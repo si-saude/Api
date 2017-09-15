@@ -1,8 +1,9 @@
 package br.com.saude.api.generic;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GenericEntityBuilder<T, ConcreteClass> {
+public abstract class GenericEntityBuilder<T> {
 	protected T entity;
 	protected T newEntity;
 	protected List<T> entityList;
@@ -10,10 +11,12 @@ public abstract class GenericEntityBuilder<T, ConcreteClass> {
 	
 	protected GenericEntityBuilder(T entity) {
 		this.entity = entity;
+		this.newEntity = clone(entity);
 	}
 	
 	protected GenericEntityBuilder(List<T> entityList) {
 		this.entityList = entityList;
+		this.newEntityList = clone(entityList);
 	}
 	
 	public T getEntity(){
@@ -26,17 +29,12 @@ public abstract class GenericEntityBuilder<T, ConcreteClass> {
 	
 	protected abstract T clone(T entity);
 	
-	protected abstract List<T> clone(List<T> entityList);
-	
-	@SuppressWarnings("unchecked")
-	public ConcreteClass clone(){
+	private List<T> clone(List<T> entityList){
+		List<T> list = new ArrayList<T>();
 		
-		if(this.entity != null)
-			this.newEntity = clone(this.entity);
+		for(T entity : entityList)
+			list.add(clone(entity));
 		
-		if(this.entityList != null)
-			this.newEntityList = clone(this.entityList);
-		
-		return (ConcreteClass)this;
+		return list;
 	}
 }

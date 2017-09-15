@@ -97,6 +97,38 @@ public abstract class GenericDao<T> {
 		return list;
 	}
 	
+	public T getFirst(List<Criterion> criterions) throws Exception{
+		return getFirst(criterions, null);
+	}
+	
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	protected T getFirst(List<Criterion> criterions, String beforeSessionCloseMethodName) throws Exception {
+		T entity;
+		Session session = HibernateHelper.getSession();
+		
+		try {
+			Criteria criteria = session.createCriteria(this.entityType);
+			
+			if(criterions != null)
+				for(Criterion criterion : criterions)
+					criteria.add(criterion);					
+			
+			criteria = criteria.setMaxResults(1);
+			entity = (T)criteria.uniqueResult();
+			
+			if(beforeSessionCloseMethodName != null)
+				entity = invokeMethod(entity, beforeSessionCloseMethodName);	 			
+			
+		}catch (Exception ex) {
+			throw ex;
+		}
+		finally {
+			session.close();
+		}
+		
+		return entity;
+	}
+	
 	public T getById(Object id) throws Exception {
 		return getById(id, null);
 	}

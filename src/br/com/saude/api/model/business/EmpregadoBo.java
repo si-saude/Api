@@ -2,6 +2,7 @@ package br.com.saude.api.model.business;
 
 import java.util.List;
 
+import br.com.saude.api.model.creation.builder.entity.EmpregadoBuilder;
 import br.com.saude.api.model.creation.builder.example.EmpregadoExampleBuilder;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.po.Empregado;
@@ -22,16 +23,19 @@ public class EmpregadoBo {
 	}
 	
 	public List<Empregado> getList(EmpregadoFilter filter) throws Exception{
-		return EmpregadoDao.getInstance()
-				.getList(new EmpregadoExampleBuilder(filter).getExample());
+		List<Empregado> empregados = EmpregadoDao.getInstance()
+				.getList(EmpregadoExampleBuilder.newInstance(filter).getExample()); 
+		return EmpregadoBuilder.newInstance(empregados).getEntityList();
 	}
 	
 	public Empregado getById(int id) throws Exception {
-		return EmpregadoDao.getInstance().getById(id);
+		Empregado empregado = EmpregadoDao.getInstance().getById(id); 
+		return EmpregadoBuilder.newInstance(empregado).getEntity();
 	}
 	
 	public Empregado save(Empregado empregado) throws Exception {
-		return EmpregadoDao.getInstance().save(empregado);
+		empregado = EmpregadoDao.getInstance().save(empregado);
+		return EmpregadoBuilder.newInstance(empregado).getEntity(); 
 	}
 	
 	public void delete(int id) {

@@ -2,6 +2,10 @@
 <web-app id="WebApp_ID" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
   <servlet>
   	<servlet-name>javax.ws.rs.core.Application</servlet-name>
+  	<init-param>
+        <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+        <param-value>br.com.saude.api.util.RequestFilterInterceptor</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
   	<servlet-name>javax.ws.rs.core.Application</servlet-name>

@@ -14,8 +14,10 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.model.business.ExameBo;
 import br.com.saude.api.model.entity.filter.ExameFilter;
 import br.com.saude.api.model.entity.po.Exame;
+import br.com.saude.api.util.RequestInterceptor;
 
 @Path("exame")
+@RequestInterceptor
 public class ExameService {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -25,9 +27,24 @@ public class ExameService {
 		return Response.ok(ExameBo.getInstance().getList(filter)).build();
 	}
 	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list/empregado")
+	public Response getListLoadEmpregado(ExameFilter filter) throws Exception{	
+		return Response.ok(ExameBo.getInstance().getListLoadEmpregado(filter)).build();
+	}
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("id") int id) throws Exception{	
+		return Response.ok(ExameBo.getInstance().getByIdLoadEmpregado(id)).build();
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/simpleGet")
+	public Response simpleGet(@QueryParam("id") int id) throws Exception{	
 		return Response.ok(ExameBo.getInstance().getById(id)).build();
 	}
 	

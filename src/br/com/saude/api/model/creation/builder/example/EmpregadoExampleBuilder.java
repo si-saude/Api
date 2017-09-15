@@ -7,18 +7,19 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
 
+import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.po.Empregado;
 
-public class EmpregadoExampleBuilder {
-	private Empregado entity;
-	private EmpregadoFilter filter;
-	private List<Criterion> criterions;
+public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,EmpregadoFilter> {
 	
-	public EmpregadoExampleBuilder(EmpregadoFilter filter) {
-		this.filter = filter;
-		this.entity = new Empregado();
+	public static EmpregadoExampleBuilder newInstance(EmpregadoFilter filter) {
+		return new EmpregadoExampleBuilder(filter);
+	}
+	
+	private EmpregadoExampleBuilder(EmpregadoFilter filter) {
+		super(filter);
 	}
 	
 	private void addNome() {
@@ -38,7 +39,8 @@ public class EmpregadoExampleBuilder {
 					this.filter.getDataNascimento().getFim()));
 		}
 	}
-	
+
+	@Override
 	public List<Criterion> getExample() {
 		if(this.filter != null) {
 			this.criterions = new ArrayList<Criterion>();

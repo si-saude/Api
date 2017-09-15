@@ -1,19 +1,13 @@
 package br.com.saude.api.model.entity.filter;
 
 import br.com.saude.api.generic.DateFilter;
+import br.com.saude.api.generic.GenericFilter;
 
-public class EmpregadoFilter {
-	private int id;
+public class EmpregadoFilter extends GenericFilter {
 	private String nome;
 	private String cpf;
 	private DateFilter dataNascimento;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getNome() {
 		return nome;
 	}

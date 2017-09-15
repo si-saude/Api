@@ -1,19 +1,25 @@
 package br.com.saude.api.model.creation.builder.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
-import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Exame;
 
-public class ExameBuilder extends GenericEntityBuilder<Exame, ExameBuilder> {
+public class ExameBuilder extends GenericEntityBuilder<Exame> {
 	
-	public ExameBuilder(Exame exame) {
+	public static ExameBuilder newInstance(Exame exame) {
+		return new ExameBuilder(exame);
+	}
+	
+	public static ExameBuilder newInstance(List<Exame> exames) {
+		return new ExameBuilder(exames);
+	}
+	
+	private ExameBuilder(Exame exame) {
 		super(exame);
 	}
 	
-	public ExameBuilder(List<Exame> exames) {
+	private ExameBuilder(List<Exame> exames) {
 		super(exames);
 	}
 
@@ -28,25 +34,26 @@ public class ExameBuilder extends GenericEntityBuilder<Exame, ExameBuilder> {
 
 		return newExame;
 	}
-
-	@Override
-	protected List<Exame> clone(List<Exame> exames){
-		List<Exame> newExames = new ArrayList<Exame>();
-		
-		for(Exame exame : exames)
-			newExames.add(clone(exame));
-			
-		return newExames;
-	}
 	
 	public ExameBuilder loadEmpregado() {
-		if(this.entity.getEmpregado() != null) {
-			this.newEntity.setEmpregado(new Empregado());
-			this.newEntity.getEmpregado().setId(this.entity.getEmpregado().getId());
-			this.newEntity.getEmpregado().setCpf(this.entity.getEmpregado().getCpf());
-			this.newEntity.getEmpregado().setNome(this.entity.getEmpregado().getNome());
-			this.newEntity.getEmpregado().setDataNascimento(this.entity.getEmpregado().getDataNascimento());			
+		if(this.entity != null) {
+			this.newEntity = loadEmpregado(this.entity,this.newEntity);
+		}else {
+			for(Exame exame:this.entityList) {
+				Exame newExame = this.newEntityList.stream()
+										.filter(e->e.getId() == exame.getId())
+										.iterator().next();
+				newExame = loadEmpregado(exame,newExame);
+			}				
 		}
 		return this;
+	}
+	
+	private Exame loadEmpregado(Exame origem, Exame destino) {
+		if(origem.getEmpregado() != null) {
+			destino
+				.setEmpregado(EmpregadoBuilder.newInstance(origem.getEmpregado()).getEntity());
+		}
+		return destino;
 	}
 }

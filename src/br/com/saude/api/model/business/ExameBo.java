@@ -22,23 +22,36 @@ public class ExameBo {
 		return instance;
 	}
 	
+	public List<Exame> getListLoadEmpregado(ExameFilter filter) throws Exception{
+		List<Exame> exames = ExameDao.getInstance()
+				.getList(ExameExampleBuilder.newInstance(filter).getExample()); 
+		
+		return ExameBuilder.newInstance(exames).getEntityList();
+	}
+	
 	public List<Exame> getList(ExameFilter filter) throws Exception{
 		List<Exame> exames = ExameDao.getInstance()
-				.getList(new ExameExampleBuilder(filter).getExample()); 
+				.getListLoadEmpregado(ExameExampleBuilder.newInstance(filter).getExample()); 
 		
-		return new ExameBuilder(exames).clone().getEntityList();
+		return ExameBuilder.newInstance(exames).loadEmpregado().getEntityList();
 	}
 	
 	public Exame getById(int id) throws Exception {
+		Exame exame = ExameDao.getInstance().getById(id); 
+		
+		return ExameBuilder.newInstance(exame).getEntity();
+	}
+	
+	public Exame getByIdLoadEmpregado(int id) throws Exception {
 		Exame exame = ExameDao.getInstance().getByIdLoadEmpregado(id); 
 		
-		return new ExameBuilder(exame).clone().loadEmpregado().getEntity();
+		return ExameBuilder.newInstance(exame).loadEmpregado().getEntity();
 	}
 	
 	public Exame save(Exame exame) throws Exception {
 		exame = ExameDao.getInstance().save(exame); 
 		
-		return new ExameBuilder(exame).clone().getEntity();
+		return ExameBuilder.newInstance(exame).getEntity();
 	}
 	
 	public void delete(int id) {

@@ -14,8 +14,10 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.model.business.EmpregadoBo;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.po.Empregado;
+import br.com.saude.api.util.RequestInterceptor;
 
 @Path("empregado")
+@RequestInterceptor
 public class EmpregadoService {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

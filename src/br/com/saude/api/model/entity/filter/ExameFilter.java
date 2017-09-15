@@ -1,17 +1,12 @@
 package br.com.saude.api.model.entity.filter;
 
-public class ExameFilter {
-	private int id;
+import br.com.saude.api.generic.GenericFilter;
+
+public class ExameFilter extends GenericFilter {
 	private String codigo;
 	private String descricao;
 	private EmpregadoFilter empregado;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getCodigo() {
 		return codigo;
 	}

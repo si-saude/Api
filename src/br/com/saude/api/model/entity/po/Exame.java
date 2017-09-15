@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ public class Exame {
 	
 	@NotNull(message="É necessário informar o Código do Exame.")
 	@Size(max = 10, message="Tamanho máximo para Código: 10")
+	@Column(unique=true)
 	private String codigo;
 	
 	
