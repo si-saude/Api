@@ -12,9 +12,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.com.saude.api.model.business.UsuarioBo;
+import br.com.saude.api.model.creation.builder.entity.UsuarioBuilder;
 import br.com.saude.api.model.entity.filter.UsuarioFilter;
 import br.com.saude.api.model.entity.po.Usuario;
 import br.com.saude.api.util.RequestInterceptor;
+import br.com.saude.api.util.UserManager;
 
 @Path("usuario")
 public class UsuarioService {
@@ -24,7 +26,15 @@ public class UsuarioService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/login")
 	public Response login(@Valid UsuarioFilter filter) throws Exception {
-		return Response.ok(UsuarioBo.getInstance().getFirstToAutenticacao(filter) ).build();
+		Usuario usuario = UsuarioBo.getInstance().getFirstToAutenticacao(filter);
+		if(usuario != null) {
+			usuario = UsuarioBuilder.newInstance(usuario).getEntity();
+			usuario = UserManager.getInstance().authenticate(usuario);
+			return Response.ok(usuario).build();
+		}else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Usuário ou senha inválidos.").build();
+		}
+		
 	}
 	
 	@RequestInterceptor
