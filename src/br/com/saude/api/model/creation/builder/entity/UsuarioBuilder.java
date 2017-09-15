@@ -25,14 +25,17 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario> {
 
 	@Override
 	protected Usuario clone(Usuario usuario) {
-		Usuario newUsuario = new Usuario();
-		
-		newUsuario.setId(usuario.getId());
-		newUsuario.setChave(usuario.getChave());
-		newUsuario.setSenha(usuario.getSenha());
-		newUsuario.setVersion(usuario.getVersion());
-		
-		return newUsuario;
+		if(usuario != null) {
+			Usuario newUsuario = new Usuario();
+			
+			newUsuario.setId(usuario.getId());
+			newUsuario.setChave(usuario.getChave());
+			newUsuario.setSenha(usuario.getSenha());
+			newUsuario.setVersion(usuario.getVersion());
+			
+			return newUsuario;
+		}
+		return null;
 	}
 	
 	public UsuarioBuilder loadPerfis() {
