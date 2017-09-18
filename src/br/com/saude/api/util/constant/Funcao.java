@@ -2,7 +2,9 @@ package br.com.saude.api.util.constant;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Funcao {
 	
@@ -18,14 +20,14 @@ public class Funcao {
 		return instance;
 	}
 	
-	public List<String> getList() throws IllegalArgumentException, IllegalAccessException{
-		List<String> list = new ArrayList<String>();
+	public Map<String,String> getList() throws IllegalArgumentException, IllegalAccessException{
+		Map<String,String> map = new HashMap<String,String>();
 		Field[] fields = this.getClass().getDeclaredFields();
 		for(Field field:fields) {
 			if(!field.getName().equals("instance"))
-				list.add((String)field.get(this));
+				map.put((String)field.get(this), (String)field.get(this));
 		}
-		return list;
+		return map;
 	}
 	
 	public final String EMPREGADO_LISTAR 				= "EMPREGADO_LISTAR";

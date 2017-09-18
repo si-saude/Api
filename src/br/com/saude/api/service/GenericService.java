@@ -1,5 +1,7 @@
 package br.com.saude.api.service;
 
+import java.util.stream.Collectors;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -17,8 +19,9 @@ public class GenericService {
 	@Path("/funcao")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
-		return Response.ok(Funcao.getInstance().getList().stream()
-							.filter(f-> filter!=null?f.toLowerCase().contains(filter.toLowerCase()):true)
-							.toArray()).build();
+		return Response.ok(Funcao.getInstance().getList().entrySet().stream() 
+							.filter(f-> filter!=null?f.getKey().toLowerCase().contains(filter.toLowerCase()):true)
+							.collect(Collectors.toMap(e->e.getKey(),e->e.getValue()))
+							).build();
 	}
 }
