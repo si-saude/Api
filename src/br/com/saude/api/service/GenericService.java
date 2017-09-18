@@ -20,7 +20,7 @@ public class GenericService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(Funcao.getInstance().getList().entrySet().stream() 
-							.filter(f-> filter!=null?f.getKey().toLowerCase().contains(filter.toLowerCase()):true)
+							.filter(f-> filter!=null?f.getValue().toLowerCase().contains(filter.toLowerCase()):true)
 							.collect(Collectors.toMap(e->e.getKey(),e->e.getValue()))
 							).build();
 	}
