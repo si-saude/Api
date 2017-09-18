@@ -3,7 +3,7 @@ package br.com.saude.api.generic;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GenericEntityBuilder<T> {
+public abstract class GenericEntityBuilder<T,F> {
 	protected T entity;
 	protected T newEntity;
 	protected List<T> entityList;
@@ -28,6 +28,8 @@ public abstract class GenericEntityBuilder<T> {
 	}
 	
 	protected abstract T clone(T entity);
+	
+	public abstract T cloneFromFilter(F filter);
 	
 	private List<T> clone(List<T> entityList){
 		List<T> list = new ArrayList<T>();

@@ -3,9 +3,10 @@ package br.com.saude.api.model.creation.builder.entity;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
+import br.com.saude.api.model.entity.filter.ExameFilter;
 import br.com.saude.api.model.entity.po.Exame;
 
-public class ExameBuilder extends GenericEntityBuilder<Exame> {
+public class ExameBuilder extends GenericEntityBuilder<Exame,ExameFilter> {
 	
 	public static ExameBuilder newInstance(Exame exame) {
 		return new ExameBuilder(exame);
@@ -55,5 +56,10 @@ public class ExameBuilder extends GenericEntityBuilder<Exame> {
 				.setEmpregado(EmpregadoBuilder.newInstance(origem.getEmpregado()).getEntity());
 		}
 		return destino;
+	}
+
+	@Override
+	public Exame cloneFromFilter(ExameFilter filter) {
+		return null;
 	}
 }

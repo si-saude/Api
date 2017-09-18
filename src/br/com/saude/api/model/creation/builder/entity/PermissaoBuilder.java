@@ -3,10 +3,11 @@ package br.com.saude.api.model.creation.builder.entity;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
+import br.com.saude.api.generic.GenericFilter;
 import br.com.saude.api.model.entity.po.Perfil;
 import br.com.saude.api.model.entity.po.Permissao;
 
-public class PermissaoBuilder extends GenericEntityBuilder<Permissao> {
+public class PermissaoBuilder extends GenericEntityBuilder<Permissao,GenericFilter> {
 
 	public static PermissaoBuilder newInstance(Permissao permissao) {
 		return new PermissaoBuilder(permissao);
@@ -65,5 +66,10 @@ public class PermissaoBuilder extends GenericEntityBuilder<Permissao> {
 			destino.setPerfil(PerfilBuilder.newInstance(origem.getPerfil()).getEntity());
 		}
 		return destino;
+	}
+
+	@Override
+	public Permissao cloneFromFilter(GenericFilter filter) {
+		return null;
 	}
 }

@@ -3,9 +3,10 @@ package br.com.saude.api.model.creation.builder.entity;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
+import br.com.saude.api.model.entity.filter.UsuarioFilter;
 import br.com.saude.api.model.entity.po.Usuario;
 
-public class UsuarioBuilder extends GenericEntityBuilder<Usuario> {
+public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> {
 
 	public static UsuarioBuilder newInstance(Usuario usuario) {
 		return new UsuarioBuilder(usuario);
@@ -59,5 +60,13 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario> {
 										.getEntityList());
 		}
 		return destino;
+	}
+
+	@Override
+	public Usuario cloneFromFilter(UsuarioFilter filter) {
+		Usuario usuario = new Usuario();
+		usuario.setChave(filter.getChave());
+		usuario.setSenha(filter.getSenha());
+		return usuario;
 	}
 }

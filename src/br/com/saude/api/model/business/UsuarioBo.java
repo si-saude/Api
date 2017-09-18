@@ -1,6 +1,7 @@
 package br.com.saude.api.model.business;
 
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.business.validate.UsuarioValidator;
 import br.com.saude.api.model.creation.builder.entity.UsuarioBuilder;
 import br.com.saude.api.model.creation.builder.example.UsuarioExampleBuilder;
 import br.com.saude.api.model.entity.filter.UsuarioFilter;
@@ -55,7 +56,10 @@ public class UsuarioBo {
 	}
 	
 	public Usuario getFirstToAutenticacao(UsuarioFilter filter) throws Exception {
-		Usuario usuario = UsuarioDao.getInstance()
+		Usuario usuario = UsuarioBuilder.newInstance(new Usuario()).cloneFromFilter(filter);
+		UsuarioValidator usuarioValidator = new UsuarioValidator();
+		usuarioValidator.validate(usuario);
+		usuario = UsuarioDao.getInstance()
 			.getFirst(UsuarioExampleBuilder.newInstance(filter).getExampleAutenticacao());
 		return UsuarioBuilder.newInstance(usuario).getEntity();
 	}

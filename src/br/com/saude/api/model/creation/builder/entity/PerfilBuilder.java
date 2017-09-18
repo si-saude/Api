@@ -3,9 +3,10 @@ package br.com.saude.api.model.creation.builder.entity;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
+import br.com.saude.api.model.entity.filter.PerfilFilter;
 import br.com.saude.api.model.entity.po.Perfil;
 
-public class PerfilBuilder extends GenericEntityBuilder<Perfil> {
+public class PerfilBuilder extends GenericEntityBuilder<Perfil,PerfilFilter> {
 
 	public static PerfilBuilder newInstance(Perfil perfil) {
 		return new PerfilBuilder(perfil);
@@ -81,5 +82,10 @@ public class PerfilBuilder extends GenericEntityBuilder<Perfil> {
 										.getEntityList());	
 		}
 		return destino;
+	}
+
+	@Override
+	public Perfil cloneFromFilter(PerfilFilter filter) {
+		return null;
 	}
 }
