@@ -25,7 +25,7 @@ public class Funcao {
 		Field[] fields = this.getClass().getDeclaredFields();
 		for(Field field:fields) {
 			if(!field.getName().equals("instance"))
-				map.put((String)field.get(this), (String)field.get(this));
+				map.put("value", (String)field.get(this));
 		}
 		return map;
 	}
