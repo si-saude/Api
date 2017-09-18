@@ -25,7 +25,7 @@ public class UsuarioService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/login")
-	public Response login(@Valid UsuarioFilter filter) throws Exception {
+	public Response login(UsuarioFilter filter) throws Exception  {
 		Usuario usuario = UsuarioBo.getInstance().getFirstToAutenticacao(filter);
 		if(usuario != null) {
 			usuario = UsuarioBuilder.newInstance(usuario).getEntity();
@@ -34,7 +34,6 @@ public class UsuarioService {
 		}else {
 			return Response.status(Response.Status.NOT_FOUND).entity("Usuário ou senha inválidos.").build();
 		}
-		
 	}
 	
 	@RequestInterceptor
