@@ -1,11 +1,11 @@
 package br.com.saude.api.model.persistence;
 
-import java.util.List;
 
 import org.hibernate.Hibernate;
-import org.hibernate.criterion.Criterion;
 
 import br.com.saude.api.generic.GenericDao;
+import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.creation.builder.example.PerfilExampleBuilder;
 import br.com.saude.api.model.entity.po.Perfil;
 
 public class PerfilDao extends GenericDao<Perfil> {
@@ -26,8 +26,8 @@ public class PerfilDao extends GenericDao<Perfil> {
 		return this.getById(id, "loadPermissoes");
 	}
 	
-	public List<Perfil> getListLoadPermissoes(List<Criterion> criterions) throws Exception{
-		return this.getList(criterions, "loadPermissoes");
+	public PagedList<Perfil> getListLoadPermissoes(PerfilExampleBuilder perfilExampleBuilder) throws Exception{
+		return this.getList(perfilExampleBuilder, "loadPermissoes");
 	}
 	
 	@SuppressWarnings("unused")

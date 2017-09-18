@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.query.Query;
 
 public abstract class GenericDao<T> {
 	
@@ -45,6 +46,11 @@ public abstract class GenericDao<T> {
 		return entity;
 	}
 	
+	private long getCount(Session session) {
+		Query<?> countQuery = session.createQuery("select count(*) from "+this.entityType.getSimpleName());
+		return (long)countQuery.uniqueResult();
+	}
+	
 	public void delete(Object id) {
 		Session session = HibernateHelper.getSession();
 		
@@ -64,17 +70,21 @@ public abstract class GenericDao<T> {
 		}
 	}
 	
-	public List<T> getList(List<Criterion> criterions) throws Exception{
-		return getList(criterions, null);
+	public PagedList<T> getList(GenericExampleBuilder<?,?> exampleBuilder) throws Exception{
+		return getList(exampleBuilder, null);
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	protected List<T> getList(List<Criterion> criterions, String beforeSessionCloseMethodName) throws Exception {
+	protected PagedList<T> getList(GenericExampleBuilder<?,?> exampleBuilder, String beforeSessionCloseMethodName) throws Exception {
 		List<T> list;
+		PagedList<T> pagedList = new PagedList<T>();
+		List<Criterion> criterions = exampleBuilder.getCriterions();
 		Session session = HibernateHelper.getSession();
 		
 		try {
 			Criteria criteria = session.createCriteria(this.entityType);
+			criteria.setFirstResult((exampleBuilder.getPageNumber() - 1) * exampleBuilder.getPageSize());
+			criteria.setMaxResults(exampleBuilder.getPageSize());
 			
 			if(criterions != null)
 				for(Criterion criterion : criterions)
@@ -87,6 +97,11 @@ public abstract class GenericDao<T> {
 					entity = invokeMethod(entity, beforeSessionCloseMethodName);	 			
 				}
 			
+			pagedList.setTotal(getCount(session));
+			pagedList.setList(list);
+			pagedList.setPageNumber(exampleBuilder.getPageNumber());
+			pagedList.setPageSize(exampleBuilder.getPageSize());
+			
 		}catch (Exception ex) {
 			throw ex;
 		}
@@ -94,7 +109,7 @@ public abstract class GenericDao<T> {
 			session.close();
 		}
 		
-		return list;
+		return pagedList;
 	}
 	
 	public T getFirst(List<Criterion> criterions) throws Exception{

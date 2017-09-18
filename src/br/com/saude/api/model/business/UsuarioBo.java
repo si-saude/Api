@@ -1,7 +1,6 @@
 package br.com.saude.api.model.business;
 
-import java.util.List;
-
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.UsuarioBuilder;
 import br.com.saude.api.model.creation.builder.example.UsuarioExampleBuilder;
 import br.com.saude.api.model.entity.filter.UsuarioFilter;
@@ -22,16 +21,18 @@ public class UsuarioBo {
 		return instance;
 	}
 	
-	public List<Usuario> getList(UsuarioFilter filter) throws Exception{
-		List<Usuario> usuarios = UsuarioDao.getInstance()
-									.getList(UsuarioExampleBuilder.newInstance(filter).getExample());
-		return UsuarioBuilder.newInstance(usuarios).getEntityList();
+	public PagedList<Usuario> getList(UsuarioFilter filter) throws Exception{
+		PagedList<Usuario> usuarios = UsuarioDao.getInstance()
+									.getList(UsuarioExampleBuilder.newInstance(filter).example());
+		usuarios.setList(UsuarioBuilder.newInstance(usuarios.getList()).getEntityList());
+		return usuarios;
 	}
 	
-	public List<Usuario> getListLoadPerfis(UsuarioFilter filter) throws Exception{
-		List<Usuario> usuarios = UsuarioDao.getInstance()
-									.getListLoadPerfis(UsuarioExampleBuilder.newInstance(filter).getExample());
-		return UsuarioBuilder.newInstance(usuarios).loadPerfis().getEntityList();
+	public PagedList<Usuario> getListLoadPerfis(UsuarioFilter filter) throws Exception{
+		PagedList<Usuario> usuarios = UsuarioDao.getInstance()
+									.getListLoadPerfis(UsuarioExampleBuilder.newInstance(filter).example());
+		usuarios.setList(UsuarioBuilder.newInstance(usuarios.getList()).loadPerfis().getEntityList());
+		return usuarios;
 	}
 	
 	public Usuario getById(int id) throws Exception {

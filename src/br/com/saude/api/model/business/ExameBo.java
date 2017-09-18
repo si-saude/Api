@@ -1,7 +1,6 @@
 package br.com.saude.api.model.business;
 
-import java.util.List;
-
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.ExameBuilder;
 import br.com.saude.api.model.creation.builder.example.ExameExampleBuilder;
 import br.com.saude.api.model.entity.filter.ExameFilter;
@@ -22,18 +21,18 @@ public class ExameBo {
 		return instance;
 	}
 	
-	public List<Exame> getListLoadEmpregado(ExameFilter filter) throws Exception{
-		List<Exame> exames = ExameDao.getInstance()
-				.getList(ExameExampleBuilder.newInstance(filter).getExample()); 
-		
-		return ExameBuilder.newInstance(exames).getEntityList();
+	public PagedList<Exame> getListLoadEmpregado(ExameFilter filter) throws Exception{
+		PagedList<Exame> exames = ExameDao.getInstance()
+				.getList(ExameExampleBuilder.newInstance(filter).example());
+		exames.setList(ExameBuilder.newInstance(exames.getList()).getEntityList());
+		return exames;
 	}
 	
-	public List<Exame> getList(ExameFilter filter) throws Exception{
-		List<Exame> exames = ExameDao.getInstance()
-				.getListLoadEmpregado(ExameExampleBuilder.newInstance(filter).getExample()); 
-		
-		return ExameBuilder.newInstance(exames).loadEmpregado().getEntityList();
+	public PagedList<Exame> getList(ExameFilter filter) throws Exception{
+		PagedList<Exame> exames = ExameDao.getInstance()
+				.getListLoadEmpregado(ExameExampleBuilder.newInstance(filter).example());
+		exames.setList(ExameBuilder.newInstance(exames.getList()).loadEmpregado().getEntityList());
+		return exames;
 	}
 	
 	public Exame getById(int id) throws Exception {

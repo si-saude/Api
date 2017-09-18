@@ -1,7 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
@@ -11,7 +10,7 @@ import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.PerfilFilter;
 import br.com.saude.api.model.entity.po.Perfil;
 
-public class PerfilExampleBuilder  extends GenericExampleBuilder<Perfil,PerfilFilter> {
+public class PerfilExampleBuilder extends GenericExampleBuilder<Perfil,PerfilFilter> {
 
 	public static PerfilExampleBuilder newInstance(PerfilFilter filter) {
 		return new PerfilExampleBuilder(filter);
@@ -22,15 +21,14 @@ public class PerfilExampleBuilder  extends GenericExampleBuilder<Perfil,PerfilFi
 	}
 
 	@Override
-	public List<Criterion> getExample() {
+	public PerfilExampleBuilder example() {
 		if(this.filter != null) {
 			this.criterions = new ArrayList<Criterion>();
 			this.entity = new Perfil();
 			addTitulo();
 			this.criterions.add(Example.create(this.entity).enableLike().ignoreCase());
-			return this.criterions;
-		}else
-			return null;
+		}
+		return this;
 	}
 	
 	private void addTitulo() {

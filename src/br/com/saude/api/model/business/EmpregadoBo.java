@@ -1,7 +1,6 @@
 package br.com.saude.api.model.business;
 
-import java.util.List;
-
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.EmpregadoBuilder;
 import br.com.saude.api.model.creation.builder.example.EmpregadoExampleBuilder;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
@@ -22,10 +21,11 @@ public class EmpregadoBo {
 		return instance;
 	}
 	
-	public List<Empregado> getList(EmpregadoFilter filter) throws Exception{
-		List<Empregado> empregados = EmpregadoDao.getInstance()
-				.getList(EmpregadoExampleBuilder.newInstance(filter).getExample()); 
-		return EmpregadoBuilder.newInstance(empregados).getEntityList();
+	public PagedList<Empregado> getList(EmpregadoFilter filter) throws Exception{
+		PagedList<Empregado> empregados = EmpregadoDao.getInstance()
+				.getList(EmpregadoExampleBuilder.newInstance(filter).example());
+		empregados.setList(EmpregadoBuilder.newInstance(empregados.getList()).getEntityList());
+		return empregados;
 	}
 	
 	public Empregado getById(int id) throws Exception {

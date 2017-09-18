@@ -18,20 +18,21 @@ public abstract class GenericExampleBuilder<T,F> {
 		return criteria;
 	}
 	
-	public abstract List<Criterion> getExample();
+	public abstract GenericExampleBuilder<?, ?> example();
+
+	public List<Criterion> getCriterions() {
+		return criterions;
+	}
 	
-//	public Criteria setPagination(Criteria criteria) {
-//	int pageNumber = this.filter.getPageNumber();
-//	int pageSize = this.filter.getPageSize();
-//	
-//	if(pageNumber == 0)
-//		pageNumber = 1;
-//	
-//	if(pageSize == 0)
-//		pageSize = 1;
-//	
-//	criteria = criteria.setFirstResult(pageNumber*pageSize);
-//	
-//	return criteria;
-//}
+	public int getPageNumber() {
+		return this.filter != null ?
+				((GenericFilter)this.filter).getPageNumber()
+				: 0;
+	}
+	
+	public int getPageSize() {
+		return this.filter != null ?
+				((GenericFilter)this.filter).getPageSize()
+				: 0;
+	}
 }

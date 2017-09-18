@@ -1,7 +1,6 @@
 package br.com.saude.api.model.business;
 
-import java.util.List;
-
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.PerfilBuilder;
 import br.com.saude.api.model.creation.builder.example.PerfilExampleBuilder;
 import br.com.saude.api.model.entity.filter.PerfilFilter;
@@ -22,16 +21,18 @@ public class PerfilBo {
 		return instance;
 	}
 	
-	public List<Perfil> getList(PerfilFilter filter) throws Exception{
-		List<Perfil> perfis = PerfilDao.getInstance()
-								.getList(PerfilExampleBuilder.newInstance(filter).getExample());
-		return PerfilBuilder.newInstance(perfis).getEntityList();
+	public PagedList<Perfil> getList(PerfilFilter filter) throws Exception{
+		PagedList<Perfil> perfis = PerfilDao.getInstance()
+								.getList(PerfilExampleBuilder.newInstance(filter).example());
+		perfis.setList(PerfilBuilder.newInstance(perfis.getList()).getEntityList());
+		return perfis;
 	}
 	
-	public List<Perfil> getListLoadPermissoes(PerfilFilter filter) throws Exception{
-		List<Perfil> perfis = PerfilDao.getInstance()
-								.getListLoadPermissoes(PerfilExampleBuilder.newInstance(filter).getExample());
-		return PerfilBuilder.newInstance(perfis).loadPermissoes().getEntityList();
+	public PagedList<Perfil> getListLoadPermissoes(PerfilFilter filter) throws Exception{
+		PagedList<Perfil> perfis = PerfilDao.getInstance()
+								.getListLoadPermissoes(PerfilExampleBuilder.newInstance(filter).example());
+		perfis.setList(PerfilBuilder.newInstance(perfis.getList()).loadPermissoes().getEntityList());
+		return perfis;
 	}
 	
 	public Perfil getById(int id) throws Exception {

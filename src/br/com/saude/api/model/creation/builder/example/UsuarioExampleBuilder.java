@@ -37,16 +37,14 @@ public class UsuarioExampleBuilder extends GenericExampleBuilder<Usuario,Usuario
 	}
 
 	@Override
-	public List<Criterion> getExample() {
+	public UsuarioExampleBuilder example() {
 		if(this.filter != null) {
 			this.criterions = new ArrayList<Criterion>();
 			this.entity = new Usuario();
 			addChave();
 			this.criterions.add(Example.create(this.entity).enableLike().ignoreCase());
-			return this.criterions;
 		}
-		else
-			return null;
+		return this;
 	}
 	
 	public List<Criterion> getExampleAutenticacao() {
