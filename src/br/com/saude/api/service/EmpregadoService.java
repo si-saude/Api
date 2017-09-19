@@ -24,7 +24,7 @@ public class EmpregadoService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
 	public Response getList(EmpregadoFilter filter) throws Exception{	
-		return Response.ok(EmpregadoBo.getInstance().getList(filter)).build();
+		return Response.ok(EmpregadoBo.getInstance().getList(filter).getGenericPagedList()).build();
 	}
 	
 	@GET
@@ -38,7 +38,8 @@ public class EmpregadoService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response save(@Valid Empregado empregado) {
 		try {
-			return Response.ok(EmpregadoBo.getInstance().save(empregado)).build();
+			EmpregadoBo.getInstance().save(empregado);
+			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
@@ -49,7 +50,7 @@ public class EmpregadoService {
 	public Response delete(int id) {
 		try {
 			EmpregadoBo.getInstance().delete(id);
-			return Response.ok().build();
+			return Response.ok("Removido com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}

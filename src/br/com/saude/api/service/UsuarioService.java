@@ -42,7 +42,7 @@ public class UsuarioService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
 	public Response getList(UsuarioFilter filter) throws Exception {
-		return  Response.ok(UsuarioBo.getInstance().getList(filter)).build();
+		return  Response.ok(UsuarioBo.getInstance().getList(filter).getGenericPagedList()).build();
 	}
 	
 	@RequestInterceptor
@@ -51,7 +51,7 @@ public class UsuarioService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list/perfis")
 	public Response getListLoadPerfis(UsuarioFilter filter) throws Exception {
-		return  Response.ok(UsuarioBo.getInstance().getListLoadPerfis(filter)).build();
+		return  Response.ok(UsuarioBo.getInstance().getListLoadPerfis(filter).getGenericPagedList()).build();
 	}
 	
 	@RequestInterceptor
@@ -75,7 +75,8 @@ public class UsuarioService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response save(@Valid Usuario usuario) {
 		try {
-			return Response.ok(UsuarioBo.getInstance().save(usuario)).build();
+			UsuarioBo.getInstance().save(usuario);
+			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
@@ -87,7 +88,7 @@ public class UsuarioService {
 	public Response delete(int id) {
 		try {
 			UsuarioBo.getInstance().delete(id);
-			return Response.ok().build();
+			return Response.ok("Removido com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}

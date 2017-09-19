@@ -24,7 +24,7 @@ public class ExameService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
 	public Response getList(ExameFilter filter) throws Exception{	
-		return Response.ok(ExameBo.getInstance().getList(filter)).build();
+		return Response.ok(ExameBo.getInstance().getList(filter).getGenericPagedList()).build();
 	}
 	
 	@POST
@@ -32,7 +32,7 @@ public class ExameService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list/empregado")
 	public Response getListLoadEmpregado(ExameFilter filter) throws Exception{	
-		return Response.ok(ExameBo.getInstance().getListLoadEmpregado(filter)).build();
+		return Response.ok(ExameBo.getInstance().getListLoadEmpregado(filter).getGenericPagedList()).build();
 	}
 	
 	@GET
@@ -53,7 +53,8 @@ public class ExameService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response save(@Valid Exame exame) {
 		try {
-			return Response.ok(ExameBo.getInstance().save(exame)).build();
+			ExameBo.getInstance().save(exame);
+			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
@@ -64,7 +65,7 @@ public class ExameService {
 	public Response delete(int id) {
 		try {
 			ExameBo.getInstance().delete(id);
-			return Response.ok().build();
+			return Response.ok("Removido com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}

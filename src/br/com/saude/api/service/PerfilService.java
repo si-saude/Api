@@ -25,7 +25,7 @@ public class PerfilService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
 	public Response getList(PerfilFilter filter) throws Exception {
-		return  Response.ok(PerfilBo.getInstance().getList(filter).getGenericPagedList()).build();
+		return Response.ok(PerfilBo.getInstance().getList(filter).getGenericPagedList()).build();
 	}
 	
 	@POST
@@ -33,7 +33,7 @@ public class PerfilService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list/permissoes")
 	public Response getListLoadPermissoes(PerfilFilter filter) throws Exception {
-		return  Response.ok(PerfilBo.getInstance().getListLoadPermissoes(filter)).build();
+		return Response.ok(PerfilBo.getInstance().getListLoadPermissoes(filter).getGenericPagedList()).build();
 	}
 	
 	@GET
@@ -55,7 +55,8 @@ public class PerfilService {
 	@CustomValidator(validatorClass=PerfilValidator.class, entityClass=Perfil.class)
 	public Response save(Perfil perfil) {		
 		try {
-			return Response.ok(PerfilBo.getInstance().save(perfil)).build();
+			PerfilBo.getInstance().save(perfil);
+			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
@@ -66,7 +67,7 @@ public class PerfilService {
 	public Response delete(int id) {
 		try {
 			PerfilBo.getInstance().delete(id);
-			return Response.ok().build();
+			return Response.ok("Removido com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
