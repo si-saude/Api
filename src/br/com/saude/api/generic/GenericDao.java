@@ -10,7 +10,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.query.Query;
+import org.hibernate.criterion.Projections;
+//import org.hibernate.query.Query;
 
 public abstract class GenericDao<T> {
 	
@@ -46,9 +47,15 @@ public abstract class GenericDao<T> {
 		return entity;
 	}
 	
-	private long getCount(Session session) {
-		Query<?> countQuery = session.createQuery("select count(*) from "+this.entityType.getSimpleName());
-		return (long)countQuery.uniqueResult();
+	private long getCount(Session session, List<Criterion> criterions) {
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(entityType);
+		
+		for(Criterion criterion : criterions)
+			criteria.add(criterion);		
+		
+//		Query<?> countQuery = session.createQuery("select count(*) from "+this.entityType.getSimpleName());
+		return (long)criteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 	
 	public void delete(Object id) {
@@ -97,7 +104,7 @@ public abstract class GenericDao<T> {
 					entity = invokeMethod(entity, beforeSessionCloseMethodName);	 			
 				}
 			
-			pagedList.setTotal(getCount(session));
+			pagedList.setTotal(getCount(session, criterions));
 			pagedList.setList(list);
 			pagedList.setPageNumber(exampleBuilder.getPageNumber());
 			pagedList.setPageSize(exampleBuilder.getPageSize());
