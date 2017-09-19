@@ -25,7 +25,7 @@ public class PerfilService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
 	public Response getList(PerfilFilter filter) throws Exception {
-		return  Response.ok(PerfilBo.getInstance().getList(filter)).build();
+		return  Response.ok(PerfilBo.getInstance().getList(filter).getGenericPagedList()).build();
 	}
 	
 	@POST
