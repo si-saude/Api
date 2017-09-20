@@ -11,7 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
-//import org.hibernate.query.Query;
+
 
 public abstract class GenericDao<T> {
 	
@@ -29,22 +29,24 @@ public abstract class GenericDao<T> {
 	
 	@SuppressWarnings("unchecked")
 	protected T save(T entity, String beforeSessionCloseMethodName) throws Exception {
+		T entityReturn = null;
 		Session session = HibernateHelper.getSession();
 		
 		try {
 			Transaction transaction = session.beginTransaction();
-			entity = (T)session.merge(entity);
-			transaction.commit();
+			entityReturn = (T)session.merge(entity);
 			
 			if(beforeSessionCloseMethodName != null)
-				entity = invokeMethod(entity, beforeSessionCloseMethodName);
+				entityReturn = (T)invokeMethod(new Object[]{entity,session}, beforeSessionCloseMethodName, new Class[] {this.entityType,Session.class});
+			
+			transaction.commit();
 		}catch(Exception ex) {
 			throw ex;
 		}finally {
 			session.close();
 		}
 		
-		return entity;
+		return entityReturn;
 	}
 	
 	private long getCount(Session session, List<Criterion> criterions) {
@@ -54,7 +56,6 @@ public abstract class GenericDao<T> {
 		for(Criterion criterion : criterions)
 			criteria.add(criterion);		
 		
-//		Query<?> countQuery = session.createQuery("select count(*) from "+this.entityType.getSimpleName());
 		return (long)criteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 	
@@ -101,7 +102,7 @@ public abstract class GenericDao<T> {
 			
 			if(beforeSessionCloseMethodName != null)
 				for(T entity : list) {
-					entity = invokeMethod(entity, beforeSessionCloseMethodName);	 			
+					entity = (T)invokeMethod(new Object[]{entity}, beforeSessionCloseMethodName, new Class[] {this.entityType});	 			
 				}
 			
 			pagedList.setTotal(getCount(session, criterions));
@@ -139,7 +140,7 @@ public abstract class GenericDao<T> {
 			entity = (T)criteria.uniqueResult();
 			
 			if(beforeSessionCloseMethodName != null)
-				entity = invokeMethod(entity, beforeSessionCloseMethodName);	 			
+				entity = (T)invokeMethod(new Object[]{entity}, beforeSessionCloseMethodName, new Class[] {this.entityType});	 			
 			
 		}catch (Exception ex) {
 			throw ex;
@@ -155,6 +156,7 @@ public abstract class GenericDao<T> {
 		return getById(id, null);
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected T getById(Object id, String beforeSessionCloseMethodName) throws Exception {
 		Session session = HibernateHelper.getSession();
 		T entity;
@@ -163,7 +165,7 @@ public abstract class GenericDao<T> {
 			entity = session.get(this.entityType, (Serializable)id);
 			
 			if(beforeSessionCloseMethodName != null)
-				entity = invokeMethod(entity, beforeSessionCloseMethodName);
+				entity = (T)invokeMethod(new Object[]{entity}, beforeSessionCloseMethodName, new Class[] {this.entityType});
 		}catch (Exception ex) {
 			throw ex;
 		}
@@ -173,10 +175,10 @@ public abstract class GenericDao<T> {
 		return entity;
 	}
 	
-	@SuppressWarnings({ "unchecked"})
-	private T invokeMethod(T entity, String methodName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		Method method = this.getClass().getDeclaredMethod(methodName, new Class[] {this.entityType});
+	@SuppressWarnings({ "unchecked", "rawtypes"})
+	private Object invokeMethod(Object[] objects, String methodName, Class[] types) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Method method = this.getClass().getDeclaredMethod(methodName,types);
 		method.setAccessible(true);
-		return (T)method.invoke(this,new Object[] {entity});	
+		return (T)method.invoke(this,objects);	
 	}
 }
