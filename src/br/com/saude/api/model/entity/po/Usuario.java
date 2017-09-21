@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +14,7 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.persistence.JoinColumn;
 
 @Entity
 public class Usuario {
@@ -21,15 +23,15 @@ public class Usuario {
 	private int id;
 	
 	@NotNull(message="É necessário informar a Chave do Usuário.")
-	@Size(max = 8, message="Tamanho máximo para Chave: 8")
+	@Size(max = 8, message="Tamanho máximo para Chave do Usuário: 8")
 	@Column(unique=true)
 	private String chave;
 	
 	@NotNull(message="É necessário informar a Senha do Usuário.")
 	private String senha;
 	
-	@ManyToMany()
-	@JoinTable(name="usuario_perfil")
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="usuario_perfil", inverseJoinColumns = {@JoinColumn(name="perfil_id")})
 	private List<Perfil> perfis;
 	
 	@Transient

@@ -41,7 +41,7 @@ public class PerfilBo {
 	}
 	
 	public Perfil getByIdLoadPermissoes(int id) throws Exception {
-		Perfil perfil = PerfilDao.getInstance().getbyIdLoadPermissoes(id);
+		Perfil perfil = PerfilDao.getInstance().getByIdLoadPermissoes(id);
 		return PerfilBuilder.newInstance(perfil).loadPermissoes().getEntity();
 	}
 	

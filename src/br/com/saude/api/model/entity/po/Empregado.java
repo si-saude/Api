@@ -22,7 +22,7 @@ public class Empregado {
 	private String nome;
 	
 	@Column(unique=true)
-	@Size(max = 11, message="Tamanho máximo para Cpf: 11")
+	@Size(max = 11, message="Tamanho máximo para Cpf do Empregado: 11")
 	@NotNull(message="É necessário informar o Cpf do Empregado(a).")
 	private String cpf;
 	

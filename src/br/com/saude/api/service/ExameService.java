@@ -2,7 +2,7 @@ package br.com.saude.api.service;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
+//import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -60,8 +60,9 @@ public class ExameService {
 		}
 	}
 	
-	@DELETE
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/delete")
 	public Response delete(int id) {
 		try {
 			ExameBo.getInstance().delete(id);

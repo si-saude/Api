@@ -24,7 +24,7 @@ public class Exame {
 	
 	
 	@NotNull(message="É necessário informar a Descrição do Exame.")
-	@Size(max = 150, message="Tamanho máximo para Descrição: 150")
+	@Size(max = 150, message="Tamanho máximo para Descrição do Exame: 150")
 	private String descricao;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

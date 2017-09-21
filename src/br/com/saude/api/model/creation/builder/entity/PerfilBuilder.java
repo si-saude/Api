@@ -50,6 +50,15 @@ public class PerfilBuilder extends GenericEntityBuilder<Perfil,PerfilFilter> {
 		return this;
 	}
 	
+	private Perfil loadPermissoes(Perfil origem, Perfil destino) {
+		if(origem.getPermissoes() != null) {
+			destino.setPermissoes(PermissaoBuilder
+										.newInstance(origem.getPermissoes())
+										.getEntityList());	
+		}
+		return destino;
+	}
+	
 	public PerfilBuilder loadPermissoesSetPerfil() {
 		if(this.entity != null) {
 			this.newEntity = loadPermissoesSetPerfil(this.entity,this.newEntity);
@@ -63,15 +72,6 @@ public class PerfilBuilder extends GenericEntityBuilder<Perfil,PerfilFilter> {
 		}
 		
 		return this;
-	}
-	
-	private Perfil loadPermissoes(Perfil origem, Perfil destino) {
-		if(origem.getPermissoes() != null) {
-			destino.setPermissoes(PermissaoBuilder
-										.newInstance(origem.getPermissoes())
-										.getEntityList());	
-		}
-		return destino;
 	}
 	
 	private Perfil loadPermissoesSetPerfil(Perfil origem, Perfil destino) {

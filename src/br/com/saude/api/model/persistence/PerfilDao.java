@@ -26,7 +26,7 @@ public class PerfilDao extends GenericDao<Perfil> {
 		return instance;
 	}
 	
-	public Perfil getbyIdLoadPermissoes(Object id) throws Exception {
+	public Perfil getByIdLoadPermissoes(Object id) throws Exception {
 		return this.getById(id, "loadPermissoes");
 	}
 	
@@ -52,7 +52,9 @@ public class PerfilDao extends GenericDao<Perfil> {
 				(List<Permissao>)session.createCriteria(Permissao.class)
 										.add(Restrictions.eq("perfil", perfil))
 										.list();
-		permissoes.removeIf(x->perfil.getPermissoes().stream().filter(y->y.getId() == x.getId()).count() > 0);
+		if(perfil.getPermissoes() != null)
+			permissoes.removeIf(x->perfil.getPermissoes().stream().filter(y->y.getId() == x.getId()).count() > 0);
+		
 		permissoes.forEach(p-> session.delete(p));
 		return perfil;
 	}

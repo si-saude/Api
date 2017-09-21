@@ -1,32 +1,24 @@
 package br.com.saude.api.model.entity.po;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Perfil {
+public class Localizacao {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar o Título do Perfil.")
-	@Size(max = 60, message="Tamanho máximo para Título do Perfil: 60")
+	@NotNull(message="É necessário informar o Nome da Localização.")
+	@Size(max = 50, message="Tamanho máximo para Nome da Localização: 50")
 	@Column(unique=true)
-	private String titulo;
-	
-	@OneToMany(mappedBy="perfil", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	private List<Permissao> permissoes;
+	private String nome;
 	
 	@Version
 	private long version;
@@ -39,12 +31,12 @@ public class Perfil {
 		this.id = id;
 	}
 
-	public String getTitulo() {
-		return titulo;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public long getVersion() {
@@ -54,12 +46,5 @@ public class Perfil {
 	public void setVersion(long version) {
 		this.version = version;
 	}
-
-	public List<Permissao> getPermissoes() {
-		return permissoes;
-	}
-
-	public void setPermissoes(List<Permissao> permissoes) {
-		this.permissoes = permissoes;
-	}
+	
 }

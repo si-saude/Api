@@ -11,6 +11,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
+import org.hibernate.sql.JoinType;
+import org.javatuples.Triplet;
 
 
 public abstract class GenericDao<T> {
@@ -87,6 +89,7 @@ public abstract class GenericDao<T> {
 		List<T> list;
 		PagedList<T> pagedList = new PagedList<T>();
 		List<Criterion> criterions = exampleBuilder.getCriterions();
+		List<Triplet<String,CriteriaExample,JoinType>> criterias = exampleBuilder.getCriterias();
 		Session session = HibernateHelper.getSession();
 		
 		try {
@@ -96,7 +99,14 @@ public abstract class GenericDao<T> {
 			
 			if(criterions != null)
 				for(Criterion criterion : criterions)
-					criteria.add(criterion);					
+					criteria.add(criterion);
+			
+			if(criterias != null)
+				for(Triplet<String,CriteriaExample,JoinType> c: criterias) {
+					Criteria example = criteria.createCriteria(c.getValue0(),c.getValue2());
+					for(Criterion criterion : c.getValue1().getCriterions())
+						example.add(criterion);
+				}
 			
 			list = criteria.list();
 			

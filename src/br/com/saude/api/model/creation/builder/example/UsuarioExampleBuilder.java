@@ -36,17 +36,6 @@ public class UsuarioExampleBuilder extends GenericExampleBuilder<Usuario,Usuario
 			this.entity.setSenha(this.filter.getSenha());
 	}
 
-	@Override
-	public UsuarioExampleBuilder example() {
-		if(this.filter != null) {
-			this.criterions = new ArrayList<Criterion>();
-			this.entity = new Usuario();
-			addChave();
-			this.criterions.add(Example.create(this.entity).enableLike().ignoreCase());
-		}
-		return this;
-	}
-	
 	public List<Criterion> getExampleAutenticacao() {
 		if(this.filter != null) {
 			this.criterions = new ArrayList<Criterion>();
@@ -59,5 +48,16 @@ public class UsuarioExampleBuilder extends GenericExampleBuilder<Usuario,Usuario
 		else
 			return null;
 	}
+	
+	@Override
+	public UsuarioExampleBuilder example() {
+		return (UsuarioExampleBuilder) super.example();
+	}
 
+	@Override
+	protected void createExample() {
+		this.criterions = new ArrayList<Criterion>();
+		this.entity = new Usuario();
+		addChave();
+	}
 }
