@@ -16,7 +16,7 @@ import br.com.saude.api.model.entity.filter.GerenciaFilter;
 import br.com.saude.api.model.entity.po.Gerencia;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("cidade")
+@Path("gerencia")
 @RequestInterceptor
 public class GerenciaService {
 

@@ -43,6 +43,10 @@ public class Profissional {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Equipe equipe;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@NotNull(message="É necessário informar a Gerência do Profissional.")
+	private Gerencia gerencia;
+	
 	@Size(max = 12, message="Tamanho máximo para MI do Profissional: 12")
 	private String mi;
 	
@@ -151,5 +155,13 @@ public class Profissional {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public Gerencia getGerencia() {
+		return gerencia;
+	}
+
+	public void setGerencia(Gerencia gerencia) {
+		this.gerencia = gerencia;
 	}
 }

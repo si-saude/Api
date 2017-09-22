@@ -38,6 +38,28 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		newProfissional.setVersion(profissional.getVersion());
 		
 		return newProfissional;
+	}	
+	
+	public ProfissionalBuilder loadGerencia() {
+		if(this.entity != null) {
+			this.newEntity = loadGerencia(this.entity,this.newEntity);
+		}else {
+			for(Profissional profissional:this.entityList) {
+				Profissional newProfissional = this.newEntityList.stream()
+						.filter(e->e.getId() == profissional.getId())
+						.iterator().next();
+				newProfissional = loadGerencia(profissional,newProfissional);
+			}
+		}
+		return this;
+	}
+	
+	private Profissional loadGerencia(Profissional origem,Profissional destino) {
+		if(origem.getGerencia()!= null) {
+			destino.setGerencia(GerenciaBuilder.newInstance(origem.getGerencia()).getEntity());
+		}
+		
+		return destino;
 	}
 	
 	public ProfissionalBuilder loadEquipe() {

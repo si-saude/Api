@@ -31,15 +31,14 @@ public class GerenciaDao extends GenericDao<Gerencia> {
 		
 		if(filter.getCodigoCompleto() != null) {
 			String[] gerencias = filter.getCodigoCompleto().split("/");
-			int index = gerencias.length-1;
 			
-			criteria.add(Restrictions.ilike("codigo", Helper.filterLike(gerencias[index])));
 			Criteria gerenciaCriteria = criteria;
-			index--;
 			
-			for(int i = index; i >= 0; i--) {
-				gerenciaCriteria = gerenciaCriteria.createCriteria("gerencia", JoinType.INNER_JOIN);
-				gerenciaCriteria.add(Restrictions.ilike("codigo", Helper.filterLike(gerencias[index])));
+			for(int i = 3; i>= 0; i--) {
+				if(i<3)
+					gerenciaCriteria = gerenciaCriteria.createCriteria("gerencia", JoinType.LEFT_OUTER_JOIN);
+				if(gerencias.length > i)
+					gerenciaCriteria.add(Restrictions.ilike("codigo", Helper.filterLike(gerencias[i])));
 			}
 		}
 		
