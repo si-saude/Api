@@ -60,4 +60,8 @@ public abstract class GenericExampleBuilder<T,F> {
 		}
 		return null;
 	}
+
+	public F getFilter() {
+		return filter;
+	}
 }

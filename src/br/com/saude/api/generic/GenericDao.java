@@ -84,6 +84,10 @@ public abstract class GenericDao<T> {
 		return getList(exampleBuilder, null);
 	}
 	
+	protected Criteria finishCriteria(Criteria criteria, GenericExampleBuilder<?,?> exampleBuilder) {
+		return criteria;
+	}
+	
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	protected PagedList<T> getList(GenericExampleBuilder<?,?> exampleBuilder, String beforeSessionCloseMethodName) throws Exception {
 		List<T> list;
@@ -108,6 +112,7 @@ public abstract class GenericDao<T> {
 						example.add(criterion);
 				}
 			
+			criteria = finishCriteria(criteria,exampleBuilder);
 			list = criteria.list();
 			
 			if(beforeSessionCloseMethodName != null)

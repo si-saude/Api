@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import org.hibernate.criterion.Criterion;
 
-import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.LocalizacaoFilter;
@@ -29,18 +28,6 @@ public class LocalizacaoExampleBuilder extends GenericExampleBuilder<Localizacao
 	@Override
 	public LocalizacaoExampleBuilder example() {
 		return (LocalizacaoExampleBuilder) super.example();
-	}
-	
-	@Override
-	public CriteriaExample getCriteriaExample() {
-		if(this.filter != null) {
-			CriteriaExample criteriaExample = new CriteriaExample();
-			createExample();
-			criteriaExample.setCriterions(this.criterions);
-			criteriaExample.setExample(getExample());
-			return criteriaExample;
-		}
-		return null;
 	}
 
 	@Override

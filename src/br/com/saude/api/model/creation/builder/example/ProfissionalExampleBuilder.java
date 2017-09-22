@@ -97,6 +97,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 	@Override
 	protected void createExample() {
 		this.criterions = new ArrayList<Criterion>();
+		this.criterias = new ArrayList<Triplet<String,CriteriaExample,JoinType>>();
 		this.entity = new Profissional();
 		addChave();
 		addDataNascimento();
