@@ -3,6 +3,7 @@ package br.com.saude.api.model.creation.builder.example;
 import java.util.ArrayList;
 
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
@@ -17,6 +18,11 @@ public class GerenciaExampleBuilder extends GenericExampleBuilder<Gerencia,Geren
 	
 	private GerenciaExampleBuilder(GerenciaFilter filter) {
 		super(filter);
+	}
+	
+	private void addNeId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.ne("id", this.filter.getId()));
 	}
 	
 	private void addCodigo() {
@@ -40,5 +46,21 @@ public class GerenciaExampleBuilder extends GenericExampleBuilder<Gerencia,Geren
 	@Override
 	public GerenciaExampleBuilder example() {
 		return (GerenciaExampleBuilder)super.example();
+	}
+	
+	private void createExampleSelectList() {
+		this.criterions = new ArrayList<Criterion>();
+		this.entity = new Gerencia();
+		addNeId();
+		this.filter.setPageNumber(1);
+		this.filter.setPageSize(Integer.MAX_VALUE);
+	}
+	
+	public GerenciaExampleBuilder exampleSelectList() {
+		if(this.filter!=null) {
+			createExampleSelectList();
+			this.criterions.add(getExample());
+		}
+		return this;
 	}
 }

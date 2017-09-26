@@ -51,12 +51,14 @@ public abstract class GenericDao<T> {
 		return entityReturn;
 	}
 	
-	private long getCount(Session session, List<Criterion> criterions) {
+	private long getCount(Session session, GenericExampleBuilder<?,?> exampleBuilder) {
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(entityType);
 		
-		for(Criterion criterion : criterions)
-			criteria.add(criterion);		
+		for(Criterion criterion : exampleBuilder.getCriterions())
+			criteria.add(criterion);
+		
+		criteria = finishCriteria(criteria,exampleBuilder);
 		
 		return (long)criteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
@@ -120,7 +122,7 @@ public abstract class GenericDao<T> {
 					entity = (T)invokeMethod(new Object[]{entity}, beforeSessionCloseMethodName, new Class[] {this.entityType});	 			
 				}
 			
-			pagedList.setTotal(getCount(session, criterions));
+			pagedList.setTotal(getCount(session, exampleBuilder));
 			pagedList.setList(list);
 			pagedList.setPageNumber(exampleBuilder.getPageNumber());
 			pagedList.setPageSize(exampleBuilder.getPageSize());

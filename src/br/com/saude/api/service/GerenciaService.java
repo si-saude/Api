@@ -28,6 +28,14 @@ public class GerenciaService {
 		return Response.ok(GerenciaBo.getInstance().getList(filter).getGenericPagedList()).build();
 	}
 	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/selectList")
+	public Response getSelectList(GerenciaFilter filter) throws Exception {
+		return Response.ok(GerenciaBo.getInstance().getSelectList(filter)).build();
+	}
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("id") int id) throws Exception{

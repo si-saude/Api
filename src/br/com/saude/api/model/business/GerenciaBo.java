@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.util.List;
+
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.GerenciaBuilder;
 import br.com.saude.api.model.creation.builder.example.GerenciaExampleBuilder;
@@ -26,6 +28,12 @@ public class GerenciaBo {
 				.getList(GerenciaExampleBuilder.newInstance(filter).example());
 		gerencias.setList(GerenciaBuilder.newInstance(gerencias.getList()).getEntityList());
 		return gerencias;
+	}
+	
+	public List<Gerencia> getSelectList(GerenciaFilter filter) throws Exception{
+		PagedList<Gerencia> gerencias = GerenciaDao.getInstance()
+				.getList(GerenciaExampleBuilder.newInstance(filter).exampleSelectList());
+		return GerenciaBuilder.newInstance(gerencias.getList()).getEntityList();
 	}
 	
 	public Gerencia getById(int id) throws Exception {
