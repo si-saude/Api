@@ -1,6 +1,7 @@
 package br.com.saude.api.model.persistence;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
@@ -32,16 +33,39 @@ public class GerenciaDao extends GenericDao<Gerencia> {
 		if(filter.getCodigoCompleto() != null) {
 			String[] gerencias = filter.getCodigoCompleto().split("/");
 			
-			Criteria gerenciaCriteria = criteria;
+			criteria.createAlias("gerencia", "gerencia1", JoinType.LEFT_OUTER_JOIN);
+			criteria.createAlias("gerencia1.gerencia", "gerencia2", JoinType.LEFT_OUTER_JOIN);
+			criteria.createAlias("gerencia2.gerencia", "gerencia3", JoinType.LEFT_OUTER_JOIN);
 			
-			for(int i = 3; i>= 0; i--) {
-				if(i<3)
-					gerenciaCriteria = gerenciaCriteria.createCriteria("gerencia", JoinType.LEFT_OUTER_JOIN);
-				if(gerencias.length > i)
-					gerenciaCriteria.add(Restrictions.ilike("codigo", Helper.filterLike(gerencias[i])));
+			Criterion or = null;
+			int i = 0;
+			for(int x = gerencias.length - 1; x <= 3; x++) {
+				Criterion and = null;
+				for(int y = i; y < gerencias.length + i; y++) {
+					if(and == null) {
+						and = Restrictions.ilike(checarCondicao("gerencia"+y),gerencias[x-y]);
+					}else {
+						and = Restrictions.and(and, Restrictions.ilike(checarCondicao("gerencia"+y),Helper.filterLike(gerencias[x-y])));
+					}
+				}
+				
+				if(or == null) {
+					or = and;
+				}else {
+					or = Restrictions.or(or, and);
+				}
+				i++;
 			}
+			
+			criteria.add(or);
 		}
 		
 		return criteria;
+	}
+	
+	private String checarCondicao(String condicao) {
+		if(condicao.contains("0"))
+			return "codigo";
+		return condicao+".codigo";
 	}
 }

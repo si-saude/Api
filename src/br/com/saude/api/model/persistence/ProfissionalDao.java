@@ -60,9 +60,9 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 				Criterion and = null;
 				for(int y = i; y < gerencias.length + i; y++) {
 					if(and == null) {
-						and = Restrictions.ilike("gerencia"+y,gerencias[x-y]);
+						and = Restrictions.ilike("gerencia"+y+".codigo",gerencias[x-y]);
 					}else {
-						and = Restrictions.and(and, Restrictions.ilike("gerencia"+y,Helper.filterLike(gerencias[x-y])));
+						and = Restrictions.and(and, Restrictions.ilike("gerencia"+y+".codigo",Helper.filterLike(gerencias[x-y])));
 					}
 				}
 				

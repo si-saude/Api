@@ -1,32 +1,25 @@
 package br.com.saude.api.generic;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 import javax.persistence.Persistence;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
 public class HibernateHelper {
 	
-	private static EntityManager entityManager;
-	private static EntityManagerFactory entityManagerFactory;
+	private static SessionFactory sessionFactory;
 	
-	private static EntityManagerFactory getEntityManagerFactory() {
-		if(entityManagerFactory == null)
+	private static SessionFactory getSessionFactory() {
+		if(sessionFactory == null)
 			try {
-				entityManagerFactory = Persistence.createEntityManagerFactory("hibernate");
+				sessionFactory = (SessionFactory)Persistence.createEntityManagerFactory("hibernate");
 			}catch (Throwable ex) {
 				throw new ExceptionInInitializerError(ex);
 			}
-		return entityManagerFactory;
-	}
-	
-	private static EntityManager getEntityManager() {
-		if(entityManager == null || !entityManager.isOpen())
-				entityManager = getEntityManagerFactory().createEntityManager();
-		return entityManager;
+		return sessionFactory;
 	}
 	
 	public static Session getSession() {
-		return getEntityManager().unwrap(Session.class);
+		return getSessionFactory().openSession();
 	}
 }
