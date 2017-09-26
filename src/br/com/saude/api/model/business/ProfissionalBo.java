@@ -23,7 +23,7 @@ public class ProfissionalBo {
 	
 	public PagedList<Profissional> getList(ProfissionalFilter filter) throws Exception{
 		PagedList<Profissional> profissionais = ProfissionalDao.getInstance()
-				.getListLoadEquipeLocalizacao(ProfissionalExampleBuilder
+				.getListLoadEquipeLocalizacaoGerenciaFuncao(ProfissionalExampleBuilder
 												.newInstance(filter).example());
 		profissionais.setList(ProfissionalBuilder.newInstance(profissionais.getList())
 									.loadEquipe().loadLocalizacao().getEntityList());
@@ -33,7 +33,7 @@ public class ProfissionalBo {
 	public Profissional getById(int id) throws Exception {
 		Profissional profissional = ProfissionalDao.getInstance().getByIdLoadAll(id);
 		return ProfissionalBuilder.newInstance(profissional)
-				.loadEnderecos().loadEquipe().loadLocalizacao().loadTelefones().getEntity();
+				.loadFuncao().loadEnderecos().loadEquipe().loadLocalizacao().loadTelefones().getEntity();
 	}
 	
 	public Profissional save(Profissional profissional) throws Exception {

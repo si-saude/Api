@@ -4,17 +4,17 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Funcao {
+public class Funcionalidade {
 	
-	private static Funcao instance;
+	private static Funcionalidade instance;
 	
-	private Funcao() {
+	private Funcionalidade() {
 		
 	}
 	
-	public static Funcao getInstance() {
+	public static Funcionalidade getInstance() {
 		if(instance==null)
-			instance = new Funcao();
+			instance = new Funcionalidade();
 		return instance;
 	}
 	

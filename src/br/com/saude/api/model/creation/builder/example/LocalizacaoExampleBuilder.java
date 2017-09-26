@@ -5,6 +5,7 @@ import br.com.saude.api.model.entity.po.Localizacao;
 import java.util.ArrayList;
 
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
@@ -20,6 +21,11 @@ public class LocalizacaoExampleBuilder extends GenericExampleBuilder<Localizacao
 		super(filter);
 	}
 	
+	private void addNeId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.ne("id", (int)this.filter.getId()));
+	}
+	
 	private void addNome() {
 		if(this.filter.getNome()!=null)
 			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
@@ -29,11 +35,27 @@ public class LocalizacaoExampleBuilder extends GenericExampleBuilder<Localizacao
 	public LocalizacaoExampleBuilder example() {
 		return (LocalizacaoExampleBuilder) super.example();
 	}
+	
+	public LocalizacaoExampleBuilder exampleSelectList() {
+		if(this.filter!=null) {
+			createExampleSelectList();
+			this.criterions.add(getExample());
+		}
+		return this;
+	}
 
 	@Override
 	protected void createExample() {
 		this.criterions = new ArrayList<Criterion>();
 		this.entity = new Localizacao();
 		addNome();
+	}
+	
+	private void createExampleSelectList() {
+		this.criterions = new ArrayList<Criterion>();
+		this.entity = new Localizacao();
+		addNeId();
+		this.filter.setPageNumber(1);
+		this.filter.setPageSize(Integer.MAX_VALUE);
 	}
 }

@@ -88,6 +88,22 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("localizacao", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
+	
+	private void addGerencia() {
+		if(this.filter.getGerencia()!=null) {
+			CriteriaExample criteriaExample = GerenciaExampleBuilder
+					.newInstance(this.filter.getGerencia()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("gerencia", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addFuncao() {
+		if(this.filter.getFuncao()!=null) {
+			CriteriaExample criteriaExample = FuncaoExampleBuilder
+					.newInstance(this.filter.getFuncao()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("funcao", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
 
 	@Override
 	public ProfissionalExampleBuilder example() {
@@ -107,5 +123,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		addRamal();
 		addEquipe();
 		addLocalizacao();
+		addGerencia();
+		addFuncao();
 	}
 }
