@@ -38,15 +38,15 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	}
 	
 	public PagedList<Profissional> 
-		getListLoadEquipeLocalizacao(ProfissionalExampleBuilder exampleBuilder) throws Exception{
-		return this.getList(exampleBuilder, "loadEquipeLocalizacao");
+		getListLoadEquipeLocalizacaoGerencia(ProfissionalExampleBuilder exampleBuilder) throws Exception{
+		return this.getList(exampleBuilder, "loadEquipeLocalizacaoGerencia");
 	}
 	
 	@Override
 	protected Criteria finishCriteria(Criteria criteria, GenericExampleBuilder<?, ?> profissionalExampleBuilder) {
 		ProfissionalFilter filter = (ProfissionalFilter)profissionalExampleBuilder.getFilter();
 		
-		if(filter.getGerencia().getCodigoCompleto() != null) {
+		if(filter.getGerencia() != null && filter.getGerencia().getCodigoCompleto() != null) {
 			String[] gerencias = filter.getGerencia().getCodigoCompleto().split("/");
 			
 			criteria.createAlias("gerencia", "gerencia0", JoinType.LEFT_OUTER_JOIN);
