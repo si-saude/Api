@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.util.List;
+
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.LocalizacaoBuilder;
 import br.com.saude.api.model.creation.builder.example.LocalizacaoExampleBuilder;
@@ -27,6 +29,12 @@ public class LocalizacaoBo {
 		localizacoes
 			.setList(LocalizacaoBuilder.newInstance(localizacoes.getList()).getEntityList());
 		return localizacoes;
+	}
+	
+	public List<Localizacao> getSelectList(LocalizacaoFilter filter) throws Exception{
+		PagedList<Localizacao> localizacoes = LocalizacaoDao.getInstance()
+				.getList(LocalizacaoExampleBuilder.newInstance(filter).exampleSelectList());
+		return LocalizacaoBuilder.newInstance(localizacoes.getList()).getEntityList();
 	}
 	
 	public Localizacao getById(int id) throws Exception {

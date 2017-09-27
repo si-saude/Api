@@ -10,45 +10,45 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.com.saude.api.generic.CustomValidator;
-import br.com.saude.api.model.business.EquipeBo;
-import br.com.saude.api.model.business.validate.EquipeValidator;
-import br.com.saude.api.model.entity.filter.EquipeFilter;
-import br.com.saude.api.model.entity.po.Equipe;
+import br.com.saude.api.model.business.FuncaoBo;
+import br.com.saude.api.model.business.validate.FuncaoValidator;
+import br.com.saude.api.model.entity.filter.FuncaoFilter;
+import br.com.saude.api.model.entity.po.Funcao;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("equipe")
+@Path("funcao")
 @RequestInterceptor
-public class EquipeService {
+public class FuncaoService {
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(EquipeFilter filter) throws Exception {
-		return Response.ok(EquipeBo.getInstance().getList(filter).getGenericPagedList()).build();
+	public Response getList(FuncaoFilter filter) throws Exception {
+		return Response.ok(FuncaoBo.getInstance().getList(filter).getGenericPagedList()).build();
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(EquipeFilter filter) throws Exception {
-		return Response.ok(EquipeBo.getInstance().getSelectList(filter)).build();
+	public Response getSelectList(FuncaoFilter filter) throws Exception {
+		return Response.ok(FuncaoBo.getInstance().getSelectList(filter)).build();
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("id") int id) throws Exception{
-		return Response.ok(EquipeBo.getInstance().getById(id)).build();
+		return Response.ok(FuncaoBo.getInstance().getById(id)).build();
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=EquipeValidator.class, entityClass=Equipe.class)
-	public Response save(Equipe equipe) {
+	@CustomValidator(validatorClass=FuncaoValidator.class, entityClass=Funcao.class)
+	public Response save(Funcao funcao) {
 		try {
-			EquipeBo.getInstance().save(equipe);
+			FuncaoBo.getInstance().save(funcao);
 			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -60,7 +60,7 @@ public class EquipeService {
 	@Path("/delete")
 	public Response delete(int id) {
 		try {
-			EquipeBo.getInstance().delete(id);
+			FuncaoBo.getInstance().delete(id);
 			return Response.ok("Removido com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();

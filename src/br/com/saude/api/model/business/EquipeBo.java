@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.util.List;
+
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.EquipeBuilder;
 import br.com.saude.api.model.creation.builder.example.EquipeExampleBuilder;
@@ -26,6 +28,12 @@ public class EquipeBo {
 				.getList(EquipeExampleBuilder.newInstance(filter).example());
 		equipes.setList(EquipeBuilder.newInstance(equipes.getList()).getEntityList());
 		return equipes;
+	}
+	
+	public List<Equipe> getSelectList(EquipeFilter filter) throws Exception{
+		PagedList<Equipe> equipes = EquipeDao.getInstance()
+				.getList(EquipeExampleBuilder.newInstance(filter).exampleSelectList());
+		return EquipeBuilder.newInstance(equipes.getList()).getEntityList();
 	}
 	
 	public Equipe getById(int id) throws Exception {

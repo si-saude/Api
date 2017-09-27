@@ -12,6 +12,7 @@ public class ProfissionalFilter extends GenericFilter {
 	private LocalizacaoFilter localizacao;
 	private EquipeFilter equipe;
 	private GerenciaFilter gerencia;
+	private FuncaoFilter funcao;
 	private String mi;
 	public String getNome() {
 		return nome;
@@ -66,5 +67,11 @@ public class ProfissionalFilter extends GenericFilter {
 	}
 	public void setGerencia(GerenciaFilter gerencia) {
 		this.gerencia = gerencia;
+	}
+	public FuncaoFilter getFuncao() {
+		return funcao;
+	}
+	public void setFuncao(FuncaoFilter funcao) {
+		this.funcao = funcao;
 	}
 }
