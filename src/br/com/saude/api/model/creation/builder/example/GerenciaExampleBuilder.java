@@ -22,7 +22,7 @@ public class GerenciaExampleBuilder extends GenericExampleBuilder<Gerencia,Geren
 	
 	private void addNeId() {
 		if(this.filter.getId() > 0)
-			this.criterions.add(Restrictions.ne("id", this.filter.getId()));
+			this.criterions.add(Restrictions.ne("id", (int)this.filter.getId()));
 	}
 	
 	private void addCodigo() {

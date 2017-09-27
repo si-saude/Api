@@ -75,13 +75,13 @@ public class Gerencia {
 	
 	public String getCodigoCompleto() {
 		if(this.codigoCompleto == null)
-			this.codigoCompleto = getCodigoCompleto(codigo);
+			this.codigoCompleto = getCodigoCompletoGerencia(codigo);
 		return this.codigoCompleto;
 	}
 	
-	private String getCodigoCompleto(String codigo) {
+	private String getCodigoCompletoGerencia(String codigo) {
 		if(this.gerencia!=null)
-			return this.gerencia.getCodigoCompleto(this.gerencia.codigo+"/"+codigo);
+			return this.gerencia.getCodigoCompletoGerencia(this.gerencia.codigo+"/"+codigo);
 		return codigo;
 	}
 }
