@@ -26,14 +26,14 @@ public class ProfissionalBo {
 				.getListLoadEquipeLocalizacaoGerenciaFuncao(ProfissionalExampleBuilder
 												.newInstance(filter).example());
 		profissionais.setList(ProfissionalBuilder.newInstance(profissionais.getList())
-									.loadEquipe().loadLocalizacao().getEntityList());
+									.loadEquipe().loadLocalizacao().loadGerencia().loadFuncao().getEntityList());
 		return profissionais;
 	}
 	
 	public Profissional getById(int id) throws Exception {
 		Profissional profissional = ProfissionalDao.getInstance().getByIdLoadAll(id);
 		return ProfissionalBuilder.newInstance(profissional)
-				.loadFuncao().loadEnderecos().loadEquipe().loadLocalizacao().loadTelefones().getEntity();
+				.loadFuncao().loadEndereco().loadEquipe().loadLocalizacao().loadTelefones().getEntity();
 	}
 	
 	public Profissional save(Profissional profissional) throws Exception {

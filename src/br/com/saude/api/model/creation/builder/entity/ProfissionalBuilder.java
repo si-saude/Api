@@ -128,23 +128,23 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		return destino;
 	}
 	
-	public ProfissionalBuilder loadEnderecos() {
+	public ProfissionalBuilder loadEndereco() {
 		if(this.entity != null) {
-			this.entity = loadEnderecos(this.entity,this.newEntity);
+			this.entity = loadEndereco(this.entity,this.newEntity);
 		}else {
 			for(Profissional profissional:this.entityList) {
 				Profissional newProfissional = this.newEntityList.stream()
 						.filter(e->e.getId() == profissional.getId())
 						.iterator().next();
-				newProfissional = loadEnderecos(profissional,newProfissional);
+				newProfissional = loadEndereco(profissional,newProfissional);
 			}
 		}
 		return this;
 	}
 	
-	private Profissional loadEnderecos(Profissional origem,Profissional destino) {
-		if(origem.getEnderecos() != null) {
-			destino.setEnderecos(EnderecoBuilder.newInstance(origem.getEnderecos()).getEntityList());
+	private Profissional loadEndereco(Profissional origem,Profissional destino) {
+		if(origem.getEndereco() != null) {
+			destino.setEndereco(EnderecoBuilder.newInstance(origem.getEndereco()).getEntity());
 		}
 		return destino;
 	}

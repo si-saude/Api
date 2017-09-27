@@ -30,10 +30,30 @@ public class FuncaoBuilder extends GenericEntityBuilder<Funcao,FuncaoFilter> {
 		
 		newFuncao.setId(funcao.getId());
 		newFuncao.setNome(funcao.getNome());
-		newFuncao.setCursosObrigatorios(funcao.getCursosObrigatorios());
 		newFuncao.setVersion(funcao.getVersion());
 		
 		return newFuncao;
+	}
+	
+	public FuncaoBuilder loadCursos() {
+		if(this.entity != null) {
+			this.entity = loadCursos(this.entity,this.newEntity);
+		}else {
+			for(Funcao funcao:this.entityList) {
+				Funcao newFuncao = this.newEntityList.stream()
+						.filter(e->e.getId() == funcao.getId())
+						.iterator().next();
+				newFuncao = loadCursos(funcao,newFuncao);
+			}
+		}
+		return this;
+	}
+	
+	private Funcao loadCursos(Funcao origem,Funcao destino) {
+		if(origem.getCursos() != null) {
+			destino.setCursos(CursoBuilder.newInstance(origem.getCursos()).getEntityList());
+		}
+		return destino;
 	}
 
 	@Override

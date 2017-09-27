@@ -21,6 +21,7 @@ public class PerfilValidator extends GenericValidator{
 		if(perfilViolation.size() > 0)
 			throw new Exception(perfilViolation.iterator().next().getMessage());
 		
-		new PermissaoValidator().validate(perfil.getPermissoes());
+		if(perfil.getPermissoes() != null)
+			new PermissaoValidator().validate(perfil.getPermissoes());
 	}
 }

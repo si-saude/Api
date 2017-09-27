@@ -9,9 +9,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -55,12 +57,14 @@ public class Profissional {
 	private String mi;
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinTable(name="telefone_profissional")
+	@JoinTable(name="telefone_profissional", 
+				joinColumns = {@JoinColumn(name="profissional_id")}, 
+				inverseJoinColumns = {@JoinColumn(name="telefone_id")})
 	private List<Telefone> telefones;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinTable(name="endereco_profissional")
-	private List<Endereco> enderecos;
+	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	@JoinColumn(name = "endereco_id")
+	private Endereco endereco;
 	
 	@Version
 	private long version;
@@ -145,12 +149,12 @@ public class Profissional {
 		this.telefones = telefones;
 	}
 
-	public List<Endereco> getEnderecos() {
-		return enderecos;
+	public Endereco getEndereco() {
+		return endereco;
 	}
 
-	public void setEnderecos(List<Endereco> enderecos) {
-		this.enderecos = enderecos;
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
 	}
 
 	public long getVersion() {

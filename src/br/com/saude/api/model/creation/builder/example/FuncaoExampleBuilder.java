@@ -33,11 +33,6 @@ public class FuncaoExampleBuilder extends GenericExampleBuilder<Funcao,FuncaoFil
 			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
 	}
 	
-	private void addCursosObrigatorios() {
-		if(this.filter.getCursosObrigatorios() != null)
-			this.entity.setCursosObrigatorios(Helper.filterLike(this.filter.getCursosObrigatorios()));
-	}
-	
 	@Override
 	public FuncaoExampleBuilder example() {
 		return (FuncaoExampleBuilder)super.example();
@@ -57,7 +52,6 @@ public class FuncaoExampleBuilder extends GenericExampleBuilder<Funcao,FuncaoFil
 		this.criterias = new ArrayList<Triplet<String,CriteriaExample,JoinType>>();
 		this.entity = new Funcao();
 		addNome();
-		addCursosObrigatorios();
 	}
 	
 	private void createExampleSelectList() {

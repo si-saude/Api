@@ -1,13 +1,10 @@
 package br.com.saude.api.model.entity.po;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -35,11 +32,9 @@ public class Endereco {
 	@Size(max = 9, message="Tamanho máximo para Cep do Endereço: 9")
 	private String cep;
 	
+	@NotNull(message="É necessário informar a Cidade do Endereço.")
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Cidade cidade;
-	
-	@ManyToMany(fetch=FetchType.LAZY, mappedBy="enderecos")
-	private List<Profissional> profissionais;
 	
 	@Version
 	private long version;
@@ -106,14 +101,5 @@ public class Endereco {
 
 	public void setVersion(long version) {
 		this.version = version;
-	}
-
-	public List<Profissional> getProfissionais() {
-		return profissionais;
-	}
-
-	public void setProfissionais(List<Profissional> profissionais) {
-		this.profissionais = profissionais;
-	}
-	
+	}	
 }

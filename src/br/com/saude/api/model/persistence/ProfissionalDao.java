@@ -1,7 +1,5 @@
 package br.com.saude.api.model.persistence;
 
-import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -15,7 +13,6 @@ import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.example.ProfissionalExampleBuilder;
 import br.com.saude.api.model.entity.filter.ProfissionalFilter;
-import br.com.saude.api.model.entity.po.Endereco;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.Telefone;
 
@@ -91,7 +88,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	@SuppressWarnings("unused")
 	private Profissional loadAll(Profissional profissional) {
 		profissional = loadTelefones(profissional);
-		profissional = loadEnderecos(profissional);
+		profissional = loadEndereco(profissional);
 		profissional = loadEquipe(profissional);
 		profissional = loadLocalizacao(profissional);
 		profissional = loadGerencia(profissional);
@@ -105,9 +102,9 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		return profissional;
 	}
 	
-	private Profissional loadEnderecos(Profissional profissional) {
-		if(profissional.getEnderecos()!=null)
-			Hibernate.initialize(profissional.getEnderecos());
+	private Profissional loadEndereco(Profissional profissional) {
+		if(profissional.getEndereco()!=null)
+			Hibernate.initialize(profissional.getEndereco());
 		return profissional;
 	}
 	
@@ -137,23 +134,14 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	
 	@Override
 	public Profissional save(Profissional profissional) throws Exception {
-		return super.save(profissional,"deleteList");
+		return super.save(profissional,"beforeCommitSave");
 	}
 	
-	@SuppressWarnings({ "deprecation", "unchecked", "unused" })
-	private Profissional deleteList(Profissional profissional, Session session) {
-		
-		List<Endereco> enderecos = (List<Endereco>)session.createCriteria(Endereco.class)
-				.add(Restrictions.eq("profissionais",profissional)).list();
-		if(profissional.getEnderecos()!=null)
-			enderecos.removeIf(x->profissional.getEnderecos().stream().filter(y->y.getId() == x.getId()).count() > 0);
-		enderecos.forEach(e-> session.delete(e));
-		
-		List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
-				.add(Restrictions.eq("profissionais",profissional)).list();
-		if(profissional.getTelefones()!=null)
-			telefones.removeIf(x->profissional.getTelefones().stream().filter(y->y.getId() == x.getId()).count() > 0);
-		telefones.forEach(t-> session.delete(t));
+	@SuppressWarnings({"unused" })
+	private Profissional beforeCommitSave(Profissional profissional, Session session) {		
+		if(profissional.getTelefones() != null)
+			for(int i=0; i < profissional.getTelefones().size(); i++)
+				profissional.getTelefones().set(i, session.get(Telefone.class, profissional.getTelefones().get(i).getId()));
 		
 		return profissional;
 	}

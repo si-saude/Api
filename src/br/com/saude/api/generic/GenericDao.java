@@ -31,15 +31,14 @@ public abstract class GenericDao<T> {
 	
 	@SuppressWarnings("unchecked")
 	protected T save(T entity, String beforeSessionCloseMethodName) throws Exception {
-		T entityReturn = null;
 		Session session = HibernateHelper.getSession();
 		
 		try {
 			Transaction transaction = session.beginTransaction();
-			entityReturn = (T)session.merge(entity);
 			
 			if(beforeSessionCloseMethodName != null)
-				entityReturn = (T)invokeMethod(new Object[]{entity,session}, beforeSessionCloseMethodName, new Class[] {this.entityType,Session.class});
+				entity = (T)invokeMethod(new Object[]{entity,session}, beforeSessionCloseMethodName, new Class[] {this.entityType,Session.class});
+			entity = (T)session.merge(entity);
 			
 			transaction.commit();
 		}catch(Exception ex) {
@@ -48,7 +47,7 @@ public abstract class GenericDao<T> {
 			session.close();
 		}
 		
-		return entityReturn;
+		return entity;
 	}
 	
 	private long getCount(Session session, GenericExampleBuilder<?,?> exampleBuilder) {

@@ -21,8 +21,11 @@ public class ProfissionalValidator extends GenericValidator {
 		if(profissionalViolation.size() > 0)
 			throw new Exception(profissionalViolation.iterator().next().getMessage());
 		
-		new TelefoneValidator().validate(profissional.getTelefones());
-		new EnderecoValidator().validate(profissional.getEnderecos());
+		if(profissional.getTelefones() != null)
+			new TelefoneValidator().validate(profissional.getTelefones());
+		
+		if(profissional.getEndereco() != null)
+			new EnderecoValidator().validate(profissional.getEndereco());
 	}
 
 }
