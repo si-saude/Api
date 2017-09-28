@@ -58,31 +58,6 @@ public class PerfilBuilder extends GenericEntityBuilder<Perfil,PerfilFilter> {
 		}
 		return destino;
 	}
-	
-	public PerfilBuilder loadPermissoesSetPerfil() {
-		if(this.entity != null) {
-			this.newEntity = loadPermissoesSetPerfil(this.entity,this.newEntity);
-		}else {
-			for(Perfil perfil:this.entityList){
-				Perfil newPerfil = this.newEntityList.stream()
-						.filter(p->p.getId() == perfil.getId())
-						.iterator().next();
-				newPerfil = loadPermissoesSetPerfil(perfil,newPerfil);
-			}
-		}
-		
-		return this;
-	}
-	
-	private Perfil loadPermissoesSetPerfil(Perfil origem, Perfil destino) {
-		if(origem.getPermissoes() != null) {
-			destino.setPermissoes(PermissaoBuilder
-										.newInstance(origem.getPermissoes())
-										.loadPerfil(destino)
-										.getEntityList());	
-		}
-		return destino;
-	}
 
 	@Override
 	public Perfil cloneFromFilter(PerfilFilter filter) {

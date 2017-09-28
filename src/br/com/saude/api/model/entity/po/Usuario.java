@@ -2,6 +2,7 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,8 +31,10 @@ public class Usuario {
 	@NotNull(message="É necessário informar a Senha do Usuário.")
 	private String senha;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(name="usuario_perfil", inverseJoinColumns = {@JoinColumn(name="perfil_id")})
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="usuario_perfil", 
+	joinColumns = {@JoinColumn(name="usuario_id")}, 
+	inverseJoinColumns = {@JoinColumn(name="perfil_id")})
 	private List<Perfil> perfis;
 	
 	@Transient

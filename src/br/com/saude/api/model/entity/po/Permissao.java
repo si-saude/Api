@@ -17,7 +17,7 @@ public class Permissao {
 	private long id;
 	
 	@Size(max = 100)
-	private String funcao;
+	private String funcionalidade;
 	
 	private boolean leitura;
 	
@@ -37,12 +37,6 @@ public class Permissao {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getFuncao() {
-		return funcao;
-	}
-	public void setFuncao(String funcao) {
-		this.funcao = funcao;
-	}
 	public boolean isLeitura() {
 		return leitura;
 	}
@@ -55,16 +49,22 @@ public class Permissao {
 	public void setEscrita(boolean escrita) {
 		this.escrita = escrita;
 	}
-	public Perfil getPerfil() {
-		return perfil;
-	}
-	public void setPerfil(Perfil perfil) {
-		this.perfil = perfil;
-	}
 	public long getVersion() {
 		return version;
 	}
 	public void setVersion(long version) {
 		this.version = version;
+	}
+	public String getFuncionalidade() {
+		return funcionalidade;
+	}
+	public void setFuncionalidade(String funcionalidade) {
+		this.funcionalidade = funcionalidade;
+	}
+	public Perfil getPerfil() {
+		return perfil;
+	}
+	public void setPerfil(Perfil perfil) {
+		this.perfil = perfil;
 	}
 }

@@ -36,17 +36,11 @@ public class PerfilBo {
 	}
 	
 	public Perfil getById(int id) throws Exception {
-		Perfil perfil = PerfilDao.getInstance().getById(id);
+		Perfil perfil = PerfilDao.getInstance().getByIdLoadPermissoes(id);
 		return PerfilBuilder.newInstance(perfil).getEntity();
 	}
 	
-	public Perfil getByIdLoadPermissoes(int id) throws Exception {
-		Perfil perfil = PerfilDao.getInstance().getByIdLoadPermissoes(id);
-		return PerfilBuilder.newInstance(perfil).loadPermissoes().getEntity();
-	}
-	
 	public Perfil save(Perfil perfil) throws Exception {
-		perfil = PerfilBuilder.newInstance(perfil).loadPermissoesSetPerfil().getEntity();
 		perfil = PerfilDao.getInstance().save(perfil);
 		return PerfilBuilder.newInstance(perfil).getEntity();
 	}

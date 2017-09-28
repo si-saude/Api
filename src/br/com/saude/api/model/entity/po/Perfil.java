@@ -25,7 +25,7 @@ public class Perfil {
 	@Column(unique=true)
 	private String titulo;
 	
-	@OneToMany(mappedBy="perfil", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="perfil", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Permissao> permissoes;
 	
 	@Version
