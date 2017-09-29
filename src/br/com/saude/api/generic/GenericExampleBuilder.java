@@ -27,7 +27,7 @@ public abstract class GenericExampleBuilder<T,F> {
 	protected abstract void createExample();
 	
 	protected Example getExample() {
-		return Example.create(this.entity).enableLike().ignoreCase();
+		return Example.create(this.entity).enableLike().ignoreCase().excludeZeroes();
 	}
 
 	public List<Criterion> getCriterions() {
