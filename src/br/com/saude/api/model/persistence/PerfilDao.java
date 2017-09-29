@@ -44,6 +44,7 @@ public class PerfilDao extends GenericDao<Perfil> {
 	
 	@SuppressWarnings({ "unused"})
 	private Perfil beforeCommitSave(Perfil perfil, Session session) {
+		//SETA O PERFIL NAS PERMISSÕES
 		perfil.getPermissoes().forEach(p-> p.setPerfil(perfil));
 		return perfil;
 	}

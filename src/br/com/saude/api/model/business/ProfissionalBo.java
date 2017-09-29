@@ -26,7 +26,7 @@ public class ProfissionalBo {
 				.getListLoadEquipeLocalizacaoGerenciaFuncao(ProfissionalExampleBuilder
 												.newInstance(filter).example());
 		profissionais.setList(ProfissionalBuilder.newInstance(profissionais.getList())
-									.loadEquipe().loadLocalizacao().loadGerencia().loadFuncao().getEntityList());
+									.loadEquipe().loadLocalizacao().loadFuncao().getEntityList());
 		return profissionais;
 	}
 	

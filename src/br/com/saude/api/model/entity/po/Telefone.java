@@ -59,4 +59,9 @@ public class Telefone {
 	public void setProfissionais(List<Profissional> profissionais) {
 		this.profissionais = profissionais;
 	}
+	
+	@Override
+	public boolean equals(Object telefone) {
+		return ((Telefone)telefone).id == this.id && this.id > 0;
+	}
 }

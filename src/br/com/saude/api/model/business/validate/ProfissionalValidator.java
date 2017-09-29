@@ -26,6 +26,9 @@ public class ProfissionalValidator extends GenericValidator {
 		
 		if(profissional.getEndereco() != null)
 			new EnderecoValidator().validate(profissional.getEndereco());
+		
+		if(profissional.getCurriculo() != null)
+			new CurriculoValidator().validate(profissional.getCurriculo());
 	}
 
 }

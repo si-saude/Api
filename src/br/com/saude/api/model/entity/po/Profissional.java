@@ -46,10 +46,6 @@ public class Profissional {
 	private Equipe equipe;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@NotNull(message="É necessário informar a Gerência do Profissional.")
-	private Gerencia gerencia;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
 	@NotNull(message="É necessário informar a Função do Profissional.")
 	private Funcao funcao;
 	
@@ -65,6 +61,9 @@ public class Profissional {
 	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	@JoinColumn(name = "endereco_id")
 	private Endereco endereco;
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private Curriculo curriculo;
 	
 	@Version
 	private long version;
@@ -165,20 +164,20 @@ public class Profissional {
 		this.version = version;
 	}
 
-	public Gerencia getGerencia() {
-		return gerencia;
-	}
-
-	public void setGerencia(Gerencia gerencia) {
-		this.gerencia = gerencia;
-	}
-
 	public Funcao getFuncao() {
 		return funcao;
 	}
 
 	public void setFuncao(Funcao funcao) {
 		this.funcao = funcao;
+	}
+
+	public Curriculo getCurriculo() {
+		return curriculo;
+	}
+
+	public void setCurriculo(Curriculo curriculo) {
+		this.curriculo = curriculo;
 	}
 	
 }

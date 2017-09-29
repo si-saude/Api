@@ -46,6 +46,7 @@ public class UsuarioDao extends GenericDao<Usuario> {
 	
 	@SuppressWarnings({ "unused" })
 	private Usuario beforeCommitSave(Usuario usuario, Session session) {
+		//CARREGA OS PERFIS SELECIONADOS PARA QUE O HIBERNATE SALVE
 		if(usuario.getPerfis()!=null)
 			for(int i=0; i < usuario.getPerfis().size(); i++)
 				usuario.getPerfis().set(i, session.get(Perfil.class, usuario.getPerfis().get(i).getId()));
