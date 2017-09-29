@@ -37,8 +37,8 @@ public class FuncaoBo {
 	}
 	
 	public Funcao getById(int id) throws Exception {
-		Funcao funcao = FuncaoDao.getInstance().getById(id);
-		return FuncaoBuilder.newInstance(funcao).getEntity();
+		Funcao funcao = FuncaoDao.getInstance().getByIdLoadCursos(id);
+		return FuncaoBuilder.newInstance(funcao).loadCursos().getEntity();
 	}
 	
 	public Funcao save(Funcao funcao) throws Exception {
