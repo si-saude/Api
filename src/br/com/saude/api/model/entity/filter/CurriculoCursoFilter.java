@@ -1,12 +1,13 @@
 package br.com.saude.api.model.entity.filter;
 
+import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class CurriculoCursoFilter extends GenericFilter {
 	
 	private CurriculoFilter curriculo;
 	private CursoFilter curso;
-	private int validade;
+	private DateFilter data;
 	public CurriculoFilter getCurriculo() {
 		return curriculo;
 	}
@@ -19,10 +20,10 @@ public class CurriculoCursoFilter extends GenericFilter {
 	public void setCurso(CursoFilter curso) {
 		this.curso = curso;
 	}
-	public int getValidade() {
-		return validade;
+	public DateFilter getData() {
+		return data;
 	}
-	public void setValidade(int validade) {
-		this.validade = validade;
+	public void setData(DateFilter data) {
+		this.data = data;
 	}
 }

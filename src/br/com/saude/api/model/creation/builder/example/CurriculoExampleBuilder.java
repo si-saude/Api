@@ -51,5 +51,4 @@ public class CurriculoExampleBuilder extends GenericExampleBuilder<Curriculo,Cur
 		addFormacao();
 		addAtuacao();
 	}
-
 }

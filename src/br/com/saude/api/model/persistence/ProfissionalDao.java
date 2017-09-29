@@ -32,7 +32,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	}
 	
 	public PagedList<Profissional> 
-		getListLoadEquipeLocalizacaoGerenciaFuncao(ProfissionalExampleBuilder exampleBuilder) throws Exception{
+		getListLoadEquipeLocalizacaoFuncao(ProfissionalExampleBuilder exampleBuilder) throws Exception{
 		return this.getList(exampleBuilder, "loadEquipeLocalizacaoFuncao");
 	}
 	
@@ -51,6 +51,8 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		profissional = loadEquipe(profissional);
 		profissional = loadLocalizacao(profissional);
 		profissional = loadFuncao(profissional);
+		profissional = loadCurriculo(profissional);
+		profissional = loadProfissionalConselho(profissional);
 		return profissional;
 	}
 	
@@ -63,6 +65,18 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	private Profissional loadEndereco(Profissional profissional) {
 		if(profissional.getEndereco()!=null)
 			Hibernate.initialize(profissional.getEndereco());
+		return profissional;
+	}
+	
+	private Profissional loadCurriculo(Profissional profissional) {
+		if(profissional.getCurriculo()!=null)
+			Hibernate.initialize(profissional.getCurriculo());
+		return profissional;
+	}
+	
+	private Profissional loadProfissionalConselho(Profissional profissional) {
+		if(profissional.getProfissionalConselho()!=null)
+			Hibernate.initialize(profissional.getProfissionalConselho());
 		return profissional;
 	}
 	

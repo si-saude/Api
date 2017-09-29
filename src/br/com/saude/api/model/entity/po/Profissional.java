@@ -65,6 +65,9 @@ public class Profissional {
 	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private Curriculo curriculo;
 	
+	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private ProfissionalConselho profissionalConselho;
+	
 	@Version
 	private long version;
 
@@ -178,6 +181,14 @@ public class Profissional {
 
 	public void setCurriculo(Curriculo curriculo) {
 		this.curriculo = curriculo;
+	}
+
+	public ProfissionalConselho getProfissionalConselho() {
+		return profissionalConselho;
+	}
+
+	public void setProfissionalConselho(ProfissionalConselho profissionalConselho) {
+		this.profissionalConselho = profissionalConselho;
 	}
 	
 }

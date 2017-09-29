@@ -24,5 +24,4 @@ public class CurriculoValidator extends GenericValidator {
 		if(curriculo.getCurriculoCursos() != null)
 			new CurriculoCursoValidator().validate(curriculo.getCurriculoCursos());
 	}
-
 }

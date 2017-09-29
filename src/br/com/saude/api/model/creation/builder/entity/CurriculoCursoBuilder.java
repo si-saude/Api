@@ -29,7 +29,7 @@ public class CurriculoCursoBuilder extends GenericEntityBuilder<CurriculoCurso,C
 		CurriculoCurso newCurriculoCurso = new CurriculoCurso();
 		
 		newCurriculoCurso.setId(curriculoCurso.getId());
-		newCurriculoCurso.setValidade(curriculoCurso.getValidade());
+		newCurriculoCurso.setData(curriculoCurso.getData());
 		newCurriculoCurso.setVersion(curriculoCurso.getVersion());
 		
 		return newCurriculoCurso;

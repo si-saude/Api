@@ -37,21 +37,21 @@ public class CurriculoBuilder extends GenericEntityBuilder<Curriculo,CurriculoFi
 		return newCurriculo;
 	}
 	
-	public CurriculoBuilder loadCurriculoCurso() {
+	public CurriculoBuilder loadCurriculoCursos() {
 		if(this.entity != null) {
-			this.newEntity = loadCurriculoCurso(this.entity,this.newEntity);
+			this.newEntity = loadCurriculoCursos(this.entity,this.newEntity);
 		}else {
 			for(Curriculo curriculo:this.entityList) {
 				Curriculo newCurriculo = this.newEntityList.stream()
 						.filter(e->e.getId() == curriculo.getId())
 						.iterator().next();
-				newCurriculo = loadCurriculoCurso(curriculo,newCurriculo);
+				newCurriculo = loadCurriculoCursos(curriculo,newCurriculo);
 			}
 		}
 		return this;
 	}
 	
-	private Curriculo loadCurriculoCurso(Curriculo origem,Curriculo destino) {
+	private Curriculo loadCurriculoCursos(Curriculo origem,Curriculo destino) {
 		if(origem.getCurriculoCursos() != null) {
 			destino.setCurriculoCursos(CurriculoCursoBuilder.newInstance(origem.getCurriculoCursos()).getEntityList());
 		}

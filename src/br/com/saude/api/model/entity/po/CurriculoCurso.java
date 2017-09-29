@@ -1,5 +1,7 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -7,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -25,8 +26,7 @@ public class CurriculoCurso {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Curso curso;
 	
-	@Min(value=0, message="Valor mínimo para Validade do Curso: 0")
-	private int validade;
+	private Date data;
 	
 	@Version
 	private long version;
@@ -55,19 +55,19 @@ public class CurriculoCurso {
 		this.curso = curso;
 	}
 
-	public int getValidade() {
-		return validade;
-	}
-
-	public void setValidade(int validade) {
-		this.validade = validade;
-	}
-
 	public long getVersion() {
 		return version;
 	}
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
 	}
 }

@@ -13,6 +13,7 @@ public class ProfissionalFilter extends GenericFilter {
 	private EquipeFilter equipe;
 	private FuncaoFilter funcao;
 	private CurriculoFilter curriculo;
+	private ProfissionalConselhoFilter profissionalConselho;
 	private String mi;
 	public String getNome() {
 		return nome;
@@ -74,5 +75,10 @@ public class ProfissionalFilter extends GenericFilter {
 	public void setCurriculo(CurriculoFilter curriculo) {
 		this.curriculo = curriculo;
 	}
-	
+	public ProfissionalConselhoFilter getProfissionalConselho() {
+		return profissionalConselho;
+	}
+	public void setProfissionalConselho(ProfissionalConselhoFilter profissionalConselho) {
+		this.profissionalConselho = profissionalConselho;
+	}
 }

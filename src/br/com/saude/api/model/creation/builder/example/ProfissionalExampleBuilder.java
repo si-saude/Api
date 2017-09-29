@@ -104,6 +104,14 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("curriculo", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
+	
+	private void addProfissionalConselho() {
+		if(this.filter.getProfissionalConselho()!=null) {
+			CriteriaExample criteriaExample = ProfissionalConselhoExampleBuilder
+					.newInstance(this.filter.getProfissionalConselho()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("profissionalConselho", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
 
 	@Override
 	public ProfissionalExampleBuilder example() {
@@ -125,5 +133,6 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		addLocalizacao();
 		addFuncao();
 		addCurriculo();
+		addProfissionalConselho();
 	}
 }
