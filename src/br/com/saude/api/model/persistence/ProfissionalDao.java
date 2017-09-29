@@ -47,6 +47,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	@SuppressWarnings("unused")
 	private Profissional loadAll(Profissional profissional) {
 		profissional = loadTelefones(profissional);
+		profissional = loadVacinas(profissional);
 		profissional = loadEndereco(profissional);
 		profissional = loadEquipe(profissional);
 		profissional = loadLocalizacao(profissional);
@@ -59,6 +60,12 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	private Profissional loadTelefones(Profissional profissional) {
 		if(profissional.getTelefones()!=null)
 			Hibernate.initialize(profissional.getTelefones());
+		return profissional;
+	}
+	
+	private Profissional loadVacinas(Profissional profissional) {
+		if(profissional.getVacinas()!=null)
+			Hibernate.initialize(profissional.getVacinas());
 		return profissional;
 	}
 	
