@@ -1,6 +1,7 @@
 package br.com.saude.api.model.entity.po;
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class Curso {
 	
 	@NotNull(message="É necessário informar o Nome do Curso.")
 	@Size(max = 120, message="Tamanho máximo para Nome do Curso: 120")
+	@Column(unique=true)
 	private String nome;
 	
 	@Size(max = 1024, message="Tamanho máximo para Descrição do Curso: 1024")
