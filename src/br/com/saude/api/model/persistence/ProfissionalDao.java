@@ -120,6 +120,9 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 			});
 		}
 		
+		//SETA O PROFISSIONAL NAS VACINAS
+		profissional.getVacinas().forEach(v->v.setProfissional(profissional));
+		
 		return profissional;
 	}
 }

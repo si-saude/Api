@@ -193,6 +193,30 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		}
 		return destino;
 	}
+	
+	public ProfissionalBuilder loadVacinas() {
+		if(this.entity != null) {
+			this.newEntity = loadVacinas(this.entity,this.newEntity);
+		}else {
+			for(Profissional profissional:this.entityList) {
+				Profissional newProfissional = this.newEntityList.stream()
+						.filter(e->e.getId() == profissional.getId())
+						.iterator().next();
+				newProfissional = loadVacinas(profissional,newProfissional);
+			}
+		}
+		
+		return this;
+	}
+	
+	private Profissional loadVacinas(Profissional origem, Profissional destino) {
+		if(origem.getVacinas() != null) {
+			destino.setVacinas(VacinaBuilder
+										.newInstance(origem.getVacinas())
+										.getEntityList());	
+		}
+		return destino;
+	}
 
 	@Override
 	public Profissional cloneFromFilter(ProfissionalFilter filter) {
