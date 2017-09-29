@@ -40,6 +40,52 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		return newProfissional;
 	}
 	
+	public ProfissionalBuilder loadProfissionalConselho() {
+		if(this.entity != null) {
+			this.newEntity = loadProfissionalConselho(this.entity,this.newEntity);
+		}else {
+			for(Profissional profissional:this.entityList) {
+				Profissional newProfissional = this.newEntityList.stream()
+						.filter(e->e.getId() == profissional.getId())
+						.iterator().next();
+				newProfissional = loadProfissionalConselho(profissional,newProfissional);
+			}
+		}
+		return this;
+	}
+	
+	private Profissional loadProfissionalConselho(Profissional origem,Profissional destino) {
+		if(origem.getProfissionalConselho()!= null) {
+			destino.setProfissionalConselho(ProfissionalConselhoBuilder.newInstance(origem.getProfissionalConselho())
+					.getEntity());
+		}
+		
+		return destino;
+	}
+	
+	public ProfissionalBuilder loadCurriculo() {
+		if(this.entity != null) {
+			this.newEntity = loadCurriculo(this.entity,this.newEntity);
+		}else {
+			for(Profissional profissional:this.entityList) {
+				Profissional newProfissional = this.newEntityList.stream()
+						.filter(e->e.getId() == profissional.getId())
+						.iterator().next();
+				newProfissional = loadCurriculo(profissional,newProfissional);
+			}
+		}
+		return this;
+	}
+	
+	private Profissional loadCurriculo(Profissional origem,Profissional destino) {
+		if(origem.getCurriculo()!= null) {
+			destino.setCurriculo(CurriculoBuilder.newInstance(origem.getCurriculo())
+					.loadCurriculoCursos().getEntity());
+		}
+		
+		return destino;
+	}
+	
 	public ProfissionalBuilder loadFuncao() {
 		if(this.entity != null) {
 			this.newEntity = loadFuncao(this.entity,this.newEntity);
@@ -57,28 +103,6 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 	private Profissional loadFuncao(Profissional origem,Profissional destino) {
 		if(origem.getFuncao()!= null) {
 			destino.setFuncao(FuncaoBuilder.newInstance(origem.getFuncao()).getEntity());
-		}
-		
-		return destino;
-	}
-	
-	public ProfissionalBuilder loadGerencia() {
-		if(this.entity != null) {
-			this.newEntity = loadGerencia(this.entity,this.newEntity);
-		}else {
-			for(Profissional profissional:this.entityList) {
-				Profissional newProfissional = this.newEntityList.stream()
-						.filter(e->e.getId() == profissional.getId())
-						.iterator().next();
-				newProfissional = loadGerencia(profissional,newProfissional);
-			}
-		}
-		return this;
-	}
-	
-	private Profissional loadGerencia(Profissional origem,Profissional destino) {
-		if(origem.getGerencia()!= null) {
-			destino.setGerencia(GerenciaBuilder.newInstance(origem.getGerencia()).getEntity());
 		}
 		
 		return destino;

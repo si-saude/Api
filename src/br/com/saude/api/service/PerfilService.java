@@ -46,7 +46,7 @@ public class PerfilService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("id") int id) throws Exception{
-		return Response.ok(PerfilBo.getInstance().getByIdLoadPermissoes(id)).build();
+		return Response.ok(PerfilBo.getInstance().getById(id)).build();
 	}
 	
 	@POST

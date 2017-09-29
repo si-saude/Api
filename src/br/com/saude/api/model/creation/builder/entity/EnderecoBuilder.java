@@ -65,13 +65,4 @@ public class EnderecoBuilder extends GenericEntityBuilder<Endereco,EnderecoFilte
 	public Endereco cloneFromFilter(EnderecoFilter filter) {
 		return null;
 	}
-	
-	public boolean isNull() {
-		return this.newEntity.getBairro() == null &&
-				this.newEntity.getCep() == null &&
-				this.newEntity.getCidade() == null &&
-				this.newEntity.getComplemento() == null &&
-				this.newEntity.getLogradouro() == null &&
-				this.newEntity.getNumero() == null;
-	}
 }

@@ -67,12 +67,7 @@ public abstract class GenericDao<T> {
 		
 		try {
 			Transaction transaction = session.beginTransaction();
-			
-			StringBuilder queryBuilder = new StringBuilder("DELETE ");
-			queryBuilder.append(this.entityType.getSimpleName());
-			queryBuilder.append(" WHERE id = :id");
-			
-			session.createQuery(queryBuilder.toString()).setParameter("id", id).executeUpdate();
+			session.remove(session.get(this.entityType, (Serializable)id));
 			transaction.commit();
 		}catch(Exception ex) {
 			throw ex;

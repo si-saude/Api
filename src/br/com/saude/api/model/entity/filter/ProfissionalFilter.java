@@ -11,8 +11,9 @@ public class ProfissionalFilter extends GenericFilter {
 	private String ramal;
 	private LocalizacaoFilter localizacao;
 	private EquipeFilter equipe;
-	private GerenciaFilter gerencia;
 	private FuncaoFilter funcao;
+	private CurriculoFilter curriculo;
+	private ProfissionalConselhoFilter profissionalConselho;
 	private String mi;
 	public String getNome() {
 		return nome;
@@ -62,16 +63,22 @@ public class ProfissionalFilter extends GenericFilter {
 	public void setMi(String mi) {
 		this.mi = mi;
 	}
-	public GerenciaFilter getGerencia() {
-		return gerencia;
-	}
-	public void setGerencia(GerenciaFilter gerencia) {
-		this.gerencia = gerencia;
-	}
 	public FuncaoFilter getFuncao() {
 		return funcao;
 	}
 	public void setFuncao(FuncaoFilter funcao) {
 		this.funcao = funcao;
+	}
+	public CurriculoFilter getCurriculo() {
+		return curriculo;
+	}
+	public void setCurriculo(CurriculoFilter curriculo) {
+		this.curriculo = curriculo;
+	}
+	public ProfissionalConselhoFilter getProfissionalConselho() {
+		return profissionalConselho;
+	}
+	public void setProfissionalConselho(ProfissionalConselhoFilter profissionalConselho) {
+		this.profissionalConselho = profissionalConselho;
 	}
 }

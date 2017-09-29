@@ -1,18 +1,15 @@
 package br.com.saude.api.model.persistence;
 
-import org.hibernate.Criteria;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 
 import br.com.saude.api.generic.GenericDao;
-import br.com.saude.api.generic.GenericExampleBuilder;
-import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.example.ProfissionalExampleBuilder;
-import br.com.saude.api.model.entity.filter.ProfissionalFilter;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.Telefone;
 
@@ -35,52 +32,14 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	}
 	
 	public PagedList<Profissional> 
-		getListLoadEquipeLocalizacaoGerenciaFuncao(ProfissionalExampleBuilder exampleBuilder) throws Exception{
-		return this.getList(exampleBuilder, "loadEquipeLocalizacaoGerenciaFuncao");
-	}
-	
-	@Override
-	protected Criteria finishCriteria(Criteria criteria, GenericExampleBuilder<?, ?> profissionalExampleBuilder) {
-		ProfissionalFilter filter = (ProfissionalFilter)profissionalExampleBuilder.getFilter();
-		
-		if(filter.getGerencia() != null && filter.getGerencia().getCodigoCompleto() != null) {
-			String[] gerencias = filter.getGerencia().getCodigoCompleto().split("/");
-			
-			criteria.createAlias("gerencia", "gerencia0", JoinType.LEFT_OUTER_JOIN);
-			criteria.createAlias("gerencia0.gerencia", "gerencia1", JoinType.LEFT_OUTER_JOIN);
-			criteria.createAlias("gerencia1.gerencia", "gerencia2", JoinType.LEFT_OUTER_JOIN);
-			criteria.createAlias("gerencia2.gerencia", "gerencia3", JoinType.LEFT_OUTER_JOIN);
-			
-			Criterion or = null;
-			int i = 0;
-			for(int x = gerencias.length - 1; x <= 3; x++) {
-				Criterion and = null;
-				for(int y = i; y < gerencias.length + i; y++) {
-					if(and == null) {
-						and = Restrictions.ilike("gerencia"+y+".codigo",gerencias[x-y]);
-					}else {
-						and = Restrictions.and(and, Restrictions.ilike("gerencia"+y+".codigo",Helper.filterLike(gerencias[x-y])));
-					}
-				}
-				
-				if(or == null) {
-					or = and;
-				}else {
-					or = Restrictions.or(or, and);
-				}
-				i++;
-			}
-			
-			criteria.add(or);
-		}
-		return criteria;
+		getListLoadEquipeLocalizacaoFuncao(ProfissionalExampleBuilder exampleBuilder) throws Exception{
+		return this.getList(exampleBuilder, "loadEquipeLocalizacaoFuncao");
 	}
 	
 	@SuppressWarnings("unused")
-	private Profissional loadEquipeLocalizacaoGerenciaFuncao(Profissional profissional) {
+	private Profissional loadEquipeLocalizacaoFuncao(Profissional profissional) {
 		profissional = loadEquipe(profissional);
 		profissional = loadLocalizacao(profissional);
-		profissional = loadGerencia(profissional);
 		profissional = loadFuncao(profissional);
 		return profissional;
 	}
@@ -91,8 +50,9 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		profissional = loadEndereco(profissional);
 		profissional = loadEquipe(profissional);
 		profissional = loadLocalizacao(profissional);
-		profissional = loadGerencia(profissional);
 		profissional = loadFuncao(profissional);
+		profissional = loadCurriculo(profissional);
+		profissional = loadProfissionalConselho(profissional);
 		return profissional;
 	}
 	
@@ -108,6 +68,18 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		return profissional;
 	}
 	
+	private Profissional loadCurriculo(Profissional profissional) {
+		if(profissional.getCurriculo()!=null)
+			Hibernate.initialize(profissional.getCurriculo());
+		return profissional;
+	}
+	
+	private Profissional loadProfissionalConselho(Profissional profissional) {
+		if(profissional.getProfissionalConselho()!=null)
+			Hibernate.initialize(profissional.getProfissionalConselho());
+		return profissional;
+	}
+	
 	private Profissional loadEquipe(Profissional profissional) {
 		if(profissional.getEquipe()!=null)
 			Hibernate.initialize(profissional.getEquipe());
@@ -117,12 +89,6 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	private Profissional loadLocalizacao(Profissional profissional) {
 		if(profissional.getLocalizacao()!=null)
 			Hibernate.initialize(profissional.getLocalizacao());
-		return profissional;
-	}
-	
-	private Profissional loadGerencia(Profissional profissional) {
-		if(profissional.getGerencia()!=null)
-			Hibernate.initialize(profissional.getGerencia());
 		return profissional;
 	}
 	
@@ -137,11 +103,22 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		return super.save(profissional,"beforeCommitSave");
 	}
 	
-	@SuppressWarnings({"unused" })
-	private Profissional beforeCommitSave(Profissional profissional, Session session) {		
-		if(profissional.getTelefones() != null)
-			for(int i=0; i < profissional.getTelefones().size(); i++)
-				profissional.getTelefones().set(i, session.get(Telefone.class, profissional.getTelefones().get(i).getId()));
+	@SuppressWarnings({"unused", "deprecation", "unchecked" })
+	private Profissional beforeCommitSave(Profissional profissional, Session session) {
+		//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
+		if(profissional.getId() > 0) {
+			if(profissional.getTelefones() == null)
+				profissional.setTelefones(new ArrayList<Telefone>());
+			
+			List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
+					.createAlias("profissionais", "profissional")
+					.add(Restrictions.eq("profissional.id", profissional.getId()))
+					.list();
+			telefones.forEach(t->{
+				if(!profissional.getTelefones().contains(t))
+					session.remove(t);
+			});
+		}
 		
 		return profissional;
 	}
