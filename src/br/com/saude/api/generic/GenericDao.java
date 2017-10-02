@@ -1,9 +1,8 @@
 package br.com.saude.api.generic;
 
 import java.util.List;
+import java.util.function.Function;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
 import org.hibernate.Criteria;
@@ -12,6 +11,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
 import org.hibernate.sql.JoinType;
+import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 
@@ -30,14 +30,14 @@ public abstract class GenericDao<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected T save(T entity, String beforeSessionCloseMethodName) throws Exception {
+	protected T save(T entity, Function<Pair<T,Session>,T> function) throws Exception {
 		Session session = HibernateHelper.getSession();
 		
 		try {
 			Transaction transaction = session.beginTransaction();
 			
-			if(beforeSessionCloseMethodName != null)
-				entity = (T)invokeMethod(new Object[]{entity,session}, beforeSessionCloseMethodName, new Class[] {this.entityType,Session.class});
+			if(function != null)
+				entity = function.apply(new Pair<T,Session>(entity,session));
 			entity = (T)session.merge(entity);
 			
 			transaction.commit();
@@ -85,7 +85,7 @@ public abstract class GenericDao<T> {
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	protected PagedList<T> getList(GenericExampleBuilder<?,?> exampleBuilder, String beforeSessionCloseMethodName) throws Exception {
+	protected PagedList<T> getList(GenericExampleBuilder<?,?> exampleBuilder, Function<T,T> function) throws Exception {
 		List<T> list;
 		PagedList<T> pagedList = new PagedList<T>();
 		List<Criterion> criterions = exampleBuilder.getCriterions();
@@ -111,10 +111,9 @@ public abstract class GenericDao<T> {
 			criteria = finishCriteria(criteria,exampleBuilder);
 			list = criteria.list();
 			
-			if(beforeSessionCloseMethodName != null)
-				for(T entity : list) {
-					entity = (T)invokeMethod(new Object[]{entity}, beforeSessionCloseMethodName, new Class[] {this.entityType});	 			
-				}
+			if(function != null)
+				for(T entity : list)
+					entity = function.apply(entity); 			
 			
 			pagedList.setTotal(getCount(session, exampleBuilder));
 			pagedList.setList(list);
@@ -136,7 +135,7 @@ public abstract class GenericDao<T> {
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	protected T getFirst(List<Criterion> criterions, String beforeSessionCloseMethodName) throws Exception {
+	protected T getFirst(List<Criterion> criterions, Function<T,T> function) throws Exception {
 		T entity;
 		Session session = HibernateHelper.getSession();
 		
@@ -150,8 +149,8 @@ public abstract class GenericDao<T> {
 			criteria = criteria.setMaxResults(1);
 			entity = (T)criteria.uniqueResult();
 			
-			if(beforeSessionCloseMethodName != null)
-				entity = (T)invokeMethod(new Object[]{entity}, beforeSessionCloseMethodName, new Class[] {this.entityType});	 			
+			if(function != null)
+				entity = function.apply(entity);	 			
 			
 		}catch (Exception ex) {
 			throw ex;
@@ -167,16 +166,15 @@ public abstract class GenericDao<T> {
 		return getById(id, null);
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected T getById(Object id, String beforeSessionCloseMethodName) throws Exception {
+	protected T getById(Object id, Function<T,T> function) throws Exception {
 		Session session = HibernateHelper.getSession();
 		T entity;
 		
 		try {
 			entity = session.get(this.entityType, (Serializable)id);
 			
-			if(beforeSessionCloseMethodName != null)
-				entity = (T)invokeMethod(new Object[]{entity}, beforeSessionCloseMethodName, new Class[] {this.entityType});
+			if(function != null)
+				entity = function.apply(entity);
 		}catch (Exception ex) {
 			throw ex;
 		}
@@ -184,12 +182,5 @@ public abstract class GenericDao<T> {
 			session.close();
 		}
 		return entity;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes"})
-	private Object invokeMethod(Object[] objects, String methodName, Class[] types) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		Method method = this.getClass().getDeclaredMethod(methodName,types);
-		method.setAccessible(true);
-		return (T)method.invoke(this,objects);	
 	}
 }

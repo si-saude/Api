@@ -2,10 +2,12 @@ package br.com.saude.api.model.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.javatuples.Pair;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.PagedList;
@@ -16,9 +18,57 @@ import br.com.saude.api.model.entity.po.Telefone;
 public class ProfissionalDao extends GenericDao<Profissional> {
 
 	private static ProfissionalDao instance;
+	private Function<Profissional,Profissional> functionLoad;
+	private Function<Profissional,Profissional> functionLoadAll;
+	private Function<Pair<Profissional,Session>,Profissional> functionBeforeSave;
 	
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	private ProfissionalDao() {
 		super();
+		
+		//CRIAÇÃO DAS FUNÇÕES
+		this.functionLoad = profissional -> {
+			profissional = loadEquipe(profissional);
+			profissional = loadLocalizacao(profissional);
+			profissional = loadFuncao(profissional);
+			return profissional;
+		};
+		
+		this.functionLoadAll = profissional -> {
+			profissional = loadTelefones(profissional);
+			profissional = loadVacinas(profissional);
+			profissional = loadEndereco(profissional);
+			profissional = loadEquipe(profissional);
+			profissional = loadLocalizacao(profissional);
+			profissional = loadFuncao(profissional);
+			profissional = loadCurriculo(profissional);
+			profissional = loadProfissionalConselho(profissional);
+			return profissional;
+		};
+		
+		this.functionBeforeSave = pair -> {
+			Profissional profissional = pair.getValue0();
+			Session session = pair.getValue1();
+			
+			//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
+			if(profissional.getId() > 0) {
+				if(profissional.getTelefones() == null)
+					profissional.setTelefones(new ArrayList<Telefone>());
+				
+				List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
+						.createAlias("profissionais", "profissional")
+						.add(Restrictions.eq("profissional.id", profissional.getId()))
+						.list();
+				telefones.forEach(t->{
+					if(!profissional.getTelefones().contains(t))
+						session.remove(t);
+				});
+			}
+			
+			//SETA O PROFISSIONAL NAS VACINAS
+			profissional.getVacinas().forEach(v->v.setProfissional(profissional));
+			return profissional;
+		};
 	}
 	
 	public static ProfissionalDao getInstance() {
@@ -28,33 +78,12 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	}
 	
 	public Profissional getByIdLoadAll(Object id) throws Exception {
-		return this.getById(id, "loadAll");
+		return this.getById(id, this.functionLoadAll);
 	}
 	
 	public PagedList<Profissional> 
 		getListLoadEquipeLocalizacaoFuncao(ProfissionalExampleBuilder exampleBuilder) throws Exception{
-		return this.getList(exampleBuilder, "loadEquipeLocalizacaoFuncao");
-	}
-	
-	@SuppressWarnings("unused")
-	private Profissional loadEquipeLocalizacaoFuncao(Profissional profissional) {
-		profissional = loadEquipe(profissional);
-		profissional = loadLocalizacao(profissional);
-		profissional = loadFuncao(profissional);
-		return profissional;
-	}
-	
-	@SuppressWarnings("unused")
-	private Profissional loadAll(Profissional profissional) {
-		profissional = loadTelefones(profissional);
-		profissional = loadVacinas(profissional);
-		profissional = loadEndereco(profissional);
-		profissional = loadEquipe(profissional);
-		profissional = loadLocalizacao(profissional);
-		profissional = loadFuncao(profissional);
-		profissional = loadCurriculo(profissional);
-		profissional = loadProfissionalConselho(profissional);
-		return profissional;
+		return this.getList(exampleBuilder, this.functionLoad);
 	}
 	
 	private Profissional loadTelefones(Profissional profissional) {
@@ -106,30 +135,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	}
 	
 	@Override
-	public Profissional save(Profissional profissional) throws Exception {
-		return super.save(profissional,"beforeCommitSave");
-	}
-	
-	@SuppressWarnings({"unused", "deprecation", "unchecked" })
-	private Profissional beforeCommitSave(Profissional profissional, Session session) {
-		//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
-		if(profissional.getId() > 0) {
-			if(profissional.getTelefones() == null)
-				profissional.setTelefones(new ArrayList<Telefone>());
-			
-			List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
-					.createAlias("profissionais", "profissional")
-					.add(Restrictions.eq("profissional.id", profissional.getId()))
-					.list();
-			telefones.forEach(t->{
-				if(!profissional.getTelefones().contains(t))
-					session.remove(t);
-			});
-		}
-		
-		//SETA O PROFISSIONAL NAS VACINAS
-		profissional.getVacinas().forEach(v->v.setProfissional(profissional));
-		
-		return profissional;
+	public Profissional save(Profissional entity) throws Exception {		
+		return super.save(entity,this.functionBeforeSave);
 	}
 }
