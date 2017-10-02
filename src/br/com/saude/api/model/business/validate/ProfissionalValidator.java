@@ -31,7 +31,7 @@ public class ProfissionalValidator extends GenericValidator {
 			new CurriculoValidator().validate(profissional.getCurriculo());
 		
 		if(profissional.getProfissionalConselho() != null)
-			new CurriculoValidator().validate(profissional.getProfissionalConselho());
+			new ProfissionalConselhoValidator().validate(profissional.getProfissionalConselho());
 	}
 
 }

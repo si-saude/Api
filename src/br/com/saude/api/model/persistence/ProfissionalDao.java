@@ -10,6 +10,8 @@ import org.hibernate.criterion.Restrictions;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.example.ProfissionalExampleBuilder;
+import br.com.saude.api.model.entity.po.CurriculoCurso;
+import br.com.saude.api.model.entity.po.Curso;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.Telefone;
 
@@ -118,6 +120,14 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 				if(!profissional.getTelefones().contains(t))
 					session.remove(t);
 			});
+		}
+		
+		if(profissional.getCurriculo() != null) {
+			for(CurriculoCurso curriculoCurso : profissional.getCurriculo().getCurriculoCursos()) {
+				curriculoCurso.setCurriculo(profissional.getCurriculo());
+				if(curriculoCurso.getCurso() != null)
+					curriculoCurso.setCurso(session.get(Curso.class, curriculoCurso.getCurso().getId()));
+			}
 		}
 		
 		return profissional;

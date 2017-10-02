@@ -11,8 +11,10 @@ import javax.ws.rs.core.Response;
 
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.model.business.CidadeBo;
+import br.com.saude.api.model.business.CursoBo;
 import br.com.saude.api.model.business.validate.CidadeValidator;
 import br.com.saude.api.model.entity.filter.CidadeFilter;
+import br.com.saude.api.model.entity.filter.CursoFilter;
 import br.com.saude.api.model.entity.po.Cidade;
 import br.com.saude.api.util.RequestInterceptor;
 
@@ -26,6 +28,14 @@ public class CidadeService {
 	@Path("/list")
 	public Response getList(CidadeFilter filter) throws Exception {
 		return Response.ok(CidadeBo.getInstance().getList(filter).getGenericPagedList()).build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/selectList")
+	public Response getSelectList(CidadeFilter filter) throws Exception {
+		return Response.ok(CidadeBo.getInstance().getSelectList(filter)).build();
 	}
 	
 	@GET
