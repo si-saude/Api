@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -67,6 +68,9 @@ public class Profissional {
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private ProfissionalConselho profissionalConselho;
+	
+	@OneToMany(mappedBy="profissional", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<Vacina> vacinas;
 	
 	@Version
 	private long version;
@@ -190,5 +194,12 @@ public class Profissional {
 	public void setProfissionalConselho(ProfissionalConselho profissionalConselho) {
 		this.profissionalConselho = profissionalConselho;
 	}
-	
+
+	public List<Vacina> getVacinas() {
+		return vacinas;
+	}
+
+	public void setVacinas(List<Vacina> vacinas) {
+		this.vacinas = vacinas;
+	}
 }

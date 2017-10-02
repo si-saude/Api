@@ -7,6 +7,8 @@ import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
 import br.com.saude.api.generic.CriteriaExample;
+=======
+>>>>>>> branch 'master' of https://github.com/si-saude/Api.git
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.CidadeFilter;
@@ -42,16 +44,14 @@ public class CidadeExampleBuilder extends GenericExampleBuilder<Cidade,CidadeFil
 	}
 
 	@Override
-	public CidadeExampleBuilder example() {
-		return (CidadeExampleBuilder) super.example();
+	protected void createExample() {
+		addNome();
+		addUf();
 	}
 
 	@Override
-	protected void createExample() {
-		this.criterions = new ArrayList<Criterion>();
-		this.entity = new Cidade();
-		addNome();
-		addUf();
+	protected void createExampleSelectList() {
+		
 	}
 	
 	private void createExampleSelectList() {

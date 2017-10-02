@@ -24,6 +24,9 @@ public class ProfissionalValidator extends GenericValidator {
 		if(profissional.getTelefones() != null)
 			new TelefoneValidator().validate(profissional.getTelefones());
 		
+		if(profissional.getVacinas() != null)
+			new VacinaValidator().validate(profissional.getVacinas());
+		
 		if(profissional.getEndereco() != null)
 			new EnderecoValidator().validate(profissional.getEndereco());
 		

@@ -1,13 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
-import java.util.ArrayList;
-
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
-import org.javatuples.Triplet;
-
-import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.ProfissionalConselhoFilter;
@@ -46,20 +39,17 @@ public class ProfissionalConselhoExampleBuilder
 					this.filter.getVencimento().getFim()));
 		}
 	}
-	
-	@Override
-	public ProfissionalConselhoExampleBuilder example() {
-		return (ProfissionalConselhoExampleBuilder)super.example();
-	}
 
 	@Override
 	protected void createExample() {
-		this.criterions = new ArrayList<Criterion>();
-		this.criterias = new ArrayList<Triplet<String,CriteriaExample,JoinType>>();
-		this.entity = new ProfissionalConselho();
 		addConselho();
 		addNumero();
 		addUf();
 		addVencimento();
+	}
+
+	@Override
+	protected void createExampleSelectList() {
+		
 	}
 }

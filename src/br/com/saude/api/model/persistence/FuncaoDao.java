@@ -13,6 +13,23 @@ public class FuncaoDao extends GenericDao<Funcao> {
 	
 	private FuncaoDao() {
 		super();
+		
+		this.functionLoadAll = funcao -> {
+			if(funcao.getCursos()!=null)
+				Hibernate.initialize(funcao.getCursos());
+			return funcao;
+		};
+		
+		this.functionBeforeSave = pair -> {
+			Funcao funcao = pair.getValue0();
+			Session session = pair.getValue1();
+			
+			if(funcao.getCursos() != null)
+				for(int i=0; i < funcao.getCursos().size(); i++)
+					funcao.getCursos().set(i, session.get(Curso.class, funcao.getCursos().get(i).getId()));
+			
+			return funcao;
+		};
 	}
 	
 	public static FuncaoDao getInstance() {
@@ -22,26 +39,6 @@ public class FuncaoDao extends GenericDao<Funcao> {
 	}
 	
 	public Funcao getByIdLoadCursos(Object id) throws Exception {
-		return super.getById(id,"loadCursos");
-	}
-	
-	@SuppressWarnings("unused")
-	private Funcao loadCursos(Funcao funcao) {
-		if(funcao.getCursos()!=null)
-			Hibernate.initialize(funcao.getCursos());
-		return funcao;
-	}
-	
-	@Override
-	public Funcao save(Funcao funcao) throws Exception {
-		return super.save(funcao,"beforeCommitSave");
-	}
-	
-	@SuppressWarnings({ "unused" })
-	private Funcao beforeCommitSave(Funcao funcao, Session session) {
-		if(funcao.getCursos() != null)
-			for(int i=0; i < funcao.getCursos().size(); i++)
-				funcao.getCursos().set(i, session.get(Curso.class, funcao.getCursos().get(i).getId()));
-		return funcao;
+		return super.getById(id,this.functionLoadAll);
 	}
 }

@@ -26,8 +26,8 @@ public class ProfissionalConselho {
 	@Size(max = 2, message="Tamanho máximo para UF do Conselho: 2")
 	private String uf;
 	
-	@NotNull(message="É necessário informar o Número do Conselho.")
-	@Size(max = 26, message="Tamanho máximo para Nome do Conselho: 26")
+	@NotNull(message="É necessário informar o Número do Registro do Conselho.")
+	@Size(max = 26, message="Tamanho máximo para Nome do Registro do Conselho: 26")
 	private String numero;
 	
 	private Date vencimento;

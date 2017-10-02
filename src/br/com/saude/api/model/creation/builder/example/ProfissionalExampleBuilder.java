@@ -1,8 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
-import java.util.ArrayList;
 
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
@@ -73,7 +71,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		}
 	}
 	
-	private void addEquipe() {
+	private void addEquipe() throws InstantiationException, IllegalAccessException {
 		if(this.filter.getEquipe()!=null) {
 			CriteriaExample criteriaExample = EquipeExampleBuilder
 					.newInstance(this.filter.getEquipe()).getCriteriaExample();
@@ -81,7 +79,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		}
 	}
 	
-	private void addLocalizacao() {
+	private void addLocalizacao() throws InstantiationException, IllegalAccessException {
 		if(this.filter.getLocalizacao()!=null) {
 			CriteriaExample criteriaExample = LocalizacaoExampleBuilder
 					.newInstance(this.filter.getLocalizacao()).getCriteriaExample();
@@ -89,7 +87,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		}
 	}
 	
-	private void addFuncao() {
+	private void addFuncao() throws InstantiationException, IllegalAccessException {
 		if(this.filter.getFuncao()!=null) {
 			CriteriaExample criteriaExample = FuncaoExampleBuilder
 					.newInstance(this.filter.getFuncao()).getCriteriaExample();
@@ -97,7 +95,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		}
 	}
 	
-	private void addCurriculo() {
+	private void addCurriculo() throws InstantiationException, IllegalAccessException {
 		if(this.filter.getCurriculo()!=null) {
 			CriteriaExample criteriaExample = CurriculoExampleBuilder
 					.newInstance(this.filter.getCurriculo()).getCriteriaExample();
@@ -105,7 +103,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		}
 	}
 	
-	private void addProfissionalConselho() {
+	private void addProfissionalConselho() throws InstantiationException, IllegalAccessException {
 		if(this.filter.getProfissionalConselho()!=null) {
 			CriteriaExample criteriaExample = ProfissionalConselhoExampleBuilder
 					.newInstance(this.filter.getProfissionalConselho()).getCriteriaExample();
@@ -114,15 +112,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 	}
 
 	@Override
-	public ProfissionalExampleBuilder example() {
-		return (ProfissionalExampleBuilder) super.example();
-	}
-
-	@Override
-	protected void createExample() {
-		this.criterions = new ArrayList<Criterion>();
-		this.criterias = new ArrayList<Triplet<String,CriteriaExample,JoinType>>();
-		this.entity = new Profissional();
+	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addChave();
 		addDataNascimento();
 		addMatricula();
@@ -134,5 +124,10 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		addFuncao();
 		addCurriculo();
 		addProfissionalConselho();
+	}
+
+	@Override
+	protected void createExampleSelectList() {
+		
 	}
 }

@@ -34,7 +34,7 @@ public class ProfissionalBo {
 		Profissional profissional = ProfissionalDao.getInstance().getByIdLoadAll(id);
 		return ProfissionalBuilder.newInstance(profissional)
 				.loadFuncao().loadEndereco().loadEquipe().loadLocalizacao()
-				.loadCurriculo().loadCurriculo().loadTelefones().getEntity();
+				.loadCurriculo().loadCurriculo().loadTelefones().loadVacinas().getEntity();
 	}
 	
 	public Profissional save(Profissional profissional) throws Exception {
