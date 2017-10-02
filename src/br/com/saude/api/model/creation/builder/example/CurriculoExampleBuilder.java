@@ -1,12 +1,5 @@
 package br.com.saude.api.model.creation.builder.example;
 
-import java.util.ArrayList;
-
-import org.hibernate.criterion.Criterion;
-import org.hibernate.sql.JoinType;
-import org.javatuples.Triplet;
-
-import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.CurriculoFilter;
@@ -36,19 +29,16 @@ public class CurriculoExampleBuilder extends GenericExampleBuilder<Curriculo,Cur
 		if(this.filter.getAtuacao() != null)
 			this.entity.setAtuacao(Helper.filterLike(this.filter.getAtuacao()));
 	}
-	
-	@Override
-	public CurriculoExampleBuilder example() {
-		return (CurriculoExampleBuilder)super.example();
-	}
 
 	@Override
 	protected void createExample() {
-		this.criterions = new ArrayList<Criterion>();
-		this.criterias = new ArrayList<Triplet<String,CriteriaExample,JoinType>>();
-		this.entity = new Curriculo();
 		addHistorico();
 		addFormacao();
 		addAtuacao();
+	}
+
+	@Override
+	protected void createExampleSelectList() {
+		
 	}
 }

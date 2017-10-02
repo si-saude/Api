@@ -6,8 +6,8 @@ import java.util.function.Function;
 import org.hibernate.Hibernate;
 
 import br.com.saude.api.generic.GenericDao;
+import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
-import br.com.saude.api.model.creation.builder.example.ExameExampleBuilder;
 import br.com.saude.api.model.entity.po.Exame;
 
 public class ExameDao extends GenericDao<Exame> {
@@ -34,7 +34,7 @@ public class ExameDao extends GenericDao<Exame> {
 		return this.getById(id, this.functionLoad);
 	}
 	
-	public PagedList<Exame> getListLoadEmpregado(ExameExampleBuilder exameExampleBuilder) throws Exception{
+	public PagedList<Exame> getListLoadEmpregado(GenericExampleBuilder<?,?> exameExampleBuilder) throws Exception{
 		return this.getList(exameExampleBuilder, this.functionLoad);
 	}
 }

@@ -1,8 +1,5 @@
 package br.com.saude.api.model.creation.builder.example;
 
-import java.util.ArrayList;
-
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.saude.api.generic.GenericExampleBuilder;
@@ -39,16 +36,14 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 	}
 
 	@Override
-	public EmpregadoExampleBuilder example() {
-		return (EmpregadoExampleBuilder) super.example();
-	}
-
-	@Override
 	protected void createExample() {
-		this.criterions = new ArrayList<Criterion>();
-		this.entity = new Empregado();
 		addNome();
 		addCpf();
 		addDataNascimento();
+	}
+
+	@Override
+	protected void createExampleSelectList() {
+		
 	}
 }

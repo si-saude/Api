@@ -1,12 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
-import java.util.ArrayList;
 
-import org.hibernate.criterion.Criterion;
-import org.hibernate.sql.JoinType;
-import org.javatuples.Triplet;
-
-import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.CursoFilter;
@@ -20,19 +14,6 @@ public class CursoExampleBuilder extends GenericExampleBuilder<Curso,CursoFilter
 	
 	private CursoExampleBuilder(CursoFilter filter) {
 		super(filter);
-	}
-	
-	@Override
-	public CursoExampleBuilder example() {
-		return (CursoExampleBuilder)super.example();
-	}
-	
-	public CursoExampleBuilder exampleSelectList() {
-		if(this.filter!=null) {
-			createExampleSelectList();
-			this.criterions.add(getExample());
-		}
-		return this;
 	}
 	
 	private void addNome() {
@@ -52,20 +33,13 @@ public class CursoExampleBuilder extends GenericExampleBuilder<Curso,CursoFilter
 
 	@Override
 	protected void createExample() {
-		this.criterions = new ArrayList<Criterion>();
-		this.criterias = new ArrayList<Triplet<String,CriteriaExample,JoinType>>();
-		this.entity = new Curso();
 		addNome();
 		addDescricao();
 		addValidade();
 	}
-	
-	private void createExampleSelectList() {
-		this.criterions = new ArrayList<Criterion>();
-		this.criterias = new ArrayList<Triplet<String,CriteriaExample,JoinType>>();
-		this.entity = new Curso();
-		this.filter.setPageNumber(1);
-		this.filter.setPageSize(Integer.MAX_VALUE);
-	}
 
+	@Override
+	protected void createExampleSelectList() {
+		
+	}
 }

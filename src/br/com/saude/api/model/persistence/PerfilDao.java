@@ -1,11 +1,9 @@
 package br.com.saude.api.model.persistence;
 
-
 import org.hibernate.Hibernate;
-
 import br.com.saude.api.generic.GenericDao;
+import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
-import br.com.saude.api.model.creation.builder.example.PerfilExampleBuilder;
 import br.com.saude.api.model.entity.po.Perfil;
 
 public class PerfilDao extends GenericDao<Perfil> {
@@ -41,7 +39,7 @@ public class PerfilDao extends GenericDao<Perfil> {
 		return this.getById(id, this.functionLoadAll);
 	}
 	
-	public PagedList<Perfil> getListLoadPermissoes(PerfilExampleBuilder perfilExampleBuilder) throws Exception{
+	public PagedList<Perfil> getListLoadPermissoes(GenericExampleBuilder<?,?> perfilExampleBuilder) throws Exception{
 		return this.getList(perfilExampleBuilder, this.functionLoadAll);
 	}
 }

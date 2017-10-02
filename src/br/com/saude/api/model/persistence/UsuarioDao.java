@@ -4,8 +4,8 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import br.com.saude.api.generic.GenericDao;
+import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
-import br.com.saude.api.model.creation.builder.example.UsuarioExampleBuilder;
 import br.com.saude.api.model.entity.po.Perfil;
 import br.com.saude.api.model.entity.po.Usuario;
 
@@ -44,7 +44,7 @@ public class UsuarioDao extends GenericDao<Usuario> {
 		return this.getById(id,this.functionLoadAll);
 	}
 	
-	public PagedList<Usuario> getListLoadPerfis(UsuarioExampleBuilder usuarioExampleBuilder) throws Exception{
+	public PagedList<Usuario> getListLoadPerfis(GenericExampleBuilder<?, ?> usuarioExampleBuilder) throws Exception{
 		return this.getList(usuarioExampleBuilder, this.functionLoadAll);
 	}
 }

@@ -8,8 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.saude.api.generic.GenericDao;
+import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
-import br.com.saude.api.model.creation.builder.example.ProfissionalExampleBuilder;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.Telefone;
 
@@ -77,7 +77,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	}
 	
 	public PagedList<Profissional> 
-		getListLoadEquipeLocalizacaoFuncao(ProfissionalExampleBuilder exampleBuilder) throws Exception{
+		getListLoadEquipeLocalizacaoFuncao(GenericExampleBuilder<?,?> exampleBuilder) throws Exception{
 		return this.getList(exampleBuilder, this.functionLoad);
 	}
 	

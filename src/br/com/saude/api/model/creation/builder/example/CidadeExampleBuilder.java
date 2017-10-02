@@ -1,9 +1,5 @@
 package br.com.saude.api.model.creation.builder.example;
 
-import java.util.ArrayList;
-
-import org.hibernate.criterion.Criterion;
-
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.CidadeFilter;
@@ -30,15 +26,13 @@ public class CidadeExampleBuilder extends GenericExampleBuilder<Cidade,CidadeFil
 	}
 
 	@Override
-	public CidadeExampleBuilder example() {
-		return (CidadeExampleBuilder) super.example();
+	protected void createExample() {
+		addNome();
+		addUf();
 	}
 
 	@Override
-	protected void createExample() {
-		this.criterions = new ArrayList<Criterion>();
-		this.entity = new Cidade();
-		addNome();
-		addUf();
+	protected void createExampleSelectList() {
+		
 	}
 }

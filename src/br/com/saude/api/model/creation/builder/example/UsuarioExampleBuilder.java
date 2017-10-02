@@ -1,11 +1,8 @@
 package br.com.saude.api.model.creation.builder.example;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
-
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.UsuarioFilter;
@@ -36,10 +33,9 @@ public class UsuarioExampleBuilder extends GenericExampleBuilder<Usuario,Usuario
 			this.entity.setSenha(this.filter.getSenha());
 	}
 
-	public List<Criterion> getExampleAutenticacao() {
+	public List<Criterion> getExampleAutenticacao() throws InstantiationException, IllegalAccessException {
 		if(this.filter != null) {
-			this.criterions = new ArrayList<Criterion>();
-			this.entity = new Usuario();
+			initialize();
 			addChaveEq();
 			addSenhaEq();
 			this.criterions.add(Example.create(this.entity));
@@ -48,16 +44,14 @@ public class UsuarioExampleBuilder extends GenericExampleBuilder<Usuario,Usuario
 		else
 			return null;
 	}
-	
-	@Override
-	public UsuarioExampleBuilder example() {
-		return (UsuarioExampleBuilder) super.example();
-	}
 
 	@Override
 	protected void createExample() {
-		this.criterions = new ArrayList<Criterion>();
-		this.entity = new Usuario();
 		addChave();
+	}
+
+	@Override
+	protected void createExampleSelectList() {
+		
 	}
 }
