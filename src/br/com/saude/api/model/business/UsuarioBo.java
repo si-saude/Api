@@ -1,5 +1,8 @@
 package br.com.saude.api.model.business;
 
+import java.util.function.Function;
+
+import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.business.validate.UsuarioValidator;
 import br.com.saude.api.model.creation.builder.entity.UsuarioBuilder;
@@ -8,12 +11,18 @@ import br.com.saude.api.model.entity.filter.UsuarioFilter;
 import br.com.saude.api.model.entity.po.Usuario;
 import br.com.saude.api.model.persistence.UsuarioDao;
 
-public class UsuarioBo {
+public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, UsuarioBuilder, 
+											UsuarioExampleBuilder> {
 	
 	private static UsuarioBo instance;
+	private Function<UsuarioBuilder,UsuarioBuilder> function;
 	
 	private UsuarioBo() {
+		super();
 		
+		this.function = builder -> {
+			return builder.loadPerfis();
+		};
 	}
 	
 	public static UsuarioBo getInstance() {
@@ -22,45 +31,19 @@ public class UsuarioBo {
 		return instance;
 	}
 	
-	public PagedList<Usuario> getList(UsuarioFilter filter) throws Exception{
-		PagedList<Usuario> usuarios = UsuarioDao.getInstance()
-									.getList(UsuarioExampleBuilder.newInstance(filter).example());
-		usuarios.setList(UsuarioBuilder.newInstance(usuarios.getList()).getEntityList());
-		return usuarios;
-	}
-	
 	public PagedList<Usuario> getListLoadPerfis(UsuarioFilter filter) throws Exception{
-		PagedList<Usuario> usuarios = UsuarioDao.getInstance()
-									.getListLoadPerfis(UsuarioExampleBuilder.newInstance(filter).example());
-		usuarios.setList(UsuarioBuilder.newInstance(usuarios.getList()).loadPerfis().getEntityList());
-		return usuarios;
-	}
-	
-	public Usuario getById(int id) throws Exception {
-		Usuario usuario = UsuarioDao.getInstance().getById(id);
-		return UsuarioBuilder.newInstance(usuario).getEntity();
+		return getList(getDao().getListLoadPerfis(getExampleBuilder(filter).example()), function);
 	}
 	
 	public Usuario getByIdLoadPerfis(int id) throws Exception {
-		Usuario usuario = UsuarioDao.getInstance().getByIdLoadPerfis(id);
-		return UsuarioBuilder.newInstance(usuario).loadPerfis().getEntity();
-	}
-	
-	public Usuario save(Usuario usuario) throws Exception {
-		usuario = UsuarioDao.getInstance().save(usuario);
-		return UsuarioBuilder.newInstance(usuario).getEntity();
-	}
-	
-	public void delete(int id) {
-		UsuarioDao.getInstance().delete(id);
+		return getByEntity(getDao().getByIdLoadPerfis(id), this.function);
 	}
 	
 	public Usuario getFirstToAutenticacao(UsuarioFilter filter) throws Exception {
-		Usuario usuario = UsuarioBuilder.newInstance(new Usuario()).cloneFromFilter(filter);
+		Usuario usuario = getBuilder(new Usuario()).cloneFromFilter(filter);
 		UsuarioValidator usuarioValidator = new UsuarioValidator();
 		usuarioValidator.validate(usuario);
-		usuario = UsuarioDao.getInstance()
-			.getFirst(UsuarioExampleBuilder.newInstance(filter).getExampleAutenticacao());
-		return UsuarioBuilder.newInstance(usuario).getEntity();
+		usuario = getDao().getFirst(getExampleBuilder(filter).getExampleAutenticacao());
+		return getBuilder(usuario).getEntity();
 	}
 }

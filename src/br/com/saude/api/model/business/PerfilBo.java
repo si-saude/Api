@@ -1,5 +1,9 @@
 package br.com.saude.api.model.business;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.function.Function;
+
+import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.PerfilBuilder;
 import br.com.saude.api.model.creation.builder.example.PerfilExampleBuilder;
@@ -7,12 +11,18 @@ import br.com.saude.api.model.entity.filter.PerfilFilter;
 import br.com.saude.api.model.entity.po.Perfil;
 import br.com.saude.api.model.persistence.PerfilDao;
 
-public class PerfilBo {
+public class PerfilBo extends GenericBo<Perfil, PerfilFilter, PerfilDao, 
+										PerfilBuilder, PerfilExampleBuilder>{
 	
 	private static PerfilBo instance;
+	private Function<PerfilBuilder,PerfilBuilder> function;
 	
 	private PerfilBo() {
+		super();
 		
+		this.function = builder -> {
+			return builder.loadPermissoes();
+		};
 	}
 	
 	public static PerfilBo getInstance() {
@@ -21,31 +31,13 @@ public class PerfilBo {
 		return instance;
 	}
 	
-	public PagedList<Perfil> getList(PerfilFilter filter) throws Exception{
-		PagedList<Perfil> perfis = PerfilDao.getInstance()
-								.getList(PerfilExampleBuilder.newInstance(filter).example());
-		perfis.setList(PerfilBuilder.newInstance(perfis.getList()).getEntityList());
-		return perfis;
+	public PagedList<Perfil> getListLoadPermissoes(PerfilFilter filter) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return this.getList(getDao().getListLoadPermissoes(getExampleBuilder(filter).example()),
+							this.function);
 	}
 	
-	public PagedList<Perfil> getListLoadPermissoes(PerfilFilter filter) throws Exception{
-		PagedList<Perfil> perfis = PerfilDao.getInstance()
-								.getListLoadPermissoes(PerfilExampleBuilder.newInstance(filter).example());
-		perfis.setList(PerfilBuilder.newInstance(perfis.getList()).loadPermissoes().getEntityList());
-		return perfis;
-	}
-	
-	public Perfil getById(int id) throws Exception {
-		Perfil perfil = PerfilDao.getInstance().getByIdLoadPermissoes(id);
-		return PerfilBuilder.newInstance(perfil).getEntity();
-	}
-	
-	public Perfil save(Perfil perfil) throws Exception {
-		perfil = PerfilDao.getInstance().save(perfil);
-		return PerfilBuilder.newInstance(perfil).getEntity();
-	}
-	
-	public void delete(int id) {
-		PerfilDao.getInstance().delete(id);
+	@Override
+	public Perfil getById(Object id) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return this.getById(getDao().getByIdLoadPermissoes(id), this.function);
 	}
 }

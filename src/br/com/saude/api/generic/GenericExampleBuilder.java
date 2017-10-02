@@ -8,7 +8,7 @@ import org.hibernate.criterion.Example;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
-public abstract class GenericExampleBuilder<T,F> {
+public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	protected T entity;
 	protected F filter;
 	protected List<Criterion> criterions;
@@ -31,8 +31,8 @@ public abstract class GenericExampleBuilder<T,F> {
 		if(this.filter!=null) {
 			initialize();
 			createExampleSelectList();
-			((GenericFilter)this.filter).setPageNumber(1);
-			((GenericFilter)this.filter).setPageSize(Integer.MAX_VALUE);
+			this.filter.setPageNumber(1);
+			this.filter.setPageSize(Integer.MAX_VALUE);
 			this.criterions.add(getExample());
 		}
 		return this;
@@ -64,13 +64,13 @@ public abstract class GenericExampleBuilder<T,F> {
 	
 	public int getPageNumber() {
 		return this.filter != null ?
-				((GenericFilter)this.filter).getPageNumber()
+				this.filter.getPageNumber()
 				: 0;
 	}
 	
 	public int getPageSize() {
 		return this.filter != null ?
-				((GenericFilter)this.filter).getPageSize()
+				this.filter.getPageSize()
 				: 0;
 	}
 	

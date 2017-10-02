@@ -1,5 +1,8 @@
 package br.com.saude.api.model.business;
 
+import java.util.function.Function;
+
+import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.ProfissionalBuilder;
 import br.com.saude.api.model.creation.builder.example.ProfissionalExampleBuilder;
@@ -7,12 +10,24 @@ import br.com.saude.api.model.entity.filter.ProfissionalFilter;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.persistence.ProfissionalDao;
 
-public class ProfissionalBo {
+public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, ProfissionalDao, 
+												ProfissionalBuilder, ProfissionalExampleBuilder> {
 	
 	private static ProfissionalBo instance;
+	private Function<ProfissionalBuilder,ProfissionalBuilder> functionLoad;
+	private Function<ProfissionalBuilder,ProfissionalBuilder> functionLoadAll;
 	
 	private ProfissionalBo() {
+		super();
 		
+		this.functionLoad = builder -> {
+			return builder.loadEquipe().loadLocalizacao().loadFuncao();
+		};
+		
+		this.functionLoadAll = builder -> {
+			return builder.loadFuncao().loadEndereco().loadEquipe().loadLocalizacao()
+						.loadCurriculo().loadCurriculo().loadTelefones().loadVacinas();
+		};
 	}
 	
 	public static ProfissionalBo getInstance() {
@@ -21,28 +36,14 @@ public class ProfissionalBo {
 		return instance;
 	}
 	
+	@Override
 	public PagedList<Profissional> getList(ProfissionalFilter filter) throws Exception{
-		PagedList<Profissional> profissionais = ProfissionalDao.getInstance()
-				.getListLoadEquipeLocalizacaoFuncao(ProfissionalExampleBuilder
-												.newInstance(filter).example());
-		profissionais.setList(ProfissionalBuilder.newInstance(profissionais.getList())
-									.loadEquipe().loadLocalizacao().loadFuncao().getEntityList());
-		return profissionais;
+		return getList(getDao().getListLoadEquipeLocalizacaoFuncao(getExampleBuilder(filter).example()), 
+						functionLoad);
 	}
 	
-	public Profissional getById(int id) throws Exception {
-		Profissional profissional = ProfissionalDao.getInstance().getByIdLoadAll(id);
-		return ProfissionalBuilder.newInstance(profissional)
-				.loadFuncao().loadEndereco().loadEquipe().loadLocalizacao()
-				.loadCurriculo().loadCurriculo().loadTelefones().loadVacinas().getEntity();
-	}
-	
-	public Profissional save(Profissional profissional) throws Exception {
-		profissional = ProfissionalDao.getInstance().save(profissional);
-		return ProfissionalBuilder.newInstance(profissional).getEntity();
-	}
-	
-	public void delete(int id) {
-		ProfissionalDao.getInstance().delete(id);
+	@Override
+	public Profissional getById(Object id) throws Exception {
+		return getByEntity(getDao().getByIdLoadAll(id), functionLoadAll);
 	}
 }
