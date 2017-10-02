@@ -1,11 +1,7 @@
 package br.com.saude.api.model.persistence;
 
-
-import java.util.function.Function;
-
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.javatuples.Pair;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.PagedList;
@@ -16,8 +12,6 @@ import br.com.saude.api.model.entity.po.Usuario;
 public class UsuarioDao extends GenericDao<Usuario> {
 	
 	private static UsuarioDao instance;
-	private Function<Usuario,Usuario> functionLoadAll;
-	private Function<Pair<Usuario,Session>,Usuario> functionBeforeSave;
 	
 	private UsuarioDao() {
 		super();
@@ -52,10 +46,5 @@ public class UsuarioDao extends GenericDao<Usuario> {
 	
 	public PagedList<Usuario> getListLoadPerfis(UsuarioExampleBuilder usuarioExampleBuilder) throws Exception{
 		return this.getList(usuarioExampleBuilder, this.functionLoadAll);
-	}
-	
-	@Override
-	public Usuario save(Usuario usuario) throws Exception {
-		return super.save(usuario,this.functionBeforeSave);
 	}
 }

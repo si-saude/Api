@@ -18,6 +18,9 @@ import org.javatuples.Triplet;
 public abstract class GenericDao<T> {
 	
 	protected Class<T> entityType;
+	protected Function<T,T> functionLoad;
+	protected Function<T,T> functionLoadAll;
+	protected Function<Pair<T,Session>,T> functionBeforeSave;
 	
 	@SuppressWarnings("unchecked")
 	protected GenericDao(){
@@ -25,19 +28,15 @@ public abstract class GenericDao<T> {
 			.getActualTypeArguments()[0];
 	}
 	
-	public T save(T entity) throws Exception {
-		return save(entity,null);
-	}
-	
 	@SuppressWarnings("unchecked")
-	protected T save(T entity, Function<Pair<T,Session>,T> function) throws Exception {
+	protected T save(T entity) throws Exception {
 		Session session = HibernateHelper.getSession();
 		
 		try {
 			Transaction transaction = session.beginTransaction();
 			
-			if(function != null)
-				entity = function.apply(new Pair<T,Session>(entity,session));
+			if(this.functionBeforeSave != null)
+				entity = this.functionBeforeSave.apply(new Pair<T,Session>(entity,session));
 			entity = (T)session.merge(entity);
 			
 			transaction.commit();

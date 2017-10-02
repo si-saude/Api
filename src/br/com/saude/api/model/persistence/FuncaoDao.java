@@ -1,10 +1,7 @@
 package br.com.saude.api.model.persistence;
 
-import java.util.function.Function;
-
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.javatuples.Pair;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.model.entity.po.Curso;
@@ -13,13 +10,11 @@ import br.com.saude.api.model.entity.po.Funcao;
 public class FuncaoDao extends GenericDao<Funcao> {
 	
 	private static FuncaoDao instance;
-	private Function<Funcao,Funcao> functionLoad;
-	private Function<Pair<Funcao,Session>,Funcao> functionBeforeSave;
 	
 	private FuncaoDao() {
 		super();
 		
-		this.functionLoad = funcao -> {
+		this.functionLoadAll = funcao -> {
 			if(funcao.getCursos()!=null)
 				Hibernate.initialize(funcao.getCursos());
 			return funcao;
@@ -44,11 +39,6 @@ public class FuncaoDao extends GenericDao<Funcao> {
 	}
 	
 	public Funcao getByIdLoadCursos(Object id) throws Exception {
-		return super.getById(id,this.functionLoad);
-	}
-	
-	@Override
-	public Funcao save(Funcao funcao) throws Exception {
-		return super.save(funcao,this.functionBeforeSave);
+		return super.getById(id,this.functionLoadAll);
 	}
 }

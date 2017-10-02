@@ -2,12 +2,10 @@ package br.com.saude.api.model.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.javatuples.Pair;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.PagedList;
@@ -18,9 +16,6 @@ import br.com.saude.api.model.entity.po.Telefone;
 public class ProfissionalDao extends GenericDao<Profissional> {
 
 	private static ProfissionalDao instance;
-	private Function<Profissional,Profissional> functionLoad;
-	private Function<Profissional,Profissional> functionLoadAll;
-	private Function<Pair<Profissional,Session>,Profissional> functionBeforeSave;
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	private ProfissionalDao() {
@@ -132,10 +127,5 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		if(profissional.getFuncao()!=null)
 			Hibernate.initialize(profissional.getFuncao());
 		return profissional;
-	}
-	
-	@Override
-	public Profissional save(Profissional entity) throws Exception {		
-		return super.save(entity,this.functionBeforeSave);
 	}
 }
