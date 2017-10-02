@@ -29,7 +29,7 @@ public abstract class GenericDao<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected T save(T entity) throws Exception {
+	public T save(T entity) throws Exception {
 		Session session = HibernateHelper.getSession();
 		
 		try {
