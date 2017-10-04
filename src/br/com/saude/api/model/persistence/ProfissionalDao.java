@@ -1,6 +1,5 @@
 package br.com.saude.api.model.persistence;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -48,10 +47,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 			Session session = pair.getValue1();
 			
 			//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
-			if(profissional.getId() > 0) {
-				if(profissional.getTelefones() == null)
-					profissional.setTelefones(new ArrayList<Telefone>());
-				
+			if(profissional.getId() > 0) {				
 				List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
 						.createAlias("profissionais", "profissional")
 						.add(Restrictions.eq("profissional.id", profissional.getId()))
@@ -62,8 +58,6 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 				});
 			}
 			
-			//SETA O PROFISSIONAL NAS VACINAS
-			profissional.getVacinas().forEach(v->v.setProfissional(profissional));
 			return profissional;
 		};
 	}

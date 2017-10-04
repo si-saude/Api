@@ -21,15 +21,6 @@ public class PerfilDao extends GenericDao<Perfil> {
 				Hibernate.initialize(perfil.getPermissoes());
 			return perfil;
 		};
-		
-		this.functionBeforeSave = pair -> {
-			Perfil perfil = pair.getValue0();
-			
-			//SETA O PERFIL NAS PERMISSÕES
-			perfil.getPermissoes().forEach(p-> p.setPerfil(perfil));
-			
-			return perfil;
-		};
 	}
 	
 	public static PerfilDao getInstance() {

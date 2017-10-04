@@ -41,4 +41,12 @@ public class PerfilBo extends GenericBo<Perfil, PerfilFilter, PerfilDao,
 	public Perfil getById(Object id) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return this.getById(getDao().getByIdLoadPermissoes(id), this.functionLoadAll);
 	}
+	
+	@Override
+	public Perfil save(Perfil perfil) throws IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		
+		perfil.getPermissoes().forEach(p-> p.setPerfil(perfil));
+		return super.save(perfil);
+	}
 }

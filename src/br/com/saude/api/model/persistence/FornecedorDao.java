@@ -1,6 +1,5 @@
 package br.com.saude.api.model.persistence;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -33,10 +32,7 @@ public class FornecedorDao extends GenericDao<Fornecedor>{
 			Session session = pair.getValue1();
 			
 			//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
-			if(fornecedor.getId() > 0) {
-				if(fornecedor.getTelefones() == null)
-					fornecedor.setTelefones(new ArrayList<Telefone>());
-				
+			if(fornecedor.getId() > 0) {				
 				List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
 						.createAlias("fornecedores", "fornecedor")
 						.add(Restrictions.eq("fornecedor.id", fornecedor.getId()))
