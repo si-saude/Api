@@ -17,6 +17,10 @@ public class FornecedorBo extends GenericBo<Fornecedor, FornecedorFilter, Fornec
 	
 	private FornecedorBo() {
 		super();
+		
+		this.functionLoadAll = builder -> {
+			return builder.loadEndereco().loadTelefones();
+		};
 	}
 	
 	public static FornecedorBo getInstance() {
