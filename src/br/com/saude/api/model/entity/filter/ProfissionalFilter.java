@@ -14,7 +14,9 @@ public class ProfissionalFilter extends GenericFilter {
 	private FuncaoFilter funcao;
 	private CurriculoFilter curriculo;
 	private ProfissionalConselhoFilter profissionalConselho;
+	private EnderecoFilter endereco;
 	private String mi;
+	
 	public String getNome() {
 		return nome;
 	}
@@ -81,4 +83,11 @@ public class ProfissionalFilter extends GenericFilter {
 	public void setProfissionalConselho(ProfissionalConselhoFilter profissionalConselho) {
 		this.profissionalConselho = profissionalConselho;
 	}
+	public EnderecoFilter getEndereco() {
+		return endereco;
+	}
+	public void setEndereco(EnderecoFilter endereco) {
+		this.endereco = endereco;
+	}
+	
 }

@@ -103,6 +103,14 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		}
 	}
 	
+	private void addEndereco() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getEndereco()!=null) {
+			CriteriaExample criteriaExample = EnderecoExampleBuilder
+					.newInstance(this.filter.getEndereco()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("curriculo", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
 	private void addProfissionalConselho() throws InstantiationException, IllegalAccessException {
 		if(this.filter.getProfissionalConselho()!=null) {
 			CriteriaExample criteriaExample = ProfissionalConselhoExampleBuilder
@@ -123,6 +131,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		addLocalizacao();
 		addFuncao();
 		addCurriculo();
+		addEndereco();
 		addProfissionalConselho();
 	}
 
