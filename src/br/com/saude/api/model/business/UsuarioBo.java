@@ -1,7 +1,5 @@
 package br.com.saude.api.model.business;
 
-import java.util.function.Function;
-
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.business.validate.UsuarioValidator;
@@ -15,12 +13,14 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 											UsuarioExampleBuilder> {
 	
 	private static UsuarioBo instance;
-	private Function<UsuarioBuilder,UsuarioBuilder> function;
 	
 	private UsuarioBo() {
 		super();
-		
-		this.function = builder -> {
+	}
+	
+	@Override
+	protected void initializeFunctions() {
+		this.functionLoadAll = builder -> {
 			return builder.loadPerfis();
 		};
 	}
@@ -32,11 +32,11 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 	}
 	
 	public PagedList<Usuario> getListLoadPerfis(UsuarioFilter filter) throws Exception{
-		return getList(getDao().getListLoadPerfis(getExampleBuilder(filter).example()), function);
+		return getList(getDao().getListLoadPerfis(getExampleBuilder(filter).example()), functionLoadAll);
 	}
 	
 	public Usuario getByIdLoadPerfis(int id) throws Exception {
-		return getByEntity(getDao().getByIdLoadPerfis(id), this.function);
+		return getByEntity(getDao().getByIdLoadPerfis(id), this.functionLoadAll);
 	}
 	
 	public Usuario getFirstToAutenticacao(UsuarioFilter filter) throws Exception {

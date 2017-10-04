@@ -1,7 +1,5 @@
 package br.com.saude.api.model.business;
 
-import java.util.function.Function;
-
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.ProfissionalBuilder;
@@ -14,12 +12,13 @@ public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, 
 												ProfissionalBuilder, ProfissionalExampleBuilder> {
 	
 	private static ProfissionalBo instance;
-	private Function<ProfissionalBuilder,ProfissionalBuilder> functionLoad;
-	private Function<ProfissionalBuilder,ProfissionalBuilder> functionLoadAll;
 	
 	private ProfissionalBo() {
 		super();
-		
+	}
+	
+	@Override
+	protected void initializeFunctions() {
 		this.functionLoad = builder -> {
 			return builder.loadEquipe().loadLocalizacao().loadFuncao();
 		};

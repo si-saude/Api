@@ -19,6 +19,11 @@ public class CidadeBo extends GenericBo<Cidade, CidadeFilter, CidadeDao, CidadeB
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static CidadeBo getInstance() {
 		if(instance==null)
 			instance = new CidadeBo();

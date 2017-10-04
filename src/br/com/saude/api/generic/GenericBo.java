@@ -5,15 +5,20 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.function.Function;
 
-public class GenericBo<T, F extends GenericFilter, D extends GenericDao<T>,
+public abstract class GenericBo<T, F extends GenericFilter, D extends GenericDao<T>,
 							B extends GenericEntityBuilder<T,F>,
 							X extends GenericExampleBuilder<T,F>> {
 	
 	private D dao;
 	
+	protected Function<B,B> functionLoad;
+	protected Function<B,B> functionLoadAll;
+	
 	protected GenericBo() {
-		
+		this.initializeFunctions();
 	}
+	
+	protected abstract void initializeFunctions();
 	
 	@SuppressWarnings("unchecked")
 	public D getDao() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {

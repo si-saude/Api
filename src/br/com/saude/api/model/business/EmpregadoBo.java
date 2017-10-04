@@ -16,6 +16,11 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static EmpregadoBo getInstance() {
 		if(instance == null)
 			instance = new EmpregadoBo();

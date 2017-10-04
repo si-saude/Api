@@ -16,6 +16,11 @@ public class LocalizacaoBo extends GenericBo<Localizacao, LocalizacaoFilter, Loc
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static LocalizacaoBo getInstance() {
 		if(instance==null)
 			instance = new LocalizacaoBo();

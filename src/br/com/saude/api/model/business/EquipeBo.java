@@ -16,6 +16,11 @@ public class EquipeBo extends GenericBo<Equipe, EquipeFilter, EquipeDao, EquipeB
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static EquipeBo getInstance() {
 		if(instance==null)
 			instance = new EquipeBo();
