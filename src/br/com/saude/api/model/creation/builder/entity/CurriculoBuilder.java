@@ -53,7 +53,7 @@ public class CurriculoBuilder extends GenericEntityBuilder<Curriculo,CurriculoFi
 	
 	private Curriculo loadCurriculoCursos(Curriculo origem,Curriculo destino) {
 		if(origem.getCurriculoCursos() != null) {
-			destino.setCurriculoCursos(CurriculoCursoBuilder.newInstance(origem.getCurriculoCursos()).getEntityList());
+			destino.setCurriculoCursos(CurriculoCursoBuilder.newInstance(origem.getCurriculoCursos()).loadCurso().getEntityList());
 		}
 		
 		return destino;

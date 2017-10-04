@@ -27,10 +27,17 @@ public class GenericBo<T, F extends GenericFilter, D extends GenericDao<T>,
 
 	@SuppressWarnings("unchecked")
 	public B getBuilder(Object entity) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		return (B)((Class<B>)((ParameterizedType)getClass().getGenericSuperclass())
-				.getActualTypeArguments()[3])
-				.getDeclaredMethod("newInstance", new Class[] {entity.getClass()})
-				.invoke(null,new Object[] {entity});
+		try {
+			return (B)((Class<B>)((ParameterizedType)getClass().getGenericSuperclass())
+					.getActualTypeArguments()[3])
+					.getDeclaredMethod("newInstance", new Class[] {entity.getClass()})
+					.invoke(null,new Object[] {entity});
+		}catch(NoSuchMethodException ex) {
+			return (B)((Class<B>)((ParameterizedType)getClass().getGenericSuperclass())
+					.getActualTypeArguments()[3])
+					.getDeclaredMethod("newInstance", new Class[] { List.class })
+					.invoke(null,new Object[] {entity});
+		}
 	}
 
 	@SuppressWarnings("unchecked")

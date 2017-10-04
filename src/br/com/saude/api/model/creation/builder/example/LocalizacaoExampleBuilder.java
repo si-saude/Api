@@ -27,14 +27,6 @@ public class LocalizacaoExampleBuilder extends GenericExampleBuilder<Localizacao
 		if(this.filter.getNome()!=null)
 			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
 	}
-	
-	public LocalizacaoExampleBuilder exampleSelectList() {
-		if(this.filter!=null) {
-			createExampleSelectList();
-			this.criterions.add(getExample());
-		}
-		return this;
-	}
 
 	@Override
 	protected void createExample() {

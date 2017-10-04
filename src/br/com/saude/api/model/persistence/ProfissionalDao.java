@@ -10,7 +10,10 @@ import org.hibernate.criterion.Restrictions;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.po.Curriculo;
+import br.com.saude.api.model.entity.po.CurriculoCurso;
 import br.com.saude.api.model.entity.po.Profissional;
+import br.com.saude.api.model.entity.po.ProfissionalConselho;
 import br.com.saude.api.model.entity.po.Telefone;
 
 public class ProfissionalDao extends GenericDao<Profissional> {
@@ -62,6 +65,17 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 			
 			//SETA O PROFISSIONAL NAS VACINAS
 			profissional.getVacinas().forEach(v->v.setProfissional(profissional));
+			
+			if(profissional.getCurriculo() != null) {
+				profissional.getCurriculo().setProfissional(profissional);
+				
+				for(CurriculoCurso curriculoCurso : profissional.getCurriculo().getCurriculoCursos())
+					curriculoCurso.setCurriculo(profissional.getCurriculo());
+			}
+			
+			if(profissional.getProfissionalConselho() != null)
+				profissional.getProfissionalConselho().setProfissional(profissional);
+			
 			return profissional;
 		};
 	}
@@ -100,14 +114,16 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	}
 	
 	private Profissional loadCurriculo(Profissional profissional) {
-		if(profissional.getCurriculo()!=null)
-			Hibernate.initialize(profissional.getCurriculo());
+		if(profissional.getCurriculo()!=null) {
+			profissional.setCurriculo((Curriculo)Hibernate.unproxy(profissional.getCurriculo()));
+			Hibernate.initialize(profissional.getCurriculo().getCurriculoCursos());
+		}
 		return profissional;
 	}
 	
 	private Profissional loadProfissionalConselho(Profissional profissional) {
 		if(profissional.getProfissionalConselho()!=null)
-			Hibernate.initialize(profissional.getProfissionalConselho());
+			profissional.setProfissionalConselho((ProfissionalConselho)Hibernate.unproxy(profissional.getProfissionalConselho()));
 		return profissional;
 	}
 	

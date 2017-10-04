@@ -23,7 +23,7 @@ public class CurriculoCurso {
 	private Curriculo curriculo;
 	
 	@NotNull(message="É necessário informar o Curso do Currículo.")
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Curso curso;
 	
 	private Date data;
