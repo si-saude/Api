@@ -19,6 +19,11 @@ public class GerenciaDao extends GenericDao<Gerencia> {
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static GerenciaDao getInstance() {
 		if(instance==null)
 			instance = new GerenciaDao();

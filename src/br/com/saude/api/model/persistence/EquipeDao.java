@@ -11,6 +11,11 @@ public class EquipeDao extends GenericDao<Equipe> {
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static EquipeDao getInstance() {
 		if(instance==null)
 			instance = new EquipeDao();

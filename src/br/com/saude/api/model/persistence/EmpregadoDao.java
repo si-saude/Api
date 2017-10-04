@@ -10,6 +10,11 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static EmpregadoDao getInstance() {
 		if(instance == null)
 			instance = new EmpregadoDao();

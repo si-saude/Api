@@ -15,7 +15,10 @@ public class UsuarioDao extends GenericDao<Usuario> {
 	
 	private UsuarioDao() {
 		super();
-		
+	}
+	
+	@Override
+	protected void initializeFunctions() {
 		this.functionLoadAll = usuario -> {
 			if(usuario.getPerfis() != null)
 				Hibernate.initialize(usuario.getPerfis());

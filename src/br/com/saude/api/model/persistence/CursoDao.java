@@ -11,6 +11,11 @@ public class CursoDao extends GenericDao<Curso> {
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static CursoDao getInstance() {
 		if(instance==null)
 			instance = new CursoDao();

@@ -11,6 +11,11 @@ public class CidadeDao extends GenericDao<Cidade> {
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static CidadeDao getInstance() {
 		if(instance==null)
 			instance = new CidadeDao();

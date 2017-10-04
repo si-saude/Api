@@ -17,11 +17,13 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 
 	private static ProfissionalDao instance;
 	
-	@SuppressWarnings({ "unchecked", "deprecation" })
 	private ProfissionalDao() {
 		super();
-		
-		//CRIAÇÃO DAS FUNÇÕES
+	}
+	
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	@Override
+	protected void initializeFunctions() {
 		this.functionLoad = profissional -> {
 			profissional = loadEquipe(profissional);
 			profissional = loadLocalizacao(profissional);

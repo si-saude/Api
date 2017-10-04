@@ -12,7 +12,10 @@ public class PerfilDao extends GenericDao<Perfil> {
 	
 	private PerfilDao() {
 		super();
-		
+	}
+	
+	@Override
+	protected void initializeFunctions() {
 		this.functionLoadAll = perfil -> {
 			if(perfil.getPermissoes() != null)
 				Hibernate.initialize(perfil.getPermissoes());

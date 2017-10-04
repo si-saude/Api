@@ -15,11 +15,13 @@ public class FornecedorDao extends GenericDao<Fornecedor>{
 
 	private static FornecedorDao instance;
 	
-	@SuppressWarnings({ "deprecation", "unchecked" })
 	private FornecedorDao() {
 		super();
-		
-		//CRIAÇÃO DAS FUNÇÕES
+	}
+	
+	@Override
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	protected void initializeFunctions() {
 		this.functionLoadAll = fornecedor -> {
 			fornecedor = loadTelefones(fornecedor);
 			fornecedor = loadEndereco(fornecedor);
