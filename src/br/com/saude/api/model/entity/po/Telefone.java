@@ -25,6 +25,9 @@ public class Telefone {
 	@ManyToMany(fetch=FetchType.LAZY, mappedBy="telefones")
 	private List<Profissional> profissionais;
 	
+	@ManyToMany(fetch=FetchType.LAZY, mappedBy="telefones")
+	private List<Fornecedor> fornecedores;
+	
 	@Version
 	private long version;
 
@@ -60,6 +63,14 @@ public class Telefone {
 		this.profissionais = profissionais;
 	}
 	
+	public List<Fornecedor> getFornecedores() {
+		return fornecedores;
+	}
+
+	public void setFornecedores(List<Fornecedor> fornecedores) {
+		this.fornecedores = fornecedores;
+	}
+
 	@Override
 	public boolean equals(Object telefone) {
 		return ((Telefone)telefone).id == this.id && this.id > 0;

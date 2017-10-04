@@ -16,6 +16,11 @@ public class CursoBo extends GenericBo<Curso, CursoFilter, CursoDao, CursoBuilde
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static CursoBo getInstance() {
 		if(instance==null)
 			instance = new CursoBo();

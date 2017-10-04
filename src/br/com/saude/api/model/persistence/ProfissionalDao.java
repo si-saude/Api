@@ -1,6 +1,5 @@
 package br.com.saude.api.model.persistence;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -11,7 +10,6 @@ import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Curriculo;
-import br.com.saude.api.model.entity.po.CurriculoCurso;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.ProfissionalConselho;
 import br.com.saude.api.model.entity.po.Telefone;
@@ -20,11 +18,13 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 
 	private static ProfissionalDao instance;
 	
-	@SuppressWarnings({ "unchecked", "deprecation" })
 	private ProfissionalDao() {
 		super();
-		
-		//CRIAÇÃO DAS FUNÇÕES
+	}
+	
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	@Override
+	protected void initializeFunctions() {
 		this.functionLoad = profissional -> {
 			profissional = loadEquipe(profissional);
 			profissional = loadLocalizacao(profissional);
@@ -49,10 +49,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 			Session session = pair.getValue1();
 			
 			//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
-			if(profissional.getId() > 0) {
-				if(profissional.getTelefones() == null)
-					profissional.setTelefones(new ArrayList<Telefone>());
-				
+			if(profissional.getId() > 0) {				
 				List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
 						.createAlias("profissionais", "profissional")
 						.add(Restrictions.eq("profissional.id", profissional.getId()))
@@ -62,19 +59,6 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 						session.remove(t);
 				});
 			}
-			
-			//SETA O PROFISSIONAL NAS VACINAS
-			profissional.getVacinas().forEach(v->v.setProfissional(profissional));
-			
-			if(profissional.getCurriculo() != null) {
-				profissional.getCurriculo().setProfissional(profissional);
-				
-				for(CurriculoCurso curriculoCurso : profissional.getCurriculo().getCurriculoCursos())
-					curriculoCurso.setCurriculo(profissional.getCurriculo());
-			}
-			
-			if(profissional.getProfissionalConselho() != null)
-				profissional.getProfissionalConselho().setProfissional(profissional);
 			
 			return profissional;
 		};

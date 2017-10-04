@@ -13,7 +13,10 @@ public class FuncaoDao extends GenericDao<Funcao> {
 	
 	private FuncaoDao() {
 		super();
-		
+	}
+	
+	@Override
+	protected void initializeFunctions() {
 		this.functionLoadAll = funcao -> {
 			if(funcao.getCursos()!=null)
 				Hibernate.initialize(funcao.getCursos());

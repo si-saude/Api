@@ -1,7 +1,6 @@
 package br.com.saude.api.model.business;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
@@ -15,12 +14,14 @@ public class PerfilBo extends GenericBo<Perfil, PerfilFilter, PerfilDao,
 										PerfilBuilder, PerfilExampleBuilder>{
 	
 	private static PerfilBo instance;
-	private Function<PerfilBuilder,PerfilBuilder> function;
 	
 	private PerfilBo() {
 		super();
-		
-		this.function = builder -> {
+	}
+	
+	@Override
+	protected void initializeFunctions() {
+		this.functionLoadAll = builder -> {
 			return builder.loadPermissoes();
 		};
 	}
@@ -33,11 +34,19 @@ public class PerfilBo extends GenericBo<Perfil, PerfilFilter, PerfilDao,
 	
 	public PagedList<Perfil> getListLoadPermissoes(PerfilFilter filter) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return this.getList(getDao().getListLoadPermissoes(getExampleBuilder(filter).example()),
-							this.function);
+							this.functionLoadAll);
 	}
 	
 	@Override
 	public Perfil getById(Object id) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		return this.getById(getDao().getByIdLoadPermissoes(id), this.function);
+		return this.getById(getDao().getByIdLoadPermissoes(id), this.functionLoadAll);
+	}
+	
+	@Override
+	public Perfil save(Perfil perfil) throws IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		
+		perfil.getPermissoes().forEach(p-> p.setPerfil(perfil));
+		return super.save(perfil);
 	}
 }

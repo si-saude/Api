@@ -16,7 +16,10 @@ public class ExameDao extends GenericDao<Exame> {
 	
 	private ExameDao(){
 		super();
-		
+	}
+	
+	@Override
+	protected void initializeFunctions() {
 		this.functionLoad = exame -> {
 			if(exame.getEmpregado() != null)
 				Hibernate.initialize(exame.getEmpregado());

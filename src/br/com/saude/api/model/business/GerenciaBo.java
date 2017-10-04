@@ -16,6 +16,11 @@ public class GerenciaBo extends GenericBo<Gerencia, GerenciaFilter, GerenciaDao,
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static GerenciaBo getInstance() {
 		if(instance==null)
 			instance = new GerenciaBo();

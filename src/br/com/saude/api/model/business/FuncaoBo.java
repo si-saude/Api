@@ -1,7 +1,6 @@
 package br.com.saude.api.model.business;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.function.Function;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.model.creation.builder.entity.FuncaoBuilder;
 import br.com.saude.api.model.creation.builder.example.FuncaoExampleBuilder;
@@ -13,12 +12,14 @@ public class FuncaoBo extends GenericBo<Funcao, FuncaoFilter, FuncaoDao, FuncaoB
 										FuncaoExampleBuilder> {
 	
 	private static FuncaoBo instance;
-	private Function<FuncaoBuilder,FuncaoBuilder> function;
 	
 	private FuncaoBo() {
 		super();
-		
-		this.function = builder -> {
+	}
+	
+	@Override
+	protected void initializeFunctions() {
+		this.functionLoadAll = builder -> {
 			return builder.loadCursos();
 		};
 	}
@@ -31,6 +32,6 @@ public class FuncaoBo extends GenericBo<Funcao, FuncaoFilter, FuncaoDao, FuncaoB
 	
 	@Override
 	public Funcao getById(Object id) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		return getByEntity(getDao().getByIdLoadCursos(id),this.function);
+		return getByEntity(getDao().getByIdLoadCursos(id),this.functionLoadAll);
 	}
 }

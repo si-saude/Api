@@ -26,7 +26,10 @@ public abstract class GenericDao<T> {
 	protected GenericDao(){
 		this.entityType = (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass())
 			.getActualTypeArguments()[0];
+		this.initializeFunctions();
 	}
+	
+	protected abstract void initializeFunctions();
 	
 	@SuppressWarnings("unchecked")
 	public T save(T entity) throws Exception {

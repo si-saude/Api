@@ -11,6 +11,11 @@ public class LocalizacaoDao extends GenericDao<Localizacao> {
 		super();
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
 	public static LocalizacaoDao getInstance() {
 		if(instance==null)
 			instance = new LocalizacaoDao();
