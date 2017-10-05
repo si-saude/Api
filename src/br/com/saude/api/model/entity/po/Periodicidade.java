@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,7 @@ public class Periodicidade {
 	
 	@NotNull(message="É necessário informar Descrição de Periodicidade.")
 	@Size(max = 64, message="Tamanho máximo para Descrição da Periodicidade: 64")
+	@Column(unique=true)
 	private String descricao;
 	
 	@Version
