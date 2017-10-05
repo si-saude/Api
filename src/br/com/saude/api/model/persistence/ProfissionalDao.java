@@ -13,6 +13,7 @@ import br.com.saude.api.model.entity.po.Curriculo;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.ProfissionalConselho;
 import br.com.saude.api.model.entity.po.Telefone;
+import br.com.saude.api.model.entity.po.Vacina;
 
 public class ProfissionalDao extends GenericDao<Profissional> {
 
@@ -34,7 +35,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		
 		this.functionLoadAll = profissional -> {
 			profissional = loadTelefones(profissional);
-			profissional = loadVacinas(profissional);
+			profissional = loadProfissionalVacinas(profissional);
 			profissional = loadEndereco(profissional);
 			profissional = loadEquipe(profissional);
 			profissional = loadLocalizacao(profissional);
@@ -59,6 +60,13 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 						session.remove(t);
 				});
 			}
+			
+			//CARREGAR AS VACINAS
+			if(profissional.getProfissionalVacinas() != null)
+				for(int i=0; i < profissional.getProfissionalVacinas().size(); i++)
+					profissional.getProfissionalVacinas().get(i)
+						.setVacina(session.get(Vacina.class, 
+											profissional.getProfissionalVacinas().get(i).getId()));
 			
 			return profissional;
 		};
@@ -85,9 +93,9 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		return profissional;
 	}
 	
-	private Profissional loadVacinas(Profissional profissional) {
-		if(profissional.getVacinas()!=null)
-			Hibernate.initialize(profissional.getVacinas());
+	private Profissional loadProfissionalVacinas(Profissional profissional) {
+		if(profissional.getProfissionalVacinas()!=null)
+			Hibernate.initialize(profissional.getProfissionalVacinas());
 		return profissional;
 	}
 	

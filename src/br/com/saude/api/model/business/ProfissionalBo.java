@@ -29,8 +29,9 @@ public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, 
 		};
 		
 		this.functionLoadAll = builder -> {
-			return builder.loadFuncao().loadEndereco().loadEquipe().loadLocalizacao()
-						.loadProfissionalConselho().loadCurriculo().loadTelefones().loadVacinas();
+			return builder.loadFuncao().loadEndereco().loadEquipe()
+						.loadLocalizacao().loadProfissionalConselho()
+						.loadCurriculo().loadTelefones().loadProfissionalVacinas();
 		};
 	}
 	
@@ -67,7 +68,8 @@ public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, 
 				profissional.setTelefones(new ArrayList<Telefone>());
 		}
 		
-		profissional.getVacinas().forEach(v->v.setProfissional(profissional));
+		profissional.getProfissionalVacinas().forEach(p->p.setProfissional(profissional));
+		
 		return super.save(profissional);
 	}
 }

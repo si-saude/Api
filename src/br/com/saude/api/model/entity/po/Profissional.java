@@ -70,7 +70,7 @@ public class Profissional {
 	private ProfissionalConselho profissionalConselho;
 	
 	@OneToMany(mappedBy="profissional", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<Vacina> vacinas;
+	private List<ProfissionalVacina> profissionalVacinas;
 	
 	@Version
 	private long version;
@@ -195,11 +195,11 @@ public class Profissional {
 		this.profissionalConselho = profissionalConselho;
 	}
 
-	public List<Vacina> getVacinas() {
-		return vacinas;
+	public List<ProfissionalVacina> getProfissionalVacinas() {
+		return profissionalVacinas;
 	}
 
-	public void setVacinas(List<Vacina> vacinas) {
-		this.vacinas = vacinas;
+	public void setProfissionalVacinas(List<ProfissionalVacina> profissionalVacinas) {
+		this.profissionalVacinas = profissionalVacinas;
 	}
 }

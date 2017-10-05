@@ -1,13 +1,14 @@
 package br.com.saude.api.model.entity.po;
 
-import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Version;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -23,23 +24,17 @@ public class Vacina {
 	@Size(max = 200, message="Tamanho máximo para Descrição da Vacina: 200")
 	private String descricao;
 	
-	@NotNull(message="É necessário informar a Data da Vacina.")
-	private Date data;
+	@Min(value=1, message="Valor mínimo para Doses da Vacina: 1")
+	private int doses;
 	
-	@Size(max = 32, message="Tamanho máximo para Lote da Vacina: 32")
-	private String lote;
+	@Min(value=0, message="Valor mínimo para Reforço da Vacina: 0")
+	private int reforco;
 	
-	@Size(max = 128, message="Tamanho máximo para Laboratório da Vacina: 128")
-	private String laboratorio;
+	@OneToMany(mappedBy="vacina", fetch=FetchType.LAZY)
+	private List<ProfissionalVacina> profissionalVacinas;
 	
-	@Min(value=1, message="Valor mínimo para Dose da Vacina: 1")
-	private int dose;
-	
-	private Date proximaDose;
-	
-	@NotNull(message="É necessário informar o Profissional da Vacina.")
-	@ManyToOne(fetch=FetchType.LAZY)
-	private Profissional profissional;
+	@Version
+	private long version;
 
 	public int getId() {
 		return id;
@@ -57,51 +52,35 @@ public class Vacina {
 		this.descricao = descricao;
 	}
 
-	public Date getData() {
-		return data;
+	public int getDoses() {
+		return doses;
 	}
 
-	public void setData(Date data) {
-		this.data = data;
+	public void setDoses(int doses) {
+		this.doses = doses;
 	}
 
-	public String getLote() {
-		return lote;
+	public int getReforco() {
+		return reforco;
 	}
 
-	public void setLote(String lote) {
-		this.lote = lote;
+	public void setReforco(int reforco) {
+		this.reforco = reforco;
 	}
 
-	public String getLaboratorio() {
-		return laboratorio;
+	public List<ProfissionalVacina> getProfissionalVacinas() {
+		return profissionalVacinas;
 	}
 
-	public void setLaboratorio(String laboratorio) {
-		this.laboratorio = laboratorio;
+	public void setProfissionalVacinas(List<ProfissionalVacina> profissionalVacinas) {
+		this.profissionalVacinas = profissionalVacinas;
 	}
 
-	public int getDose() {
-		return dose;
+	public long getVersion() {
+		return version;
 	}
 
-	public void setDose(int dose) {
-		this.dose = dose;
-	}
-
-	public Date getProximaDose() {
-		return proximaDose;
-	}
-
-	public void setProximaDose(Date proximaDose) {
-		this.proximaDose = proximaDose;
-	}
-
-	public Profissional getProfissional() {
-		return profissional;
-	}
-
-	public void setProfissional(Profissional profissional) {
-		this.profissional = profissional;
+	public void setVersion(long version) {
+		this.version = version;
 	}
 }
