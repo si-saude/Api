@@ -41,7 +41,7 @@ public class EnderecoBuilder extends GenericEntityBuilder<Endereco,EnderecoFilte
 
 	public EnderecoBuilder loadCidade() {
 		if(this.entity != null) {
-			this.entity = loadCidade(this.entity, this.newEntity);
+			this.newEntity = loadCidade(this.entity, this.newEntity);
 		}else {
 			for(Endereco endereco:this.entityList) {
 				Endereco newEndereco = this.newEntityList.stream()

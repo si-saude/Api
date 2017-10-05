@@ -37,7 +37,7 @@ public class FuncaoBuilder extends GenericEntityBuilder<Funcao,FuncaoFilter> {
 	
 	public FuncaoBuilder loadCursos() {
 		if(this.entity != null) {
-			this.entity = loadCursos(this.entity,this.newEntity);
+			this.newEntity = loadCursos(this.entity,this.newEntity);
 		}else {
 			for(Funcao funcao:this.entityList) {
 				Funcao newFuncao = this.newEntityList.stream()
@@ -52,6 +52,27 @@ public class FuncaoBuilder extends GenericEntityBuilder<Funcao,FuncaoFilter> {
 	private Funcao loadCursos(Funcao origem,Funcao destino) {
 		if(origem.getCursos() != null) {
 			destino.setCursos(CursoBuilder.newInstance(origem.getCursos()).getEntityList());
+		}
+		return destino;
+	}
+	
+	public FuncaoBuilder loadVacinas() {
+		if(this.entity != null) {
+			this.newEntity = loadCursos(this.entity,this.newEntity);
+		}else {
+			for(Funcao funcao:this.entityList) {
+				Funcao newFuncao = this.newEntityList.stream()
+						.filter(e->e.getId() == funcao.getId())
+						.iterator().next();
+				newFuncao = loadVacinas(funcao,newFuncao);
+			}
+		}
+		return this;
+	}
+	
+	private Funcao loadVacinas(Funcao origem,Funcao destino) {
+		if(origem.getVacinas() != null) {
+			destino.setVacinas(VacinaBuilder.newInstance(origem.getVacinas()).getEntityList());
 		}
 		return destino;
 	}

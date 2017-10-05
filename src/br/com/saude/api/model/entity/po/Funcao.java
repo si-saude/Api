@@ -31,6 +31,12 @@ public class Funcao {
 	inverseJoinColumns = {@JoinColumn(name="curso_id")})
 	private List<Curso> cursos;
 	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="vacina_funcao", 
+	joinColumns = {@JoinColumn(name="funcao_id")}, 
+	inverseJoinColumns = {@JoinColumn(name="vacina_id")})
+	private List<Vacina> vacinas;
+	
 	@Version
 	private long version;
 
@@ -64,5 +70,13 @@ public class Funcao {
 
 	public void setCursos(List<Curso> cursos) {
 		this.cursos = cursos;
+	}
+
+	public List<Vacina> getVacinas() {
+		return vacinas;
+	}
+
+	public void setVacinas(List<Vacina> vacinas) {
+		this.vacinas = vacinas;
 	}
 }

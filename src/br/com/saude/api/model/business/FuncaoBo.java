@@ -20,7 +20,7 @@ public class FuncaoBo extends GenericBo<Funcao, FuncaoFilter, FuncaoDao, FuncaoB
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadCursos();
+			return builder.loadCursos().loadVacinas();
 		};
 	}
 	
@@ -32,6 +32,6 @@ public class FuncaoBo extends GenericBo<Funcao, FuncaoFilter, FuncaoDao, FuncaoB
 	
 	@Override
 	public Funcao getById(Object id) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		return getByEntity(getDao().getByIdLoadCursos(id),this.functionLoadAll);
+		return getByEntity(getDao().getByIdLoadAll(id),this.functionLoadAll);
 	}
 }

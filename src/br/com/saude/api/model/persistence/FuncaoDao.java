@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.model.entity.po.Curso;
 import br.com.saude.api.model.entity.po.Funcao;
+import br.com.saude.api.model.entity.po.Vacina;
 
 public class FuncaoDao extends GenericDao<Funcao> {
 	
@@ -18,8 +19,13 @@ public class FuncaoDao extends GenericDao<Funcao> {
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = funcao -> {
+			
 			if(funcao.getCursos()!=null)
 				Hibernate.initialize(funcao.getCursos());
+			
+			if(funcao.getVacinas()!=null)
+				Hibernate.initialize(funcao.getVacinas());
+			
 			return funcao;
 		};
 		
@@ -31,6 +37,10 @@ public class FuncaoDao extends GenericDao<Funcao> {
 				for(int i=0; i < funcao.getCursos().size(); i++)
 					funcao.getCursos().set(i, session.get(Curso.class, funcao.getCursos().get(i).getId()));
 			
+			if(funcao.getVacinas() != null)
+				for(int i=0; i < funcao.getVacinas().size(); i++)
+					funcao.getVacinas().set(i, session.get(Vacina.class, funcao.getVacinas().get(i).getId()));
+			
 			return funcao;
 		};
 	}
@@ -41,7 +51,7 @@ public class FuncaoDao extends GenericDao<Funcao> {
 		return instance;
 	}
 	
-	public Funcao getByIdLoadCursos(Object id) throws Exception {
+	public Funcao getByIdLoadAll(Object id) throws Exception {
 		return super.getById(id,this.functionLoadAll);
 	}
 }
