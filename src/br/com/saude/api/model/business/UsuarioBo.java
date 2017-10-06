@@ -35,7 +35,8 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 		return getList(getDao().getListLoadPerfis(getExampleBuilder(filter).example()), functionLoadAll);
 	}
 	
-	public Usuario getByIdLoadPerfis(int id) throws Exception {
+	@Override
+	public Usuario getById(Object id) throws Exception {
 		return getByEntity(getDao().getByIdLoadPerfis(id), this.functionLoadAll);
 	}
 	

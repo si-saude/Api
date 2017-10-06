@@ -15,7 +15,7 @@ import br.com.saude.api.util.constant.TipoPessoa;
 
 @Path("generic")
 @RequestInterceptor
-public class GenericService {
+public class UtilService {
 	@GET
 	@Path("/funcionalidade")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -7,18 +7,18 @@ import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 
 import br.com.saude.api.generic.GenericValidator;
-import br.com.saude.api.model.entity.po.Cidade;
+import br.com.saude.api.model.entity.po.Exame;
 
-public class CidadeValidator extends GenericValidator {
+public class ExameValidator extends GenericValidator{
 
 	@Override
 	public void validate(Object entity) throws Exception {
-		Cidade cidade = (Cidade)entity;
+		Exame exame = (Exame)entity;
 		
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		Set<ConstraintViolation<Cidade>> cidadeViolation = factory.getValidator().validate(cidade);
+		Set<ConstraintViolation<Exame>> exameViolation = factory.getValidator().validate(exame);
 		
-		if(cidadeViolation.size() > 0)
-			throw new Exception(cidadeViolation.iterator().next().getMessage());
+		if(exameViolation.size() > 0)
+			throw new Exception(exameViolation.iterator().next().getMessage());
 	}
 }
