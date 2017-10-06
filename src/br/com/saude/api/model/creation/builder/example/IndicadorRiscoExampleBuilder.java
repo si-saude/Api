@@ -1,5 +1,9 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.sql.JoinType;
+import org.javatuples.Triplet;
+
+import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.IndicadorRiscoFilter;
@@ -46,6 +50,14 @@ public abstract class IndicadorRiscoExampleBuilder<T extends IndicadorRisco>
 		if(this.filter.getIndice5() != null)
 			this.entity.setIndice5(Helper.filterLike(this.filter.getIndice5()));
 	}
+	
+	protected void addPeriodicidade() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getPeriodicidade()!=null) {
+			CriteriaExample criteriaExample = PeriodicidadeExampleBuilder
+					.newInstance(this.filter.getPeriodicidade()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("periodicidade", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
@@ -56,6 +68,7 @@ public abstract class IndicadorRiscoExampleBuilder<T extends IndicadorRisco>
 		addIndice3();
 		addIndice4();
 		addIndice5();
+		addPeriodicidade();
 	}
 
 	@Override

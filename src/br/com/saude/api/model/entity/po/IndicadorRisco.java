@@ -1,9 +1,11 @@
 package br.com.saude.api.model.entity.po;
 
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,6 +20,10 @@ public abstract class IndicadorRisco {
 	@Size(max = 256, message="Tamanho máximo para Nome do Indicador de Risco: 256")
 	@Column(unique=true)
 	private String nome;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@NotNull(message="É necessário informar a Periodicidade do Indicador de Risco.")
+	private Periodicidade periodicidade;
 	
 	@Size(max = 1024, message="Tamanho máximo para Índice 0 do Indicador de Risco: 1024")
 	private String indice0;
@@ -110,5 +116,13 @@ public abstract class IndicadorRisco {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public Periodicidade getPeriodicidade() {
+		return periodicidade;
+	}
+
+	public void setPeriodicidade(Periodicidade periodicidade) {
+		this.periodicidade = periodicidade;
 	}
 }

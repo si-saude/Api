@@ -1,9 +1,8 @@
 package br.com.saude.api.model.persistence;
 
-import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.model.entity.po.IndicadorRiscoAmbiental;
 
-public class IndicadorRiscoAmbientalDao extends GenericDao<IndicadorRiscoAmbiental> {
+public class IndicadorRiscoAmbientalDao extends IndicadorRiscoDao<IndicadorRiscoAmbiental> {
 
 	private static IndicadorRiscoAmbientalDao instance;
 	
@@ -15,10 +14,5 @@ public class IndicadorRiscoAmbientalDao extends GenericDao<IndicadorRiscoAmbient
 		if(instance==null)
 			instance = new IndicadorRiscoAmbientalDao();
 		return instance;
-	}
-	
-	@Override
-	protected void initializeFunctions() {
-
 	}
 }

@@ -11,6 +11,8 @@ public class IndicadorRiscoFilter extends GenericFilter {
 	private String indice3;
 	private String indice4;
 	private String indice5;
+	private PeriodicidadeFilter periodicidade;
+	
 	public String getNome() {
 		return nome;
 	}
@@ -52,5 +54,11 @@ public class IndicadorRiscoFilter extends GenericFilter {
 	}
 	public void setIndice5(String indice5) {
 		this.indice5 = indice5;
+	}
+	public PeriodicidadeFilter getPeriodicidade() {
+		return periodicidade;
+	}
+	public void setPeriodicidade(PeriodicidadeFilter periodicidade) {
+		this.periodicidade = periodicidade;
 	}
 }

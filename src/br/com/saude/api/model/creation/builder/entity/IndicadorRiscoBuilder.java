@@ -39,6 +39,28 @@ public abstract class IndicadorRiscoBuilder<T extends IndicadorRisco> extends Ge
 		
 		return newIndicadorRisco;
 	}
+	
+	public IndicadorRiscoBuilder<?> loadPeriodicidade() {
+		if(this.entity != null) {
+			this.newEntity = loadPeriodicidade(this.entity,this.newEntity);
+		}else {
+			for(T indicadorRisco:this.entityList) {
+				T newIndicadorRisco = this.newEntityList.stream()
+						.filter(e->e.getId() == indicadorRisco.getId())
+						.iterator().next();
+				newIndicadorRisco = loadPeriodicidade(indicadorRisco,newIndicadorRisco);
+			}
+		}
+		return this;
+	}
+	
+	protected T loadPeriodicidade(T origem,T destino) {
+		if(origem.getPeriodicidade()!= null) {
+			destino.setPeriodicidade(PeriodicidadeBuilder.newInstance(origem.getPeriodicidade()).getEntity());
+		}
+		
+		return destino;
+	}
 
 	@Override
 	public T cloneFromFilter(IndicadorRiscoFilter filter) {
