@@ -2,6 +2,7 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,6 +23,7 @@ public class Vacina {
 	
 	@NotNull(message="É necessário informar a Descrição da Vacina.")
 	@Size(max = 200, message="Tamanho máximo para Descrição da Vacina: 200")
+	@Column(unique=true)
 	private String descricao;
 	
 	@Min(value=1, message="Valor mínimo para Doses da Vacina: 1")

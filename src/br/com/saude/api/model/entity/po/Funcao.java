@@ -3,6 +3,7 @@ package br.com.saude.api.model.entity.po;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,6 +24,7 @@ public class Funcao {
 	
 	@NotNull(message="É necessário informar o Nome da Função.")
 	@Size(max = 120, message="Tamanho máximo para Nome da Função: 120")
+	@Column(unique=true)
 	private String nome;
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
