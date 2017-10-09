@@ -14,7 +14,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class IndicadorRiscoAcidenteInstalacao {
+public class IndicadorRiscoAmbientalInstalacao {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class IndicadorRiscoAcidenteInstalacao {
 	
 	@NotNull(message="É necessário informar o Indicador de Risco.")
 	@ManyToOne(fetch=FetchType.EAGER)
-	private IndicadorRiscoAcidente indicadorRisco;
+	private IndicadorRiscoAmbiental indicadorRisco;
 	
 	private Date dataInspecao;
 	
@@ -53,11 +53,11 @@ public class IndicadorRiscoAcidenteInstalacao {
 		this.instalacao = instalacao;
 	}
 
-	public IndicadorRiscoAcidente getIndicadorRisco() {
+	public IndicadorRiscoAmbiental getIndicadorRisco() {
 		return indicadorRisco;
 	}
 
-	public void setIndicadorRisco(IndicadorRiscoAcidente indicadorRisco) {
+	public void setIndicadorRisco(IndicadorRiscoAmbiental indicadorRisco) {
 		this.indicadorRisco = indicadorRisco;
 	}
 
