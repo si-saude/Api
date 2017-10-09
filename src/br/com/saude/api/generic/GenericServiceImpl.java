@@ -18,8 +18,8 @@ public abstract class GenericServiceImpl<	T,
 		return Response.ok(getBo().getSelectList(filter)).build();
 	}
 	
-	public Response getGeneric(String id) throws Exception{
-		return Response.ok(getBo().getById(new Long(id))).build();
+	public Response getGeneric(Object id) throws Exception{
+		return Response.ok(getBo().getById(id)).build();
 	}
 	
 	public Response deleteGeneric(Object id) {

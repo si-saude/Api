@@ -10,11 +10,11 @@ import br.com.saude.api.model.entity.po.IndicadorRiscoAcidenteInstalacao;
 public class IndicadorRiscoAcidenteInstalacaoBuilder
 		extends GenericEntityBuilder<IndicadorRiscoAcidenteInstalacao,GenericFilter>{
 
-	public IndicadorRiscoAcidenteInstalacaoBuilder newInstance(IndicadorRiscoAcidenteInstalacao entity) {
+	public static IndicadorRiscoAcidenteInstalacaoBuilder newInstance(IndicadorRiscoAcidenteInstalacao entity) {
 		return new IndicadorRiscoAcidenteInstalacaoBuilder(entity);
 	}
 	
-	public IndicadorRiscoAcidenteInstalacaoBuilder newInstance(List<IndicadorRiscoAcidenteInstalacao> entityList) {
+	public static IndicadorRiscoAcidenteInstalacaoBuilder newInstance(List<IndicadorRiscoAcidenteInstalacao> entityList) {
 		return new IndicadorRiscoAcidenteInstalacaoBuilder(entityList);
 	}
 	

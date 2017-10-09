@@ -69,7 +69,7 @@ public class PerfilService extends GenericServiceImpl<Perfil,PerfilFilter,Perfil
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("id") String id) throws Exception {
-		return super.getGeneric(id);
+		return super.getGeneric(new Integer(id));
 	}
 
 	@Override

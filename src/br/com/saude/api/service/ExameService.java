@@ -2,7 +2,6 @@ package br.com.saude.api.service;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -36,7 +35,7 @@ public class ExameService extends GenericServiceImpl<Exame,ExameFilter,ExameBo>
 	@Consumes(MediaType.APPLICATION_JSON)
 	@CustomValidator(validatorClass=ExameValidator.class, entityClass=Exame.class)
 	@Override
-	public Response save(@Valid Exame exame) {
+	public Response save(Exame exame) {
 		try {
 			ExameBo.getInstance().save(exame);
 			return Response.ok("Salvo com sucesso.").build();
@@ -69,7 +68,7 @@ public class ExameService extends GenericServiceImpl<Exame,ExameFilter,ExameBo>
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("id") String id) throws Exception {
-		return super.getGeneric(id);
+		return super.getGeneric(new Integer(id));
 	}
 
 	@Override
