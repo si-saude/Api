@@ -3,6 +3,8 @@ package br.com.saude.api.generic;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 import org.hibernate.sql.JoinType;
@@ -13,9 +15,13 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	protected F filter;
 	protected List<Criterion> criterions;
 	protected List<Triplet<String,CriteriaExample,JoinType>> criterias;
+	protected Function<Example,Example> finishExampleFunction;
 	
 	protected GenericExampleBuilder(F filter) {
 		this.filter = filter;
+		this.finishExampleFunction = example -> {
+			return example;
+		};
 	}
 	
 	public GenericExampleBuilder<T, F> example() throws InstantiationException, IllegalAccessException{
@@ -51,7 +57,9 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	}
 	
 	protected Example getExample() {
-		return Example.create(this.entity).enableLike().ignoreCase().excludeZeroes();
+		Example example = Example.create(this.entity).enableLike()
+								.ignoreCase().excludeZeroes().excludeNone(); 
+		return this.finishExampleFunction.apply(example);
 	}
 
 	public List<Criterion> getCriterions() {

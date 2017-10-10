@@ -30,6 +30,7 @@ public class PeriodicidadeBuilder extends GenericEntityBuilder<Periodicidade,Per
 		
 		newPeriodicidade.setId(periodicidade.getId());
 		newPeriodicidade.setDescricao(periodicidade.getDescricao());
+		newPeriodicidade.setMeses(periodicidade.getMeses());
 		newPeriodicidade.setVersion(periodicidade.getVersion());
 		
 		return newPeriodicidade;

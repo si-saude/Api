@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.filter;
 
+import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class IndicadorRiscoFilter extends GenericFilter {
@@ -12,6 +13,8 @@ public class IndicadorRiscoFilter extends GenericFilter {
 	private String indice4;
 	private String indice5;
 	private PeriodicidadeFilter periodicidade;
+	private BooleanFilter critico;
+	private String requisito;
 	
 	public String getNome() {
 		return nome;
@@ -60,5 +63,17 @@ public class IndicadorRiscoFilter extends GenericFilter {
 	}
 	public void setPeriodicidade(PeriodicidadeFilter periodicidade) {
 		this.periodicidade = periodicidade;
+	}
+	public String getRequisito() {
+		return requisito;
+	}
+	public void setRequisito(String requisito) {
+		this.requisito = requisito;
+	}
+	public BooleanFilter getCritico() {
+		return critico;
+	}
+	public void setCritico(BooleanFilter critico) {
+		this.critico = critico;
 	}
 }

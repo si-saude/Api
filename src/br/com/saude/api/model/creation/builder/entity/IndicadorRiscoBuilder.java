@@ -33,6 +33,8 @@ public abstract class IndicadorRiscoBuilder<T extends IndicadorRisco> extends Ge
 			newIndicadorRisco.setIndice3(indicadorRisco.getIndice3());
 			newIndicadorRisco.setIndice4(indicadorRisco.getIndice4());
 			newIndicadorRisco.setIndice5(indicadorRisco.getIndice5());
+			newIndicadorRisco.setCritico(indicadorRisco.isCritico());
+			newIndicadorRisco.setRequisito(indicadorRisco.getRequisito());
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}

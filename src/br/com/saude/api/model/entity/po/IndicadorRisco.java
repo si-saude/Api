@@ -45,6 +45,11 @@ public abstract class IndicadorRisco {
 	@Size(max = 1024, message="Tamanho máximo para Índice 5 do Indicador de Risco: 1024")
 	private String indice5;
 	
+	private boolean critico;
+	
+	@Size(max = 64, message="Tamanho máximo para Requisito do Indicador de Risco: 64")
+	private String requisito;
+	
 	@Version
 	private long version;
 
@@ -126,5 +131,21 @@ public abstract class IndicadorRisco {
 
 	public void setPeriodicidade(Periodicidade periodicidade) {
 		this.periodicidade = periodicidade;
+	}
+
+	public boolean isCritico() {
+		return critico;
+	}
+
+	public void setCritico(boolean critico) {
+		this.critico = critico;
+	}
+
+	public String getRequisito() {
+		return requisito;
+	}
+
+	public void setRequisito(String requisito) {
+		this.requisito = requisito;
 	}
 }

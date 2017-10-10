@@ -20,15 +20,20 @@ public class PeriodicidadeExampleBuilder
 		if(this.filter.getDescricao() != null)
 			this.entity.setDescricao(Helper.filterLike(this.filter.getDescricao()));
 	}
+	
+	private void addMeses() {
+		if(this.filter.getMeses() > 0)
+			this.entity.setMeses(this.filter.getMeses());
+	}
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addDescricao();
+		addMeses();
 	}
 
 	@Override
 	protected void createExampleSelectList() {
 		
 	}
-
 }

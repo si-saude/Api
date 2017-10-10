@@ -21,6 +21,24 @@ public abstract class IndicadorRiscoExampleBuilder<T extends IndicadorRisco>
 			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
 	}
 	
+	protected void addRequisito() {
+		if(this.filter.getRequisito() != null)
+			this.entity.setRequisito(Helper.filterLike(this.filter.getRequisito()));
+	}
+	
+	protected void addCritico() {
+		if(this.filter.getCritico() == null || 
+				this.filter.getCritico().getValue() <= 0 || 
+				this.filter.getCritico().getValue() > 2)
+			this.finishExampleFunction = example -> {
+				return example.excludeProperty("critico");
+			};
+		else if(this.filter.getCritico().getValue() == 1)
+			this.entity.setCritico(true);
+		else
+			this.entity.setCritico(false);
+	}
+	
 	protected void addIndice0() {
 		if(this.filter.getIndice0() != null)
 			this.entity.setIndice0(Helper.filterLike(this.filter.getIndice0()));
@@ -69,6 +87,8 @@ public abstract class IndicadorRiscoExampleBuilder<T extends IndicadorRisco>
 		addIndice4();
 		addIndice5();
 		addPeriodicidade();
+		addCritico();
+		addRequisito();
 	}
 
 	@Override

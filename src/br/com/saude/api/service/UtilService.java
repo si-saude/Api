@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.com.saude.api.util.RequestInterceptor;
+import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.Funcionalidade;
 import br.com.saude.api.util.constant.TipoPessoa;
 
@@ -31,6 +32,16 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getTipoPessoa(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(TipoPessoa.getInstance().getList().entrySet().stream() 
+							.filter(f-> filter!=null?f.getValue().toLowerCase().contains(filter.toLowerCase()):true)
+							.collect(Collectors.toMap(e->e.getKey(),e->e.getValue()))
+							).build();
+	}
+	
+	@GET
+	@Path("/conformidade")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getConformidade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(Conformidade.getInstance().getList().entrySet().stream() 
 							.filter(f-> filter!=null?f.getValue().toLowerCase().contains(filter.toLowerCase()):true)
 							.collect(Collectors.toMap(e->e.getKey(),e->e.getValue()))
 							).build();

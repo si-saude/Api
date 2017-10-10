@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -20,6 +21,9 @@ public class Periodicidade {
 	@Size(max = 64, message="Tamanho máximo para Descrição da Periodicidade: 64")
 	@Column(unique=true)
 	private String descricao;
+	
+	@Min(value = 0, message="Valor mínimo para Meses da Periodicidade: 0")
+	private int meses;
 	
 	@Version
 	private long version;
@@ -46,5 +50,13 @@ public class Periodicidade {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public int getMeses() {
+		return meses;
+	}
+
+	public void setMeses(int meses) {
+		this.meses = meses;
 	}
 }
