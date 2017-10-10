@@ -35,28 +35,6 @@ public class ExameBuilder extends GenericEntityBuilder<Exame,ExameFilter> {
 
 		return newExame;
 	}
-	
-	public ExameBuilder loadEmpregado() {
-		if(this.entity != null) {
-			this.newEntity = loadEmpregado(this.entity,this.newEntity);
-		}else {
-			for(Exame exame:this.entityList) {
-				Exame newExame = this.newEntityList.stream()
-										.filter(e->e.getId() == exame.getId())
-										.iterator().next();
-				newExame = loadEmpregado(exame,newExame);
-			}				
-		}
-		return this;
-	}
-	
-	private Exame loadEmpregado(Exame origem, Exame destino) {
-		if(origem.getEmpregado() != null) {
-			destino
-				.setEmpregado(EmpregadoBuilder.newInstance(origem.getEmpregado()).getEntity());
-		}
-		return destino;
-	}
 
 	@Override
 	public Exame cloneFromFilter(ExameFilter filter) {
