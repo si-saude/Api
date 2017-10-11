@@ -1,7 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
 
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
@@ -47,28 +46,11 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 	}
 	
 	private void addDataNascimento() {
-		if(this.filter.getDataNascimento()!= null) {
-			switch(this.filter.getDataNascimento().getTypeFilter()) {
-				case ENTRE: this.criterions.add(Restrictions.between("dataNascimento", 
-													this.filter.getDataNascimento().getInicio(), 
-													this.filter.getDataNascimento().getFim()));
-					break;
-				case MAIOR_IGUAL:
-				case MAIOR: this.criterions.add(Restrictions.gt("dataNascimento", 
-									this.filter.getDataNascimento().getInicio()));
-					break;
-				case MENOR_IGUAL:
-				case MENOR: this.criterions.add(Restrictions.lt("dataNascimento", 
-									this.filter.getDataNascimento().getInicio()));
-					break;
-				case IGUAL: this.criterions.add(Restrictions.eq("dataNascimento", this.filter.getDataNascimento().getInicio()));
-					break;
-				case DIFERENTE: this.criterions.add(Restrictions.ne("dataNascimento", this.filter.getDataNascimento().getInicio()));
-					break;
-				default:
-					break;
-			}
-		}
+		this.addData("dataNascimento", this.filter.getDataNascimento());
+	}
+	
+	private void addDataAso() {
+		this.addData("dataAso", this.filter.getDataAso());
 	}
 	
 	private void addEquipe() throws InstantiationException, IllegalAccessException {
@@ -123,6 +105,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addChave();
 		addDataNascimento();
+		addDataAso();
 		addMatricula();
 		addMi();
 		addNome();

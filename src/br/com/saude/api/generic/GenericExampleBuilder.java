@@ -97,4 +97,10 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	public F getFilter() {
 		return filter;
 	}
+	
+	protected void addData(String propertyName, DateFilter dateFilter) {
+		Criterion criterion = Helper.getCriterionDateFilter(propertyName, dateFilter);
+		if(criterion!=null)
+			this.criterions.add(criterion);
+	}
 }

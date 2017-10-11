@@ -31,6 +31,8 @@ public class Profissional {
 	
 	private Date dataNascimento;
 	
+	private Date dataAso;
+	
 	@Size(max = 10, message="Tamanho máximo para Matrícula do Profissional: 10")
 	private String matricula;
 	
@@ -201,5 +203,13 @@ public class Profissional {
 
 	public void setProfissionalVacinas(List<ProfissionalVacina> profissionalVacinas) {
 		this.profissionalVacinas = profissionalVacinas;
+	}
+
+	public Date getDataAso() {
+		return dataAso;
+	}
+
+	public void setDataAso(Date dataAso) {
+		this.dataAso = dataAso;
 	}
 }

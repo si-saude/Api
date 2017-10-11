@@ -3,7 +3,7 @@ package br.com.saude.api.generic;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GenericEntityBuilder<T,F> {
+public abstract class GenericEntityBuilder<T,F extends GenericFilter> {
 	protected T entity;
 	protected T newEntity;
 	protected List<T> entityList;

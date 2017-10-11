@@ -6,6 +6,7 @@ import br.com.saude.api.generic.GenericFilter;
 public class ProfissionalFilter extends GenericFilter {
 	private String nome;
 	private DateFilter dataNascimento;
+	private DateFilter dataAso;
 	private String matricula;
 	private String chave;
 	private String ramal;
@@ -89,5 +90,10 @@ public class ProfissionalFilter extends GenericFilter {
 	public void setEndereco(EnderecoFilter endereco) {
 		this.endereco = endereco;
 	}
-	
+	public DateFilter getDataAso() {
+		return dataAso;
+	}
+	public void setDataAso(DateFilter dataAso) {
+		this.dataAso = dataAso;
+	}
 }

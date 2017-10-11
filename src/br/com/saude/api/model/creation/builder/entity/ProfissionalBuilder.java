@@ -31,6 +31,7 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		newProfissional.setId(profissional.getId());
 		newProfissional.setChave(profissional.getChave());
 		newProfissional.setDataNascimento(profissional.getDataNascimento());
+		newProfissional.setDataAso(profissional.getDataAso());
 		newProfissional.setMatricula(profissional.getMatricula());
 		newProfissional.setMi(profissional.getMi());
 		newProfissional.setNome(profissional.getNome());
