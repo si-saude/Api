@@ -50,7 +50,7 @@ public class Profissional {
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@NotNull(message="É necessário informar a Função do Profissional.")
-	private Funcao funcao;
+	private Cargo cargo;
 	
 	@Size(max = 12, message="Tamanho máximo para MI do Profissional: 12")
 	private String mi;
@@ -173,12 +173,12 @@ public class Profissional {
 		this.version = version;
 	}
 
-	public Funcao getFuncao() {
-		return funcao;
+	public Cargo getCargo() {
+		return cargo;
 	}
 
-	public void setFuncao(Funcao funcao) {
-		this.funcao = funcao;
+	public void setCargo(Cargo cargo) {
+		this.cargo = cargo;
 	}
 
 	public Curriculo getCurriculo() {

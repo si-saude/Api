@@ -6,7 +6,7 @@ import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.FuncaoFilter;
 import br.com.saude.api.model.entity.po.Funcao;
 
-public class FuncaoBuilder extends GenericEntityBuilder<Funcao,FuncaoFilter> {
+public class FuncaoBuilder extends GenericEntityBuilder<Funcao, FuncaoFilter> {
 
 	public static FuncaoBuilder newInstance(Funcao funcao) {
 		return new FuncaoBuilder(funcao);
@@ -33,48 +33,6 @@ public class FuncaoBuilder extends GenericEntityBuilder<Funcao,FuncaoFilter> {
 		newFuncao.setVersion(funcao.getVersion());
 		
 		return newFuncao;
-	}
-	
-	public FuncaoBuilder loadCursos() {
-		if(this.entity != null) {
-			this.newEntity = loadCursos(this.entity,this.newEntity);
-		}else {
-			for(Funcao funcao:this.entityList) {
-				Funcao newFuncao = this.newEntityList.stream()
-						.filter(e->e.getId() == funcao.getId())
-						.iterator().next();
-				newFuncao = loadCursos(funcao,newFuncao);
-			}
-		}
-		return this;
-	}
-	
-	private Funcao loadCursos(Funcao origem,Funcao destino) {
-		if(origem.getCursos() != null) {
-			destino.setCursos(CursoBuilder.newInstance(origem.getCursos()).getEntityList());
-		}
-		return destino;
-	}
-	
-	public FuncaoBuilder loadVacinas() {
-		if(this.entity != null) {
-			this.newEntity = loadCursos(this.entity,this.newEntity);
-		}else {
-			for(Funcao funcao:this.entityList) {
-				Funcao newFuncao = this.newEntityList.stream()
-						.filter(e->e.getId() == funcao.getId())
-						.iterator().next();
-				newFuncao = loadVacinas(funcao,newFuncao);
-			}
-		}
-		return this;
-	}
-	
-	private Funcao loadVacinas(Funcao origem,Funcao destino) {
-		if(origem.getVacinas() != null) {
-			destino.setVacinas(VacinaBuilder.newInstance(origem.getVacinas()).getEntityList());
-		}
-		return destino;
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class ProfissionalFilter extends GenericFilter {
 	private String ramal;
 	private LocalizacaoFilter localizacao;
 	private EquipeFilter equipe;
-	private FuncaoFilter funcao;
+	private CargoFilter cargo;
 	private CurriculoFilter curriculo;
 	private ProfissionalConselhoFilter profissionalConselho;
 	private EnderecoFilter endereco;
@@ -66,11 +66,11 @@ public class ProfissionalFilter extends GenericFilter {
 	public void setMi(String mi) {
 		this.mi = mi;
 	}
-	public FuncaoFilter getFuncao() {
-		return funcao;
+	public CargoFilter getCargo() {
+		return cargo;
 	}
-	public void setFuncao(FuncaoFilter funcao) {
-		this.funcao = funcao;
+	public void setCargo(CargoFilter cargo) {
+		this.cargo = cargo;
 	}
 	public CurriculoFilter getCurriculo() {
 		return curriculo;

@@ -69,11 +69,11 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		}
 	}
 	
-	private void addFuncao() throws InstantiationException, IllegalAccessException {
-		if(this.filter.getFuncao()!=null) {
-			CriteriaExample criteriaExample = FuncaoExampleBuilder
-					.newInstance(this.filter.getFuncao()).getCriteriaExample();
-			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("funcao", criteriaExample, JoinType.INNER_JOIN));
+	private void addCargo() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getCargo()!=null) {
+			CriteriaExample criteriaExample = CargoExampleBuilder
+					.newInstance(this.filter.getCargo()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("cargo", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
 	
@@ -112,7 +112,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		addRamal();
 		addEquipe();
 		addLocalizacao();
-		addFuncao();
+		addCargo();
 		addCurriculo();
 		addEndereco();
 		addProfissionalConselho();

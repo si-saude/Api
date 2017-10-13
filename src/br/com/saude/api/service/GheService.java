@@ -14,31 +14,28 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.FuncaoBo;
-import br.com.saude.api.model.business.validate.FuncaoValidator;
-import br.com.saude.api.model.entity.filter.FuncaoFilter;
-import br.com.saude.api.model.entity.po.Funcao;
-import br.com.saude.api.util.RequestInterceptor;
+import br.com.saude.api.model.business.GheBo;
+import br.com.saude.api.model.business.validate.GheValidator;
+import br.com.saude.api.model.entity.filter.GheFilter;
+import br.com.saude.api.model.entity.po.Ghe;
 
-@Path("base")
-@RequestInterceptor
-public class FuncaoService 
-			extends GenericServiceImpl<Funcao, FuncaoFilter, FuncaoBo>
-			implements GenericService<Funcao, FuncaoFilter>{
-	
+public class GheService 
+				extends GenericServiceImpl<Ghe, GheFilter, GheBo>
+				implements GenericService<Ghe, GheFilter> {
+
 	@Override
-	protected FuncaoBo getBo() {
-		return FuncaoBo.getInstance();
+	protected GheBo getBo() {
+		return GheBo.getInstance();
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=FuncaoValidator.class, entityClass=Funcao.class)
+	@CustomValidator(validatorClass=GheValidator.class, entityClass=Ghe.class)
 	@Override
-	public Response save(Funcao funcao) {
+	public Response save(Ghe ghe) {
 		try {
-			FuncaoBo.getInstance().save(funcao);
+			GheBo.getInstance().save(ghe);
 			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -50,7 +47,7 @@ public class FuncaoService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(FuncaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(GheFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -60,7 +57,7 @@ public class FuncaoService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(FuncaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(GheFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}

@@ -14,43 +14,42 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.FuncaoBo;
-import br.com.saude.api.model.business.validate.FuncaoValidator;
-import br.com.saude.api.model.entity.filter.FuncaoFilter;
-import br.com.saude.api.model.entity.po.Funcao;
+import br.com.saude.api.model.business.CargoBo;
+import br.com.saude.api.model.business.validate.CargoValidator;
+import br.com.saude.api.model.entity.filter.CargoFilter;
+import br.com.saude.api.model.entity.po.Cargo;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("base")
+@Path("cargo")
 @RequestInterceptor
-public class FuncaoService 
-			extends GenericServiceImpl<Funcao, FuncaoFilter, FuncaoBo>
-			implements GenericService<Funcao, FuncaoFilter>{
-	
+public class CargoService extends GenericServiceImpl<Cargo,CargoFilter,CargoBo>
+							implements GenericService<Cargo,CargoFilter>{
+
 	@Override
-	protected FuncaoBo getBo() {
-		return FuncaoBo.getInstance();
+	protected CargoBo getBo() {
+		return CargoBo.getInstance();
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=FuncaoValidator.class, entityClass=Funcao.class)
+	@CustomValidator(validatorClass=CargoValidator.class, entityClass=Cargo.class)
 	@Override
-	public Response save(Funcao funcao) {
+	public Response save(Cargo cargo) {
 		try {
-			FuncaoBo.getInstance().save(funcao);
+			CargoBo.getInstance().save(cargo);
 			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
-
+	
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(FuncaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(CargoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -60,7 +59,7 @@ public class FuncaoService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(FuncaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(CargoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
