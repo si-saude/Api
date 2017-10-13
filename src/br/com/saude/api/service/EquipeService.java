@@ -33,7 +33,7 @@ public class EquipeService extends GenericServiceImpl<Equipe,EquipeFilter,Equipe
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=EquipeValidator.class, entityClass=Equipe.class)
+	@CustomValidator(validatorClass=EquipeValidator.class)
 	@Override
 	public Response save(Equipe equipe) {
 		try {

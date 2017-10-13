@@ -61,14 +61,14 @@ public class RequestFilterInterceptor implements ContainerRequestFilter {
 			throw new Exception();
     }
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void validateArgument(ContainerRequest containerRequest) throws Exception {
 		CustomValidator customValidator = this.resourceInfo.getResourceMethod()
 															.getAnnotation(CustomValidator.class);
 		if(customValidator != null) {
-			containerRequest.bufferEntity();
-			Object entity = containerRequest.readEntity(customValidator.entityClass());
-			
+			containerRequest.bufferEntity();			
 			GenericValidator validator = (GenericValidator)customValidator.validatorClass().newInstance();
+			Object entity = containerRequest.readEntity(validator.getEntityClass());
 			validator.validate(entity);
 		}
 	}

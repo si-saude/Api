@@ -11,9 +11,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.UsuarioBo;
+import br.com.saude.api.model.business.validate.UsuarioValidator;
 import br.com.saude.api.model.creation.builder.entity.UsuarioBuilder;
 import br.com.saude.api.model.entity.filter.UsuarioFilter;
 import br.com.saude.api.model.entity.po.Usuario;
@@ -49,6 +51,7 @@ public class UsuarioService extends GenericServiceImpl<Usuario,UsuarioFilter,Usu
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
+	@CustomValidator(validatorClass=UsuarioValidator.class)
 	public Response save(Usuario usuario) {
 		try {
 			UsuarioBo.getInstance().save(usuario);

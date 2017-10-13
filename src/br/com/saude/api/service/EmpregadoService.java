@@ -33,7 +33,7 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=EmpregadoValidator.class, entityClass=Empregado.class)
+	@CustomValidator(validatorClass=EmpregadoValidator.class)
 	public Response save(Empregado empregado) {
 		try {
 			EmpregadoBo.getInstance().save(empregado);

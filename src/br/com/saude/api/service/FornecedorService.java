@@ -33,7 +33,7 @@ public class FornecedorService extends GenericServiceImpl<Fornecedor,FornecedorF
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=FornecedorValidator.class, entityClass=Fornecedor.class)
+	@CustomValidator(validatorClass=FornecedorValidator.class)
 	@Override
 	public Response save(Fornecedor fornecedor) {
 		try {

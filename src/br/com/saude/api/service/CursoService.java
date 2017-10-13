@@ -33,7 +33,7 @@ public class CursoService extends GenericServiceImpl<Curso,CursoFilter,CursoBo>
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=CursoValidator.class, entityClass=Curso.class)
+	@CustomValidator(validatorClass=CursoValidator.class)
 	@Override
 	public Response save(Curso curso) {
 		try {

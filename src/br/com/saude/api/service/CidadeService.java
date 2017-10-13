@@ -33,7 +33,7 @@ public class CidadeService extends GenericServiceImpl<Cidade, CidadeFilter, Cida
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=CidadeValidator.class, entityClass=Cidade.class)
+	@CustomValidator(validatorClass=CidadeValidator.class)
 	@Override
 	public Response save(Cidade cidade) {
 		try {

@@ -33,7 +33,7 @@ public class GerenciaService extends GenericServiceImpl<Gerencia,GerenciaFilter,
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=GerenciaValidator.class, entityClass=Gerencia.class)
+	@CustomValidator(validatorClass=GerenciaValidator.class)
 	@Override
 	public Response save(Gerencia gerencia) {
 		try {

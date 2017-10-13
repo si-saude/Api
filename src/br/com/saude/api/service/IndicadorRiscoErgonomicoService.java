@@ -34,7 +34,7 @@ public class IndicadorRiscoErgonomicoService
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=IndicadorRiscoValidator.class, entityClass=IndicadorRiscoErgonomico.class)
+	@CustomValidator(validatorClass=IndicadorRiscoValidator.class)
 	@Override
 	public Response save(IndicadorRiscoErgonomico indicadorRiscoErgonomico) {
 		try {

@@ -33,7 +33,7 @@ public class CargoService extends GenericServiceImpl<Cargo,CargoFilter,CargoBo>
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=CargoValidator.class, entityClass=Cargo.class)
+	@CustomValidator(validatorClass=CargoValidator.class)
 	@Override
 	public Response save(Cargo cargo) {
 		try {

@@ -35,7 +35,7 @@ public class TipoGrupoMonitoramentoService
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=TipoGrupoMonitoramentoValidator.class, entityClass=TipoGrupoMonitoramento.class)
+	@CustomValidator(validatorClass=TipoGrupoMonitoramentoValidator.class)
 	@Override
 	public Response save(TipoGrupoMonitoramento tipoGrupoMonitoramento) {
 		try {

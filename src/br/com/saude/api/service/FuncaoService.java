@@ -34,7 +34,7 @@ public class FuncaoService
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=FuncaoValidator.class, entityClass=Funcao.class)
+	@CustomValidator(validatorClass=FuncaoValidator.class)
 	@Override
 	public Response save(Funcao funcao) {
 		try {

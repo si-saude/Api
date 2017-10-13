@@ -34,7 +34,7 @@ public class PerfilService extends GenericServiceImpl<Perfil,PerfilFilter,Perfil
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=PerfilValidator.class, entityClass=Perfil.class)
+	@CustomValidator(validatorClass=PerfilValidator.class)
 	@Override
 	public Response save(Perfil perfil) {		
 		try {

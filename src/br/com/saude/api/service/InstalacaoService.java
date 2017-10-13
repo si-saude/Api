@@ -34,7 +34,7 @@ public class InstalacaoService
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=InstalacaoValidator.class, entityClass=Instalacao.class)
+	@CustomValidator(validatorClass=InstalacaoValidator.class)
 	@Override
 	public Response save(Instalacao Instalacao) {
 		try {

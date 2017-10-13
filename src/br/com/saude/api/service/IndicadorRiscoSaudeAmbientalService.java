@@ -34,7 +34,7 @@ implements GenericService<IndicadorRiscoSaudeAmbiental,IndicadorRiscoFilter>{
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=IndicadorRiscoValidator.class, entityClass=IndicadorRiscoSaudeAmbiental.class)
+	@CustomValidator(validatorClass=IndicadorRiscoValidator.class)
 	@Override
 	public Response save(IndicadorRiscoSaudeAmbiental indicadorRiscoSaudeAmbiental) {
 		try {

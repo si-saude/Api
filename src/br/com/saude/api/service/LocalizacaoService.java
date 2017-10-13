@@ -33,7 +33,7 @@ public class LocalizacaoService extends GenericServiceImpl<Localizacao,Localizac
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=LocalizacaoValidator.class, entityClass=Localizacao.class)
+	@CustomValidator(validatorClass=LocalizacaoValidator.class)
 	@Override
 	public Response save(Localizacao localizacao) {
 		try {

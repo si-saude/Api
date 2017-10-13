@@ -33,7 +33,7 @@ public class BaseService extends GenericServiceImpl<Base, BaseFilter, BaseBo>
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=BaseValidator.class, entityClass=Base.class)
+	@CustomValidator(validatorClass=BaseValidator.class)
 	@Override
 	public Response save(Base base) {
 		try {

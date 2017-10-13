@@ -34,7 +34,7 @@ public class ProfissionalService
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=ProfissionalValidator.class, entityClass=Profissional.class)
+	@CustomValidator(validatorClass=ProfissionalValidator.class)
 	@Override
 	public Response save(Profissional profissional) {
 		try {

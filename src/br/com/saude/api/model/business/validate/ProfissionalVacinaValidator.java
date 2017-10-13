@@ -1,29 +1,16 @@
 package br.com.saude.api.model.business.validate;
 
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
-
 import br.com.saude.api.generic.GenericValidator;
 import br.com.saude.api.model.entity.po.ProfissionalVacina;
 
-public class ProfissionalVacinaValidator extends GenericValidator {
+public class ProfissionalVacinaValidator extends GenericValidator<ProfissionalVacina> {
 
 	@Override
-	public void validate(Object entity) throws Exception {
-		ProfissionalVacina profissionalVacina = (ProfissionalVacina)entity;
+	public void validate(ProfissionalVacina profissionalVacina) throws Exception {
 		
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		Set<ConstraintViolation<ProfissionalVacina>> profissionaVacinaViolation = 
-				factory.getValidator().validate(profissionalVacina);
-		
-		if(profissionaVacinaViolation.size() > 0)
-			throw new Exception(profissionaVacinaViolation.iterator().next().getMessage());
+		super.validate(profissionalVacina);
 		
 		if(profissionalVacina.getVacina() != null)
 			new VacinaValidator().validate(profissionalVacina.getVacina());
 	}
-
 }

@@ -31,7 +31,7 @@ public class CriterioService
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=CriterioValidator.class, entityClass=Criterio.class)
+	@CustomValidator(validatorClass=CriterioValidator.class)
 	@Override
 	public Response save(Criterio criterio) {
 		try {

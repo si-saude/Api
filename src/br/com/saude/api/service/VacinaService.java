@@ -33,7 +33,7 @@ public class VacinaService extends GenericServiceImpl<Vacina,VacinaFilter,Vacina
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=VacinaValidator.class, entityClass=Vacina.class)
+	@CustomValidator(validatorClass=VacinaValidator.class)
 	@Override
 	public Response save(Vacina vacina) {
 		try {

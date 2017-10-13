@@ -33,7 +33,7 @@ public class ExameService extends GenericServiceImpl<Exame,ExameFilter,ExameBo>
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=ExameValidator.class, entityClass=Exame.class)
+	@CustomValidator(validatorClass=ExameValidator.class)
 	@Override
 	public Response save(Exame exame) {
 		try {

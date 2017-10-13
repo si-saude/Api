@@ -31,7 +31,7 @@ public class GheService
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=GheValidator.class, entityClass=Ghe.class)
+	@CustomValidator(validatorClass=GheValidator.class)
 	@Override
 	public Response save(Ghe ghe) {
 		try {

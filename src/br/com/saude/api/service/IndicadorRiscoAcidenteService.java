@@ -34,7 +34,7 @@ public class IndicadorRiscoAcidenteService
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=IndicadorRiscoValidator.class, entityClass=IndicadorRiscoAcidente.class)
+	@CustomValidator(validatorClass=IndicadorRiscoValidator.class)
 	@Override
 	public Response save(IndicadorRiscoAcidente indicadorRiscoAcidente) {
 		try {

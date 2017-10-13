@@ -1,25 +1,14 @@
 package br.com.saude.api.model.business.validate;
 
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
-
 import br.com.saude.api.generic.GenericValidator;
 import br.com.saude.api.model.entity.po.Instalacao;
 
-public class InstalacaoValidator extends GenericValidator {
+public class InstalacaoValidator extends GenericValidator<Instalacao> {
 
 	@Override
-	public void validate(Object entity) throws Exception {
-		Instalacao instalacao = (Instalacao)entity;
+	public void validate(Instalacao instalacao) throws Exception {		
 		
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		Set<ConstraintViolation<Instalacao>> instalacaoViolation = factory.getValidator().validate(instalacao);
-		
-		if(instalacaoViolation.size() > 0)
-			throw new Exception(instalacaoViolation.iterator().next().getMessage());
+		super.validate(instalacao);
 		
 		if(instalacao.getIndicadorRiscoAcidenteInstalacoes() != null)
 			new IndicadorRiscoAcidenteInstalacaoValidator()

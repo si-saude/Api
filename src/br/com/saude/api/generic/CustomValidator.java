@@ -6,5 +6,4 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CustomValidator {
 	Class<?> validatorClass();
-	Class<?> entityClass();
 }

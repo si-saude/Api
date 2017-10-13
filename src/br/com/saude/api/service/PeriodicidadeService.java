@@ -34,7 +34,7 @@ public class PeriodicidadeService
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=PeriodicidadeValidator.class, entityClass=Periodicidade.class)
+	@CustomValidator(validatorClass=PeriodicidadeValidator.class)
 	@Override
 	public Response save(Periodicidade periodicidade) {
 		try {
