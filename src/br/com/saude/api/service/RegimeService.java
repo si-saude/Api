@@ -14,31 +14,30 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.GheBo;
-import br.com.saude.api.model.business.validate.GheValidator;
-import br.com.saude.api.model.entity.filter.GheFilter;
-import br.com.saude.api.model.entity.po.Ghe;
+import br.com.saude.api.model.business.RegimeBo;
+import br.com.saude.api.model.business.validate.RegimeValidator;
+import br.com.saude.api.model.entity.filter.RegimeFilter;
+import br.com.saude.api.model.entity.po.Regime;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("ghe")
+@Path("regime")
 @RequestInterceptor
-public class GheService 
-				extends GenericServiceImpl<Ghe, GheFilter, GheBo>
-				implements GenericService<Ghe, GheFilter> {
+public class RegimeService extends GenericServiceImpl<Regime, RegimeFilter, RegimeBo>
+							implements GenericService<Regime, RegimeFilter>{
 
 	@Override
-	protected GheBo getBo() {
-		return GheBo.getInstance();
+	protected RegimeBo getBo() {
+		return RegimeBo.getInstance();
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=GheValidator.class)
+	@CustomValidator(validatorClass=RegimeValidator.class)
 	@Override
-	public Response save(Ghe ghe) {
+	public Response save(Regime regime) {
 		try {
-			GheBo.getInstance().save(ghe);
+			RegimeBo.getInstance().save(regime);
 			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -50,8 +49,8 @@ public class GheService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(GheFilter filter) throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+	public Response getList(RegimeFilter filter) throws InstantiationException, IllegalAccessException,
+		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
 
@@ -60,8 +59,8 @@ public class GheService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(GheFilter filter) throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+	public Response getSelectList(RegimeFilter filter) throws InstantiationException, IllegalAccessException,
+		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
 

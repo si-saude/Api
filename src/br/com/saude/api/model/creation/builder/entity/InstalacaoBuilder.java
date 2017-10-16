@@ -16,11 +16,11 @@ public class InstalacaoBuilder extends GenericEntityBuilder<Instalacao,Instalaca
 	private Function<Map<String,Instalacao>,Instalacao> loadIndicadorRiscoSanitarioInstalacoes;
 	private Function<Map<String,Instalacao>,Instalacao> loadIndicadorRiscoSaudeAmbientalInstalacoes;
 	
-	public InstalacaoBuilder newInstance(Instalacao instalacao) {
+	public static InstalacaoBuilder newInstance(Instalacao instalacao) {
 		return new InstalacaoBuilder(instalacao);
 	}
 	
-	public InstalacaoBuilder newInstance(List<Instalacao> instalacoes) {
+	public static InstalacaoBuilder newInstance(List<Instalacao> instalacoes) {
 		return new InstalacaoBuilder(instalacoes);
 	}
 	

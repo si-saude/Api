@@ -20,7 +20,7 @@ import br.com.saude.api.model.entity.filter.FuncaoFilter;
 import br.com.saude.api.model.entity.po.Funcao;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("base")
+@Path("funcao")
 @RequestInterceptor
 public class FuncaoService 
 			extends GenericServiceImpl<Funcao, FuncaoFilter, FuncaoBo>

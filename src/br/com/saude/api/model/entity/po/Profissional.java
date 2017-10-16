@@ -49,7 +49,7 @@ public class Profissional {
 	private Equipe equipe;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@NotNull(message="É necessário informar a Função do Profissional.")
+	@NotNull(message="É necessário informar a Cargo do Profissional.")
 	private Cargo cargo;
 	
 	@Size(max = 12, message="Tamanho máximo para MI do Profissional: 12")

@@ -28,8 +28,8 @@ public class Cargo {
 	private String nome;
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinTable(name="curso_funcao", 
-	joinColumns = {@JoinColumn(name="funcao_id")}, 
+	@JoinTable(name="curso_cargo", 
+	joinColumns = {@JoinColumn(name="cargo_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="curso_id")})
 	private List<Curso> cursos;
 	

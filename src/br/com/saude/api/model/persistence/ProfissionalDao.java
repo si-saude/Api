@@ -34,12 +34,10 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		};
 		
 		this.functionLoadAll = profissional -> {
+			profissional = this.functionLoad.apply(profissional);
 			profissional = loadTelefones(profissional);
 			profissional = loadProfissionalVacinas(profissional);
 			profissional = loadEndereco(profissional);
-			profissional = loadEquipe(profissional);
-			profissional = loadLocalizacao(profissional);
-			profissional = loadCargo(profissional);
 			profissional = loadCurriculo(profissional);
 			profissional = loadProfissionalConselho(profissional);
 			return profissional;
