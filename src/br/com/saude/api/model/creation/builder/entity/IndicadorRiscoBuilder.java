@@ -1,12 +1,16 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.IndicadorRiscoFilter;
 import br.com.saude.api.model.entity.po.IndicadorRisco;
 
 public abstract class IndicadorRiscoBuilder<T extends IndicadorRisco> extends GenericEntityBuilder<T,IndicadorRiscoFilter> {
+	
+	private Function<Map<String,T>,T> loadPeriodicidade;
 	
 	protected IndicadorRiscoBuilder(T indicadorRisco) {
 		super(indicadorRisco);
@@ -42,18 +46,18 @@ public abstract class IndicadorRiscoBuilder<T extends IndicadorRisco> extends Ge
 		return newIndicadorRisco;
 	}
 	
-	public IndicadorRiscoBuilder<?> loadPeriodicidade() {
-		if(this.entity != null) {
-			this.newEntity = loadPeriodicidade(this.entity,this.newEntity);
-		}else {
-			for(T indicadorRisco:this.entityList) {
-				T newIndicadorRisco = this.newEntityList.stream()
-						.filter(e->e.getId() == indicadorRisco.getId())
-						.iterator().next();
-				newIndicadorRisco = loadPeriodicidade(indicadorRisco,newIndicadorRisco);
+	@Override
+	protected void initializeFunctions() {
+		this.loadPeriodicidade = indicadores -> {
+			if(indicadores.get("origem").getPeriodicidade()!= null) {
+				indicadores.get("destino").setPeriodicidade(PeriodicidadeBuilder.newInstance(indicadores.get("origem").getPeriodicidade()).getEntity());
 			}
-		}
-		return this;
+			return indicadores.get("destino");
+		};
+	}
+	
+	public IndicadorRiscoBuilder<?> loadPeriodicidade() {
+		return (IndicadorRiscoBuilder<?>) this.loadProperty(this.loadPeriodicidade);
 	}
 	
 	protected T loadPeriodicidade(T origem,T destino) {
@@ -68,5 +72,4 @@ public abstract class IndicadorRiscoBuilder<T extends IndicadorRisco> extends Ge
 	public T cloneFromFilter(IndicadorRiscoFilter filter) {
 		return null;
 	}
-
 }

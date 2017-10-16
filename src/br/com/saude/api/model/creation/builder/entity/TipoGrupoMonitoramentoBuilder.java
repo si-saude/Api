@@ -24,6 +24,11 @@ public class TipoGrupoMonitoramentoBuilder
 	private TipoGrupoMonitoramentoBuilder(List<TipoGrupoMonitoramento> tipos) {
 		super(tipos);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected TipoGrupoMonitoramento clone(TipoGrupoMonitoramento tipo) {

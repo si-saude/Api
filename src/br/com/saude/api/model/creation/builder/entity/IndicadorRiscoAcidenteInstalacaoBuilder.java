@@ -25,6 +25,11 @@ public class IndicadorRiscoAcidenteInstalacaoBuilder
 	private IndicadorRiscoAcidenteInstalacaoBuilder(IndicadorRiscoAcidenteInstalacao entity) {
 		super(entity);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected IndicadorRiscoAcidenteInstalacao clone(IndicadorRiscoAcidenteInstalacao entity) {

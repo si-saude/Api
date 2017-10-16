@@ -23,6 +23,11 @@ public class FuncaoBuilder extends GenericEntityBuilder<Funcao, FuncaoFilter> {
 	private FuncaoBuilder(Funcao funcao) {
 		super(funcao);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Funcao clone(Funcao funcao) {

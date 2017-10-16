@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.CargoFilter;
@@ -8,6 +10,9 @@ import br.com.saude.api.model.entity.po.Cargo;
 
 public class CargoBuilder extends GenericEntityBuilder<Cargo,CargoFilter> {
 
+	private Function<Map<String,Cargo>,Cargo> loadCursos;
+	private Function<Map<String,Cargo>,Cargo> loadVacinas;
+	
 	public static CargoBuilder newInstance(Cargo cargo) {
 		return new CargoBuilder(cargo);
 	}
@@ -23,6 +28,23 @@ public class CargoBuilder extends GenericEntityBuilder<Cargo,CargoFilter> {
 	private CargoBuilder(Cargo cargo) {
 		super(cargo);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		this.loadCursos = cargos ->{
+			if(cargos.get("origem").getCursos() != null) {
+				cargos.get("destino").setCursos(CursoBuilder.newInstance(cargos.get("origem").getCursos()).getEntityList());
+			}
+			return cargos.get("destino");
+		};
+		
+		this.loadVacinas = cargos -> {
+			if(cargos.get("origem").getVacinas() != null) {
+				cargos.get("destino").setVacinas(VacinaBuilder.newInstance(cargos.get("origem").getVacinas()).getEntityList());
+			}
+			return cargos.get("destino");
+		};
+	}
 
 	@Override
 	protected Cargo clone(Cargo cargo) {
@@ -36,45 +58,11 @@ public class CargoBuilder extends GenericEntityBuilder<Cargo,CargoFilter> {
 	}
 	
 	public CargoBuilder loadCursos() {
-		if(this.entity != null) {
-			this.newEntity = loadCursos(this.entity,this.newEntity);
-		}else {
-			for(Cargo cargo:this.entityList) {
-				Cargo newCargo = this.newEntityList.stream()
-						.filter(e->e.getId() == cargo.getId())
-						.iterator().next();
-				newCargo = loadCursos(cargo,newCargo);
-			}
-		}
-		return this;
-	}
-	
-	private Cargo loadCursos(Cargo origem,Cargo destino) {
-		if(origem.getCursos() != null) {
-			destino.setCursos(CursoBuilder.newInstance(origem.getCursos()).getEntityList());
-		}
-		return destino;
+		return (CargoBuilder) this.loadProperty(this.loadCursos);
 	}
 	
 	public CargoBuilder loadVacinas() {
-		if(this.entity != null) {
-			this.newEntity = loadCursos(this.entity,this.newEntity);
-		}else {
-			for(Cargo cargo:this.entityList) {
-				Cargo newCargo = this.newEntityList.stream()
-						.filter(e->e.getId() == cargo.getId())
-						.iterator().next();
-				newCargo = loadVacinas(cargo,newCargo);
-			}
-		}
-		return this;
-	}
-	
-	private Cargo loadVacinas(Cargo origem,Cargo destino) {
-		if(origem.getVacinas() != null) {
-			destino.setVacinas(VacinaBuilder.newInstance(origem.getVacinas()).getEntityList());
-		}
-		return destino;
+		return (CargoBuilder) this.loadProperty(this.loadVacinas);
 	}
 
 	@Override

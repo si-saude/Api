@@ -23,6 +23,11 @@ public class PeriodicidadeBuilder extends GenericEntityBuilder<Periodicidade,Per
 	private PeriodicidadeBuilder(List<Periodicidade> periodicidades) {
 		super(periodicidades);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Periodicidade clone(Periodicidade periodicidade) {

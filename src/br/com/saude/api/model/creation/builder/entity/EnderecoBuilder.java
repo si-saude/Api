@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.EnderecoFilter;
@@ -8,6 +10,8 @@ import br.com.saude.api.model.entity.po.Endereco;
 
 public class EnderecoBuilder extends GenericEntityBuilder<Endereco,EnderecoFilter> {
 
+	private Function<Map<String,Endereco>,Endereco> loadCidade;
+	
 	public static EnderecoBuilder newInstance(Endereco endereco) {
 		return new EnderecoBuilder(endereco);
 	}
@@ -22,6 +26,16 @@ public class EnderecoBuilder extends GenericEntityBuilder<Endereco,EnderecoFilte
 
 	private EnderecoBuilder(Endereco endereco) {
 		super(endereco);
+	}
+	
+	@Override
+	protected void initializeFunctions() {
+		this.loadCidade = cidades -> {
+			if(cidades.get("origem").getCidade() != null) {
+				cidades.get("destino").setCidade(CidadeBuilder.newInstance(cidades.get("origem").getCidade()).getEntity());
+			}
+			return cidades.get("destino");
+		};
 	}
 
 	@Override
@@ -40,25 +54,7 @@ public class EnderecoBuilder extends GenericEntityBuilder<Endereco,EnderecoFilte
 	}
 
 	public EnderecoBuilder loadCidade() {
-		if(this.entity != null) {
-			this.newEntity = loadCidade(this.entity, this.newEntity);
-		}else {
-			for(Endereco endereco:this.entityList) {
-				Endereco newEndereco = this.newEntityList.stream()
-						.filter(e->e.getId() == endereco.getId())
-						.iterator().next();
-				newEndereco = loadCidade(endereco,newEndereco);
-			}
-		}
-		return this;
-	}
-	
-	private Endereco loadCidade(Endereco origem, Endereco destino) {
-		if(origem.getCidade() != null) {
-			destino.setCidade(CidadeBuilder.newInstance(origem.getCidade()).getEntity());
-		}
-		
-		return destino;
+		return (EnderecoBuilder) this.loadProperty(this.loadCidade);
 	}
 	
 	@Override

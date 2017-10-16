@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.CurriculoCursoFilter;
@@ -8,6 +10,8 @@ import br.com.saude.api.model.entity.po.CurriculoCurso;
 
 public class CurriculoCursoBuilder extends GenericEntityBuilder<CurriculoCurso,CurriculoCursoFilter> {
 
+	private Function<Map<String,CurriculoCurso>,CurriculoCurso> loadCurso;
+	
 	public static CurriculoCursoBuilder newInstance(CurriculoCurso curriculoCurso) {
 		return new CurriculoCursoBuilder(curriculoCurso);
 	}
@@ -35,27 +39,18 @@ public class CurriculoCursoBuilder extends GenericEntityBuilder<CurriculoCurso,C
 		return newCurriculoCurso;
 	}
 	
+	@Override
+	protected void initializeFunctions() {
+		this.loadCurso = curriculoCursos -> {
+			if(curriculoCursos.get("origem").getCurso() != null) {
+				curriculoCursos.get("destino").setCurso(CursoBuilder.newInstance(curriculoCursos.get("origem").getCurso()).getEntity());
+			}
+			return curriculoCursos.get("destino");
+		};
+	}
 
 	public CurriculoCursoBuilder loadCurso() {
-		if(this.entity != null) {
-			this.newEntity = loadCurso(this.entity,this.newEntity);
-		}else {
-			for(CurriculoCurso curriculoCurso:this.entityList) {
-				CurriculoCurso newCurriculoCurso = this.newEntityList.stream()
-						.filter(e->e.getId() == curriculoCurso.getId())
-						.iterator().next();
-				newCurriculoCurso = loadCurso(curriculoCurso,newCurriculoCurso);
-			}
-		}
-		return this;
-	}
-	
-	private CurriculoCurso loadCurso(CurriculoCurso origem,CurriculoCurso destino) {
-		if(origem.getCurso() != null) {
-			destino.setCurso(CursoBuilder.newInstance(origem.getCurso()).getEntity());
-		}
-		
-		return destino;
+		return (CurriculoCursoBuilder) this.loadProperty(this.loadCurso);
 	}
 
 	@Override

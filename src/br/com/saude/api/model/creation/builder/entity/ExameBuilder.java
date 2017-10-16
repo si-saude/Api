@@ -23,6 +23,11 @@ public class ExameBuilder extends GenericEntityBuilder<Exame,ExameFilter> {
 	private ExameBuilder(List<Exame> exames) {
 		super(exames);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Exame clone(Exame exame) {

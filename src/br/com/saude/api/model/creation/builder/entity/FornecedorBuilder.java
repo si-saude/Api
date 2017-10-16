@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.FornecedorFilter;
@@ -8,6 +10,9 @@ import br.com.saude.api.model.entity.po.Fornecedor;
 
 public class FornecedorBuilder extends GenericEntityBuilder<Fornecedor,FornecedorFilter>{
 
+	private Function<Map<String,Fornecedor>,Fornecedor> loadEndereco;
+	private Function<Map<String,Fornecedor>,Fornecedor> loadTelefones;
+	
 	public static FornecedorBuilder newInstance(Fornecedor fornecedor) {
 		return new FornecedorBuilder(fornecedor);
 	}
@@ -22,6 +27,23 @@ public class FornecedorBuilder extends GenericEntityBuilder<Fornecedor,Fornecedo
 
 	private FornecedorBuilder(Fornecedor fornecedore) {
 		super(fornecedore);
+	}
+	
+	@Override
+	protected void initializeFunctions() {
+		this.loadEndereco = fornecedores -> {
+			if(fornecedores.get("origem").getEndereco() != null) {
+				fornecedores.get("destino").setEndereco(EnderecoBuilder.newInstance(fornecedores.get("origem").getEndereco()).getEntity());
+			}
+			return fornecedores.get("destino");
+		};
+		
+		this.loadTelefones = fornecedores -> {
+			if(fornecedores.get("origem").getTelefones() != null) {
+				fornecedores.get("destino").setTelefones(TelefoneBuilder.newInstance(fornecedores.get("origem").getTelefones()).getEntityList());
+			}
+			return fornecedores.get("destino");
+		};
 	}
 
 	@Override
@@ -40,45 +62,11 @@ public class FornecedorBuilder extends GenericEntityBuilder<Fornecedor,Fornecedo
 	}
 	
 	public FornecedorBuilder loadEndereco() {
-		if(this.entity != null) {
-			this.newEntity = loadEndereco(this.entity,this.newEntity);
-		}else {
-			for(Fornecedor fornecedor:this.entityList) {
-				Fornecedor newFornecedor = this.newEntityList.stream()
-						.filter(e->e.getId() == fornecedor.getId())
-						.iterator().next();
-				newFornecedor = loadEndereco(fornecedor,newFornecedor);
-			}
-		}
-		return this;
-	}
-	
-	private Fornecedor loadEndereco(Fornecedor origem,Fornecedor destino) {
-		if(origem.getEndereco() != null) {
-			destino.setEndereco(EnderecoBuilder.newInstance(origem.getEndereco()).getEntity());
-		}
-		return destino;
+		return (FornecedorBuilder) this.loadProperty(this.loadEndereco);
 	}
 	
 	public FornecedorBuilder loadTelefones() {
-		if(this.entity != null) {
-			this.newEntity = loadTelefones(this.entity,this.newEntity);
-		}else {
-			for(Fornecedor fornecedor:this.entityList) {
-				Fornecedor newFornecedor = this.newEntityList.stream()
-						.filter(e->e.getId() == fornecedor.getId())
-						.iterator().next();
-				newFornecedor = loadTelefones(fornecedor,newFornecedor);
-			}
-		}
-		return this;
-	}
-	
-	private Fornecedor loadTelefones(Fornecedor origem,Fornecedor destino) {
-		if(origem.getTelefones() != null) {
-			destino.setTelefones(TelefoneBuilder.newInstance(origem.getTelefones()).getEntityList());
-		}
-		return destino;
+		return (FornecedorBuilder) this.loadProperty(this.loadTelefones);
 	}
 
 	@Override

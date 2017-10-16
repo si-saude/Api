@@ -25,6 +25,11 @@ public class BaseBuilder extends GenericEntityBuilder<Base, BaseFilter> {
 	}
 
 	@Override
+	protected void initializeFunctions() {
+		
+	}
+
+	@Override
 	protected Base clone(Base base) {
 		Base newBase = new Base();
 		
@@ -39,5 +44,4 @@ public class BaseBuilder extends GenericEntityBuilder<Base, BaseFilter> {
 	public Base cloneFromFilter(BaseFilter filter) {
 		return null;
 	}
-
 }

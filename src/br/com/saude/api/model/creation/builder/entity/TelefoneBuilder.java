@@ -23,6 +23,11 @@ public class TelefoneBuilder extends GenericEntityBuilder<Telefone,TelefoneFilte
 	private TelefoneBuilder(List<Telefone> telefones) {
 		super(telefones);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Telefone clone(Telefone telefone) {

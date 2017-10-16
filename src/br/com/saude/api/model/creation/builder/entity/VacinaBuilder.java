@@ -23,6 +23,11 @@ public class VacinaBuilder extends GenericEntityBuilder<Vacina,VacinaFilter> {
 	private VacinaBuilder(List<Vacina> vacinas) {
 		super(vacinas);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Vacina clone(Vacina vacina) {

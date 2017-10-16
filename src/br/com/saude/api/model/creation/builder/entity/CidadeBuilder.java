@@ -25,6 +25,11 @@ public class CidadeBuilder extends GenericEntityBuilder<Cidade,CidadeFilter> {
 	}
 
 	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
+	@Override
 	protected Cidade clone(Cidade cidade) {
 		Cidade newCidade = new Cidade();
 		
@@ -40,5 +45,4 @@ public class CidadeBuilder extends GenericEntityBuilder<Cidade,CidadeFilter> {
 	public Cidade cloneFromFilter(CidadeFilter filter) {
 		return null;
 	}
-
 }

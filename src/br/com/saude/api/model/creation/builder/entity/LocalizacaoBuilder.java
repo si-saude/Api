@@ -23,6 +23,11 @@ public class LocalizacaoBuilder extends GenericEntityBuilder<Localizacao,Localiz
 	private LocalizacaoBuilder(List<Localizacao> localizacoes) {
 		super(localizacoes);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Localizacao clone(Localizacao localizacao) {

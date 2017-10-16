@@ -23,6 +23,11 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	private EmpregadoBuilder(List<Empregado> empregados) {
 		super(empregados);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Empregado clone(Empregado empregado) {

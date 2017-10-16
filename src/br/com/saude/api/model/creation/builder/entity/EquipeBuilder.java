@@ -23,6 +23,11 @@ public class EquipeBuilder extends GenericEntityBuilder<Equipe,EquipeFilter> {
 	private EquipeBuilder(Equipe equipe) {
 		super(equipe);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+	
+	}
 
 	@Override
 	protected Equipe clone(Equipe equipe) {
