@@ -76,6 +76,6 @@ public class BaseService extends GenericServiceImpl<Base, BaseFilter, BaseBo>
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/delete")
 	public Response delete(Object id) {
-		return super.deleteGeneric(id);
+		return super.deleteGeneric(new Integer(id.toString()));
 	}
 }

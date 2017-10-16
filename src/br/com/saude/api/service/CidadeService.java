@@ -76,6 +76,6 @@ public class CidadeService extends GenericServiceImpl<Cidade, CidadeFilter, Cida
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/delete")
 	public Response delete(Object id) {
-		return super.deleteGeneric(id);
+		return super.deleteGeneric(new Integer(id.toString()));
 	}
 }
