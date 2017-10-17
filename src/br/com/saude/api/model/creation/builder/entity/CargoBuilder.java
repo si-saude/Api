@@ -58,7 +58,7 @@ public class CargoBuilder extends GenericEntityBuilder<Cargo,CargoFilter> {
 	
 	public CargoBuilder loadVacinas() {
 		if(this.entity != null) {
-			this.newEntity = loadCursos(this.entity,this.newEntity);
+			this.newEntity = loadVacinas(this.entity,this.newEntity);
 		}else {
 			for(Cargo cargo:this.entityList) {
 				Cargo newCargo = this.newEntityList.stream()
