@@ -46,7 +46,7 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	
 	protected abstract void createExample() throws InstantiationException, IllegalAccessException;
 	
-	protected abstract void createExampleSelectList();
+	protected abstract void createExampleSelectList() throws InstantiationException, IllegalAccessException;
 	
 	@SuppressWarnings("unchecked")
 	protected void initialize() throws InstantiationException, IllegalAccessException {

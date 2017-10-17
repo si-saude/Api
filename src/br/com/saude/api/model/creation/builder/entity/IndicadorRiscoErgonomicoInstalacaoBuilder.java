@@ -25,6 +25,11 @@ public class IndicadorRiscoErgonomicoInstalacaoBuilder
 	private IndicadorRiscoErgonomicoInstalacaoBuilder(IndicadorRiscoErgonomicoInstalacao entity) {
 		super(entity);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected IndicadorRiscoErgonomicoInstalacao clone(IndicadorRiscoErgonomicoInstalacao entity) {

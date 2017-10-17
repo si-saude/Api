@@ -23,6 +23,11 @@ public class GheBuilder extends GenericEntityBuilder<Ghe, GheFilter> {
 	private GheBuilder(Ghe ghe) {
 		super(ghe);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Ghe clone(Ghe ghe) {

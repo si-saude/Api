@@ -28,6 +28,9 @@ public class Telefone {
 	@ManyToMany(fetch=FetchType.LAZY, mappedBy="telefones")
 	private List<Fornecedor> fornecedores;
 	
+	@ManyToMany(fetch=FetchType.LAZY, mappedBy="telefones")
+	private List<Empregado> empregados;
+	
 	@Version
 	private long version;
 
@@ -69,6 +72,14 @@ public class Telefone {
 
 	public void setFornecedores(List<Fornecedor> fornecedores) {
 		this.fornecedores = fornecedores;
+	}
+
+	public List<Empregado> getEmpregados() {
+		return empregados;
+	}
+
+	public void setEmpregados(List<Empregado> empregados) {
+		this.empregados = empregados;
 	}
 
 	@Override

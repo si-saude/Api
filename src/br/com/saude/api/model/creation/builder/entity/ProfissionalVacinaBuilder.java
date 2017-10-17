@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.generic.GenericFilter;
@@ -8,6 +10,8 @@ import br.com.saude.api.model.entity.po.ProfissionalVacina;
 
 public class ProfissionalVacinaBuilder extends GenericEntityBuilder<ProfissionalVacina,GenericFilter> {
 
+	private Function<Map<String,ProfissionalVacina>,ProfissionalVacina> loadVacina;
+	
 	public static ProfissionalVacinaBuilder newInstance(ProfissionalVacina profissionalVacina) {
 		return new ProfissionalVacinaBuilder(profissionalVacina);
 	}
@@ -39,26 +43,18 @@ public class ProfissionalVacinaBuilder extends GenericEntityBuilder<Profissional
 		return newProfissionalVacina;
 	}
 	
-	public ProfissionalVacinaBuilder loadVacina() {
-		if(this.entity != null) {
-			this.newEntity = loadVacina(this.entity,this.newEntity);
-		}else {
-			for(ProfissionalVacina profissionalVacina:this.entityList) {
-				ProfissionalVacina newProfissionalVacina = this.newEntityList.stream()
-						.filter(e->e.getId() == profissionalVacina.getId())
-						.iterator().next();
-				newProfissionalVacina = loadVacina(profissionalVacina,newProfissionalVacina);
+	@Override
+	protected void initializeFunctions() {
+		this.loadVacina = profissionalVacinas -> {
+			if(profissionalVacinas.get("origem").getVacina()!= null) {
+				profissionalVacinas.get("destino").setVacina(VacinaBuilder.newInstance(profissionalVacinas.get("origem").getVacina()).getEntity());
 			}
-		}
-		return this;
+			return profissionalVacinas.get("destino");
+		};
 	}
 	
-	private ProfissionalVacina loadVacina(ProfissionalVacina origem,ProfissionalVacina destino) {
-		if(origem.getVacina()!= null) {
-			destino.setVacina(VacinaBuilder.newInstance(origem.getVacina()).getEntity());
-		}
-		
-		return destino;
+	public ProfissionalVacinaBuilder loadVacina() {
+		return (ProfissionalVacinaBuilder) this.loadProperty(this.loadVacina);
 	}
 
 	@Override

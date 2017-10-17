@@ -18,7 +18,10 @@ import br.com.saude.api.model.business.GheBo;
 import br.com.saude.api.model.business.validate.GheValidator;
 import br.com.saude.api.model.entity.filter.GheFilter;
 import br.com.saude.api.model.entity.po.Ghe;
+import br.com.saude.api.util.RequestInterceptor;
 
+@Path("ghe")
+@RequestInterceptor
 public class GheService 
 				extends GenericServiceImpl<Ghe, GheFilter, GheBo>
 				implements GenericService<Ghe, GheFilter> {
@@ -74,6 +77,6 @@ public class GheService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/delete")
 	public Response delete(Object id) {
-		return super.deleteGeneric(id);
+		return super.deleteGeneric(new Integer(id.toString()));
 	}
 }

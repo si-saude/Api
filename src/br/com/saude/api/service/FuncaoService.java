@@ -20,7 +20,7 @@ import br.com.saude.api.model.entity.filter.FuncaoFilter;
 import br.com.saude.api.model.entity.po.Funcao;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("base")
+@Path("funcao")
 @RequestInterceptor
 public class FuncaoService 
 			extends GenericServiceImpl<Funcao, FuncaoFilter, FuncaoBo>
@@ -77,6 +77,6 @@ public class FuncaoService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/delete")
 	public Response delete(Object id) {
-		return super.deleteGeneric(id);
+		return super.deleteGeneric(new Integer(id.toString()));
 	}
 }

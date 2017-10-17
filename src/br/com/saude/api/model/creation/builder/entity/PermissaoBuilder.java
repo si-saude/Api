@@ -23,6 +23,11 @@ public class PermissaoBuilder extends GenericEntityBuilder<Permissao,GenericFilt
 	private PermissaoBuilder(List<Permissao> permissoes) {
 		super(permissoes);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Permissao clone(Permissao permissao) {

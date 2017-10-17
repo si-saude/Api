@@ -25,6 +25,11 @@ public class CriterioBuilder extends GenericEntityBuilder<Criterio,CriterioFilte
 	}
 
 	@Override
+	protected void initializeFunctions() {
+		
+	}
+	
+	@Override
 	protected Criterio clone(Criterio criterio) {
 		Criterio newCriterio = new Criterio();
 		
@@ -40,5 +45,4 @@ public class CriterioBuilder extends GenericEntityBuilder<Criterio,CriterioFilte
 	public Criterio cloneFromFilter(CriterioFilter filter) {
 		return null;
 	}
-
 }

@@ -23,6 +23,11 @@ public class CursoBuilder extends GenericEntityBuilder<Curso,CursoFilter> {
 	private CursoBuilder(Curso curso) {
 		super(curso);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Curso clone(Curso curso) {

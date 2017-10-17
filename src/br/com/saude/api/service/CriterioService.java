@@ -74,6 +74,6 @@ public class CriterioService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/delete")
 	public Response delete(Object id) {
-		return super.deleteGeneric(id);
+		return super.deleteGeneric(new Integer(id.toString()));
 	}
 }

@@ -29,8 +29,8 @@ public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, 
 		};
 		
 		this.functionLoadAll = builder -> {
-			return builder.loadCargo().loadEndereco().loadEquipe()
-						.loadLocalizacao().loadProfissionalConselho()
+			return this.functionLoad.apply(builder)
+						.loadEndereco().loadProfissionalConselho()
 						.loadCurriculo().loadTelefones().loadProfissionalVacinas();
 		};
 	}

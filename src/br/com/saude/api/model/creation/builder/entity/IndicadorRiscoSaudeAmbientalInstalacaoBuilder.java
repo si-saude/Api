@@ -27,6 +27,11 @@ extends GenericEntityBuilder<IndicadorRiscoSaudeAmbientalInstalacao,GenericFilte
 	private IndicadorRiscoSaudeAmbientalInstalacaoBuilder(IndicadorRiscoSaudeAmbientalInstalacao entity) {
 		super(entity);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected IndicadorRiscoSaudeAmbientalInstalacao clone(IndicadorRiscoSaudeAmbientalInstalacao entity) {

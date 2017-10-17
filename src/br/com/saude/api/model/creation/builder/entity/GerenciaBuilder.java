@@ -23,6 +23,11 @@ public class GerenciaBuilder extends GenericEntityBuilder<Gerencia,GerenciaFilte
 	private GerenciaBuilder(Gerencia gerencia) {
 		super(gerencia);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected Gerencia clone(Gerencia gerencia) {

@@ -24,6 +24,11 @@ public class ProfissionalConselhoBuilder
 	private ProfissionalConselhoBuilder(List<ProfissionalConselho> profissionalConselhos) {
 		super(profissionalConselhos);
 	}
+	
+	@Override
+	protected void initializeFunctions() {
+		
+	}
 
 	@Override
 	protected ProfissionalConselho clone(ProfissionalConselho profissionalConselho) {

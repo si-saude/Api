@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.PerfilFilter;
@@ -8,6 +10,8 @@ import br.com.saude.api.model.entity.po.Perfil;
 
 public class PerfilBuilder extends GenericEntityBuilder<Perfil,PerfilFilter> {
 
+	private Function<Map<String,Perfil>,Perfil> loadPermissoes;
+	
 	public static PerfilBuilder newInstance(Perfil perfil) {
 		return new PerfilBuilder(perfil);
 	}
@@ -35,28 +39,20 @@ public class PerfilBuilder extends GenericEntityBuilder<Perfil,PerfilFilter> {
 		return newPerfil;
 	}
 	
-	public PerfilBuilder loadPermissoes() {
-		if(this.entity != null) {
-			this.newEntity = loadPermissoes(this.entity,this.newEntity);
-		}else {
-			for(Perfil perfil:this.entityList){
-				Perfil newPerfil = this.newEntityList.stream()
-						.filter(p->p.getId() == perfil.getId())
-						.iterator().next();
-				newPerfil = loadPermissoes(perfil,newPerfil);
+	@Override
+	protected void initializeFunctions() {
+		this.loadPermissoes = perfis -> {
+			if(perfis.get("origem").getPermissoes() != null) {
+				perfis.get("destino").setPermissoes(PermissaoBuilder
+											.newInstance(perfis.get("origem").getPermissoes())
+											.getEntityList());	
 			}
-		}
-		
-		return this;
+			return perfis.get("destino");
+		};
 	}
 	
-	private Perfil loadPermissoes(Perfil origem, Perfil destino) {
-		if(origem.getPermissoes() != null) {
-			destino.setPermissoes(PermissaoBuilder
-										.newInstance(origem.getPermissoes())
-										.getEntityList());	
-		}
-		return destino;
+	public PerfilBuilder loadPermissoes() {
+		return (PerfilBuilder) this.loadProperty(this.loadPermissoes);
 	}
 
 	@Override

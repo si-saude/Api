@@ -20,7 +20,7 @@ import br.com.saude.api.model.entity.filter.BaseFilter;
 import br.com.saude.api.model.entity.po.Base;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("Base")
+@Path("base")
 @RequestInterceptor
 public class BaseService extends GenericServiceImpl<Base, BaseFilter, BaseBo>
 							implements GenericService<Base, BaseFilter>{
@@ -76,6 +76,6 @@ public class BaseService extends GenericServiceImpl<Base, BaseFilter, BaseBo>
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/delete")
 	public Response delete(Object id) {
-		return super.deleteGeneric(id);
+		return super.deleteGeneric(new Integer(id.toString()));
 	}
 }

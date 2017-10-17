@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.UsuarioFilter;
@@ -8,6 +10,8 @@ import br.com.saude.api.model.entity.po.Usuario;
 
 public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> {
 
+	private Function<Map<String,Usuario>,Usuario> loadPerfis;
+	
 	public static UsuarioBuilder newInstance(Usuario usuario) {
 		return new UsuarioBuilder(usuario);
 	}
@@ -22,6 +26,18 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> 
 	
 	private UsuarioBuilder(List<Usuario> usuarios) {
 		super(usuarios);
+	}
+	
+	@Override
+	protected void initializeFunctions() {
+		this.loadPerfis = usuarios -> {
+			if(usuarios.get("origem").getPerfis() != null) {
+				usuarios.get("destino").setPerfis(PerfilBuilder
+											.newInstance(usuarios.get("origem").getPerfis())
+											.getEntityList());
+			}
+			return usuarios.get("destino");
+		};
 	}
 
 	@Override
@@ -40,26 +56,7 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> 
 	}
 	
 	public UsuarioBuilder loadPerfis() {
-		if(this.entity != null) {
-			this.newEntity = loadPerfis(this.entity,this.newEntity);
-		}else {
-			for(Usuario usuario:this.entityList) {
-				Usuario newUsuario = this.newEntityList.stream()
-										.filter(u->u.getId() == usuario.getId())
-										.iterator().next();
-				newUsuario = loadPerfis(usuario,newUsuario);
-			}
-		}
-		return this;
-	}
-	
-	private Usuario loadPerfis(Usuario origem, Usuario destino) {
-		if(origem.getPerfis() != null) {
-			destino.setPerfis(PerfilBuilder
-										.newInstance(origem.getPerfis())
-										.getEntityList());
-		}
-		return destino;
+		return (UsuarioBuilder) this.loadProperty(this.loadPerfis);
 	}
 
 	@Override
