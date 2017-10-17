@@ -17,6 +17,7 @@ import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Instalacao;
 import br.com.saude.api.model.entity.po.Telefone;
+import br.com.saude.api.model.entity.po.Vacina;
 
 public class EmpregadoDao extends GenericDao<Empregado>  {
 	private static EmpregadoDao instance;
@@ -49,6 +50,7 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			empregado = loadGhee(empregado);
 			empregado = loadRegime(empregado);
 			empregado = loadInstalacoes(empregado);
+			empregado = loadEmpregadoVacinas(empregado);
 			
 			return empregado;
 		};
@@ -75,6 +77,13 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 						session.remove(t);
 				});
 			}
+			
+			//CARREGAR AS VACINAS
+			if(empregado.getEmpregadoVacinas() != null)
+				for(int i=0; i < empregado.getEmpregadoVacinas().size(); i++)
+					empregado.getEmpregadoVacinas().get(i)
+						.setVacina(session.get(Vacina.class, 
+								empregado.getEmpregadoVacinas().get(i).getId()));
 			
 			return empregado;
 		};
@@ -163,6 +172,12 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	private Empregado loadInstalacoes(Empregado empregado) {
 		if(empregado.getInstalacoes() != null)
 			Hibernate.initialize(empregado.getInstalacoes());
+		return empregado;
+	}
+	
+	private Empregado loadEmpregadoVacinas(Empregado empregado) {
+		if(empregado.getEmpregadoVacinas()!=null)
+			Hibernate.initialize(empregado.getEmpregadoVacinas());
 		return empregado;
 	}
 	

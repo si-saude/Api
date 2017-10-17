@@ -19,6 +19,7 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	private Function<Map<String,Empregado>,Empregado> loadGhee;
 	private Function<Map<String,Empregado>,Empregado> loadInstalacoes;
 	private Function<Map<String,Empregado>,Empregado> loadTelefones;
+	private Function<Map<String,Empregado>,Empregado> loadEmpregadoVacinas;
 	
 	public static EmpregadoBuilder newInstance(Empregado empregado) {
 		return new EmpregadoBuilder(empregado);
@@ -100,6 +101,16 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 			}
 			return empregados.get("destino");
 		};
+		
+		this.loadEmpregadoVacinas = empregados -> {
+			if(empregados.get("origem").getEmpregadoVacinas() != null) {
+				empregados.get("destino").setEmpregadoVacinas(EmpregadoVacinaBuilder
+											.newInstance(empregados.get("origem").getEmpregadoVacinas())
+											.loadVacina()
+											.getEntityList());	
+			}
+			return empregados.get("destino");
+		};
 	}
 
 	@Override
@@ -155,6 +166,10 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	
 	public EmpregadoBuilder loadTelefones() {
 		return (EmpregadoBuilder) this.loadProperty(this.loadTelefones);
+	}
+	
+	public EmpregadoBuilder loadEmpregadoVacinas() {
+		return (EmpregadoBuilder) this.loadProperty(this.loadEmpregadoVacinas);
 	}
 
 	@Override

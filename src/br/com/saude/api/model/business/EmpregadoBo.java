@@ -34,8 +34,10 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 		};
 		
 		this.functionLoadAll = builder -> {
-			return this.functionLoad.apply(builder).loadBase().loadRegime()
-						.loadGhe().loadGhee().loadInstalacoes().loadTelefones();
+			return this.functionLoad.apply(builder).loadBase()
+						.loadRegime().loadGhe().loadGhee()
+						.loadInstalacoes().loadTelefones()
+						.loadEmpregadoVacinas();
 		};
 	}
 	
@@ -59,6 +61,8 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 			if(empregado.getTelefones() == null)
 				empregado.setTelefones(new ArrayList<Telefone>());
 		}
+		
+		empregado.getEmpregadoVacinas().forEach(e->e.setEmpregado(empregado));
 		
 		return super.save(empregado);
 	}

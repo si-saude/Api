@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -88,6 +89,9 @@ public class Empregado {
 				joinColumns = {@JoinColumn(name="empregado_id")}, 
 				inverseJoinColumns = {@JoinColumn(name="telefone_id")})
 	private List<Telefone> telefones;
+	
+	@OneToMany(mappedBy="empregado", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<EmpregadoVacina> empregadoVacinas;
 	
 	@Version
 	private long version;
@@ -212,5 +216,11 @@ public class Empregado {
 	}
 	public void setTelefones(List<Telefone> telefones) {
 		this.telefones = telefones;
+	}
+	public List<EmpregadoVacina> getEmpregadoVacinas() {
+		return empregadoVacinas;
+	}
+	public void setEmpregadoVacinas(List<EmpregadoVacina> empregadoVacinas) {
+		this.empregadoVacinas = empregadoVacinas;
 	}
 }
