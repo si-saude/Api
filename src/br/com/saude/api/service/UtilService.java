@@ -14,6 +14,7 @@ import br.com.saude.api.generic.GenericConstant;
 import br.com.saude.api.util.RequestInterceptor;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.Funcionalidade;
+import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.Sexo;
 import br.com.saude.api.util.constant.StatusEmpregado;
 import br.com.saude.api.util.constant.TipoCriterio;
@@ -69,5 +70,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStatusEmpregado(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(StatusEmpregado.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/requisito")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRequisito(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Requisito.getInstance(),filter)).build();
 	}
 }
