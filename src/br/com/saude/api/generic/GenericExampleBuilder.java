@@ -58,7 +58,7 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	
 	protected Example getExample() {
 		Example example = Example.create(this.entity).enableLike()
-								.ignoreCase().excludeZeroes().excludeNone(); 
+								.ignoreCase().excludeZeroes(); 
 		return this.finishExampleFunction.apply(example);
 	}
 

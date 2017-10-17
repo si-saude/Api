@@ -14,7 +14,7 @@ public class Helper {
 	}
 	
 	public static Criterion getCriterionDateFilter(String propertyName, DateFilter dateFilter) {
-		if(dateFilter != null) {
+		if(dateFilter != null && dateFilter.getInicio() != null) {
 			switch(dateFilter.getTypeFilter()) {
 				case ENTRE: return Restrictions.between(propertyName, 
 								dateFilter.getInicio(), 
