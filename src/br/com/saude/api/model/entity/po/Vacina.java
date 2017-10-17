@@ -35,6 +35,9 @@ public class Vacina {
 	@OneToMany(mappedBy="vacina", fetch=FetchType.LAZY)
 	private List<ProfissionalVacina> profissionalVacinas;
 	
+	@OneToMany(mappedBy="vacina", fetch=FetchType.LAZY)
+	private List<EmpregadoVacina> empregadoVacinas;
+	
 	@Version
 	private long version;
 
@@ -76,6 +79,14 @@ public class Vacina {
 
 	public void setProfissionalVacinas(List<ProfissionalVacina> profissionalVacinas) {
 		this.profissionalVacinas = profissionalVacinas;
+	}
+
+	public List<EmpregadoVacina> getEmpregadoVacinas() {
+		return empregadoVacinas;
+	}
+
+	public void setEmpregadoVacinas(List<EmpregadoVacina> empregadoVacinas) {
+		this.empregadoVacinas = empregadoVacinas;
 	}
 
 	public long getVersion() {
