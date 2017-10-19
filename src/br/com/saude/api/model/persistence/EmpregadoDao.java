@@ -80,14 +80,6 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 						.setVacina(session.get(Vacina.class, 
 								empregado.getEmpregadoVacinas().get(i).getVacina().getId()));
 			
-			//CARREGAR OS GRUPOS DE MONITORAMENTO
-			if(empregado.getHistoricoGrupoMonitoramentos() != null)
-				for(int i=0; i < empregado.getHistoricoGrupoMonitoramentos().size(); i++)
-					empregado.getHistoricoGrupoMonitoramentos().get(i)
-						.setGrupoMonitoramento(session.get(GrupoMonitoramento.class, 
-												empregado.getHistoricoGrupoMonitoramentos().get(i)
-																.getGrupoMonitoramento().getId()));
-			
 			if(empregado.getId() > 0) {				
 				//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
 				List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
@@ -98,6 +90,17 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 					if(!empregado.getTelefones().contains(t))
 						session.remove(t);
 				});
+				
+				//CARREGAR O HISTÓRICO DE GRUPOS DE MONITORAMENTO
+				List<HistoricoGrupoMonitoramento> historicos = (List<HistoricoGrupoMonitoramento>)session
+						.createCriteria(HistoricoGrupoMonitoramento.class)
+						.add(Restrictions.eq("empregado",empregado))
+						.list();
+				
+				if(historicos == null)
+					historicos = new ArrayList<HistoricoGrupoMonitoramento>();
+				
+				empregado.setHistoricoGrupoMonitoramentos(historicos);
 				
 				//VERIFICA SE FORAM REMOVIDOS GRUPOS DE MONITORAMENTO PARA INSERÇÃO NO HISTÓRICO
 				List<Integer> ids = new ArrayList<Integer>();
