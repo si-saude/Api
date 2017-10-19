@@ -51,6 +51,7 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			empregado = loadRegime(empregado);
 			empregado = loadInstalacoes(empregado);
 			empregado = loadEmpregadoVacinas(empregado);
+			empregado = loadGrupoMonitoramentos(empregado);
 			
 			return empregado;
 		};
@@ -178,6 +179,12 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	private Empregado loadEmpregadoVacinas(Empregado empregado) {
 		if(empregado.getEmpregadoVacinas()!=null)
 			Hibernate.initialize(empregado.getEmpregadoVacinas());
+		return empregado;
+	}
+	
+	private Empregado loadGrupoMonitoramentos(Empregado empregado) {
+		if(empregado.getGrupoMonitoramentos()!=null)
+			Hibernate.initialize(empregado.getGrupoMonitoramentos());
 		return empregado;
 	}
 	

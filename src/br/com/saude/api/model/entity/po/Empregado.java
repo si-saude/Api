@@ -93,6 +93,12 @@ public class Empregado {
 	@OneToMany(mappedBy="empregado", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<EmpregadoVacina> empregadoVacinas;
 	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="grupomonitoramento_empregado", 
+				joinColumns = {@JoinColumn(name="empregado_id")}, 
+				inverseJoinColumns = {@JoinColumn(name="grupomonitoramento_id")})
+	private List<GrupoMonitoramento> grupoMonitoramentos;
+	
 	@Version
 	private long version;
 	
@@ -222,5 +228,11 @@ public class Empregado {
 	}
 	public void setEmpregadoVacinas(List<EmpregadoVacina> empregadoVacinas) {
 		this.empregadoVacinas = empregadoVacinas;
+	}
+	public List<GrupoMonitoramento> getGrupoMonitoramentos() {
+		return grupoMonitoramentos;
+	}
+	public void setGrupoMonitoramentos(List<GrupoMonitoramento> grupoMonitoramentos) {
+		this.grupoMonitoramentos = grupoMonitoramentos;
 	}
 }

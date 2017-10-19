@@ -38,6 +38,7 @@ public class GrupoMonitoramentoDao extends GenericDao<GrupoMonitoramento> {
 		this.functionLoadAll = grupoMonitoramento -> {
 			grupoMonitoramento = this.functionLoad.apply(grupoMonitoramento);
 			grupoMonitoramento = loadGrupoMonitoramentoExames(grupoMonitoramento);
+			grupoMonitoramento = loadEmpregados(grupoMonitoramento);
 			return grupoMonitoramento;
 		};
 		
@@ -84,6 +85,12 @@ public class GrupoMonitoramentoDao extends GenericDao<GrupoMonitoramento> {
 	private GrupoMonitoramento loadGrupoMonitoramentoExames(GrupoMonitoramento grupoMonitoramento) {
 		if(grupoMonitoramento.getGrupoMonitoramentoExames() != null)
 			Hibernate.initialize(grupoMonitoramento.getGrupoMonitoramentoExames());
+		return grupoMonitoramento;
+	}
+	
+	private GrupoMonitoramento loadEmpregados(GrupoMonitoramento grupoMonitoramento) {
+		if(grupoMonitoramento.getEmpregados() != null)
+			Hibernate.initialize(grupoMonitoramento.getEmpregados());
 		return grupoMonitoramento;
 	}
 	

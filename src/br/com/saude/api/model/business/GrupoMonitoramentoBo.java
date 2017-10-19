@@ -32,7 +32,8 @@ public class GrupoMonitoramentoBo
 		
 		this.functionLoadAll = builder -> {
 			return this.functionLoad.apply(builder)
-						.loadGrupoMonitoramentoExames();
+						.loadGrupoMonitoramentoExames()
+						.loadEmpregados();
 		};
 	}
 	

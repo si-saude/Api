@@ -1,6 +1,5 @@
 package br.com.saude.api.model.business;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import br.com.saude.api.generic.GenericBo;
@@ -37,25 +36,23 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 			return this.functionLoad.apply(builder).loadBase()
 						.loadRegime().loadGhe().loadGhee()
 						.loadInstalacoes().loadTelefones()
-						.loadEmpregadoVacinas();
+						.loadEmpregadoVacinas()
+						.loadGrupoMonitoramentos();
 		};
 	}
 	
 	@Override
-	public PagedList<Empregado> getList(EmpregadoFilter filter) throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+	public PagedList<Empregado> getList(EmpregadoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
 	}
 	
 	@Override
-	public Empregado getById(Object id) throws IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+	public Empregado getById(Object id) throws Exception {
 		return super.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
 	
 	@Override
-	public Empregado save(Empregado empregado) throws IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+	public Empregado save(Empregado empregado) throws Exception {
 		
 		if(empregado.getId() > 0) {
 			if(empregado.getTelefones() == null)

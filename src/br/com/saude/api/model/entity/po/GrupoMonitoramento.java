@@ -38,6 +38,9 @@ public class GrupoMonitoramento {
 	@ManyToMany(fetch=FetchType.LAZY, mappedBy="grupoMonitoramentos")
 	private List<Profissiograma> profissiogramas;
 	
+	@ManyToMany(fetch=FetchType.LAZY, mappedBy="grupoMonitoramentos", cascade=CascadeType.ALL)
+	private List<Empregado> empregados;
+	
 	@Version
 	private long version;
 
@@ -79,6 +82,14 @@ public class GrupoMonitoramento {
 
 	public void setProfissiogramas(List<Profissiograma> profissiogramas) {
 		this.profissiogramas = profissiogramas;
+	}
+
+	public List<Empregado> getEmpregados() {
+		return empregados;
+	}
+
+	public void setEmpregados(List<Empregado> empregados) {
+		this.empregados = empregados;
 	}
 
 	public long getVersion() {
