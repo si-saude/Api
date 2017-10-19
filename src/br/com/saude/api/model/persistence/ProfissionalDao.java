@@ -64,7 +64,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 				for(int i=0; i < profissional.getProfissionalVacinas().size(); i++)
 					profissional.getProfissionalVacinas().get(i)
 						.setVacina(session.get(Vacina.class, 
-											profissional.getProfissionalVacinas().get(i).getId()));
+											profissional.getProfissionalVacinas().get(i).getVacina().getId()));
 			
 			return profissional;
 		};

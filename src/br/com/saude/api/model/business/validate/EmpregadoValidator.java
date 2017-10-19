@@ -15,5 +15,8 @@ public class EmpregadoValidator extends GenericValidator<Empregado> {
 		
 		if(empregado.getEmpregadoVacinas() != null)
 			new EmpregadoVacinaValidator().validate(empregado.getEmpregadoVacinas());
+		
+		if(empregado.getHistoricoGrupoMonitoramentos() != null)
+			new HistoricoGrupoMonitoramentoValidator().validate(empregado.getHistoricoGrupoMonitoramentos());
 	}
 }
