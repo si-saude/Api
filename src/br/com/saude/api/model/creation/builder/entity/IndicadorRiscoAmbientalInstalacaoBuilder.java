@@ -4,7 +4,6 @@ import java.util.List;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.generic.GenericFilter;
-import br.com.saude.api.model.entity.po.IndicadorRiscoAmbiental;
 import br.com.saude.api.model.entity.po.IndicadorRiscoAmbientalInstalacao;
 
 public class IndicadorRiscoAmbientalInstalacaoBuilder
@@ -41,8 +40,7 @@ public class IndicadorRiscoAmbientalInstalacaoBuilder
 		newEntity.setVersion(entity.getVersion());
 		
 		if(entity.getIndicadorRisco() != null)
-			newEntity.setIndicadorRisco((IndicadorRiscoAmbiental)IndicadorRiscoAmbientalBuilder
-					.newInstance(entity.getIndicadorRisco()).loadPeriodicidade().getEntity());
+			newEntity.setIndicadorRisco(IndicadorRiscoAmbientalBuilder.newInstance(entity.getIndicadorRisco()).getEntity());
 		
 		return newEntity;
 	}

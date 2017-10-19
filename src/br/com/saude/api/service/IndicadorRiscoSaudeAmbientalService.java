@@ -15,7 +15,7 @@ import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.IndicadorRiscoSaudeAmbientalBo;
-import br.com.saude.api.model.business.validate.IndicadorRiscoValidator;
+import br.com.saude.api.model.business.validate.IndicadorRiscoSaudeAmbientalValidator;
 import br.com.saude.api.model.entity.filter.IndicadorRiscoFilter;
 import br.com.saude.api.model.entity.po.IndicadorRiscoSaudeAmbiental;
 import br.com.saude.api.util.RequestInterceptor;
@@ -34,7 +34,7 @@ implements GenericService<IndicadorRiscoSaudeAmbiental,IndicadorRiscoFilter>{
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=IndicadorRiscoValidator.class)
+	@CustomValidator(validatorClass=IndicadorRiscoSaudeAmbientalValidator.class)
 	@Override
 	public Response save(IndicadorRiscoSaudeAmbiental indicadorRiscoSaudeAmbiental) {
 		try {

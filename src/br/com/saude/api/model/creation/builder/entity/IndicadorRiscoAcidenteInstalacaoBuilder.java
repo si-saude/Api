@@ -2,9 +2,9 @@ package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
 
+
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.generic.GenericFilter;
-import br.com.saude.api.model.entity.po.IndicadorRiscoAcidente;
 import br.com.saude.api.model.entity.po.IndicadorRiscoAcidenteInstalacao;
 
 public class IndicadorRiscoAcidenteInstalacaoBuilder
@@ -41,8 +41,7 @@ public class IndicadorRiscoAcidenteInstalacaoBuilder
 		newEntity.setVersion(entity.getVersion());
 		
 		if(entity.getIndicadorRisco() != null)
-			newEntity.setIndicadorRisco((IndicadorRiscoAcidente)IndicadorRiscoAcidenteBuilder
-					.newInstance(entity.getIndicadorRisco()).loadPeriodicidade().getEntity());
+			newEntity.setIndicadorRisco(IndicadorRiscoAcidenteBuilder.newInstance(entity.getIndicadorRisco()).getEntity());
 		
 		return newEntity;
 	}

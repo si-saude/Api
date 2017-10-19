@@ -3,6 +3,7 @@ package br.com.saude.api.model.business;
 import java.lang.reflect.InvocationTargetException;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.InstalacaoBuilder;
 import br.com.saude.api.model.creation.builder.example.InstalacaoExampleBuilder;
 import br.com.saude.api.model.entity.filter.InstalacaoFilter;
@@ -33,6 +34,18 @@ public class InstalacaoBo extends GenericBo<Instalacao, InstalacaoFilter,
 						.loadIndicadorRiscoSanitarioInstalacoes()
 						.loadIndicadorRiscoSaudeAmbientalInstalacoes();
 		};
+	}
+	
+	@Override
+	public Instalacao getById(Object id) throws IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return this.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+	}
+	
+	@Override
+	public PagedList<Instalacao> getList(InstalacaoFilter filter) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return this.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
 	}
 	
 	@Override

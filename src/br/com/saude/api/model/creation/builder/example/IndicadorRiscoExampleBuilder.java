@@ -93,7 +93,7 @@ public abstract class IndicadorRiscoExampleBuilder<T extends IndicadorRisco>
 
 	@Override
 	protected void createExampleSelectList() {
-		
+		addCritico();
 	}
 
 }

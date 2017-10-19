@@ -4,7 +4,6 @@ import java.util.List;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.generic.GenericFilter;
-import br.com.saude.api.model.entity.po.IndicadorRiscoErgonomico;
 import br.com.saude.api.model.entity.po.IndicadorRiscoErgonomicoInstalacao;
 
 public class IndicadorRiscoErgonomicoInstalacaoBuilder
@@ -41,8 +40,7 @@ public class IndicadorRiscoErgonomicoInstalacaoBuilder
 		newEntity.setVersion(entity.getVersion());
 		
 		if(entity.getIndicadorRisco() != null)
-			newEntity.setIndicadorRisco((IndicadorRiscoErgonomico)IndicadorRiscoErgonomicoBuilder
-					.newInstance(entity.getIndicadorRisco()).loadPeriodicidade().getEntity());
+			newEntity.setIndicadorRisco(IndicadorRiscoErgonomicoBuilder.newInstance(entity.getIndicadorRisco()).getEntity());
 		
 		return newEntity;
 	}

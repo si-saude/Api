@@ -24,7 +24,7 @@ public class EmpregadoVacina {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Empregado empregado;
 	
-	@NotNull(message="É necessário informar a Vacina do Profissional.")
+	@NotNull(message="É necessário informar a Vacina do Empregado.")
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Vacina vacina;
 	

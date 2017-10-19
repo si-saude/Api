@@ -4,6 +4,8 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import br.com.saude.api.generic.GenericDao;
+import br.com.saude.api.generic.GenericExampleBuilder;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.IndicadorRiscoAcidente;
 import br.com.saude.api.model.entity.po.IndicadorRiscoAmbiental;
 import br.com.saude.api.model.entity.po.IndicadorRiscoErgonomico;
@@ -56,38 +58,41 @@ public class InstalacaoDao extends GenericDao<Instalacao> {
 				for(int i=0; i < instalacao.getIndicadorRiscoAcidenteInstalacoes().size(); i++)
 					instalacao.getIndicadorRiscoAcidenteInstalacoes().get(i)
 						.setIndicadorRisco(session.get(IndicadorRiscoAcidente.class,
-								instalacao.getIndicadorRiscoAcidenteInstalacoes().get(i).getId()));
+								instalacao.getIndicadorRiscoAcidenteInstalacoes().get(i).getIndicadorRisco().getId()));
 			
 			if(instalacao.getIndicadorRiscoAmbientalInstalacoes() != null)
 				for(int i=0; i < instalacao.getIndicadorRiscoAmbientalInstalacoes().size(); i++)
 					instalacao.getIndicadorRiscoAmbientalInstalacoes().get(i)
 						.setIndicadorRisco(session.get(IndicadorRiscoAmbiental.class,
-								instalacao.getIndicadorRiscoAmbientalInstalacoes().get(i).getId()));
+								instalacao.getIndicadorRiscoAmbientalInstalacoes().get(i).getIndicadorRisco().getId()));
 			
 			if(instalacao.getIndicadorRiscoErgonomicoInstalacoes() != null)
 				for(int i=0; i < instalacao.getIndicadorRiscoErgonomicoInstalacoes().size(); i++)
 					instalacao.getIndicadorRiscoErgonomicoInstalacoes().get(i)
 						.setIndicadorRisco(session.get(IndicadorRiscoErgonomico.class,
-								instalacao.getIndicadorRiscoErgonomicoInstalacoes().get(i).getId()));
+								instalacao.getIndicadorRiscoErgonomicoInstalacoes().get(i).getIndicadorRisco().getId()));
 			
 			if(instalacao.getIndicadorRiscoSanitarioInstalacoes() != null)
 				for(int i=0; i < instalacao.getIndicadorRiscoSanitarioInstalacoes().size(); i++)
 					instalacao.getIndicadorRiscoSanitarioInstalacoes().get(i)
 						.setIndicadorRisco(session.get(IndicadorRiscoSanitario.class,
-								instalacao.getIndicadorRiscoSanitarioInstalacoes().get(i).getId()));
+								instalacao.getIndicadorRiscoSanitarioInstalacoes().get(i).getIndicadorRisco().getId()));
 			
 			if(instalacao.getIndicadorRiscoSaudeAmbientalInstalacoes() != null)
 				for(int i=0; i < instalacao.getIndicadorRiscoSaudeAmbientalInstalacoes().size(); i++)
 					instalacao.getIndicadorRiscoSaudeAmbientalInstalacoes().get(i)
 						.setIndicadorRisco(session.get(IndicadorRiscoSaudeAmbiental.class,
-								instalacao.getIndicadorRiscoSaudeAmbientalInstalacoes().get(i).getId()));
+								instalacao.getIndicadorRiscoSaudeAmbientalInstalacoes().get(i).getIndicadorRisco().getId()));
 			
 			return instalacao;
 		};
 	}
 	
-	@Override
-	public Instalacao getById(Object id) throws Exception {
+	public Instalacao getByIdLoadAll(Object id) throws Exception {
 		return super.getById(id, this.functionLoadAll);
+	}
+	
+	public PagedList<Instalacao> getListFunctionLoad(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder,this.functionLoad);
 	}
 }

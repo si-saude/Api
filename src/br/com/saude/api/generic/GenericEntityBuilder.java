@@ -1,5 +1,6 @@
 package br.com.saude.api.generic;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +14,13 @@ public abstract class GenericEntityBuilder<T,F extends GenericFilter> {
 	protected List<T> newEntityList;
 	
 	protected GenericEntityBuilder(T entity) {
+		initializeFunctions();
 		this.entity = entity;
 		this.newEntity = clone(entity);
 	}
 	
 	protected GenericEntityBuilder(List<T> entityList) {
+		initializeFunctions();
 		this.entityList = entityList;
 		this.newEntityList = clone(entityList);
 	}
@@ -44,6 +47,7 @@ public abstract class GenericEntityBuilder<T,F extends GenericFilter> {
 		return list;
 	}
 	
+	private static Object entityTemp;
 	protected GenericEntityBuilder<T,F> loadProperty(Function<Map<String,T>,T> function) {
 		Map<String,T> map = new HashMap<String,T>();
 		
@@ -53,11 +57,13 @@ public abstract class GenericEntityBuilder<T,F extends GenericFilter> {
 			this.newEntity = function.apply(map);
 		}else {
 			for(T entity:this.entityList) {
+				entityTemp = entity;
 				T newEntity = this.newEntityList.stream()
 						.filter(e->{
 							try {
-								return e.getClass().getDeclaredField("id").get(e) == 
-											entity.getClass().getDeclaredField("id").get(entity);
+								Field field = e.getClass().getDeclaredField("id");
+								field.setAccessible(true);
+								return field.get(e).equals(field.get(entityTemp));
 							} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
 									| SecurityException e1) {
 								e1.printStackTrace();
@@ -68,6 +74,7 @@ public abstract class GenericEntityBuilder<T,F extends GenericFilter> {
 				map.put("origem", entity);
 				map.put("destino", newEntity);
 				newEntity = function.apply(map);
+				entityTemp = null;
 			}
 		}
 		
