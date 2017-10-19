@@ -117,10 +117,11 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 					grupoMonitoramentos.forEach(g-> {
 						HistoricoGrupoMonitoramento historico = new HistoricoGrupoMonitoramento();
 						historico.setDataRemocao(new Date());
-						historico.setEmpregado(empregado);
 						historico.setGrupoMonitoramento(g);
 						empregado.getHistoricoGrupoMonitoramentos().add(historico);
-					});				
+					});
+				
+				empregado.getHistoricoGrupoMonitoramentos().forEach(h->h.setEmpregado(empregado));
 			}
 			
 			return empregado;
