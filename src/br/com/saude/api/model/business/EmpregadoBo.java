@@ -1,14 +1,11 @@
 package br.com.saude.api.model.business;
 
-import java.util.ArrayList;
-
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.EmpregadoBuilder;
 import br.com.saude.api.model.creation.builder.example.EmpregadoExampleBuilder;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.po.Empregado;
-import br.com.saude.api.model.entity.po.Telefone;
 import br.com.saude.api.model.persistence.EmpregadoDao;
 
 public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, EmpregadoDao, 
@@ -37,7 +34,8 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 						.loadRegime().loadGhe().loadGhee()
 						.loadInstalacoes().loadTelefones()
 						.loadEmpregadoVacinas()
-						.loadGrupoMonitoramentos();
+						.loadGrupoMonitoramentos()
+						.loadHistoricoGrupoMonitoramentos();
 		};
 	}
 	
@@ -54,12 +52,8 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 	@Override
 	public Empregado save(Empregado empregado) throws Exception {
 		
-		if(empregado.getId() > 0) {
-			if(empregado.getTelefones() == null)
-				empregado.setTelefones(new ArrayList<Telefone>());
-		}
-		
 		empregado.getEmpregadoVacinas().forEach(e->e.setEmpregado(empregado));
+		empregado.getHistoricoGrupoMonitoramentos().forEach(h->h.setEmpregado(empregado));
 		
 		return super.save(empregado);
 	}

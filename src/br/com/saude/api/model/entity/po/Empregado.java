@@ -99,6 +99,9 @@ public class Empregado {
 				inverseJoinColumns = {@JoinColumn(name="grupomonitoramento_id")})
 	private List<GrupoMonitoramento> grupoMonitoramentos;
 	
+	@OneToMany(mappedBy="empregado", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<HistoricoGrupoMonitoramento> historicoGrupoMonitoramentos;
+	
 	@Version
 	private long version;
 	
@@ -234,5 +237,11 @@ public class Empregado {
 	}
 	public void setGrupoMonitoramentos(List<GrupoMonitoramento> grupoMonitoramentos) {
 		this.grupoMonitoramentos = grupoMonitoramentos;
+	}
+	public List<HistoricoGrupoMonitoramento> getHistoricoGrupoMonitoramentos() {
+		return historicoGrupoMonitoramentos;
+	}
+	public void setHistoricoGrupoMonitoramentos(List<HistoricoGrupoMonitoramento> historicoGrupoMonitoramentos) {
+		this.historicoGrupoMonitoramentos = historicoGrupoMonitoramentos;
 	}
 }

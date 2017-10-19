@@ -1,5 +1,7 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -18,6 +20,8 @@ import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Instalacao;
 import br.com.saude.api.model.entity.po.Telefone;
 import br.com.saude.api.model.entity.po.Vacina;
+import br.com.saude.api.model.entity.po.GrupoMonitoramento;
+import br.com.saude.api.model.entity.po.HistoricoGrupoMonitoramento;
 
 public class EmpregadoDao extends GenericDao<Empregado>  {
 	private static EmpregadoDao instance;
@@ -52,6 +56,7 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			empregado = loadInstalacoes(empregado);
 			empregado = loadEmpregadoVacinas(empregado);
 			empregado = loadGrupoMonitoramentos(empregado);
+			empregado = loadHistoricoGrupoMonitoramentos(empregado);
 			
 			return empregado;
 		};
@@ -67,8 +72,23 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 							session.get(Instalacao.class, empregado.getInstalacoes()
 																	.get(i).getId()));
 			
-			//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
+			//CARREGAR AS VACINAS
+			if(empregado.getEmpregadoVacinas() != null)
+				for(int i=0; i < empregado.getEmpregadoVacinas().size(); i++)
+					empregado.getEmpregadoVacinas().get(i)
+						.setVacina(session.get(Vacina.class, 
+								empregado.getEmpregadoVacinas().get(i).getVacina().getId()));
+			
+			//CARREGAR OS GRUPOS DE MONITORAMENTO
+			if(empregado.getHistoricoGrupoMonitoramentos() != null)
+				for(int i=0; i < empregado.getHistoricoGrupoMonitoramentos().size(); i++)
+					empregado.getHistoricoGrupoMonitoramentos().get(i)
+						.setGrupoMonitoramento(session.get(GrupoMonitoramento.class, 
+												empregado.getHistoricoGrupoMonitoramentos().get(i)
+																.getGrupoMonitoramento().getId()));
+			
 			if(empregado.getId() > 0) {				
+				//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
 				List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
 						.createAlias("empregados", "empregado")
 						.add(Restrictions.eq("empregado.id", empregado.getId()))
@@ -77,14 +97,27 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 					if(!empregado.getTelefones().contains(t))
 						session.remove(t);
 				});
+				
+				//VERIFICA SE FORAM REMOVIDOS GRUPOS DE MONITORAMENTO PARA INSERÇÃO NO HISTÓRICO
+				List<Integer> ids = new ArrayList<Integer>();
+				empregado.getGrupoMonitoramentos().forEach(g -> ids.add(g.getId()));
+				
+				List<GrupoMonitoramento> grupoMonitoramentos = (List<GrupoMonitoramento>)
+						session.createCriteria(GrupoMonitoramento.class)
+						.createAlias("empregados", "empregado")
+						.add(Restrictions.eq("empregado.id", empregado.getId()))
+						.add(Restrictions.not(Restrictions.in("id", ids.toArray())) )
+						.list();
+				
+				if(grupoMonitoramentos != null)
+					grupoMonitoramentos.forEach(g-> {
+						HistoricoGrupoMonitoramento historico = new HistoricoGrupoMonitoramento();
+						historico.setDataRemocao(new Date());
+						historico.setEmpregado(empregado);
+						historico.setGrupoMonitoramento(g);
+						empregado.getHistoricoGrupoMonitoramentos().add(historico);
+					});				
 			}
-			
-			//CARREGAR AS VACINAS
-			if(empregado.getEmpregadoVacinas() != null)
-				for(int i=0; i < empregado.getEmpregadoVacinas().size(); i++)
-					empregado.getEmpregadoVacinas().get(i)
-						.setVacina(session.get(Vacina.class, 
-								empregado.getEmpregadoVacinas().get(i).getId()));
 			
 			return empregado;
 		};
@@ -185,6 +218,12 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	private Empregado loadGrupoMonitoramentos(Empregado empregado) {
 		if(empregado.getGrupoMonitoramentos()!=null)
 			Hibernate.initialize(empregado.getGrupoMonitoramentos());
+		return empregado;
+	}
+	
+	private Empregado loadHistoricoGrupoMonitoramentos(Empregado empregado) {
+		if(empregado.getHistoricoGrupoMonitoramentos()!=null)
+			Hibernate.initialize(empregado.getHistoricoGrupoMonitoramentos());
 		return empregado;
 	}
 	
