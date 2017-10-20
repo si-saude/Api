@@ -28,6 +28,8 @@ public class Profissiograma {
 	@Column(unique=true)
 	private String nome;
 	
+	private boolean concluido;
+	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name="profissiograma_grupomonitoramento", 
 	joinColumns = {@JoinColumn(name="profissiograma_id")}, 
@@ -67,5 +69,13 @@ public class Profissiograma {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public boolean isConcluido() {
+		return concluido;
+	}
+
+	public void setConcluido(boolean concluido) {
+		this.concluido = concluido;
 	}
 }

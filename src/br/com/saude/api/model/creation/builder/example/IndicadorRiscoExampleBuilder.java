@@ -27,16 +27,7 @@ public abstract class IndicadorRiscoExampleBuilder<T extends IndicadorRisco>
 	}
 	
 	protected void addCritico() {
-		if(this.filter.getCritico() == null || 
-				this.filter.getCritico().getValue() <= 0 || 
-				this.filter.getCritico().getValue() > 2)
-			this.finishExampleFunction = example -> {
-				return example.excludeProperty("critico");
-			};
-		else if(this.filter.getCritico().getValue() == 1)
-			this.entity.setCritico(true);
-		else
-			this.entity.setCritico(false);
+		this.entity.setCritico(this.addBoolean("critico", this.filter.getCritico()));
 	}
 	
 	protected void addIndice0() {

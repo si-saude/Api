@@ -103,4 +103,14 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 		if(criterion!=null)
 			this.criterions.add(criterion);
 	}
+	
+	protected boolean addBoolean(String propertyName, BooleanFilter booleanFilter) {
+		if(booleanFilter == null || booleanFilter.getValue() <= 0 || booleanFilter.getValue() > 2)
+			this.finishExampleFunction = example -> {
+				return example.excludeProperty(propertyName);
+			};
+		else if(booleanFilter.getValue() == 1)
+			return true;
+		return false;
+	}
 }
