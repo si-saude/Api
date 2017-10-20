@@ -19,6 +19,7 @@ public class ProfissiogramaExampleBuilder
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addNome();
+		addConcluido();
 	}
 
 	@Override
@@ -29,5 +30,9 @@ public class ProfissiogramaExampleBuilder
 	private void addNome() {
 		if(this.filter.getNome() != null)
 			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
+	}
+	
+	private void addConcluido() {
+		this.entity.setConcluido(this.addBoolean("concluido", this.filter.getConcluido()));
 	}
 }

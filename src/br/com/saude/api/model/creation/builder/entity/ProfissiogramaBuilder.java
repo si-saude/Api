@@ -47,6 +47,7 @@ public class ProfissiogramaBuilder extends GenericEntityBuilder<Profissiograma, 
 		
 		newProfissiograma.setId(profissiograma.getId());
 		newProfissiograma.setNome(profissiograma.getNome());
+		newProfissiograma.setConcluido(profissiograma.isConcluido());
 		newProfissiograma.setVersion(profissiograma.getVersion());
 		
 		return newProfissiograma;
