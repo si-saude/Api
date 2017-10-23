@@ -18,7 +18,10 @@ import br.com.saude.api.model.business.CriterioBo;
 import br.com.saude.api.model.business.validate.CriterioValidator;
 import br.com.saude.api.model.entity.filter.CriterioFilter;
 import br.com.saude.api.model.entity.po.Criterio;
+import br.com.saude.api.util.RequestInterceptor;
 
+@Path("criterio")
+@RequestInterceptor
 public class CriterioService 
 		extends GenericServiceImpl<Criterio, CriterioFilter, CriterioBo>
 		implements GenericService<Criterio, CriterioFilter>{
