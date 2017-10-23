@@ -18,12 +18,19 @@ public class GerenciaBo extends GenericBo<Gerencia, GerenciaFilter, GerenciaDao,
 	
 	@Override
 	protected void initializeFunctions() {
-		
+		this.functionLoadAll = builder -> {
+			return builder.loadGerente().loadSecretario1().loadSecretario2();
+		};
 	}
 	
 	public static GerenciaBo getInstance() {
 		if(instance==null)
 			instance = new GerenciaBo();
 		return instance;
+	}
+	
+	@Override
+	public Gerencia getById(Object id) throws Exception {
+		return this.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
 }

@@ -1,7 +1,10 @@
 package br.com.saude.api.model.creation.builder.example;
 
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
+import org.javatuples.Triplet;
 
+import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.GerenciaFilter;
@@ -31,11 +34,38 @@ public class GerenciaExampleBuilder extends GenericExampleBuilder<Gerencia,Geren
 		if(this.filter.getDescricao() != null)
 			this.entity.setDescricao(Helper.filterLike(this.filter.getDescricao()));
 	}
+	
+	private void addGerente() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getGerente()!=null) {
+			CriteriaExample criteriaExample = EmpregadoExampleBuilder
+					.newInstance(this.filter.getGerente()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("gerente", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addSecretario1() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getSecretario1()!=null) {
+			CriteriaExample criteriaExample = EmpregadoExampleBuilder
+					.newInstance(this.filter.getSecretario1()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("secretario1", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addSecretario2() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getSecretario2()!=null) {
+			CriteriaExample criteriaExample = EmpregadoExampleBuilder
+					.newInstance(this.filter.getSecretario2()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("secretario2", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
 
 	@Override
-	protected void createExample() {
+	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addCodigo();
 		addDescricao();
+		addGerente();
+		addSecretario1();
+		addSecretario2();
 	}
 	
 	@Override
