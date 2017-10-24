@@ -24,6 +24,7 @@ public class GrupoMonitoramentoExampleBuilder
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addNome();
 		addTipoGrupoMonitoramento();
+		addRecorrente();
 	}
 
 	@Override
@@ -42,5 +43,9 @@ public class GrupoMonitoramentoExampleBuilder
 					.newInstance(this.filter.getTipoGrupoMonitoramento()).getCriteriaExample();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("tipoGrupoMonitoramento", criteriaExample, JoinType.INNER_JOIN));
 		}
+	}
+	
+	protected void addRecorrente() {
+		this.entity.setRecorrente(this.addBoolean("recorrente", this.filter.getRecorrente()));
 	}
 }
