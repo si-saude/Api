@@ -1,6 +1,5 @@
 package br.com.saude.api.service;
 
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.ws.rs.Consumes;
@@ -12,7 +11,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.media.multipart.FormDataParam;
+//import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
@@ -34,28 +33,29 @@ public class ProfissionalService
 		return ProfissionalBo.getInstance();
 	}
 	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=ProfissionalValidator.class)
 	@Override
 	public Response save(Profissional profissional) throws Exception {
 		ProfissionalBo.getInstance().save(profissional);
 		return Response.ok("Salvo com sucesso.").build();
 	}
 	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@CustomValidator(validatorClass=ProfissionalValidator.class)
-	public Response salvar(@FormDataParam("assinatura") InputStream assinatura, 
-						@FormDataParam("profissional") Profissional profissional) {
-		try {
-			Response sucesso = this.save(profissional);
-			
-			//SALVAR ASSINATURA
-			
-			return sucesso;
-		}catch (Exception e) {
-			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
-		}
-	}
+	
+//	public Response salvar(@FormDataParam("assinatura") InputStream assinatura, 
+//						@FormDataParam("profissional") Profissional profissional) {
+//		try {
+//			Response sucesso = this.save(profissional);
+//			
+//			//SALVAR ASSINATURA
+//			
+//			return sucesso;
+//		}catch (Exception e) {
+//			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+//		}
+//	}
 	
 	@Override
 	@POST
