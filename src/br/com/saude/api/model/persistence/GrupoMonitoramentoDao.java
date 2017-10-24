@@ -83,8 +83,15 @@ public class GrupoMonitoramentoDao extends GenericDao<GrupoMonitoramento> {
 	}
 	
 	private GrupoMonitoramento loadGrupoMonitoramentoExames(GrupoMonitoramento grupoMonitoramento) {
-		if(grupoMonitoramento.getGrupoMonitoramentoExames() != null)
+		if(grupoMonitoramento.getGrupoMonitoramentoExames() != null) {
+			
 			Hibernate.initialize(grupoMonitoramento.getGrupoMonitoramentoExames());
+			
+			grupoMonitoramento.getGrupoMonitoramentoExames().forEach(g->{
+				if(g.getCriterios() != null)
+					Hibernate.initialize(g.getCriterios());
+			});
+		}
 		return grupoMonitoramento;
 	}
 	

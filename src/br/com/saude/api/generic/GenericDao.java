@@ -31,7 +31,6 @@ public abstract class GenericDao<T> {
 	
 	protected abstract void initializeFunctions();
 	
-	@SuppressWarnings("unchecked")
 	public T save(T entity) throws Exception {
 		Session session = HibernateHelper.getSession();
 		
@@ -40,8 +39,8 @@ public abstract class GenericDao<T> {
 			
 			if(this.functionBeforeSave != null)
 				entity = this.functionBeforeSave.apply(new Pair<T,Session>(entity,session));
-			entity = (T)session.merge(entity);
 			
+			session.merge(entity);			
 			transaction.commit();
 		}catch(Exception ex) {
 			throw ex;

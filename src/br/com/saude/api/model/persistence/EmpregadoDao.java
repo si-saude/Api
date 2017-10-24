@@ -73,6 +73,13 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 							session.get(Instalacao.class, empregado.getInstalacoes()
 																	.get(i).getId()));
 			
+			//CARREGA OS GRUPOS DE MONITORAMENTO PARA QUE O HIBERNATE SALVE
+			if(empregado.getGrupoMonitoramentos()!=null)
+				for(int i=0; i < empregado.getGrupoMonitoramentos().size(); i++)
+					empregado.getGrupoMonitoramentos().set(i, 
+							session.get(GrupoMonitoramento.class, empregado.getGrupoMonitoramentos()
+																	.get(i).getId()));
+			
 			//CARREGAR AS VACINAS
 			if(empregado.getEmpregadoVacinas() != null)
 				for(int i=0; i < empregado.getEmpregadoVacinas().size(); i++)
@@ -106,12 +113,14 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 				List<Integer> ids = new ArrayList<Integer>();
 				empregado.getGrupoMonitoramentos().forEach(g -> ids.add(g.getId()));
 				
-				List<GrupoMonitoramento> grupoMonitoramentos = (List<GrupoMonitoramento>)
-						session.createCriteria(GrupoMonitoramento.class)
+				Criteria grupoMonitoramentoCriteria = session.createCriteria(GrupoMonitoramento.class)
 						.createAlias("empregados", "empregado")
-						.add(Restrictions.eq("empregado.id", empregado.getId()))
-						.add(Restrictions.not(Restrictions.in("id", ids.toArray())) )
-						.list();
+						.add(Restrictions.eq("empregado.id", empregado.getId()));
+				
+				if(ids.size() > 0)
+					grupoMonitoramentoCriteria.add(Restrictions.not(Restrictions.in("id", ids.toArray())) );
+				
+				List<GrupoMonitoramento> grupoMonitoramentos = (List<GrupoMonitoramento>)grupoMonitoramentoCriteria.list();
 				
 				if(grupoMonitoramentos != null)
 					grupoMonitoramentos.forEach(g-> {
