@@ -41,6 +41,8 @@ public class GrupoMonitoramento {
 	@ManyToMany(fetch=FetchType.LAZY, mappedBy="grupoMonitoramentos", cascade=CascadeType.ALL)
 	private List<Empregado> empregados;
 	
+	private boolean recorrente;
+	
 	@Version
 	private long version;
 
@@ -98,5 +100,13 @@ public class GrupoMonitoramento {
 
 	public void setVersion(long version) {
 		this.version = version;
-	}	
+	}
+
+	public boolean isRecorrente() {
+		return recorrente;
+	}
+
+	public void setRecorrente(boolean recorrente) {
+		this.recorrente = recorrente;
+	}
 }

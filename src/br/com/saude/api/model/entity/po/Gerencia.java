@@ -30,6 +30,15 @@ public class Gerencia {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Gerencia gerencia;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Empregado gerente;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Empregado secretario1;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Empregado secretario2;
+	
 	@Version
 	private long version;
 
@@ -83,5 +92,29 @@ public class Gerencia {
 		if(this.gerencia!=null)
 			return this.gerencia.getCodigoCompletoGerencia(this.gerencia.codigo+"/"+codigo);
 		return codigo;
+	}
+
+	public Empregado getGerente() {
+		return gerente;
+	}
+
+	public void setGerente(Empregado gerente) {
+		this.gerente = gerente;
+	}
+
+	public Empregado getSecretario1() {
+		return secretario1;
+	}
+
+	public void setSecretario1(Empregado secretario1) {
+		this.secretario1 = secretario1;
+	}
+
+	public Empregado getSecretario2() {
+		return secretario2;
+	}
+
+	public void setSecretario2(Empregado secretario2) {
+		this.secretario2 = secretario2;
 	}
 }

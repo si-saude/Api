@@ -1,6 +1,7 @@
 package br.com.saude.api.model.persistence;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
@@ -21,7 +22,12 @@ public class GerenciaDao extends GenericDao<Gerencia> {
 	
 	@Override
 	protected void initializeFunctions() {
-		
+		this.functionLoadAll = gerencia -> {
+			gerencia = loadGerente(gerencia);
+			gerencia = loadSecretario1(gerencia);
+			gerencia = loadSecretario2(gerencia);
+			return gerencia;
+		};
 	}
 	
 	public static GerenciaDao getInstance() {
@@ -72,5 +78,27 @@ public class GerenciaDao extends GenericDao<Gerencia> {
 		if(condicao.contains("0"))
 			return "codigo";
 		return condicao+".codigo";
+	}
+	
+	private Gerencia loadGerente(Gerencia gerencia) {
+		if(gerencia.getGerente()!=null)
+			Hibernate.initialize(gerencia.getGerente());
+		return gerencia;
+	}
+	
+	private Gerencia loadSecretario1(Gerencia gerencia) {
+		if(gerencia.getSecretario1()!=null)
+			Hibernate.initialize(gerencia.getSecretario1());
+		return gerencia;
+	}
+	
+	private Gerencia loadSecretario2(Gerencia gerencia) {
+		if(gerencia.getSecretario2()!=null)
+			Hibernate.initialize(gerencia.getSecretario2());
+		return gerencia;
+	}
+	
+	public Gerencia getByIdLoadAll(Object id) throws Exception {
+		return this.getById(id,this.functionLoadAll);
 	}
 }

@@ -10,5 +10,5 @@ public interface GenericService <T, F extends GenericFilter> {
 	public Response getSelectList(F filter) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception;
 	public Response get(String id) throws Exception;
 	public Response delete(Object id);
-	public Response save(T entity);
+	public Response save(T entity) throws Exception;
 }
