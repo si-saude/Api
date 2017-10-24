@@ -28,7 +28,7 @@ import br.com.saude.api.util.RequestInterceptor;
 public class ProfissionalService 
 				extends GenericServiceImpl<Profissional,ProfissionalFilter,ProfissionalBo>
 				implements GenericService<Profissional,ProfissionalFilter>{
-	
+
 	@Override
 	protected ProfissionalBo getBo() {
 		return ProfissionalBo.getInstance();
@@ -44,7 +44,7 @@ public class ProfissionalService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@CustomValidator(validatorClass=ProfissionalValidator.class)
-	public Response save(@FormDataParam("assinatura") InputStream assinatura, 
+	public Response salvar(@FormDataParam("assinatura") InputStream assinatura, 
 						@FormDataParam("profissional") Profissional profissional) {
 		try {
 			Response sucesso = this.save(profissional);
