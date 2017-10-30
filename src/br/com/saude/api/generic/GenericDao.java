@@ -3,6 +3,7 @@ package br.com.saude.api.generic;
 import java.util.List;
 import java.util.function.Function;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 
 import org.hibernate.Criteria;
@@ -40,7 +41,10 @@ public abstract class GenericDao<T> {
 			if(this.functionBeforeSave != null)
 				entity = this.functionBeforeSave.apply(new Pair<T,Session>(entity,session));
 			
-			session.merge(entity);			
+			Field id = entity.getClass().getDeclaredField("id");
+			id.setAccessible(true);
+			id.set(entity, id.get(session.merge(entity)));
+			
 			transaction.commit();
 		}catch(Exception ex) {
 			throw ex;

@@ -2,6 +2,7 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -73,6 +75,12 @@ public class Profissional {
 	
 	@OneToMany(mappedBy="profissional", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<ProfissionalVacina> profissionalVacinas;
+	
+	@Transient
+	private Map<Integer,Integer> assinatura;
+	
+	@Transient
+	private String assinaturaBase64;
 	
 	@Version
 	private long version;
@@ -211,5 +219,21 @@ public class Profissional {
 
 	public void setDataAso(Date dataAso) {
 		this.dataAso = dataAso;
+	}
+
+	public Map<Integer,Integer> getAssinatura() {
+		return assinatura;
+	}
+
+	public void setAssinatura(Map<Integer,Integer> assinatura) {
+		this.assinatura = assinatura;
+	}
+
+	public String getAssinaturaBase64() {
+		return assinaturaBase64;
+	}
+
+	public void setAssinaturaBase64(String assinaturaBase64) {
+		this.assinaturaBase64 = assinaturaBase64;
 	}
 }
