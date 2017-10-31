@@ -39,7 +39,7 @@ public class PerfilBo extends GenericBo<Perfil, PerfilFilter, PerfilDao,
 	
 	@Override
 	public Perfil getById(Object id) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		return this.getById(getDao().getByIdLoadPermissoes(id), this.functionLoadAll);
+		return this.getByEntity(getDao().getByIdLoadPermissoes(id), this.functionLoadAll);
 	}
 	
 	@Override

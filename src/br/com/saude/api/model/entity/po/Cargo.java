@@ -22,8 +22,8 @@ public class Cargo {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar o Nome da Função.")
-	@Size(max = 120, message="Tamanho máximo para Nome da Função: 120")
+	@NotNull(message="É necessário informar o Nome do Cargo.")
+	@Size(max = 120, message="Tamanho máximo para Nome do Cargo: 120")
 	@Column(unique=true)
 	private String nome;
 	
@@ -34,8 +34,8 @@ public class Cargo {
 	private List<Curso> cursos;
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinTable(name="vacina_funcao", 
-	joinColumns = {@JoinColumn(name="funcao_id")}, 
+	@JoinTable(name="vacina_cargo", 
+	joinColumns = {@JoinColumn(name="cargo_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="vacina_id")})
 	private List<Vacina> vacinas;
 	

@@ -83,6 +83,14 @@ public abstract class GenericBo<T, F extends GenericFilter, D extends GenericDao
 		return getBuilder(pagedList.getList()).getEntityList();
 	}
 	
+	protected List<T> getSelectList(List<T> list, Function<B,B> loadFunction) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+		if(loadFunction != null)
+			list = loadFunction.apply(getBuilder(list)).getEntityList();
+		else
+			list = getBuilder(list).getEntityList();
+		return list;
+	}
+	
 	public T getById(Object id) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return getById(id,null);
 	}

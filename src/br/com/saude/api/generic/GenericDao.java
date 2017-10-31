@@ -32,6 +32,14 @@ public abstract class GenericDao<T> {
 	
 	protected abstract void initializeFunctions();
 	
+	private Field getId(Class<?> entityClass) {
+		try {
+			return entityClass.getDeclaredField("id");
+		} catch (NoSuchFieldException e) {
+			return getId(entityClass.getSuperclass());
+		}
+	}
+	
 	public T save(T entity) throws Exception {
 		Session session = HibernateHelper.getSession();
 		
@@ -41,7 +49,7 @@ public abstract class GenericDao<T> {
 			if(this.functionBeforeSave != null)
 				entity = this.functionBeforeSave.apply(new Pair<T,Session>(entity,session));
 			
-			Field id = entity.getClass().getDeclaredField("id");
+			Field id = getId(entity.getClass());
 			id.setAccessible(true);
 			id.set(entity, id.get(session.merge(entity)));
 			

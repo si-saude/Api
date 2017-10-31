@@ -34,4 +34,16 @@ public class ProfissiogramaBo
 	public Profissiograma getById(Object id) throws Exception {
 		return this.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
+	
+	@Override
+	public Profissiograma save(Profissiograma profissiograma) throws Exception {
+		
+		profissiograma.getGrupoMonitoramentos().forEach(g->
+			g.getGrupoMonitoramentoExames().forEach(e->{
+				e.setGrupoMonitoramento(g);
+			}) 
+		);
+		
+		return super.save(profissiograma);
+	}
 }

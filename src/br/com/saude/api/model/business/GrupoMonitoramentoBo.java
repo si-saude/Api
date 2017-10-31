@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.util.List;
+
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.GrupoMonitoramentoBuilder;
@@ -46,6 +48,11 @@ public class GrupoMonitoramentoBo
 	public PagedList<GrupoMonitoramento> getList(GrupoMonitoramentoFilter filter) throws Exception {
 		return this.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), 
 				this.functionLoad);
+	}
+	
+	@Override
+	public List<GrupoMonitoramento> getSelectList(GrupoMonitoramentoFilter filter) throws  Exception {
+		return this.getSelectList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()).getList(), this.functionLoad);
 	}
 	
 	@Override

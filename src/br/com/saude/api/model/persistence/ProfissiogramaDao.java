@@ -71,8 +71,25 @@ public class ProfissiogramaDao extends GenericDao<Profissiograma> {
 	}
 	
 	private Profissiograma loadGrupoMonitoramentos(Profissiograma profissiograma) {
-		if(profissiograma.getGrupoMonitoramentos() != null)
+		if(profissiograma.getGrupoMonitoramentos() != null) {
 			Hibernate.initialize(profissiograma.getGrupoMonitoramentos());
+			
+			profissiograma.getGrupoMonitoramentos()
+				.forEach(g->{
+					
+					if(g.getTipoGrupoMonitoramento() != null) {
+						Hibernate.initialize(g.getTipoGrupoMonitoramento());
+					}
+					
+					if(g.getGrupoMonitoramentoExames() != null) {
+						Hibernate.initialize(g.getGrupoMonitoramentoExames());
+						g.getGrupoMonitoramentoExames().forEach(e->{
+							if(e.getCriterios() != null)
+								Hibernate.initialize(e.getCriterios());
+						});
+					}
+				});
+		}
 		return profissiograma;
 	}
 	

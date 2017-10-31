@@ -131,7 +131,21 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 	}
 
 	@Override
-	protected void createExampleSelectList() {
-		
+	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		addNome();
+		addCpf();
+		addDataNascimento();
+		addChave();
+		addMatricula();
+		addRg();
+		addSexo();
+		addRamal();
+		addStatus();
+		addBase();
+		addCargo();
+		addFuncao();
+		addGhe();
+		addGhee();
+		addRegime();
 	}
 }
