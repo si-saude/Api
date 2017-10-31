@@ -26,6 +26,10 @@ public class Instalacao {
 	@Column(unique=true)
 	private String nome;
 	
+	private float latitude;
+	
+	private float longitude;
+	
 	@OneToMany(mappedBy="instalacao", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<IndicadorRiscoAcidenteInstalacao> indicadorRiscoAcidenteInstalacoes;
 	
@@ -111,5 +115,21 @@ public class Instalacao {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
 	}
 }
