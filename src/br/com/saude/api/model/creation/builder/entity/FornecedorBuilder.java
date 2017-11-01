@@ -33,7 +33,7 @@ public class FornecedorBuilder extends GenericEntityBuilder<Fornecedor,Fornecedo
 	protected void initializeFunctions() {
 		this.loadEndereco = fornecedores -> {
 			if(fornecedores.get("origem").getEndereco() != null) {
-				fornecedores.get("destino").setEndereco(EnderecoBuilder.newInstance(fornecedores.get("origem").getEndereco()).getEntity());
+				fornecedores.get("destino").setEndereco(EnderecoBuilder.newInstance(fornecedores.get("origem").getEndereco()).loadCidade().getEntity());
 			}
 			return fornecedores.get("destino");
 		};
