@@ -19,20 +19,6 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 		super(filter);
 	}
 	
-	private void addNome() {
-		if(this.filter.getNome()!= null)
-			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
-	}
-	
-	private void addCpf() {
-		if(this.filter.getCpf()!= null)
-			this.entity.setCpf(Helper.filterLike(this.filter.getCpf()));
-	}
-	
-	private void addDataNascimento() {
-		this.addData("dataNascimento", this.filter.getDataNascimento());
-	}
-	
 	private void addChave() {
 		if(this.filter.getChave()!= null)
 			this.entity.setChave(Helper.filterLike(this.filter.getChave()));
@@ -43,14 +29,14 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 			this.entity.setMatricula(Helper.filterLike(this.filter.getMatricula()));
 	}
 	
-	private void addRg() {
-		if(this.filter.getRg()!= null)
-			this.entity.setRg(Helper.filterLike(this.filter.getRg()));
+	private void addEstadoCivil() {
+		if(this.filter.getEstadoCivil()!= null)
+			this.entity.setEstadoCivil(this.filter.getEstadoCivil());
 	}
 	
-	private void addSexo() {
-		if(this.filter.getSexo()!= null)
-			this.entity.setSexo(this.filter.getSexo());
+	private void addEscolaridade() {
+		if(this.filter.getEscolaridade()!= null)
+			this.entity.setEscolaridade(this.filter.getEscolaridade());
 	}
 	
 	private void addRamal() {
@@ -61,6 +47,14 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 	private void addStatus() {
 		if(this.filter.getStatus()!= null)
 			this.entity.setStatus(Helper.filterLike(this.filter.getStatus()));
+	}
+	
+	private void addPessoa() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getPessoa()!=null) {
+			CriteriaExample criteriaExample = PessoaExampleBuilder
+					.newInstance(this.filter.getPessoa()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("pessoa", criteriaExample, JoinType.INNER_JOIN));
+		}
 	}
 	
 	private void addCargo() throws InstantiationException, IllegalAccessException {
@@ -110,19 +104,17 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("ghee", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
-
+	
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
-		addNome();
-		addCpf();
-		addDataNascimento();
 		addChave();
 		addMatricula();
-		addRg();
-		addSexo();
+		addEstadoCivil();
+		addEscolaridade();
 		addRamal();
 		addStatus();
 		addBase();
+		addPessoa();
 		addCargo();
 		addFuncao();
 		addGhe();
@@ -132,16 +124,14 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
-		addNome();
-		addCpf();
-		addDataNascimento();
 		addChave();
 		addMatricula();
-		addRg();
-		addSexo();
+		addEstadoCivil();
+		addEscolaridade();
 		addRamal();
 		addStatus();
 		addBase();
+		addPessoa();
 		addCargo();
 		addFuncao();
 		addGhe();

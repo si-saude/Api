@@ -1,10 +1,9 @@
 package br.com.saude.api.model.entity.po;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,6 +14,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,28 +26,11 @@ public class Empregado {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar o Nome do Empregado(a).")
-	@Size(max = 400, message="Tamanho máximo para Nome: 400")
-	private String nome;
-	
-	@Column(unique=true)
-	@Size(max = 11, message="Tamanho máximo para Cpf do Empregado: 11")
-	@NotNull(message="É necessário informar o Cpf do Empregado(a).")
-	private String cpf;
-	
-	private Date dataNascimento;
-	
 	@Size(max = 16, message="Tamanho máximo para Chave de Empregado: 16")
 	private String chave;
 	
 	@Size(max = 32, message="Tamanho máximo para Matrícula de Empregado: 32")
 	private String matricula;
-	
-	@Size(max = 32, message="Tamanho máximo para RG de Empregado: 32")
-	private String rg;
-	
-	@Size(max = 16, message="Tamanho máximo para Sexo de Empregado: 16")
-	private String sexo;
 	
 	@Size(max = 16, message="Tamanho máximo para Ramal de Empregado: 16")
 	private String ramal;
@@ -54,8 +38,17 @@ public class Empregado {
 	@Size(max = 16, message="Tamanho máximo para Status de Empregado: 16")
 	private String status;
 	
+	@Size(max = 16, message="Tamanho máximo para Estado Civil de Empregado: 16")
+	private String estadoCivil;
+	
+	@Size(max = 128, message="Tamanho máximo para Escolaridade de Empregado: 128")
+	private String escolaridade;
+	
+	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+	@JoinColumn(name = "pessoa_id")
+	private Pessoa pessoa;
+	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@NotNull(message="É necessário informar a Cargo de Empregado.")
 	private Cargo cargo;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -84,12 +77,6 @@ public class Empregado {
 				inverseJoinColumns = {@JoinColumn(name="instalacao_id")})
 	private List<Instalacao> instalacoes;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinTable(name="telefone_empregado", 
-				joinColumns = {@JoinColumn(name="empregado_id")}, 
-				inverseJoinColumns = {@JoinColumn(name="telefone_id")})
-	private List<Telefone> telefones;
-	
 	@OneToMany(mappedBy="empregado", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<EmpregadoVacina> empregadoVacinas;
 	
@@ -102,6 +89,22 @@ public class Empregado {
 	@OneToMany(mappedBy="empregado", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<HistoricoGrupoMonitoramento> historicoGrupoMonitoramentos;
 	
+	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	@JoinColumn(name = "profissional_id")
+	private Profissional profissional;
+	
+	@Transient
+	private Map<Integer,Integer> foto;
+	
+	@Transient
+	private String fotoBase64;
+
+	@Transient
+	private Map<Integer,Integer> assinatura;
+	
+	@Transient
+	private String assinaturaBase64;
+	
 	@Version
 	private long version;
 	
@@ -111,23 +114,17 @@ public class Empregado {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getNome() {
-		return nome;
+	public String getEstadoCivil() {
+		return estadoCivil;
 	}
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setEstadoCivil(String estadoCivil) {
+		this.estadoCivil = estadoCivil;
 	}
-	public String getCpf() {
-		return cpf;
+	public String getEscolaridade() {
+		return escolaridade;
 	}
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-	public Date getDataNascimento() {
-		return dataNascimento;
-	}
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
+	public void setEscolaridade(String escolaridade) {
+		this.escolaridade = escolaridade;
 	}
 	public long getVersion() {
 		return version;
@@ -147,18 +144,7 @@ public class Empregado {
 	public void setMatricula(String matricula) {
 		this.matricula = matricula;
 	}
-	public String getRg() {
-		return rg;
-	}
-	public void setRg(String rg) {
-		this.rg = rg;
-	}
-	public String getSexo() {
-		return sexo;
-	}
-	public void setSexo(String sexo) {
-		this.sexo = sexo;
-	}
+	
 	public String getRamal() {
 		return ramal;
 	}
@@ -170,6 +156,12 @@ public class Empregado {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public Pessoa getPessoa() {
+		return pessoa;
+	}
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
 	}
 	public Cargo getCargo() {
 		return cargo;
@@ -207,7 +199,6 @@ public class Empregado {
 	public void setGhe(Ghe ghe) {
 		this.ghe = ghe;
 	}
-	
 	public Ghee getGhee() {
 		return ghee;
 	}
@@ -219,12 +210,6 @@ public class Empregado {
 	}
 	public void setInstalacoes(List<Instalacao> instalacoes) {
 		this.instalacoes = instalacoes;
-	}
-	public List<Telefone> getTelefones() {
-		return telefones;
-	}
-	public void setTelefones(List<Telefone> telefones) {
-		this.telefones = telefones;
 	}
 	public List<EmpregadoVacina> getEmpregadoVacinas() {
 		return empregadoVacinas;
@@ -244,4 +229,29 @@ public class Empregado {
 	public void setHistoricoGrupoMonitoramentos(List<HistoricoGrupoMonitoramento> historicoGrupoMonitoramentos) {
 		this.historicoGrupoMonitoramentos = historicoGrupoMonitoramentos;
 	}
+	public Map<Integer,Integer> getFoto() {
+		return foto;
+	}
+	public void setFoto(Map<Integer,Integer> foto) {
+		this.foto = foto;
+	}
+	public String getFotoBase64() {
+		return fotoBase64;
+	}
+	public void setFotoBase64(String fotoBase64) {
+		this.fotoBase64 = fotoBase64;
+	}
+	public Map<Integer,Integer> getAssinatura() {
+		return assinatura;
+	}
+	public void setAssinatura(Map<Integer,Integer> assinatura) {
+		this.assinatura = assinatura;
+	}
+	public String getAssinaturaBase64() {
+		return assinaturaBase64;
+	}
+	public void setAssinaturaBase64(String assinaturaBase64) {
+		this.assinaturaBase64 = assinaturaBase64;
+	}
+
 }

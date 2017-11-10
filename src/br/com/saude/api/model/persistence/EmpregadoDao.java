@@ -34,7 +34,6 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 		super();
 	}
 	
-	
 	public static EmpregadoDao getInstance() {
 		if(instance == null)
 			instance = new EmpregadoDao();
@@ -48,6 +47,7 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			empregado = loadCargo(empregado);
 			empregado = loadFuncao(empregado);
 			empregado = loadGerencia(empregado);
+			empregado = loadPessoa(empregado);
 			return empregado;
 		};
 		
@@ -59,9 +59,10 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			empregado = loadRegime(empregado);
 			empregado = loadInstalacoes(empregado);
 			empregado = loadEmpregadoVacinas(empregado);
-			empregado = loadTelefones(empregado);
 			empregado = loadGrupoMonitoramentos(empregado);
 			empregado = loadHistoricoGrupoMonitoramentos(empregado);
+			empregado = loadEndereco(empregado);
+			empregado = loadTelefones(empregado);
 			
 			return empregado;
 		};
@@ -100,11 +101,12 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			if(empregado.getId() > 0) {				
 				//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
 				List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
-						.createAlias("empregados", "empregado")
+						.createAlias("pessoas", "pessoa")
+						.createAlias("pessoa.empregado", "empregado")
 						.add(Restrictions.eq("empregado.id", empregado.getId()))
 						.list();
 				telefones.forEach(t->{
-					if(!empregado.getTelefones().contains(t))
+					if(!empregado.getPessoa().getTelefones().contains(t))
 						session.remove(t);
 				});
 				
@@ -239,9 +241,26 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 		return empregado;
 	}
 	
+	private Empregado loadPessoa(Empregado empregado) {
+		if(empregado.getPessoa()!=null) {
+			Hibernate.initialize(empregado.getPessoa());
+		}
+		return empregado;
+	}
+	
+	private Empregado loadEndereco(Empregado empregado) {
+		if(empregado.getPessoa().getEndereco()!=null) {
+			Hibernate.initialize(empregado.getPessoa().getEndereco());
+			if (empregado.getPessoa().getEndereco().getCidade()!=null)
+				Hibernate.initialize(empregado.getPessoa().getEndereco().getCidade());
+		}
+		return empregado;
+	}
+	
 	private Empregado loadTelefones(Empregado empregado) {
-		if(empregado.getTelefones()!=null)
-			Hibernate.initialize(empregado.getTelefones());
+		if(empregado.getPessoa().getTelefones()!=null) {
+			Hibernate.initialize(empregado.getPessoa().getTelefones());
+		}
 		return empregado;
 	}
 	

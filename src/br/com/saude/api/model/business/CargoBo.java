@@ -20,7 +20,7 @@ public class CargoBo extends GenericBo<Cargo, CargoFilter, CargoDao, CargoBuilde
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadCursos().loadVacinas();
+			return builder.loadCursos();
 		};
 	}
 	

@@ -1,19 +1,15 @@
 package br.com.saude.api.model.persistence;
 
-import java.util.List;
-
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Curriculo;
+import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.ProfissionalConselho;
-import br.com.saude.api.model.entity.po.Telefone;
-import br.com.saude.api.model.entity.po.Vacina;
 
 public class ProfissionalDao extends GenericDao<Profissional> {
 
@@ -23,21 +19,17 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		super();
 	}
 	
-	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = profissional -> {
 			profissional = loadEquipe(profissional);
 			profissional = loadLocalizacao(profissional);
-			profissional = loadCargo(profissional);
+			profissional = loadEmpregado(profissional);
 			return profissional;
 		};
 		
 		this.functionLoadAll = profissional -> {
 			profissional = this.functionLoad.apply(profissional);
-			profissional = loadTelefones(profissional);
-			profissional = loadProfissionalVacinas(profissional);
-			profissional = loadEndereco(profissional);
 			profissional = loadCurriculo(profissional);
 			profissional = loadProfissionalConselho(profissional);
 			return profissional;
@@ -47,25 +39,8 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 			Profissional profissional = pair.getValue0();
 			Session session = pair.getValue1();
 			
-			//REMOVE REGISTROS DE TELEFONE ÓRFÃOS
-			if(profissional.getId() > 0) {				
-				List<Telefone> telefones = (List<Telefone>)session.createCriteria(Telefone.class)
-						.createAlias("profissionais", "profissional")
-						.add(Restrictions.eq("profissional.id", profissional.getId()))
-						.list();
-				telefones.forEach(t->{
-					if(!profissional.getTelefones().contains(t))
-						session.remove(t);
-				});
-			}
-			
-			//CARREGAR AS VACINAS
-			if(profissional.getProfissionalVacinas() != null)
-				for(int i=0; i < profissional.getProfissionalVacinas().size(); i++)
-					profissional.getProfissionalVacinas().get(i)
-						.setVacina(session.get(Vacina.class, 
-											profissional.getProfissionalVacinas().get(i).getVacina().getId()));
-			
+			profissional.setEmpregado(session.get(Empregado.class, profissional.getEmpregado().getId()));
+		
 			return profissional;
 		};
 	}
@@ -85,21 +60,9 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		return this.getList(exampleBuilder, this.functionLoad);
 	}
 	
-	private Profissional loadTelefones(Profissional profissional) {
-		if(profissional.getTelefones()!=null)
-			Hibernate.initialize(profissional.getTelefones());
-		return profissional;
-	}
-	
-	private Profissional loadProfissionalVacinas(Profissional profissional) {
-		if(profissional.getProfissionalVacinas()!=null)
-			Hibernate.initialize(profissional.getProfissionalVacinas());
-		return profissional;
-	}
-	
-	private Profissional loadEndereco(Profissional profissional) {
-		if(profissional.getEndereco()!=null)
-			Hibernate.initialize(profissional.getEndereco());
+	private Profissional loadEmpregado(Profissional profissional) {
+		if(profissional.getEmpregado()!=null)
+			Hibernate.initialize(profissional.getEmpregado());
 		return profissional;
 	}
 	
@@ -129,9 +92,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		return profissional;
 	}
 	
-	private Profissional loadCargo(Profissional profissional) {
-		if(profissional.getCargo()!=null)
-			Hibernate.initialize(profissional.getCargo());
-		return profissional;
+	public PagedList<Profissional> getListFunctionLoad(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
+		return getList(exampleBuilder,this.functionLoad);
 	}
 }

@@ -20,37 +20,21 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		super(filter);
 	}
 	
-	private void addNome() {
-		if(this.filter.getNome() != null)
-			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
-	}
-	
-	private void addMatricula() {
-		if(this.filter.getMatricula() != null)
-			this.entity.setMatricula(Helper.filterLike(this.filter.getMatricula()));
-	}
-	
-	private void addChave() {
-		if(this.filter.getChave() != null)
-			this.entity.setChave(Helper.filterLike(this.filter.getChave()));
-	}
-	
-	private void addRamal() {
-		if(this.filter.getRamal() != null)
-			this.entity.setRamal(Helper.filterLike(this.filter.getRamal()));
-	}
-	
 	private void addMi() {
 		if(this.filter.getMi() != null)
 			this.entity.setMi(Helper.filterLike(this.filter.getMi()));
 	}
 	
-	private void addDataNascimento() {
-		this.addData("dataNascimento", this.filter.getDataNascimento());
-	}
-	
 	private void addDataAso() {
 		this.addData("dataAso", this.filter.getDataAso());
+	}
+	
+	private void addEmpregado() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getEmpregado()!=null) {
+			CriteriaExample criteriaExample = EmpregadoExampleBuilder
+					.newInstance(this.filter.getEmpregado()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("empregado", criteriaExample, JoinType.INNER_JOIN));
+		}
 	}
 	
 	private void addEquipe() throws InstantiationException, IllegalAccessException {
@@ -69,26 +53,10 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 		}
 	}
 	
-	private void addCargo() throws InstantiationException, IllegalAccessException {
-		if(this.filter.getCargo()!=null) {
-			CriteriaExample criteriaExample = CargoExampleBuilder
-					.newInstance(this.filter.getCargo()).getCriteriaExample();
-			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("cargo", criteriaExample, JoinType.INNER_JOIN));
-		}
-	}
-	
 	private void addCurriculo() throws InstantiationException, IllegalAccessException {
 		if(this.filter.getCurriculo()!=null) {
 			CriteriaExample criteriaExample = CurriculoExampleBuilder
 					.newInstance(this.filter.getCurriculo()).getCriteriaExample();
-			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("curriculo", criteriaExample, JoinType.INNER_JOIN));
-		}
-	}
-	
-	private void addEndereco() throws InstantiationException, IllegalAccessException {
-		if(this.filter.getEndereco()!=null) {
-			CriteriaExample criteriaExample = EnderecoExampleBuilder
-					.newInstance(this.filter.getEndereco()).getCriteriaExample();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("curriculo", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
@@ -103,18 +71,12 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
-		addChave();
-		addDataNascimento();
+		addEmpregado();
 		addDataAso();
-		addMatricula();
 		addMi();
-		addNome();
-		addRamal();
 		addEquipe();
 		addLocalizacao();
-		addCargo();
 		addCurriculo();
-		addEndereco();
 		addProfissionalConselho();
 	}
 

@@ -67,6 +67,7 @@ public class GrupoMonitoramentoBuilder
 		newGrupoMonitoramento.setId(grupoMonitoramento.getId());
 		newGrupoMonitoramento.setNome(grupoMonitoramento.getNome());
 		newGrupoMonitoramento.setRecorrente(grupoMonitoramento.isRecorrente());
+		newGrupoMonitoramento.setRelatorio(grupoMonitoramento.getRelatorio());
 		newGrupoMonitoramento.setVersion(grupoMonitoramento.getVersion());
 		
 		return newGrupoMonitoramento;

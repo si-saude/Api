@@ -10,8 +10,8 @@ public class EmpregadoValidator extends GenericValidator<Empregado> {
 	public void validate(Empregado empregado) throws Exception {
 		super.validate(empregado);
 		
-		if(empregado.getTelefones() != null)
-			new TelefoneValidator().validate(empregado.getTelefones());
+		if(empregado.getPessoa() != null)
+			new PessoaValidator().validate(empregado.getPessoa());
 		
 		if(empregado.getEmpregadoVacinas() != null)
 			new EmpregadoVacinaValidator().validate(empregado.getEmpregadoVacinas());

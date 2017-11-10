@@ -24,6 +24,7 @@ public class GrupoMonitoramentoExampleBuilder
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addNome();
 		addTipoGrupoMonitoramento();
+		addRelatorio();
 		addRecorrente();
 	}
 
@@ -47,5 +48,9 @@ public class GrupoMonitoramentoExampleBuilder
 	
 	protected void addRecorrente() {
 		this.entity.setRecorrente(this.addBoolean("recorrente", this.filter.getRecorrente()));
+	}
+	
+	protected void addRelatorio() {
+		this.entity.setRelatorio(this.addBoolean("relatorio", this.filter.getRelatorio()));
 	}
 }

@@ -1,16 +1,6 @@
 package br.com.saude.api.model.business;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Base64;
-
-import javax.imageio.ImageIO;
+import java.util.List;
 
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
@@ -33,13 +23,13 @@ public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, 
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = builder -> {
-			return builder.loadEquipe().loadLocalizacao().loadCargo();
+			return builder.loadEquipe().loadLocalizacao();
 		};
 		
 		this.functionLoadAll = builder -> {
 			return this.functionLoad.apply(builder)
-						.loadEndereco().loadProfissionalConselho()
-						.loadCurriculo().loadTelefones().loadProfissionalVacinas();
+						.loadProfissionalConselho()
+						.loadCurriculo();
 		};
 	}
 	
@@ -58,7 +48,6 @@ public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, 
 	@Override
 	public Profissional getById(Object id) throws Exception {
 		Profissional profissional = getByEntity(getDao().getByIdLoadAll(id), functionLoadAll); 
-		profissional = loadFiles(profissional);
 		return profissional;
 	}
 	
@@ -72,50 +61,13 @@ public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, 
 				curriculoCurso.setCurriculo(profissional.getCurriculo());
 		}
 		
-		profissional.getProfissionalVacinas().forEach(p->p.setProfissional(profissional));
-		
-		Profissional newProfissional = super.save(profissional); 
-		saveFiles(profissional,newProfissional);
+		Profissional newProfissional = super.save(profissional);
 		return newProfissional;
 	}
 	
-	@SuppressWarnings("unlikely-arg-type")
-	private void saveFiles(Profissional profissional, Profissional newProfissional) throws URISyntaxException, IOException {
-		if(profissional.getAssinatura() != null) {
-			byte[] assinaturaArray = new byte[profissional.getAssinatura().size()];
-			
-			for (int i = 0; i < profissional.getAssinatura().size(); i++) {
-				assinaturaArray[i] = new Integer(profissional.getAssinatura().get(i+"")).byteValue();
-			}
-			
-			URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-					+"profissional/assinatura/"+newProfissional.getId()+".png");
-			File file = new File(uri.getPath());
-			file.getParentFile().mkdirs();
-			
-			InputStream in = new ByteArrayInputStream(assinaturaArray);
-			BufferedImage bImageFromConvert = ImageIO.read(in);
-			ImageIO.write(bImageFromConvert, "png", new File(uri.getPath()));
-		}
+	@Override
+	public List<Profissional> getSelectList(ProfissionalFilter filter) throws Exception {
+		return super.getSelectList(this.getDao().getListFunctionLoad(this.getExampleBuilder(filter).exampleSelectList()).getList(), this.functionLoadAll);
 	}
 	
-	@SuppressWarnings("resource")
-	private Profissional loadFiles(Profissional profissional) throws URISyntaxException{
-		
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				+"profissional/assinatura/"+profissional.getId()+".png");
-		
-		File imgPath = new File(uri.getPath());
-		
-		try {
-			FileInputStream fileInputStreamReader = new FileInputStream(imgPath);			
-			byte[] assinaturaArray = new byte[(int) imgPath.length()];
-			fileInputStreamReader.read(assinaturaArray);
-			profissional.setAssinaturaBase64(Base64.getEncoder().encodeToString(assinaturaArray));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return profissional;
-	}
 }

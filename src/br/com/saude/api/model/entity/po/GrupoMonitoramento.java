@@ -43,6 +43,9 @@ public class GrupoMonitoramento {
 	
 	private boolean recorrente;
 	
+	private boolean relatorio;
+	
+	
 	@Version
 	private long version;
 
@@ -113,5 +116,13 @@ public class GrupoMonitoramento {
 	@Override
 	public boolean equals(Object grupoMonitoramento) {
 		return ((GrupoMonitoramento)grupoMonitoramento).id == this.id && this.id > 0;
+	}
+	
+	public boolean getRelatorio() {
+		return relatorio;
+	}
+
+	public void setRelatorio(boolean relatorio) {
+		this.relatorio = relatorio;
 	}
 }

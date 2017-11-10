@@ -187,14 +187,14 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					
 					switch(criterio.getTipo()) {
 					   case TipoCriterio.IDADE :
-						   LocalDate nascimento = empregado.getDataNascimento().toInstant()
+						   LocalDate nascimento = empregado.getPessoa().getDataNascimento().toInstant()
 						   							.atZone(ZoneId.systemDefault()).toLocalDate();
 						   Period periodo = Period.between(nascimento, LocalDate.now());
 						   valor = periodo.getYears()+"";
 						   break;
 					      
 					   case TipoCriterio.SEXO :
-						   valor = empregado.getSexo();
+						   valor = empregado.getPessoa().getSexo();
 						   break;
 						      
 					   case TipoCriterio.EXAME :

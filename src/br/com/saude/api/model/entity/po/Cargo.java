@@ -33,11 +33,7 @@ public class Cargo {
 	inverseJoinColumns = {@JoinColumn(name="curso_id")})
 	private List<Curso> cursos;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinTable(name="vacina_cargo", 
-	joinColumns = {@JoinColumn(name="cargo_id")}, 
-	inverseJoinColumns = {@JoinColumn(name="vacina_id")})
-	private List<Vacina> vacinas;
+	private String operador;
 	
 	@Version
 	private long version;
@@ -74,11 +70,11 @@ public class Cargo {
 		this.cursos = cursos;
 	}
 
-	public List<Vacina> getVacinas() {
-		return vacinas;
+	public String getOperador() {
+		return operador;
 	}
 
-	public void setVacinas(List<Vacina> vacinas) {
-		this.vacinas = vacinas;
+	public void setOperador(String operador) {
+		this.operador = operador;
 	}
 }

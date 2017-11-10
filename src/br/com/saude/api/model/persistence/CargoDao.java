@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.model.entity.po.Curso;
 import br.com.saude.api.model.entity.po.Cargo;
-import br.com.saude.api.model.entity.po.Vacina;
 
 public class CargoDao extends GenericDao<Cargo> {
 	
@@ -23,9 +22,6 @@ public class CargoDao extends GenericDao<Cargo> {
 			if(cargo.getCursos()!=null)
 				Hibernate.initialize(cargo.getCursos());
 			
-			if(cargo.getVacinas()!=null)
-				Hibernate.initialize(cargo.getVacinas());
-			
 			return cargo;
 		};
 		
@@ -36,10 +32,6 @@ public class CargoDao extends GenericDao<Cargo> {
 			if(cargo.getCursos() != null)
 				for(int i=0; i < cargo.getCursos().size(); i++)
 					cargo.getCursos().set(i, session.get(Curso.class, cargo.getCursos().get(i).getId()));
-			
-			if(cargo.getVacinas() != null)
-				for(int i=0; i < cargo.getVacinas().size(); i++)
-					cargo.getVacinas().set(i, session.get(Vacina.class, cargo.getVacinas().get(i).getId()));
 			
 			return cargo;
 		};

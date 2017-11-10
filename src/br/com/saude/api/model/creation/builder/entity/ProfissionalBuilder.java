@@ -10,14 +10,11 @@ import br.com.saude.api.model.entity.po.Profissional;
 
 public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,ProfissionalFilter> {
 
+	private Function<Map<String,Profissional>,Profissional> loadEmpregado;
 	private Function<Map<String,Profissional>,Profissional> loadProfissionalConselho;
 	private Function<Map<String,Profissional>,Profissional> loadCurriculo;
-	private Function<Map<String,Profissional>,Profissional> loadCargo;
 	private Function<Map<String,Profissional>,Profissional> loadEquipe;
 	private Function<Map<String,Profissional>,Profissional> loadLocalizacao;
-	private Function<Map<String,Profissional>,Profissional> loadEndereco;
-	private Function<Map<String,Profissional>,Profissional> loadTelefones;
-	private Function<Map<String,Profissional>,Profissional> loadProfissionalVacinas;
 	
 	public static ProfissionalBuilder newInstance(Profissional profissional) {
 		return new ProfissionalBuilder(profissional);
@@ -40,28 +37,28 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		Profissional newProfissional = new Profissional();
 		
 		newProfissional.setId(profissional.getId());
-		newProfissional.setChave(profissional.getChave());
-		newProfissional.setDataNascimento(profissional.getDataNascimento());
 		newProfissional.setDataAso(profissional.getDataAso());
-		newProfissional.setMatricula(profissional.getMatricula());
 		newProfissional.setMi(profissional.getMi());
-		newProfissional.setNome(profissional.getNome());
-		newProfissional.setRamal(profissional.getRamal());
 		newProfissional.setVersion(profissional.getVersion());
+		
+		if(profissional.getEmpregado() != null)
+			newProfissional.setEmpregado(new EmpregadoBuilder(profissional.getEmpregado()).getEntity());
 		
 		return newProfissional;
 	}
 	
 	@Override
 	protected void initializeFunctions() {
-		this.loadTelefones = profissionais -> {
-			if(profissionais.get("origem").getTelefones() != null) {
-				profissionais.get("destino").setTelefones(TelefoneBuilder
-													.newInstance(profissionais.get("origem").getTelefones())
-													.getEntityList());
+		this.loadEmpregado = profissionais -> {
+			if(profissionais.get("origem").getEmpregado()!= null) {
+				profissionais.get("destino").setEmpregado(EmpregadoBuilder
+													.newInstance(profissionais.get("origem").getEmpregado())
+						.getEntity());
 			}
+			
 			return profissionais.get("destino");
 		};
+		
 		
 		this.loadProfissionalConselho = profissionais -> {
 			if(profissionais.get("origem").getProfissionalConselho()!= null) {
@@ -81,13 +78,6 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 			return profissionais.get("destino");
 		};
 		
-		this.loadCargo = profissionais -> {
-			if(profissionais.get("origem").getCargo()!= null) {
-				profissionais.get("destino").setCargo(CargoBuilder.newInstance(profissionais.get("origem").getCargo()).getEntity());
-			}
-			return profissionais.get("destino");
-		};
-		
 		this.loadEquipe = profissionais -> {
 			if(profissionais.get("origem").getEquipe()!= null) {
 				profissionais.get("destino").setEquipe(EquipeBuilder.newInstance(profissionais.get("origem").getEquipe()).getEntity());
@@ -102,22 +92,10 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 			return profissionais.get("destino");
 		};
 		
-		this.loadEndereco = profissionais -> {
-			if(profissionais.get("origem").getEndereco() != null) {
-				profissionais.get("destino").setEndereco(EnderecoBuilder.newInstance(profissionais.get("origem").getEndereco()).loadCidade().getEntity());
-			}
-			return profissionais.get("destino");
-		};
-		
-		this.loadProfissionalVacinas = profissionais -> {
-			if(profissionais.get("origem").getProfissionalVacinas() != null) {
-				profissionais.get("destino").setProfissionalVacinas(ProfissionalVacinaBuilder
-											.newInstance(profissionais.get("origem").getProfissionalVacinas())
-											.loadVacina()
-											.getEntityList());	
-			}
-			return profissionais.get("destino");
-		};
+	}
+	
+	public ProfissionalBuilder loadEmpregado() {
+		return (ProfissionalBuilder) this.loadProperty(this.loadEmpregado);
 	}
 	
 	public ProfissionalBuilder loadProfissionalConselho() {
@@ -128,28 +106,12 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		return (ProfissionalBuilder) this.loadProperty(this.loadCurriculo);
 	}
 	
-	public ProfissionalBuilder loadCargo() {
-		return (ProfissionalBuilder) this.loadProperty(this.loadCargo);
-	}
-	
 	public ProfissionalBuilder loadEquipe() {
 		return (ProfissionalBuilder) this.loadProperty(this.loadEquipe);
 	}
 	
 	public ProfissionalBuilder loadLocalizacao() {
 		return (ProfissionalBuilder) this.loadProperty(this.loadLocalizacao);
-	}
-	
-	public ProfissionalBuilder loadEndereco() {
-		return (ProfissionalBuilder) this.loadProperty(this.loadEndereco);
-	}
-	
-	public ProfissionalBuilder loadTelefones() {
-		return (ProfissionalBuilder) this.loadProperty(this.loadTelefones);
-	}
-	
-	public ProfissionalBuilder loadProfissionalVacinas() {
-		return (ProfissionalBuilder) this.loadProperty(this.loadProfissionalVacinas);
 	}
 
 	@Override
