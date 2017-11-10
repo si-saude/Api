@@ -38,7 +38,7 @@ public class GrupoMonitoramento {
 	@ManyToMany(fetch=FetchType.LAZY, mappedBy="grupoMonitoramentos")
 	private List<Profissiograma> profissiogramas;
 	
-	@ManyToMany(fetch=FetchType.LAZY, mappedBy="grupoMonitoramentos", cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY, mappedBy="grupoMonitoramentos")
 	private List<Empregado> empregados;
 	
 	private boolean recorrente;
