@@ -3,6 +3,7 @@ package br.com.saude.api.model.persistence;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -24,6 +25,9 @@ import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.HistoricoGrupoMonitoramento;
 
 public class EmpregadoDao extends GenericDao<Empregado>  {
+	
+	private Function<Empregado,Empregado> functionLoadGrupoMonitoramentos;
+	
 	private static EmpregadoDao instance;
 	
 	private EmpregadoDao(){
@@ -60,6 +64,12 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			empregado = loadEndereco(empregado);
 			empregado = loadTelefones(empregado);
 			
+			return empregado;
+		};
+		
+		this.functionLoadGrupoMonitoramentos = empregado -> {
+			empregado = this.functionLoad.apply(empregado);
+			empregado = loadGrupoMonitoramentos(empregado);
 			return empregado;
 		};
 		
@@ -272,5 +282,9 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	
 	public PagedList<Empregado> getListFunctionLoad(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
 		return getList(exampleBuilder,this.functionLoad);
+	}
+	
+	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentos(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
+		return getList(exampleBuilder,this.functionLoadGrupoMonitoramentos);
 	}
 }

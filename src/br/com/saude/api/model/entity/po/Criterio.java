@@ -23,6 +23,12 @@ public class Criterio {
 	@Size(max = 64, message="Tamanho máximo para Tipo do Critério: 64")
 	private String tipo;
 	
+	private String operador;
+	
+	@NotNull(message="É necessário informar Valor do Critério.")
+	@Size(max = 64, message="Tamanho máximo para Valor do Critério: 64")
+	private String valor;
+	
 	@Version
 	private long version;
 
@@ -50,6 +56,14 @@ public class Criterio {
 		this.tipo = tipo;
 	}
 
+	public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
+
 	public long getVersion() {
 		return version;
 	}
@@ -57,4 +71,14 @@ public class Criterio {
 	public void setVersion(long version) {
 		this.version = version;
 	}
+
+	public String getOperador() {
+		return operador;
+	}
+
+	public void setOperador(String operador) {
+		this.operador = operador;
+	}
+	
+	
 }

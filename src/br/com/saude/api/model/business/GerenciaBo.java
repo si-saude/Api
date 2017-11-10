@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.util.List;
+
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.model.creation.builder.entity.GerenciaBuilder;
 import br.com.saude.api.model.creation.builder.example.GerenciaExampleBuilder;
@@ -32,5 +34,16 @@ public class GerenciaBo extends GenericBo<Gerencia, GerenciaFilter, GerenciaDao,
 	@Override
 	public Gerencia getById(Object id) throws Exception {
 		return this.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+	}
+	
+	public List<Gerencia> getListNotIn(List<Integer> ids) throws Exception {
+		GerenciaFilter filter = new GerenciaFilter();
+		filter.setPageNumber(1);
+		filter.setPageSize(Integer.MAX_VALUE);
+		
+		return GerenciaBuilder.newInstance(this.getDao()
+					.getList(GerenciaExampleBuilder
+									.newInstance(filter)
+									.exampleNotIn(ids)).getList()).getEntityList();
 	}
 }

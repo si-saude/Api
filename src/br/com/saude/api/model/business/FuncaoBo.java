@@ -6,7 +6,6 @@ import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.model.creation.builder.entity.FuncaoBuilder;
 import br.com.saude.api.model.creation.builder.example.FuncaoExampleBuilder;
 import br.com.saude.api.model.entity.filter.FuncaoFilter;
-import br.com.saude.api.model.entity.po.Cargo;
 import br.com.saude.api.model.entity.po.Funcao;
 import br.com.saude.api.model.persistence.FuncaoDao;
 

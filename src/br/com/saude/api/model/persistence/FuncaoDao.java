@@ -4,7 +4,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import br.com.saude.api.generic.GenericDao;
-import br.com.saude.api.model.entity.po.Cargo;
 import br.com.saude.api.model.entity.po.Funcao;
 import br.com.saude.api.model.entity.po.Vacina;
 

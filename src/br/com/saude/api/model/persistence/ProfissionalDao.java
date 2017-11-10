@@ -19,7 +19,6 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 		super();
 	}
 	
-	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = profissional -> {

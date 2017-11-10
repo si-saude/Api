@@ -7,7 +7,6 @@ import java.util.function.Function;
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.po.Empregado;
-import br.com.saude.api.model.entity.po.Profissional;
 
 public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFilter> {
 

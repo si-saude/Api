@@ -1,12 +1,13 @@
 package br.com.saude.api.model.business;
 
+import java.util.function.Function;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Base64;
@@ -20,11 +21,12 @@ import br.com.saude.api.model.creation.builder.entity.EmpregadoBuilder;
 import br.com.saude.api.model.creation.builder.example.EmpregadoExampleBuilder;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.po.Empregado;
-import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.persistence.EmpregadoDao;
 
 public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, EmpregadoDao, 
 											EmpregadoBuilder, EmpregadoExampleBuilder> {
+	
+	private Function<EmpregadoBuilder,EmpregadoBuilder> functionLoadGrupoMonitoramentos;
 	
 	private static EmpregadoBo instance;
 	
@@ -53,11 +55,20 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 						.loadHistoricoGrupoMonitoramentos()
 						.loadEndereco().loadTelefones();
 		};
+		
+		this.functionLoadGrupoMonitoramentos = builder -> {
+			return this.functionLoad.apply(builder).loadGrupoMonitoramentos();
+		};
 	}
 	
 	@Override
 	public PagedList<Empregado> getList(EmpregadoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
+	}
+	
+	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentos(EmpregadoFilter filter) throws Exception{
+		return super.getList(getDao().getListFunctionLoadGrupoMonitoramentos(getExampleBuilder(filter)
+									.example()), this.functionLoadGrupoMonitoramentos);
 	}
 	
 	@Override

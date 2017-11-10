@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.model.entity.po.Curso;
 import br.com.saude.api.model.entity.po.Cargo;
-import br.com.saude.api.model.entity.po.Vacina;
 
 public class CargoDao extends GenericDao<Cargo> {
 	

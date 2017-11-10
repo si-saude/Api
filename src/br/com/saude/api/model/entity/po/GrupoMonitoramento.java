@@ -105,12 +105,17 @@ public class GrupoMonitoramento {
 		this.version = version;
 	}
 
-	public boolean getRecorrente() {
+	public boolean isRecorrente() {
 		return recorrente;
 	}
 
 	public void setRecorrente(boolean recorrente) {
 		this.recorrente = recorrente;
+	}
+	
+	@Override
+	public boolean equals(Object grupoMonitoramento) {
+		return ((GrupoMonitoramento)grupoMonitoramento).id == this.id && this.id > 0;
 	}
 	
 	public boolean getRelatorio() {
