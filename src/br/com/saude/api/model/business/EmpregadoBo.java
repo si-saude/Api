@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.util.function.Function;
+
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.EmpregadoBuilder;
@@ -10,6 +12,8 @@ import br.com.saude.api.model.persistence.EmpregadoDao;
 
 public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, EmpregadoDao, 
 											EmpregadoBuilder, EmpregadoExampleBuilder> {
+	
+	private Function<EmpregadoBuilder,EmpregadoBuilder> functionLoadGrupoMonitoramentos;
 	
 	private static EmpregadoBo instance;
 	
@@ -37,11 +41,20 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 						.loadGrupoMonitoramentos()
 						.loadHistoricoGrupoMonitoramentos();
 		};
+		
+		this.functionLoadGrupoMonitoramentos = builder -> {
+			return this.functionLoad.apply(builder).loadGrupoMonitoramentos();
+		};
 	}
 	
 	@Override
 	public PagedList<Empregado> getList(EmpregadoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
+	}
+	
+	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentos(EmpregadoFilter filter) throws Exception{
+		return super.getList(getDao().getListFunctionLoadGrupoMonitoramentos(getExampleBuilder(filter)
+									.example()), this.functionLoadGrupoMonitoramentos);
 	}
 	
 	@Override

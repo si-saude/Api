@@ -14,9 +14,11 @@ import br.com.saude.api.generic.GenericConstant;
 import br.com.saude.api.util.RequestInterceptor;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.Funcionalidade;
+import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.Sexo;
 import br.com.saude.api.util.constant.StatusEmpregado;
+import br.com.saude.api.util.constant.TipoConvocacao;
 import br.com.saude.api.util.constant.TipoCriterio;
 import br.com.saude.api.util.constant.TipoPessoa;
 
@@ -59,6 +61,13 @@ public class UtilService {
 	}
 	
 	@GET
+	@Path("/tipo-convocacao")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTipoConvocacao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TipoConvocacao.getInstance(),filter)).build();
+	}
+	
+	@GET
 	@Path("/sexo")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSexo(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
@@ -77,5 +86,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRequisito(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(Requisito.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/operador")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getOperador(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Operador.getInstance(),filter)).build();
 	}
 }

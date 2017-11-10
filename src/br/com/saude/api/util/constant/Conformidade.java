@@ -16,6 +16,6 @@ public class Conformidade extends GenericConstant  {
 		return instance;
 	}
 	
-	public final String LEGAL 				= "LEGAL";
-	public final String EMPRESARIAL			= "EMPRESARIAL";
+	public static final String LEGAL 				= "LEGAL";
+	public static final String EMPRESARIAL			= "EMPRESARIAL";
 }

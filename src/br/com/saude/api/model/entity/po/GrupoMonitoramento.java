@@ -109,4 +109,9 @@ public class GrupoMonitoramento {
 	public void setRecorrente(boolean recorrente) {
 		this.recorrente = recorrente;
 	}
+	
+	@Override
+	public boolean equals(Object grupoMonitoramento) {
+		return ((GrupoMonitoramento)grupoMonitoramento).id == this.id && this.id > 0;
+	}
 }

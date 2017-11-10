@@ -6,6 +6,8 @@ public class CriterioFilter extends GenericFilter {
 
 	private String nome;
 	private String tipo;
+	private String valor;
+	
 	public String getNome() {
 		return nome;
 	}
@@ -18,4 +20,11 @@ public class CriterioFilter extends GenericFilter {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
+	public String getValor() {
+		return valor;
+	}
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
+	
 }

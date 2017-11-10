@@ -1,5 +1,7 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import java.util.List;
+
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
@@ -57,6 +59,16 @@ public class GerenciaExampleBuilder extends GenericExampleBuilder<Gerencia,Geren
 					.newInstance(this.filter.getSecretario2()).getCriteriaExample();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("secretario2", criteriaExample, JoinType.INNER_JOIN));
 		}
+	}
+	
+	public GerenciaExampleBuilder exampleNotIn(List<Integer> ids) throws InstantiationException, IllegalAccessException{
+		if(this.filter!=null) {
+			initialize();
+			createExample();
+			this.criterions.add(getExample());
+			ids.forEach(id->this.criterions.add(Restrictions.ne("id", (int)id)));
+		}
+		return this;
 	}
 
 	@Override
