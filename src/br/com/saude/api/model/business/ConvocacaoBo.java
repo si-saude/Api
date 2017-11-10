@@ -226,4 +226,11 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		
 		return exames;
 	}
+	
+	@Override
+	public Convocacao save(Convocacao convocacao) throws Exception {
+		convocacao.getGerenciaConvocacoes().forEach(g->g.setConvocacao(convocacao));
+		convocacao.getEmpregadoConvocacoes().forEach(e->e.setConvocacao(convocacao));
+		return super.save(convocacao);
+	}
 }

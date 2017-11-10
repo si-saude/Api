@@ -1,13 +1,13 @@
 package br.com.saude.api.model.persistence;
 
 import org.hibernate.Hibernate;
-//import org.hibernate.Session;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.model.entity.po.Convocacao;
+//import br.com.saude.api.model.entity.po.Exame;
 
 public class ConvocacaoDao extends GenericDao<Convocacao> {
 
@@ -36,7 +36,9 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 //			Convocacao convocacao = pair.getValue0();
 //			Session session = pair.getValue1();
 //			
-//			
+//			convocacao.getEmpregadoConvocacoes().forEach(e->{
+//				e.getExames().forEach(ex->ex = session.get(Exame.class, ex.getId()));
+//			});
 //			
 //			return convocacao;
 //		};
