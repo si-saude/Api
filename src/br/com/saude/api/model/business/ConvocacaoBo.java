@@ -104,7 +104,12 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 	
 	@Override
 	public Convocacao getById(Object id) throws Exception {
-		Convocacao convocacao = this.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+		Convocacao newConvocacao = new Convocacao(); 
+				
+		if((int)id > 0)
+			newConvocacao = this.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+		
+		Convocacao convocacao = newConvocacao;
 		
 		if(convocacao.getGerenciaConvocacoes() != null)
 			convocacao.getGerenciaConvocacoes().forEach(g->g.setSelecionado(true));
@@ -127,6 +132,9 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 						.compareTo((!arg1.isSelecionado())+" - "+arg1.getGerencia().getCodigoCompleto());
 			}
 		});
+		
+		if(convocacao.getEmpregadoConvocacoes() == null)
+			convocacao.setEmpregadoConvocacoes(new ArrayList<EmpregadoConvocacao>());
 		
 		//VERIFICAR OS EXAMES DOS EMPREGADOS
 		convocacao.getEmpregadoConvocacoes().forEach(eC->{
