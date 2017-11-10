@@ -1,18 +1,15 @@
 package br.com.saude.api.model.entity.filter;
 
-import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class EmpregadoFilter extends GenericFilter {
-	private String nome;
-	private String cpf;
-	private DateFilter dataNascimento;
 	private String chave;
 	private String matricula;
-	private String rg;
-	private String sexo;
+	private String estadoCivil;
+	private String escolaridade;
 	private String ramal;
 	private String status;
+	private PessoaFilter pessoa;
 	private CargoFilter cargo;
 	private FuncaoFilter funcao;
 	private RegimeFilter regime;
@@ -21,24 +18,6 @@ public class EmpregadoFilter extends GenericFilter {
 	private GheFilter ghe;
 	private GheeFilter ghee;
 	
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	public String getCpf() {
-		return cpf;
-	}
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-	public DateFilter getDataNascimento() {
-		return dataNascimento;
-	}
-	public void setDataNascimento(DateFilter dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
 	public String getChave() {
 		return chave;
 	}
@@ -51,17 +30,17 @@ public class EmpregadoFilter extends GenericFilter {
 	public void setMatricula(String matricula) {
 		this.matricula = matricula;
 	}
-	public String getRg() {
-		return rg;
+	public String getEstadoCivil() {
+		return estadoCivil;
 	}
-	public void setRg(String rg) {
-		this.rg = rg;
+	public void setEstadoCivil(String estadoCivil) {
+		this.estadoCivil = estadoCivil;
 	}
-	public String getSexo() {
-		return sexo;
+	public String getEscolaridade() {
+		return escolaridade;
 	}
-	public void setSexo(String sexo) {
-		this.sexo = sexo;
+	public void setEscolaridade(String escolaridade) {
+		this.escolaridade = escolaridade;
 	}
 	public String getRamal() {
 		return ramal;
@@ -74,6 +53,12 @@ public class EmpregadoFilter extends GenericFilter {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public PessoaFilter getPessoa() {
+		return pessoa;
+	}
+	public void setPessoa(PessoaFilter pessoa) {
+		this.pessoa = pessoa;
 	}
 	public CargoFilter getCargo() {
 		return cargo;
@@ -117,4 +102,5 @@ public class EmpregadoFilter extends GenericFilter {
 	public void setGhee(GheeFilter ghee) {
 		this.ghee = ghee;
 	}
+	
 }

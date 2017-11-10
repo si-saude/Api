@@ -43,6 +43,9 @@ public class GrupoMonitoramento {
 	
 	private boolean recorrente;
 	
+	private boolean relatorio;
+	
+	
 	@Version
 	private long version;
 
@@ -102,11 +105,19 @@ public class GrupoMonitoramento {
 		this.version = version;
 	}
 
-	public boolean isRecorrente() {
+	public boolean getRecorrente() {
 		return recorrente;
 	}
 
 	public void setRecorrente(boolean recorrente) {
 		this.recorrente = recorrente;
+	}
+	
+	public boolean getRelatorio() {
+		return relatorio;
+	}
+
+	public void setRelatorio(boolean relatorio) {
+		this.relatorio = relatorio;
 	}
 }

@@ -1,13 +1,18 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.FuncaoFilter;
+import br.com.saude.api.model.entity.po.Cargo;
 import br.com.saude.api.model.entity.po.Funcao;
 
 public class FuncaoBuilder extends GenericEntityBuilder<Funcao, FuncaoFilter> {
 
+	private Function<Map<String,Funcao>,Funcao> loadVacinas;
+	
 	public static FuncaoBuilder newInstance(Funcao funcao) {
 		return new FuncaoBuilder(funcao);
 	}
@@ -26,7 +31,12 @@ public class FuncaoBuilder extends GenericEntityBuilder<Funcao, FuncaoFilter> {
 	
 	@Override
 	protected void initializeFunctions() {
-		
+		this.loadVacinas = vacinas -> {
+			if(vacinas.get("origem").getVacinas() != null) {
+				vacinas.get("destino").setVacinas(VacinaBuilder.newInstance(vacinas.get("origem").getVacinas()).getEntityList());
+			}
+			return vacinas.get("destino");
+		};
 	}
 
 	@Override
@@ -40,6 +50,10 @@ public class FuncaoBuilder extends GenericEntityBuilder<Funcao, FuncaoFilter> {
 		return newFuncao;
 	}
 
+	public FuncaoBuilder loadVacinas() {
+		return (FuncaoBuilder) this.loadProperty(this.loadVacinas);
+	}
+	
 	@Override
 	public Funcao cloneFromFilter(FuncaoFilter filter) {
 		return null;

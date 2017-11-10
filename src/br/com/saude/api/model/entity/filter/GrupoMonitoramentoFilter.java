@@ -8,6 +8,7 @@ public class GrupoMonitoramentoFilter extends GenericFilter {
 	private String nome;
 	private TipoGrupoMonitoramentoFilter tipoGrupoMonitoramento;
 	private BooleanFilter recorrente;
+	private BooleanFilter relatorio;
 	
 	public String getNome() {
 		return nome;
@@ -26,5 +27,11 @@ public class GrupoMonitoramentoFilter extends GenericFilter {
 	}
 	public void setRecorrente(BooleanFilter recorrente) {
 		this.recorrente = recorrente;
+	}
+	public BooleanFilter getRelatorio() {
+		return relatorio;
+	}
+	public void set(BooleanFilter relatorio) {
+		this.relatorio = relatorio;
 	}
 }

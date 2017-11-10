@@ -11,7 +11,6 @@ import br.com.saude.api.model.entity.po.Cargo;
 public class CargoBuilder extends GenericEntityBuilder<Cargo,CargoFilter> {
 
 	private Function<Map<String,Cargo>,Cargo> loadCursos;
-	private Function<Map<String,Cargo>,Cargo> loadVacinas;
 	
 	public static CargoBuilder newInstance(Cargo cargo) {
 		return new CargoBuilder(cargo);
@@ -38,12 +37,6 @@ public class CargoBuilder extends GenericEntityBuilder<Cargo,CargoFilter> {
 			return cargos.get("destino");
 		};
 		
-		this.loadVacinas = cargos -> {
-			if(cargos.get("origem").getVacinas() != null) {
-				cargos.get("destino").setVacinas(VacinaBuilder.newInstance(cargos.get("origem").getVacinas()).getEntityList());
-			}
-			return cargos.get("destino");
-		};
 	}
 
 	@Override
@@ -52,6 +45,7 @@ public class CargoBuilder extends GenericEntityBuilder<Cargo,CargoFilter> {
 		
 		newCargo.setId(cargo.getId());
 		newCargo.setNome(cargo.getNome());
+		newCargo.setOperador(cargo.getOperador());
 		newCargo.setVersion(cargo.getVersion());
 		
 		return newCargo;
@@ -61,10 +55,6 @@ public class CargoBuilder extends GenericEntityBuilder<Cargo,CargoFilter> {
 		return (CargoBuilder) this.loadProperty(this.loadCursos);
 	}
 	
-	public CargoBuilder loadVacinas() {
-		return (CargoBuilder) this.loadProperty(this.loadVacinas);
-	}
-
 	@Override
 	public Cargo cloneFromFilter(CargoFilter filter) {
 		return null;

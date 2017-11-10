@@ -13,6 +13,8 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.GenericConstant;
 import br.com.saude.api.util.RequestInterceptor;
 import br.com.saude.api.util.constant.Conformidade;
+import br.com.saude.api.util.constant.Escolaridade;
+import br.com.saude.api.util.constant.EstadoCivil;
 import br.com.saude.api.util.constant.Funcionalidade;
 import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.Sexo;
@@ -77,5 +79,19 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRequisito(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(Requisito.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/estado-civil")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getEstadoCivil(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(EstadoCivil.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/escolaridade")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getEscolaridade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Escolaridade.getInstance(),filter)).build();
 	}
 }

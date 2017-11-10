@@ -7,9 +7,13 @@ import java.util.function.Function;
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.po.Empregado;
+import br.com.saude.api.model.entity.po.Profissional;
 
 public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFilter> {
 
+	private Function<Map<String,Empregado>,Empregado> loadPessoa;
+	private Function<Map<String,Empregado>,Empregado> loadEndereco;
+	private Function<Map<String,Empregado>,Empregado> loadTelefones;
 	private Function<Map<String,Empregado>,Empregado> loadCargo;
 	private Function<Map<String,Empregado>,Empregado> loadFuncao;
 	private Function<Map<String,Empregado>,Empregado> loadRegime;
@@ -18,7 +22,6 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	private Function<Map<String,Empregado>,Empregado> loadGhe;
 	private Function<Map<String,Empregado>,Empregado> loadGhee;
 	private Function<Map<String,Empregado>,Empregado> loadInstalacoes;
-	private Function<Map<String,Empregado>,Empregado> loadTelefones;
 	private Function<Map<String,Empregado>,Empregado> loadEmpregadoVacinas;
 	private Function<Map<String,Empregado>,Empregado> loadGrupoMonitoramentos;
 	private Function<Map<String,Empregado>,Empregado> loadHistoricoGrupoMonitoramentos;
@@ -31,7 +34,7 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 		return new EmpregadoBuilder(empregados);
 	}
 	
-	private EmpregadoBuilder(Empregado empregado) {
+	protected EmpregadoBuilder(Empregado empregado) {
 		super(empregado);
 	}
 
@@ -41,6 +44,32 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	
 	@Override
 	protected void initializeFunctions() {
+		
+		this.loadPessoa = empregados ->{
+			if(empregados.get("origem").getPessoa() != null) {
+				empregados.get("destino").setPessoa(PessoaBuilder.newInstance(empregados.get("origem").getPessoa()).getEntity());
+			}
+			return empregados.get("destino");
+		};
+		
+		this.loadEndereco = empregados ->{
+			if(empregados.get("origem").getPessoa().getEndereco() != null) {
+				empregados.get("destino").getPessoa().setEndereco(
+						EnderecoBuilder.newInstance(
+								empregados.get("origem").getPessoa().getEndereco()).loadCidade().getEntity());
+			}
+			return empregados.get("destino");
+		};
+		
+		this.loadTelefones = empregados ->{
+			if(empregados.get("origem").getPessoa().getTelefones() != null) {
+				empregados.get("destino").getPessoa().setTelefones(
+						TelefoneBuilder.newInstance(
+								empregados.get("origem").getPessoa().getTelefones()).getEntityList());
+			}
+			return empregados.get("destino");
+		};
+		
 		this.loadCargo = empregados ->{
 			if(empregados.get("origem").getCargo() != null) {
 				empregados.get("destino").setCargo(CargoBuilder.newInstance(empregados.get("origem").getCargo()).getEntity());
@@ -97,13 +126,6 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 			return empregados.get("destino");
 		};
 		
-		this.loadTelefones = empregados -> {
-			if(empregados.get("origem").getTelefones() != null) {
-				empregados.get("destino").setTelefones(TelefoneBuilder.newInstance(empregados.get("origem").getTelefones()).getEntityList());
-			}
-			return empregados.get("destino");
-		};
-		
 		this.loadEmpregadoVacinas = empregados -> {
 			if(empregados.get("origem").getEmpregadoVacinas() != null) {
 				empregados.get("destino").setEmpregadoVacinas(EmpregadoVacinaBuilder
@@ -139,18 +161,31 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 		Empregado newEmpregado = new Empregado();
 		
 		newEmpregado.setId(empregado.getId());
-		newEmpregado.setNome(empregado.getNome());
-		newEmpregado.setCpf(empregado.getCpf());
-		newEmpregado.setDataNascimento(empregado.getDataNascimento());
+		
 		newEmpregado.setChave(empregado.getChave());
 		newEmpregado.setMatricula(empregado.getMatricula());
 		newEmpregado.setRamal(empregado.getRamal());
-		newEmpregado.setRg(empregado.getRg());
-		newEmpregado.setSexo(empregado.getSexo());
+		newEmpregado.setEstadoCivil(empregado.getEstadoCivil());
+		newEmpregado.setEscolaridade(empregado.getEscolaridade());
 		newEmpregado.setStatus(empregado.getStatus());
 		newEmpregado.setVersion(empregado.getVersion());
 		
+		if(empregado.getPessoa() != null)
+			newEmpregado.setPessoa(new PessoaBuilder(empregado.getPessoa()).getEntity());
+		
 		return newEmpregado;
+	}
+	
+	public EmpregadoBuilder loadPessoa() {
+		return (EmpregadoBuilder) this.loadProperty(this.loadPessoa);
+	}
+	
+	public EmpregadoBuilder loadEndereco() {
+		return (EmpregadoBuilder) this.loadProperty(this.loadEndereco);
+	}
+	
+	public EmpregadoBuilder loadTelefones() {
+		return (EmpregadoBuilder) this.loadProperty(this.loadTelefones);
 	}
 	
 	public EmpregadoBuilder loadCargo() {
@@ -183,10 +218,6 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	
 	public EmpregadoBuilder loadInstalacoes() {
 		return (EmpregadoBuilder) this.loadProperty(this.loadInstalacoes);
-	}
-	
-	public EmpregadoBuilder loadTelefones() {
-		return (EmpregadoBuilder) this.loadProperty(this.loadTelefones);
 	}
 	
 	public EmpregadoBuilder loadEmpregadoVacinas() {

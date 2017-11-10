@@ -10,15 +10,6 @@ public class ProfissionalValidator extends GenericValidator<Profissional> {
 		
 		super.validate(profissional);
 		
-		if(profissional.getTelefones() != null)
-			new TelefoneValidator().validate(profissional.getTelefones());
-		
-		if(profissional.getProfissionalVacinas() != null)
-			new ProfissionalVacinaValidator().validate(profissional.getProfissionalVacinas());
-		
-		if(profissional.getEndereco() != null)
-			new EnderecoValidator().validate(profissional.getEndereco());
-		
 		if(profissional.getCurriculo() != null)
 			new CurriculoValidator().validate(profissional.getCurriculo());
 		

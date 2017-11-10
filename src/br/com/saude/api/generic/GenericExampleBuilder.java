@@ -16,10 +16,15 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	protected List<Criterion> criterions;
 	protected List<Triplet<String,CriteriaExample,JoinType>> criterias;
 	protected Function<Example,Example> finishExampleFunction;
+	protected List<String> excludingProperties;
 	
 	protected GenericExampleBuilder(F filter) {
 		this.filter = filter;
 		this.finishExampleFunction = example -> {
+			
+			for(String property:this.excludingProperties)
+				example = example.excludeProperty(property);
+			
 			return example;
 		};
 	}
@@ -50,6 +55,7 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	
 	@SuppressWarnings("unchecked")
 	protected void initialize() throws InstantiationException, IllegalAccessException {
+		this.excludingProperties = new ArrayList<String>();
 		this.criterions = new ArrayList<Criterion>();
 		this.criterias = new ArrayList<Triplet<String,CriteriaExample,JoinType>>();
 		this.entity = (((Class<T>) ((ParameterizedType)getClass().getGenericSuperclass())
@@ -106,9 +112,7 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	
 	protected boolean addBoolean(String propertyName, BooleanFilter booleanFilter) {
 		if(booleanFilter == null || booleanFilter.getValue() <= 0 || booleanFilter.getValue() > 2)
-			this.finishExampleFunction = example -> {
-				return example.excludeProperty(propertyName);
-			};
+			this.excludingProperties.add(propertyName);
 		else if(booleanFilter.getValue() == 1)
 			return true;
 		return false;

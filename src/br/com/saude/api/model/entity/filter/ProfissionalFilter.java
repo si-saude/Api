@@ -4,49 +4,19 @@ import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class ProfissionalFilter extends GenericFilter {
-	private String nome;
-	private DateFilter dataNascimento;
+	private EmpregadoFilter empregado;
 	private DateFilter dataAso;
-	private String matricula;
-	private String chave;
-	private String ramal;
 	private LocalizacaoFilter localizacao;
 	private EquipeFilter equipe;
-	private CargoFilter cargo;
 	private CurriculoFilter curriculo;
 	private ProfissionalConselhoFilter profissionalConselho;
-	private EnderecoFilter endereco;
 	private String mi;
 	
-	public String getNome() {
-		return nome;
+	public EmpregadoFilter getEmpregado() {
+		return empregado;
 	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	public DateFilter getDataNascimento() {
-		return dataNascimento;
-	}
-	public void setDataNascimento(DateFilter dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-	public String getMatricula() {
-		return matricula;
-	}
-	public void setMatricula(String matricula) {
-		this.matricula = matricula;
-	}
-	public String getChave() {
-		return chave;
-	}
-	public void setChave(String chave) {
-		this.chave = chave;
-	}
-	public String getRamal() {
-		return ramal;
-	}
-	public void setRamal(String ramal) {
-		this.ramal = ramal;
+	public void setEmpregado(EmpregadoFilter empregado) {
+		this.empregado = empregado;
 	}
 	public LocalizacaoFilter getLocalizacao() {
 		return localizacao;
@@ -66,12 +36,6 @@ public class ProfissionalFilter extends GenericFilter {
 	public void setMi(String mi) {
 		this.mi = mi;
 	}
-	public CargoFilter getCargo() {
-		return cargo;
-	}
-	public void setCargo(CargoFilter cargo) {
-		this.cargo = cargo;
-	}
 	public CurriculoFilter getCurriculo() {
 		return curriculo;
 	}
@@ -83,12 +47,6 @@ public class ProfissionalFilter extends GenericFilter {
 	}
 	public void setProfissionalConselho(ProfissionalConselhoFilter profissionalConselho) {
 		this.profissionalConselho = profissionalConselho;
-	}
-	public EnderecoFilter getEndereco() {
-		return endereco;
-	}
-	public void setEndereco(EnderecoFilter endereco) {
-		this.endereco = endereco;
 	}
 	public DateFilter getDataAso() {
 		return dataAso;
