@@ -23,6 +23,7 @@ import br.com.saude.api.model.entity.po.GerenciaConvocacao;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.Profissiograma;
 import br.com.saude.api.model.persistence.ConvocacaoDao;
+import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.TipoCriterio;
 
 public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, ConvocacaoDao, 
@@ -190,6 +191,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			g.getGrupoMonitoramentoExames().forEach(gE->{
 				boolean criteriosAtendidos = true;
 				
+				loop:
 				for(Criterio criterio : gE.getCriterios()) {
 					String valor="";
 					
@@ -221,9 +223,47 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					}
 					
 					//SE O CRITÉRIO NÃO FOR SATISFEITO, SETAR FALSE NO FLAG E SAIR DA REPETIÇÃO
-					if(!valor.equals(criterio.getValor())) {
-						criteriosAtendidos = false;
-						break;
+					switch(criterio.getTipo()) {
+						
+						case Operador.IGUAL :
+							if(!valor.equals(criterio.getValor())) {
+								criteriosAtendidos = false;								
+								break loop;
+							}
+							break;
+							
+						case Operador.DIFERENTE:
+							if(valor.equals(criterio.getValor())) {
+								criteriosAtendidos = false;								
+								break loop;
+							}
+							break;
+							
+						case Operador.MAIOR:
+							if( !(valor.compareTo(criterio.getValor()) > 0) ) {
+								criteriosAtendidos = false;								
+								break loop;
+							}
+							
+						case Operador.MAIOR_IGUAL:
+							if( !(valor.compareTo(criterio.getValor()) >= 0) ) {
+								criteriosAtendidos = false;								
+								break loop;
+							}
+							
+						case Operador.MENOR:
+							if( !(valor.compareTo(criterio.getValor()) < 0) ) {
+								criteriosAtendidos = false;								
+								break loop;
+							}
+							
+						case Operador.MENOR_IGUAL:
+							if( !(valor.compareTo(criterio.getValor()) <= 0) ) {
+								criteriosAtendidos = false;								
+								break loop;
+							}
+						
+						default :
 					}
 				}
 				
