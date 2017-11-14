@@ -54,7 +54,7 @@ public class GerenciaDao extends GenericDao<Gerencia> {
 				Criterion and = null;
 				for(int y = i; y < gerencias.length + i; y++) {
 					if(and == null) {
-						and = Restrictions.ilike(checarCondicao("gerencia"+y),gerencias[x-y]);
+						and = Restrictions.ilike(checarCondicao("gerencia"+y),Helper.filterLike(gerencias[x-y]));
 					}else {
 						and = Restrictions.and(and, Restrictions.ilike(checarCondicao("gerencia"+y),Helper.filterLike(gerencias[x-y])));
 					}
