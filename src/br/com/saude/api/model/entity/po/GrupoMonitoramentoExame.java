@@ -2,7 +2,6 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,7 +29,7 @@ public class GrupoMonitoramentoExame {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private GrupoMonitoramento grupoMonitoramento;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="grupomonitoramentoexame_criterio", 
 	joinColumns = {@JoinColumn(name="grupomonitoramentoexame_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="criterio_id")})
