@@ -48,6 +48,20 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		};
 	}
 	
+	public Convocacao getEmpregadoConvocacao(Convocacao convocacao) throws Exception {
+		EmpregadoConvocacao empregadoConvocacao = convocacao.getEmpregadoConvocacoes().get(0); 
+		Empregado empregado = empregadoConvocacao.getEmpregado();
+		empregado = EmpregadoBo.getInstance().getByIdLoadGrupoMonitoramentos(empregado.getId());
+		
+		List<Exame> exames = getExames(empregado, convocacao);
+		
+		empregadoConvocacao.setEmpregado(empregado);
+		empregadoConvocacao.setExames(exames);
+		convocacao.getEmpregadoConvocacoes().set(0, empregadoConvocacao);
+		
+		return convocacao;
+	}
+	
 	public Convocacao getEmpregadoConvocacoesByGerencia(Convocacao convocacao) throws Exception {
 		
 		GerenciaConvocacao gerenciaConvocacao = convocacao.getGerenciaConvocacoes().get(0);
