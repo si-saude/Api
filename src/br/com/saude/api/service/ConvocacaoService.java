@@ -79,6 +79,14 @@ public class ConvocacaoService
 	public Response getEmpregadoConvocacoesByGerencia(Convocacao convocacao) throws Exception {
 		return Response.ok(getBo().getEmpregadoConvocacoesByGerencia(convocacao)).build();
 	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-empregado")
+	public Response getEmpregadoConvocacao(Convocacao convocacao) throws Exception {
+		return Response.ok(getBo().getEmpregadoConvocacao(convocacao)).build();
+	}
 
 	@Override
 	@POST

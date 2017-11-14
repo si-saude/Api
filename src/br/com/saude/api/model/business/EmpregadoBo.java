@@ -83,6 +83,10 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 		return empregado;
 	}
 	
+	public Empregado getByIdLoadGrupoMonitoramentos(Object id) throws Exception {
+		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadGrupoMonitoramentos);
+	}
+	
 	@Override
 	public Empregado save(Empregado empregado) throws Exception {
 		

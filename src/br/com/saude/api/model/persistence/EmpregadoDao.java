@@ -280,6 +280,10 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 		return super.getById(id,this.functionLoadAll);
 	}
 	
+	public Empregado getByIdLoadGrupoMonitoramento(Object id) throws Exception {
+		return super.getById(id,this.functionLoadGrupoMonitoramentos);
+	}
+	
 	public PagedList<Empregado> getListFunctionLoad(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
 		return getList(exampleBuilder,this.functionLoad);
 	}
