@@ -24,7 +24,8 @@ public class ProfissiogramaExampleBuilder
 
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
-		
+		addNome();
+		addConcluido();
 	}
 	
 	private void addNome() {

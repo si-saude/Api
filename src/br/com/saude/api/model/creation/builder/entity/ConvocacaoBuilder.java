@@ -35,36 +35,36 @@ public class ConvocacaoBuilder extends GenericEntityBuilder<Convocacao, Convocac
 	protected void initializeFunctions() {
 		this.loadProfissiograma = convocacoes -> {
 			if(convocacoes.get("origem").getProfissiograma() != null)
-				convocacoes.get("gestino").setProfissiograma(ProfissiogramaBuilder
+				convocacoes.get("destino").setProfissiograma(ProfissiogramaBuilder
 						.newInstance(convocacoes.get("origem").getProfissiograma())
 						.getEntity());
-			return convocacoes.get("gestino");
+			return convocacoes.get("destino");
 		};
 		
 		this.loadGerenciaConvocacoes = convocacoes -> {
 			if(convocacoes.get("origem").getGerenciaConvocacoes() != null)
-				convocacoes.get("gestino").setGerenciaConvocacoes(GerenciaConvocacaoBuilder
+				convocacoes.get("destino").setGerenciaConvocacoes(GerenciaConvocacaoBuilder
 						.newInstance(convocacoes.get("origem").getGerenciaConvocacoes())
 						.getEntityList());
-			return convocacoes.get("gestino");
+			return convocacoes.get("destino");
 		};
 		
 		this.loadEmpregadoConvocacoesAll  = convocacoes -> {
 			if(convocacoes.get("origem").getEmpregadoConvocacoes() != null)
-				convocacoes.get("gestino").setEmpregadoConvocacoes(EmpregadoConvocacaoBuilder
+				convocacoes.get("destino").setEmpregadoConvocacoes(EmpregadoConvocacaoBuilder
 						.newInstance(convocacoes.get("origem").getEmpregadoConvocacoes())
 						.loadEmpregadoAll().loadExames()
 						.getEntityList());
-			return convocacoes.get("gestino");
+			return convocacoes.get("destino");
 		};
 		
 		this.loadEmpregadoConvocacoes  = convocacoes -> {
 			if(convocacoes.get("origem").getEmpregadoConvocacoes() != null)
-				convocacoes.get("gestino").setEmpregadoConvocacoes(EmpregadoConvocacaoBuilder
+				convocacoes.get("destino").setEmpregadoConvocacoes(EmpregadoConvocacaoBuilder
 						.newInstance(convocacoes.get("origem").getEmpregadoConvocacoes())
 						.loadEmpregado().loadExames()
 						.getEntityList());
-			return convocacoes.get("gestino");
+			return convocacoes.get("destino");
 		};
 	}
 
