@@ -27,6 +27,7 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 											EmpregadoBuilder, EmpregadoExampleBuilder> {
 	
 	private Function<EmpregadoBuilder,EmpregadoBuilder> functionLoadGrupoMonitoramentos;
+	private Function<EmpregadoBuilder,EmpregadoBuilder> functionLoadGrupoMonitoramentosExames;
 	
 	private static EmpregadoBo instance;
 	
@@ -59,11 +60,20 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 		this.functionLoadGrupoMonitoramentos = builder -> {
 			return this.functionLoad.apply(builder).loadGrupoMonitoramentos();
 		};
+		
+		this.functionLoadGrupoMonitoramentosExames = builder -> {
+			return this.functionLoad.apply(builder).loadGrupoMonitoramentosExames();
+		};
 	}
 	
 	@Override
 	public PagedList<Empregado> getList(EmpregadoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
+	}
+	
+	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentosExames(EmpregadoFilter filter) throws Exception{
+		return super.getList(getDao().getListFunctionLoadGrupoMonitoramentosExames(getExampleBuilder(filter)
+									.example()), this.functionLoadGrupoMonitoramentosExames);
 	}
 	
 	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentos(EmpregadoFilter filter) throws Exception{
@@ -84,7 +94,7 @@ public class EmpregadoBo extends GenericBo<Empregado, EmpregadoFilter, Empregado
 	}
 	
 	public Empregado getByIdLoadGrupoMonitoramentos(Object id) throws Exception {
-		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadGrupoMonitoramentos);
+		return getByEntity(getDao().getByIdLoadGrupoMonitoramento(id), this.functionLoadGrupoMonitoramentosExames);
 	}
 	
 	@Override

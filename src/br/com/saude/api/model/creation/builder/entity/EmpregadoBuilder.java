@@ -23,6 +23,7 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	private Function<Map<String,Empregado>,Empregado> loadInstalacoes;
 	private Function<Map<String,Empregado>,Empregado> loadEmpregadoVacinas;
 	private Function<Map<String,Empregado>,Empregado> loadGrupoMonitoramentos;
+	private Function<Map<String,Empregado>,Empregado> loadGrupoMonitoramentosExames;
 	private Function<Map<String,Empregado>,Empregado> loadHistoricoGrupoMonitoramentos;
 	
 	public static EmpregadoBuilder newInstance(Empregado empregado) {
@@ -144,6 +145,16 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 			return empregados.get("destino");
 		};
 		
+		this.loadGrupoMonitoramentosExames = empregados -> {
+			if(empregados.get("origem").getGrupoMonitoramentos() != null) {
+				empregados.get("destino").setGrupoMonitoramentos(GrupoMonitoramentoBuilder
+											.newInstance(empregados.get("origem").getGrupoMonitoramentos())
+											.loadGrupoMonitoramentoExames()
+											.getEntityList());
+			}
+			return empregados.get("destino");
+		};
+		
 		this.loadHistoricoGrupoMonitoramentos = empregados -> {
 			if(empregados.get("origem").getHistoricoGrupoMonitoramentos() != null) {
 				empregados.get("destino").setHistoricoGrupoMonitoramentos(HistoricoGrupoMonitoramentoBuilder
@@ -225,6 +236,10 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	
 	public EmpregadoBuilder loadGrupoMonitoramentos() {
 		return (EmpregadoBuilder) this.loadProperty(this.loadGrupoMonitoramentos);
+	}
+	
+	public EmpregadoBuilder loadGrupoMonitoramentosExames() {
+		return (EmpregadoBuilder) this.loadProperty(this.loadGrupoMonitoramentosExames);
 	}
 	
 	public EmpregadoBuilder loadHistoricoGrupoMonitoramentos() {
