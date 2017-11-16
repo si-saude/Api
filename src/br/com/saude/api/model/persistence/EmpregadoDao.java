@@ -153,35 +153,39 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	protected Criteria finishCriteria(Criteria criteria, GenericExampleBuilder<?, ?> empregadoExampleBuilder) {
 		EmpregadoFilter filter = (EmpregadoFilter)empregadoExampleBuilder.getFilter();
 		
-		if(filter.getGerencia() != null && filter.getGerencia().getCodigoCompleto() != null) {
-			String[] gerencias = filter.getGerencia().getCodigoCompleto().split("/");
-			
-			criteria.createAlias("gerencia", "gerencia0", JoinType.LEFT_OUTER_JOIN);
-			criteria.createAlias("gerencia0.gerencia", "gerencia1", JoinType.LEFT_OUTER_JOIN);
-			criteria.createAlias("gerencia1.gerencia", "gerencia2", JoinType.LEFT_OUTER_JOIN);
-			criteria.createAlias("gerencia2.gerencia", "gerencia3", JoinType.LEFT_OUTER_JOIN);
-			
-			Criterion or = null;
-			int i = 0;
-			for(int x = gerencias.length - 1; x <= 3; x++) {
-				Criterion and = null;
-				for(int y = i; y < gerencias.length + i; y++) {
-					if(and == null) {
-						and = Restrictions.ilike("gerencia"+y+".codigo",Helper.filterLike(gerencias[x-y]));
-					}else {
-						and = Restrictions.and(and, Restrictions.ilike("gerencia"+y+".codigo",Helper.filterLike(gerencias[x-y])));
+		if(filter.getGerencia() != null) {
+			if(filter.getGerencia().getCodigoCompleto() != null) {
+				String[] gerencias = filter.getGerencia().getCodigoCompleto().split("/");
+				
+				criteria.createAlias("gerencia", "gerencia0", JoinType.LEFT_OUTER_JOIN);
+				criteria.createAlias("gerencia0.gerencia", "gerencia1", JoinType.LEFT_OUTER_JOIN);
+				criteria.createAlias("gerencia1.gerencia", "gerencia2", JoinType.LEFT_OUTER_JOIN);
+				criteria.createAlias("gerencia2.gerencia", "gerencia3", JoinType.LEFT_OUTER_JOIN);
+				
+				Criterion or = null;
+				int i = 0;
+				for(int x = gerencias.length - 1; x <= 3; x++) {
+					Criterion and = null;
+					for(int y = i; y < gerencias.length + i; y++) {
+						if(and == null) {
+							and = Restrictions.ilike("gerencia"+y+".codigo",Helper.filterLike(gerencias[x-y]));
+						}else {
+							and = Restrictions.and(and, Restrictions.ilike("gerencia"+y+".codigo",Helper.filterLike(gerencias[x-y])));
+						}
 					}
+					
+					if(or == null) {
+						or = and;
+					}else {
+						or = Restrictions.or(or, and);
+					}
+					i++;
 				}
 				
-				if(or == null) {
-					or = and;
-				}else {
-					or = Restrictions.or(or, and);
-				}
-				i++;
+				criteria.add(or);
+			}else if(filter.getGerencia().getId() > 0) {
+				criteria.add(Restrictions.eq("gerencia.id", (int)filter.getGerencia().getId()));
 			}
-			
-			criteria.add(or);
 		}
 		
 		return criteria;

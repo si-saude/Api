@@ -77,7 +77,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		
 		EmpregadoFilter filter = new EmpregadoFilter();
 		filter.setGerencia(new GerenciaFilter());
-		filter.getGerencia().setCodigoCompleto(gerenciaConvocacao.getGerencia().getCodigoCompleto());
+		filter.getGerencia().setId(gerenciaConvocacao.getGerencia().getId());
 		filter.setPageNumber(1);
 		filter.setPageSize(Integer.MAX_VALUE);
 		
