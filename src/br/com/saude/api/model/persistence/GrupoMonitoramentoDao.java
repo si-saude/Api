@@ -16,6 +16,8 @@ import br.com.saude.api.model.entity.po.GrupoMonitoramentoExame;
 
 public class GrupoMonitoramentoDao extends GenericDao<GrupoMonitoramento> {
 
+	private Function<GrupoMonitoramento,GrupoMonitoramento> functionLoadGrupoMonitoramentoExames;
+	
 	private static GrupoMonitoramentoDao instance;
 	
 	private GrupoMonitoramentoDao() {
@@ -39,6 +41,12 @@ public class GrupoMonitoramentoDao extends GenericDao<GrupoMonitoramento> {
 			grupoMonitoramento = this.functionLoad.apply(grupoMonitoramento);
 			grupoMonitoramento = loadGrupoMonitoramentoExames(grupoMonitoramento);
 			grupoMonitoramento = loadEmpregados(grupoMonitoramento);
+			return grupoMonitoramento;
+		};
+		
+		this.functionLoadGrupoMonitoramentoExames = grupoMonitoramento -> {
+			grupoMonitoramento = this.functionLoad.apply(grupoMonitoramento);
+			grupoMonitoramento = loadGrupoMonitoramentoExames(grupoMonitoramento);
 			return grupoMonitoramento;
 		};
 		
@@ -74,6 +82,14 @@ public class GrupoMonitoramentoDao extends GenericDao<GrupoMonitoramento> {
 	
 	public PagedList<GrupoMonitoramento> getListFunctionLoad(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder, this.functionLoad);
+	}
+	
+	public PagedList<GrupoMonitoramento> getListFunctionLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder, this.functionLoadAll);
+	}
+	
+	public PagedList<GrupoMonitoramento> getListFunctionLoadGrupoMonitoramentoExames(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder, this.functionLoadGrupoMonitoramentoExames);
 	}
 	
 	private GrupoMonitoramento loadTipoGrupoMonitoramento(GrupoMonitoramento grupoMonitoramento) {

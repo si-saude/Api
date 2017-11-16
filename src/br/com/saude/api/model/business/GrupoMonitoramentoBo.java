@@ -1,6 +1,7 @@
 package br.com.saude.api.model.business;
 
 import java.util.List;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
@@ -14,6 +15,8 @@ public class GrupoMonitoramentoBo
 		extends GenericBo<GrupoMonitoramento, GrupoMonitoramentoFilter, 
 			GrupoMonitoramentoDao, GrupoMonitoramentoBuilder, GrupoMonitoramentoExampleBuilder> {
 
+	private Function<GrupoMonitoramentoBuilder,GrupoMonitoramentoBuilder> functionLoadGrupoMonitoramentoExames;
+	
 	private static GrupoMonitoramentoBo instance;
 	
 	private GrupoMonitoramentoBo() {
@@ -37,6 +40,11 @@ public class GrupoMonitoramentoBo
 						.loadGrupoMonitoramentoExames()
 						.loadEmpregados();
 		};
+		
+		this.functionLoadGrupoMonitoramentoExames = builder -> {
+			return this.functionLoad.apply(builder)
+					.loadGrupoMonitoramentoExames();
+	};
 	}
 	
 	@Override
@@ -48,6 +56,11 @@ public class GrupoMonitoramentoBo
 	public PagedList<GrupoMonitoramento> getList(GrupoMonitoramentoFilter filter) throws Exception {
 		return this.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), 
 				this.functionLoad);
+	}
+	
+	public PagedList<GrupoMonitoramento> getListLoadGrupoMonitoramentoExames(GrupoMonitoramentoFilter filter) throws Exception {
+		return this.getList(getDao().getListFunctionLoadGrupoMonitoramentoExames(getExampleBuilder(filter).example()), 
+				this.functionLoadGrupoMonitoramentoExames);
 	}
 	
 	@Override

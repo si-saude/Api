@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.model.creation.builder.entity.ConvocacaoBuilder;
 import br.com.saude.api.model.creation.builder.example.ConvocacaoExampleBuilder;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.filter.GerenciaFilter;
+import br.com.saude.api.model.entity.filter.GrupoMonitoramentoFilter;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Criterio;
 import br.com.saude.api.model.entity.po.Empregado;
@@ -74,7 +76,7 @@ public class ConvocacaoBo
 
 		EmpregadoFilter filter = new EmpregadoFilter();
 		filter.setGerencia(new GerenciaFilter());
-		filter.getGerencia().setCodigoCompleto(gerenciaConvocacao.getGerencia().getCodigoCompleto());
+		filter.getGerencia().setId(gerenciaConvocacao.getGerencia().getId());
 		filter.setPageNumber(1);
 		filter.setPageSize(Integer.MAX_VALUE);
 
@@ -187,6 +189,20 @@ public class ConvocacaoBo
 	private List<Exame> getExames(Empregado empregado, Convocacao convocacao) throws Exception {
 		Profissiograma profissiograma = ProfissiogramaBo.getInstance().getById(convocacao.getProfissiograma().getId());
 
+		//OBTER A LISTA DE GRUPOS DE MONITORAMENTO E ADICIONAR AO PROFISSIOGRAMA
+		BooleanFilter recorrente = new BooleanFilter();
+		recorrente.setValue(1);
+		
+		GrupoMonitoramentoFilter filter = new GrupoMonitoramentoFilter();
+		filter.setPageNumber(1);
+		filter.setPageSize(Integer.MAX_VALUE);
+		filter.setRecorrente(recorrente);
+		
+		profissiograma.getGrupoMonitoramentos().addAll(
+									GrupoMonitoramentoBo.getInstance()
+														.getListLoadGrupoMonitoramentoExames(filter)
+														.getList());
+		
 		List<GrupoMonitoramento> grupoMonitoramentos = new ArrayList<GrupoMonitoramento>();
 		List<Exame> exames = new ArrayList<Exame>();
 
