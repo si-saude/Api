@@ -477,10 +477,10 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 						
 						default :
 					}
+
+					if (criteriosAtendidos)
+						exames.add(gE.getExame());
 				}
-				
-				if(criteriosAtendidos)
-					exames.add(gE.getExame());
 			});
 		});
 		

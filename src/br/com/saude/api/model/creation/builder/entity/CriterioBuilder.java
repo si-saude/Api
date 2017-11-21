@@ -37,6 +37,7 @@ public class CriterioBuilder extends GenericEntityBuilder<Criterio,CriterioFilte
 		newCriterio.setNome(criterio.getNome());
 		newCriterio.setTipo(criterio.getTipo());
 		newCriterio.setValor(criterio.getValor());
+		newCriterio.setOperador(criterio.getOperador());
 		newCriterio.setVersion(criterio.getVersion());
 		
 		return newCriterio;
