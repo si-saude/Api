@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
@@ -86,6 +87,17 @@ public class ConvocacaoService
 	@Path("/get-empregado")
 	public Response getEmpregadoConvocacao(Convocacao convocacao) throws Exception {
 		return Response.ok(getBo().getEmpregadoConvocacao(convocacao)).build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/processar-convocacao")
+	public Response processarConvocacao(Convocacao convocacao) throws Exception {
+		StreamingOutput zip = getBo().processarConvocacao(convocacao);
+		return Response.ok(zip)
+				.header("content-disposition", "attachment; filename="+convocacao.getTitulo()+".zip")
+				.build();
 	}
 
 	@Override

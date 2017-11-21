@@ -58,6 +58,7 @@ public class PessoaBuilder extends GenericEntityBuilder<Pessoa,PessoaFilter>{
 		newPessoa.setDataNascimento(pessoa.getDataNascimento());
 		newPessoa.setRg(pessoa.getRg());
 		newPessoa.setSexo(pessoa.getSexo());
+		newPessoa.setEmail(pessoa.getEmail());
 		
 		return newPessoa;
 	}

@@ -8,6 +8,7 @@ public class PessoaFilter extends GenericFilter{
 	private String cpf;
 	private DateFilter dataNascimento;
 	private String rg;
+	private String email;
 	private String sexo;
 	private EmpregadoFilter empregado;
 	private EnderecoFilter endereco;
@@ -53,6 +54,12 @@ public class PessoaFilter extends GenericFilter{
 	}
 	public void setEndereco(EnderecoFilter endereco) {
 		this.endereco = endereco;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 }

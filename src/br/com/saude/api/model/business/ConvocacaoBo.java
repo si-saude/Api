@@ -1,14 +1,43 @@
 package br.com.saude.api.model.business;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.StreamingOutput;
+
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.html.simpleparser.HTMLWorker;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.StringReplacer;
 import br.com.saude.api.model.creation.builder.entity.ConvocacaoBuilder;
 import br.com.saude.api.model.creation.builder.example.ConvocacaoExampleBuilder;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
@@ -28,6 +57,7 @@ import br.com.saude.api.model.persistence.ConvocacaoDao;
 import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.TipoCriterio;
 
+@SuppressWarnings("deprecation")
 public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, ConvocacaoDao, 
 									ConvocacaoBuilder, ConvocacaoExampleBuilder>	 {
 
@@ -117,6 +147,158 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		});
 		
 		return convocacao;
+	}
+	
+	public StreamingOutput processarConvocacao(Convocacao convocacao) throws Exception {
+		//OBTER O HTML DO RELATÓRIO		
+		StringBuilder html = new StringBuilder();
+		String line;
+		
+		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+				.replace("/WEB-INF/classes", "")+"REPORT/GuiaExames.html");
+		
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(uri.getPath()));
+		
+		while((line = bufferedReader.readLine()) != null) {
+			html.append(line);
+		}
+		
+		bufferedReader.close();
+		
+		//CONFIGURAR DIRETÓRIO DOS PDFs
+		URI pdfUri;
+		File pdf;
+		uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+				+"convocacao/"+convocacao.getId());
+		File file = new File(uri.getPath());
+		file.mkdirs();
+		FileUtils.cleanDirectory(file);
+		
+		List<EmpregadoConvocacao> empregadoConvocacoes = convocacao
+					.getEmpregadoConvocacoes().stream().filter(e->e.isSelecionado()).collect(Collectors.toList());
+		
+		//PARA CADA EMPREGADO SELECIONADO, FAZER:
+		for(EmpregadoConvocacao eC:empregadoConvocacoes) {
+			
+			//CARREGAR O EMPREGADO
+			eC.setEmpregado(EmpregadoBo.getInstance().getById(eC.getEmpregado().getId()));
+			
+			//SUBSTITUIR AS VARIÁVEIS
+			StringReplacer stringReplacer = new StringReplacer(html.toString());
+			stringReplacer = stringReplacer
+				.replace("nomeEmpregado", eC.getEmpregado().getPessoa().getNome())
+				.replace("matriculaEmpregado", Objects.toString(eC.getEmpregado().getMatricula(),"---"))
+				.replace("cpfEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getCpf(),"---"))
+				.replace("chaveEmpregado", Objects.toString(eC.getEmpregado().getChave(),"---"))
+				.replace("gerenciaEmpregado", eC.getEmpregado().getGerencia().getCodigoCompleto())
+				.replace("turmaEmpregado", "---")
+				.replace("tipoConvocacao", Objects.toString(convocacao.getTipo(),"---"))
+				.replace("centroCusto", "---")
+				.replace("emailEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getEmail(),"---"))
+				.replace("data", new Date().toLocaleString().substring(0, 10));
+			
+			if(eC.getEmpregado().getCargo() != null)
+				stringReplacer.replace("cargoEmpregado", Objects.toString(eC.getEmpregado().getCargo().getNome(),"---"));
+			else
+				stringReplacer.replace("cargoEmpregado","---");
+			
+			if(eC.getEmpregado().getPessoa().getDataNascimento() != null)
+				stringReplacer.replace("dataNascimentoEmpregado", eC.getEmpregado().getPessoa().getDataNascimento().toLocaleString().substring(0, 10));
+			else
+				stringReplacer.replace("dataNascimentoEmpregado","---");
+			
+			//OBTER O CRONOGRAMA DA GERÊNCIA DO EMPREGADO
+			GerenciaConvocacao gC = null; 
+			
+			try {
+					gC = convocacao.getGerenciaConvocacoes().stream()
+											.filter(g->g.getGerencia().getId() == eC.getEmpregado().getGerencia().getId())
+											.findFirst().get();
+			}catch(NoSuchElementException ex) {
+				ex.printStackTrace();
+			}
+			
+			if(gC != null) {
+				stringReplacer.replace("mesConvocacao", 
+						new SimpleDateFormat("MMMMMMMMMM").format(gC.getInicio()) +"/"+
+						new SimpleDateFormat("YYYY").format(gC.getInicio()));
+			} else
+				stringReplacer.replace("mesConvocacao","---");
+			
+			URI logoUri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+					.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
+			stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath());
+			
+			
+			//EXAMES
+			String exames = "";
+			for(Exame exame : eC.getExames()) {
+				exames+="<tr><td>"+exame.getDescricao()+"</td></tr>";				
+			}
+			stringReplacer = stringReplacer.replace("exames", exames);
+			
+			//GERAR PDF
+			pdfUri = new URI(uri.getPath()+"/"+eC.getEmpregado().getPessoa().getNome().replace(' ', '_')+".pdf");
+			pdf = new File(pdfUri.getPath());
+			OutputStream stream = new FileOutputStream(pdf);
+			Document doc = new Document();
+			PdfWriter.getInstance(doc, stream);
+			doc.open();
+			
+			HTMLWorker htmlWorker = new HTMLWorker(doc);
+			htmlWorker.parse(new StringReader(stringReplacer.result()));
+			
+			doc.close();
+			stream.close();
+		}
+		
+		
+		//GERAR ZIP
+		file = new File(file.getPath());
+		URI zipUri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation()
+									.toString()+"convocacao/"+convocacao.getTitulo().replace(' ', '_')+".zip");
+		File zipFile = new File(zipUri.getPath());
+		
+		ZipEntry zipEntry;
+		FileInputStream in;
+		FileOutputStream stream = new FileOutputStream(zipFile);
+		ZipOutputStream zipStream = new ZipOutputStream(stream);
+		byte[] buffer = new byte[1024];
+		
+		for(File f : file.listFiles() ) {
+			zipEntry = new ZipEntry( f.getName() );
+			zipStream.putNextEntry(zipEntry);
+			
+			in = new FileInputStream( f.getAbsolutePath() );
+			
+			int len;
+        	while ((len = in.read(buffer)) > 0) {
+        		zipStream.write(buffer, 0, len);
+        	}
+
+        	in.close();
+		}
+
+		zipStream.closeEntry();
+		zipStream.close();
+		FileUtils.cleanDirectory(file);
+		
+		//RETORNO
+		StreamingOutput result = new StreamingOutput() {
+			@Override
+			public void write(OutputStream output) throws IOException, WebApplicationException {
+				try {
+					Path path = Paths.get(zipUri);
+					byte[] data = Files.readAllBytes(path);
+	                output.write(data);
+	                output.flush();
+				}catch (Exception e){
+                    throw new WebApplicationException("Arquivo não encontrado.");
+                }
+			}
+		};
+
+		return result;
 	}
 	
 	@Override

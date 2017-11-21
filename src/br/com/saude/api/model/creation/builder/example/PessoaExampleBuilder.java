@@ -34,6 +34,11 @@ public class PessoaExampleBuilder extends GenericExampleBuilder<Pessoa,PessoaFil
 			this.entity.setRg(Helper.filterLike(this.filter.getRg()));
 	}
 	
+	private void addEmail() {
+		if(this.filter.getEmail()!= null)
+			this.entity.setEmail(Helper.filterLike(this.filter.getEmail()));
+	}
+	
 	private void addSexo() {
 		if(this.filter.getSexo()!= null)
 			this.entity.setSexo(this.filter.getSexo());
@@ -46,6 +51,7 @@ public class PessoaExampleBuilder extends GenericExampleBuilder<Pessoa,PessoaFil
 		addDataNascimento();
 		addRg();
 		addSexo();
+		addEmail();
 	}
 
 	@Override
@@ -54,7 +60,8 @@ public class PessoaExampleBuilder extends GenericExampleBuilder<Pessoa,PessoaFil
 		addCpf();
 		addDataNascimento();
 		addRg();
-		addSexo();		
+		addSexo();
+		addEmail();
 	}
 
 }

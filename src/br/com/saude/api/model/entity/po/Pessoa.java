@@ -18,27 +18,33 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
+
 @Entity
 public class Pessoa {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar o Nome do Empregado(a).")
+	@NotNull(message="É necessário informar o Nome.")
 	@Size(max = 400, message="Tamanho máximo para Nome: 400")
 	private String nome;
 	
-	@Size(max = 32, message="Tamanho máximo para RG de Empregado: 32")
+	@Size(max = 32, message="Tamanho máximo para RGa: 32")
 	private String rg;
 	
+	@Size(max = 128, message="Tamanho máximo para Email: 128")
+	@Email(message="Valor inválido para Email.")
+	private String email;
+	
 	@Column(unique=true)
-	@Size(max = 11, message="Tamanho máximo para Cpf do Empregado: 11")
-	@NotNull(message="É necessário informar o Cpf do Empregado(a).")
+	@Size(max = 11, message="Tamanho máximo para Cpf: 11")
+	@NotNull(message="É necessário informar o Cpf.")
 	private String cpf;
 	
 	private Date dataNascimento;
 	
-	@Size(max = 16, message="Tamanho máximo para Sexo de Empregado: 16")
+	@Size(max = 16, message="Tamanho máximo para Sexo: 16")
 	private String sexo;
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
@@ -118,5 +124,10 @@ public class Pessoa {
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
-	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }
