@@ -5,13 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -25,9 +21,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
@@ -149,7 +142,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		return convocacao;
 	}
 	
-	public StreamingOutput processarConvocacao(Convocacao convocacao) throws Exception {
+	public File processarConvocacao(Convocacao convocacao) throws Exception {
 		//OBTER O HTML DO RELATÓRIO		
 		StringBuilder html = new StringBuilder();
 		String line;
@@ -284,21 +277,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		FileUtils.cleanDirectory(file);
 		
 		//RETORNO
-		StreamingOutput result = new StreamingOutput() {
-			@Override
-			public void write(OutputStream output) throws IOException, WebApplicationException {
-				try {
-					Path path = Paths.get(zipUri);
-					byte[] data = Files.readAllBytes(path);
-	                output.write(data);
-	                output.flush();
-				}catch (Exception e){
-                    throw new WebApplicationException("Arquivo não encontrado.");
-                }
-			}
-		};
-
-		return result;
+		return zipFile;
 	}
 	
 	@Override
@@ -435,7 +414,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					}
 					
 					//SE O CRITÉRIO NÃO FOR SATISFEITO, SETAR FALSE NO FLAG E SAIR DA REPETIÇÃO
-					switch(criterio.getTipo()) {
+					switch(criterio.getOperador()) {
 						
 						case Operador.IGUAL :
 							if(!valor.equals(criterio.getValor())) {
@@ -481,10 +460,10 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 						
 						default :
 					}
-
-					if (criteriosAtendidos)
-						exames.add(gE.getExame());
 				}
+				
+				if (criteriosAtendidos)
+					exames.add(gE.getExame());
 			});
 		});
 		
