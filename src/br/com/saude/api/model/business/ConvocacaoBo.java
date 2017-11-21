@@ -112,7 +112,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		filter.setPageSize(Integer.MAX_VALUE);
 		
 		List<Empregado> empregados = EmpregadoBo.getInstance()
-									.getListFunctionLoadGrupoMonitoramentos(filter).getList();
+									.getListFunctionLoadGrupoMonitoramentosExames(filter).getList();
 		
 		empregados.forEach(e->{
 			List<Exame> exameList = new ArrayList<Exame>();
@@ -456,24 +456,28 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 								criteriosAtendidos = false;								
 								break loop;
 							}
+							break;
 							
 						case Operador.MAIOR_IGUAL:
 							if( !(valor.compareTo(criterio.getValor()) >= 0) ) {
 								criteriosAtendidos = false;								
 								break loop;
 							}
+							break;
 							
 						case Operador.MENOR:
 							if( !(valor.compareTo(criterio.getValor()) < 0) ) {
 								criteriosAtendidos = false;								
 								break loop;
 							}
+							break;
 							
 						case Operador.MENOR_IGUAL:
 							if( !(valor.compareTo(criterio.getValor()) <= 0) ) {
 								criteriosAtendidos = false;								
 								break loop;
 							}
+							break;
 						
 						default :
 					}
