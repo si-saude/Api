@@ -7,7 +7,8 @@ import org.hibernate.criterion.Restrictions;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.model.entity.po.Convocacao;
-//import br.com.saude.api.model.entity.po.Exame;
+import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.entity.po.Exame;
 
 public class ConvocacaoDao extends GenericDao<Convocacao> {
 
@@ -32,16 +33,16 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 			return convocacao;
 		};
 		
-//		this.functionBeforeSave = pair -> {
-//			Convocacao convocacao = pair.getValue0();
-//			Session session = pair.getValue1();
-//			
-//			convocacao.getEmpregadoConvocacoes().forEach(e->{
-//				e.getExames().forEach(ex->ex = session.get(Exame.class, ex.getId()));
-//			});
-//			
-//			return convocacao;
-//		};
+		this.functionBeforeSave = pair -> {
+			Convocacao convocacao = pair.getValue0();
+			Session session = pair.getValue1();
+			
+			convocacao.getEmpregadoConvocacoes().forEach(e->{
+				e.getExames().forEach(ex->ex = session.get(Exame.class, ex.getId()));
+			});
+			
+			return convocacao;
+		};
 	}
 	
 	private Convocacao loadProfissiograma(Convocacao convocacao) {
@@ -90,23 +91,28 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 		return convocacao;
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	public Convocacao getByIdGerencia(Convocacao convocacao) {
 		Session session = HibernateHelper.getSession();
 		
 		try {
-			convocacao = (Convocacao) session
-				.createCriteria(Convocacao.class)
-				.createAlias("empregadoConvocacoes", "empregadoConvocacao")
-				.createAlias("empregadoConvocacao.empregado", "empregado")
-				.createAlias("empregado.gerencia", "gerencia")
-				.add(Restrictions.eq("id", convocacao.getId()))
-				.add(Restrictions.eq("gerencia.id", convocacao.getGerenciaConvocacoes().get(0).getGerencia().getId()))
-				.list().get(0);
-			convocacao.getEmpregadoConvocacoes().forEach(e->{
-				Hibernate.initialize(e.getEmpregado());
-				Hibernate.initialize(e.getExames());
-			});
+			
+			convocacao.setEmpregadoConvocacoes(
+						session
+							.createCriteria(EmpregadoConvocacao.class)
+							.createAlias("convocacao", "convocacao")
+							.createAlias("empregado", "empregado")
+							.createAlias("empregado.gerencia", "gerencia")
+							.add(Restrictions.eq("convocacao.id", convocacao.getId()))
+							.add(Restrictions.eq("gerencia.id", convocacao.getGerenciaConvocacoes().get(0).getGerencia().getId()))
+							.list());
+			
+			if(convocacao.getEmpregadoConvocacoes() != null)
+				convocacao.getEmpregadoConvocacoes().forEach(e->{
+					Hibernate.initialize(e.getEmpregado());
+					Hibernate.initialize(e.getEmpregado().getGerencia());
+					Hibernate.initialize(e.getExames());
+				});
 		}catch (Exception ex) {
 			throw ex;
 		}

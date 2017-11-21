@@ -49,6 +49,7 @@ public class EmpregadoConvocacaoBuilder
 			if(empregadoConvocacoes.get("origem").getEmpregado() != null)
 				empregadoConvocacoes.get("destino").setEmpregado(EmpregadoBuilder
 						.newInstance(empregadoConvocacoes.get("origem").getEmpregado())
+						.loadGerencia()
 						.getEntity());
 			return empregadoConvocacoes.get("destino"); 
 		};
