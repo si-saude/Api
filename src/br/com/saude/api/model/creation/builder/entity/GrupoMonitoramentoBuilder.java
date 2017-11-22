@@ -38,7 +38,7 @@ public class GrupoMonitoramentoBuilder
 				grupoMonitoramentos.get("destino").setGrupoMonitoramentoExames(
 						GrupoMonitoramentoExameBuilder
 						.newInstance(grupoMonitoramentos.get("origem").getGrupoMonitoramentoExames())
-						.loadExame().loadCriterios().getEntityList());
+						.loadExame().loadPeriodicidade().loadCriterios().getEntityList());
 			return grupoMonitoramentos.get("destino");
 		};
 		
