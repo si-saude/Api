@@ -370,11 +370,18 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 														.getListLoadGrupoMonitoramentoExames(filter)
 														.getList());
 		
+		//REMOVER GRUPOS DE MONITORAMENTO REPETIDOS
+		profissiograma.setGrupoMonitoramentos(
+					profissiograma.getGrupoMonitoramentos()
+									.stream().distinct()
+									.collect(Collectors.toList()));
+		
 		List<GrupoMonitoramento> grupoMonitoramentos = new ArrayList<GrupoMonitoramento>();
 		List<Exame> exames = new ArrayList<Exame>();
 		
-		empregado.getGrupoMonitoramentos().forEach(g->{
-			if(profissiograma.getGrupoMonitoramentos().contains(g))
+		
+		profissiograma.getGrupoMonitoramentos().forEach(g->{
+			if(empregado.getGrupoMonitoramentos().contains(g))
 				grupoMonitoramentos.add(g);
 		});
 		
