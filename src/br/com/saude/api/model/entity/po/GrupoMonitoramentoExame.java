@@ -25,6 +25,9 @@ public class GrupoMonitoramentoExame {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Exame exame;
 	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Periodicidade periodicidade;
+	
 	@NotNull(message="É necessário informar o Grupo de Monitoramento do Exame.")
 	@ManyToOne(fetch=FetchType.LAZY)
 	private GrupoMonitoramento grupoMonitoramento;
@@ -76,5 +79,13 @@ public class GrupoMonitoramentoExame {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public Periodicidade getPeriodicidade() {
+		return periodicidade;
+	}
+
+	public void setPeriodicidade(Periodicidade periodicidade) {
+		this.periodicidade = periodicidade;
 	}
 }

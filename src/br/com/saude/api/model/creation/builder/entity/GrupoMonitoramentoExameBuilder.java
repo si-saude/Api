@@ -12,6 +12,7 @@ public class GrupoMonitoramentoExameBuilder
 	extends GenericEntityBuilder<GrupoMonitoramentoExame, GenericFilter> {
 
 	private Function<Map<String,GrupoMonitoramentoExame>,GrupoMonitoramentoExame> loadExame;
+	private Function<Map<String,GrupoMonitoramentoExame>,GrupoMonitoramentoExame> loadPeriodicidade;
 	private Function<Map<String,GrupoMonitoramentoExame>,GrupoMonitoramentoExame> loadCriterios;
 	
 	public static GrupoMonitoramentoExameBuilder newInstance(GrupoMonitoramentoExame grupoMonitoramentoExame) {
@@ -39,6 +40,13 @@ public class GrupoMonitoramentoExameBuilder
 			return grupoMonitoramentoExames.get("destino");
 		};
 		
+		this.loadPeriodicidade = grupoMonitoramentoExames -> {
+			if(grupoMonitoramentoExames.get("origem").getPeriodicidade() != null)
+				grupoMonitoramentoExames.get("destino")
+					.setPeriodicidade(PeriodicidadeBuilder.newInstance(grupoMonitoramentoExames.get("origem").getPeriodicidade()).getEntity());
+			return grupoMonitoramentoExames.get("destino");
+		};
+		
 		this.loadCriterios = grupoMonitoramentoExames -> {
 			if(grupoMonitoramentoExames.get("origem").getCriterios() != null)
 				grupoMonitoramentoExames.get("destino")
@@ -59,6 +67,10 @@ public class GrupoMonitoramentoExameBuilder
 	
 	public GrupoMonitoramentoExameBuilder loadExame() {
 		return (GrupoMonitoramentoExameBuilder) this.loadProperty(this.loadExame);
+	}
+	
+	public GrupoMonitoramentoExameBuilder loadPeriodicidade() {
+		return (GrupoMonitoramentoExameBuilder) this.loadProperty(this.loadPeriodicidade);
 	}
 	
 	public GrupoMonitoramentoExameBuilder loadCriterios() {
