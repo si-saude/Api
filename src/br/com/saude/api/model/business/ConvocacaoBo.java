@@ -47,11 +47,13 @@ import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Criterio;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.entity.po.EmpregadoConvocacaoExame;
 import br.com.saude.api.model.entity.po.Exame;
 import br.com.saude.api.model.entity.po.Gerencia;
 import br.com.saude.api.model.entity.po.GerenciaConvocacao;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.Profissiograma;
+import br.com.saude.api.model.entity.po.RelatorioMedico;
 import br.com.saude.api.model.entity.po.ResultadoExame;
 import br.com.saude.api.model.persistence.ConvocacaoDao;
 import br.com.saude.api.util.constant.Operador;
@@ -87,8 +89,23 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		
 		List<Exame> exames = getExames(empregado, convocacao);
 		
+		if(empregadoConvocacao.getEmpregadoConvocacaoExames() == null)
+			empregadoConvocacao.setEmpregadoConvocacaoExames(new ArrayList<EmpregadoConvocacaoExame>());
+		
+		exames.forEach(e->{
+			//SE O EXAME EXIGIR RELATÓRIO MÉDICO, ADICIONAR O RELATÓRIO
+			EmpregadoConvocacaoExame empregadoConvocacaoExame = new EmpregadoConvocacaoExame();
+			empregadoConvocacaoExame.setExame(e);
+			
+			if(e.isExigeRelatorio()) {
+				RelatorioMedico relatorioMedico = new RelatorioMedico();
+				empregadoConvocacaoExame.setRelatorioMedico(relatorioMedico);
+			}
+			
+			empregadoConvocacao.getEmpregadoConvocacaoExames().add(empregadoConvocacaoExame);
+		});
+		
 		empregadoConvocacao.setEmpregado(empregado);
-		empregadoConvocacao.setExames(exames);
 		convocacao.getEmpregadoConvocacoes().set(0, empregadoConvocacao);
 		
 		return convocacao;
@@ -130,9 +147,24 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					.filter(eC ->eC.getEmpregado().getId() == e.getId())
 					.count() == 0) {
 				
+				List<EmpregadoConvocacaoExame> empregadoConvocacaoExames = new ArrayList<EmpregadoConvocacaoExame>(); 
 				empregadoConvocacao = new EmpregadoConvocacao();
+				
+				exameList.forEach(eE->{
+					EmpregadoConvocacaoExame empregadoConvocacaoExame = new EmpregadoConvocacaoExame();
+					empregadoConvocacaoExame.setExame(eE);
+					
+					if(eE.isExigeRelatorio()) {
+						RelatorioMedico relatorioMedico = new RelatorioMedico();
+						empregadoConvocacaoExame.setRelatorioMedico(relatorioMedico);
+					}
+					
+					empregadoConvocacaoExames.add(empregadoConvocacaoExame);
+				});
+				
+				empregadoConvocacao.setEmpregadoConvocacaoExames(empregadoConvocacaoExames);
+				
 				empregadoConvocacao.setEmpregado(e);
-				empregadoConvocacao.setExames(exameList);
 				convocacao.getEmpregadoConvocacoes().add(empregadoConvocacao);
 			}else {
 				for(int i=0; i<convocacao.getEmpregadoConvocacoes().size();i++) {
@@ -195,7 +227,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		//PARA CADA EMPREGADO SELECIONADO, FAZER:
 		for(EmpregadoConvocacao eC:empregadoConvocacoes) {
 			
-			if(eC.getExames() == null || eC.getExames().size() == 0)
+			if(eC.getEmpregadoConvocacaoExames() == null || eC.getEmpregadoConvocacaoExames().size() == 0)
 				continue;
 			
 			//CARREGAR O EMPREGADO
@@ -245,18 +277,20 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			
 			
 			//EXAMES
-			if(eC.getExames().size() < 26) {
-				int total = eC.getExames().size(); 
+			if(eC.getEmpregadoConvocacaoExames().size() < 26) {
+				int total = eC.getEmpregadoConvocacaoExames().size(); 
 				for(int i=0; i<26; i++) {
-					if(eC.getExames().size() == 26)
+					if(eC.getEmpregadoConvocacaoExames().size() == 26)
 						break;
 					
 					if( ((i+1)%2 == 0 || (i/2 >= total)) && (total - i)+1+total <= 26 ) {
 						Exame e = ExameFactory.newInstance().descricao("&nbsp;").get();
+						EmpregadoConvocacaoExame eE = new EmpregadoConvocacaoExame();
+						eE.setExame(e);
 						try {
-							eC.getExames().add(i, e);
+							eC.getEmpregadoConvocacaoExames().add(i, eE);
 						}catch(IndexOutOfBoundsException ex) {
-							eC.getExames().add(e);
+							eC.getEmpregadoConvocacaoExames().add(eE);
 						}
 					}
 				}
@@ -266,12 +300,12 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			String linha = "";
 			int i = 0;
 			
-			for(Exame exame : eC.getExames()) {
+			for(EmpregadoConvocacaoExame e : eC.getEmpregadoConvocacaoExames()) {
 				if(i == 0) {
-					linha += "<tr><td>"+exame.getDescricao()+"</td>";
+					linha += "<tr><td>"+e.getExame().getDescricao()+"</td>";
 					i++;
 				}else {
-					linha += "<td>"+exame.getDescricao()+"</td></tr>";
+					linha += "<td>"+e.getExame().getDescricao()+"</td></tr>";
 					exames+= linha;
 					linha = "";
 					i = 0;
@@ -394,16 +428,16 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 				
 		//VERIFICAR SE OS EXAMES DA CONVOCAÇÃO SÃO OS MESMOS DO PROFISSIOGRAMA
 		int qtd = 0;
-		for(Exame exameConvocacao:eC.getExames()) {
+		for(EmpregadoConvocacaoExame eE:eC.getEmpregadoConvocacaoExames()) {
 			for(Exame exameProfissiograma:exames) {
-				if(exameConvocacao.getId() == exameProfissiograma.getId()) {
+				if(eE.getExame().getId() == exameProfissiograma.getId()) {
 					qtd++;
 					break;
 				}
 			}
 		}
 		
-		if(eC.getExames().size() != exames.size() || exames.size() != qtd)
+		if(eC.getEmpregadoConvocacaoExames().size() != exames.size() || exames.size() != qtd)
 			eC.setDivergente(true);
 		
 		return eC;
@@ -529,6 +563,10 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					   case TipoCriterio.FUNCAO :
 						   valor = empregado.getFuncao().getId()+"";   
 						   break;
+						   
+					   case TipoCriterio.EXIGE_RELATORIO_MEDICO :
+						   valor = Objects.toString(true);
+						   break;
 					   
 					   default :
 					}
@@ -620,8 +658,14 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					}
 				}
 				
-				if (criteriosAtendidos && periodicidadeAtendida)
+				if (criteriosAtendidos && periodicidadeAtendida) {
+					if(gE.getCriterios().stream()
+							.filter(c->c.getTipo().equals(TipoCriterio.EXIGE_RELATORIO_MEDICO))
+							.count() > 0) {
+						gE.getExame().setExigeRelatorio(true);
+					}
 					exames.add(gE.getExame());
+				}
 			});
 		});
 		

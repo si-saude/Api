@@ -38,7 +38,9 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 			Session session = pair.getValue1();
 			
 			convocacao.getEmpregadoConvocacoes().forEach(e->{
-				e.getExames().forEach(ex->ex = session.get(Exame.class, ex.getId()));
+				e.getEmpregadoConvocacaoExames().forEach(ex->{
+					ex.setExame(session.get(Exame.class, ex.getExame().getId()));
+				});
 			});
 			
 			return convocacao;
@@ -84,8 +86,8 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 					}
 				}
 				
-				if(eC.getExames() != null)
-					Hibernate.initialize(eC.getExames());
+				if(eC.getEmpregadoConvocacaoExames() != null)
+					Hibernate.initialize(eC.getEmpregadoConvocacaoExames());
 			});
 		}
 		return convocacao;
@@ -111,7 +113,7 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 				convocacao.getEmpregadoConvocacoes().forEach(e->{
 					Hibernate.initialize(e.getEmpregado());
 					Hibernate.initialize(e.getEmpregado().getGerencia());
-					Hibernate.initialize(e.getExames());
+					Hibernate.initialize(e.getEmpregadoConvocacaoExames());
 				});
 		}catch (Exception ex) {
 			throw ex;

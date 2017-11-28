@@ -2,15 +2,14 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -30,11 +29,8 @@ public class EmpregadoConvocacao {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Convocacao convocacao;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(name="empregadoconvocacao_exame", 
-	joinColumns = {@JoinColumn(name="empregadoconvocacao_id")}, 
-	inverseJoinColumns = {@JoinColumn(name="exame_id")})
-	private List<Exame> exames;
+	@OneToMany(mappedBy="empregadoConvocacao", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<EmpregadoConvocacaoExame> empregadoConvocacaoExames;
 	
 	private boolean auditado;
 	
@@ -71,14 +67,6 @@ public class EmpregadoConvocacao {
 
 	public void setConvocacao(Convocacao convocacao) {
 		this.convocacao = convocacao;
-	}
-
-	public List<Exame> getExames() {
-		return exames;
-	}
-
-	public void setExames(List<Exame> exames) {
-		this.exames = exames;
 	}
 
 	public boolean isAuditado() {
@@ -119,5 +107,13 @@ public class EmpregadoConvocacao {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public List<EmpregadoConvocacaoExame> getEmpregadoConvocacaoExames() {
+		return empregadoConvocacaoExames;
+	}
+
+	public void setEmpregadoConvocacaoExames(List<EmpregadoConvocacaoExame> empregadoConvocacaoExames) {
+		this.empregadoConvocacaoExames = empregadoConvocacaoExames;
 	}
 }

@@ -11,7 +11,7 @@ import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
 public class EmpregadoConvocacaoBuilder 
 		extends GenericEntityBuilder<EmpregadoConvocacao, GenericFilter> {
 
-	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadExames;
+	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadEmpregadoConvocacaoExames;
 	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadEmpregadoAll;
 	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadEmpregado;
 	
@@ -54,10 +54,10 @@ public class EmpregadoConvocacaoBuilder
 			return empregadoConvocacoes.get("destino"); 
 		};
 		
-		this.loadExames = empregadoConvocacoes -> {
-			if(empregadoConvocacoes.get("origem").getExames() != null)
-				empregadoConvocacoes.get("destino").setExames(ExameBuilder
-						.newInstance(empregadoConvocacoes.get("origem").getExames())
+		this.loadEmpregadoConvocacaoExames = empregadoConvocacoes -> {
+			if(empregadoConvocacoes.get("origem").getEmpregadoConvocacaoExames() != null)
+				empregadoConvocacoes.get("destino").setEmpregadoConvocacaoExames(EmpregadoConvocacaoExameBuilder
+						.newInstance(empregadoConvocacoes.get("origem").getEmpregadoConvocacaoExames())
 						.getEntityList());
 			return empregadoConvocacoes.get("destino");
 		};
@@ -72,7 +72,7 @@ public class EmpregadoConvocacaoBuilder
 	}
 	
 	public EmpregadoConvocacaoBuilder loadExames() {
-		return (EmpregadoConvocacaoBuilder) this.loadProperty(this.loadExames);
+		return (EmpregadoConvocacaoBuilder) this.loadProperty(this.loadEmpregadoConvocacaoExames);
 	}
 
 	@Override
