@@ -52,4 +52,9 @@ public class Exame {
 	public void setVersion(long version) {
 		this.version = version;
 	}
+	
+	@Override
+	public boolean equals(Object exame) {
+		return ((Exame)exame).id == this.id && this.id > 0;
+	}
 }

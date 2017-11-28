@@ -1,8 +1,6 @@
 package br.com.saude.api.service;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -91,14 +89,11 @@ public class ConvocacaoService
 	}
 	
 	@POST
-	@Produces("application/octet-stream")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/processar-convocacao")
 	public Response processarConvocacao(Convocacao convocacao) throws Exception {
-		File zip = getBo().processarConvocacao(convocacao);
-		return Response.ok(Files.readAllBytes(zip.toPath()))
-				.header("Content-Disposition", "attachment; filename=\""+convocacao.getTitulo()+".zip\"")
-				.build();
+		return Response.ok(getBo().processarConvocacao(convocacao)).build();
 	}
 
 	@Override

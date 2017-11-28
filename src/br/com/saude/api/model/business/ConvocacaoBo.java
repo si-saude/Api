@@ -10,9 +10,11 @@ import java.io.StringReader;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -33,10 +35,14 @@ import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.StringReplacer;
 import br.com.saude.api.model.creation.builder.entity.ConvocacaoBuilder;
 import br.com.saude.api.model.creation.builder.example.ConvocacaoExampleBuilder;
+import br.com.saude.api.model.creation.factory.entity.AsoFactory;
+import br.com.saude.api.model.creation.factory.entity.ExameFactory;
+import br.com.saude.api.model.creation.factory.entity.ResultadoExameFactory;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.filter.GerenciaFilter;
 import br.com.saude.api.model.entity.filter.GrupoMonitoramentoFilter;
+import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Criterio;
 import br.com.saude.api.model.entity.po.Empregado;
@@ -46,6 +52,7 @@ import br.com.saude.api.model.entity.po.Gerencia;
 import br.com.saude.api.model.entity.po.GerenciaConvocacao;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.Profissiograma;
+import br.com.saude.api.model.entity.po.ResultadoExame;
 import br.com.saude.api.model.persistence.ConvocacaoDao;
 import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.TipoCriterio;
@@ -142,7 +149,22 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		return convocacao;
 	}
 	
-	public File processarConvocacao(Convocacao convocacao) throws Exception {
+	private GerenciaConvocacao findGerenciaConvocacaoByEmpregado(Empregado empregado, Convocacao convocacao) {
+		GerenciaConvocacao gC = null;
+		
+		try {
+			gC = convocacao.getGerenciaConvocacoes().stream()
+									.filter(g->g.getGerencia().getId() == empregado.getGerencia().getId())
+									.findFirst().get();
+		}catch(NoSuchElementException ex) {
+			ex.printStackTrace();
+		}
+		
+		return gC;
+	}
+	
+	@SuppressWarnings("resource")
+	public String processarConvocacao(Convocacao convocacao) throws Exception {
 		//OBTER O HTML DO RELATÓRIO		
 		StringBuilder html = new StringBuilder();
 		String line;
@@ -173,6 +195,9 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		//PARA CADA EMPREGADO SELECIONADO, FAZER:
 		for(EmpregadoConvocacao eC:empregadoConvocacoes) {
 			
+			if(eC.getExames() == null || eC.getExames().size() == 0)
+				continue;
+			
 			//CARREGAR O EMPREGADO
 			eC.setEmpregado(EmpregadoBo.getInstance().getById(eC.getEmpregado().getId()));
 			
@@ -200,21 +225,17 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			else
 				stringReplacer.replace("dataNascimentoEmpregado","---");
 			
-			//OBTER O CRONOGRAMA DA GERÊNCIA DO EMPREGADO
-			GerenciaConvocacao gC = null; 
+			//OBTER O MÊS DA CONVOCAÇÃO
+			Date dataConvocacao = null;
+			GerenciaConvocacao gC = findGerenciaConvocacaoByEmpregado(eC.getEmpregado(), convocacao);
 			
-			try {
-					gC = convocacao.getGerenciaConvocacoes().stream()
-											.filter(g->g.getGerencia().getId() == eC.getEmpregado().getGerencia().getId())
-											.findFirst().get();
-			}catch(NoSuchElementException ex) {
-				ex.printStackTrace();
-			}
+			if(gC != null)
+				dataConvocacao = getDataConvocacao(eC.getEmpregado(), convocacao);
 			
-			if(gC != null) {
+			if(dataConvocacao != null) {
 				stringReplacer.replace("mesConvocacao", 
-						new SimpleDateFormat("MMMMMMMMMM").format(gC.getInicio()) +"/"+
-						new SimpleDateFormat("YYYY").format(gC.getInicio()));
+						new SimpleDateFormat("MMMMMMMMMM").format(dataConvocacao) +"/"+
+						new SimpleDateFormat("YYYY").format(dataConvocacao));
 			} else
 				stringReplacer.replace("mesConvocacao","---");
 			
@@ -224,14 +245,48 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			
 			
 			//EXAMES
+			if(eC.getExames().size() < 26) {
+				int total = eC.getExames().size(); 
+				for(int i=0; i<26; i++) {
+					if(eC.getExames().size() == 26)
+						break;
+					
+					if( ((i+1)%2 == 0 || (i/2 >= total)) && (total - i)+1+total <= 26 ) {
+						Exame e = ExameFactory.newInstance().descricao("&nbsp;").get();
+						try {
+							eC.getExames().add(i, e);
+						}catch(IndexOutOfBoundsException ex) {
+							eC.getExames().add(e);
+						}
+					}
+				}
+			}
+			
 			String exames = "";
+			String linha = "";
+			int i = 0;
+			
 			for(Exame exame : eC.getExames()) {
-				exames+="<tr><td>"+exame.getDescricao()+"</td></tr>";				
+				if(i == 0) {
+					linha += "<tr><td>"+exame.getDescricao()+"</td>";
+					i++;
+				}else {
+					linha += "<td>"+exame.getDescricao()+"</td></tr>";
+					exames+= linha;
+					linha = "";
+					i = 0;
+				}
+			}
+			
+			if(linha != "") {
+				linha += "<td></td></tr>";
+				exames+= linha;
 			}
 			stringReplacer = stringReplacer.replace("exames", exames);
 			
 			//GERAR PDF
-			pdfUri = new URI(uri.getPath()+"/"+eC.getEmpregado().getPessoa().getNome().replace(' ', '_')+".pdf");
+			pdfUri = new URI(uri.getPath()+"/"+Objects.toString(eC.getEmpregado().getChave()+"-","")
+					+eC.getEmpregado().getPessoa().getNome().replace(' ', '_')+".pdf");
 			pdf = new File(pdfUri.getPath());
 			OutputStream stream = new FileOutputStream(pdf);
 			Document doc = new Document();
@@ -277,7 +332,9 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		FileUtils.cleanDirectory(file);
 		
 		//RETORNO
-		return zipFile;
+		byte[] zipArray = new byte[(int) zipFile.length()];
+		new FileInputStream(zipFile).read(zipArray);
+		return Base64.getEncoder().encodeToString(zipArray);
 	}
 	
 	@Override
@@ -352,11 +409,49 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		return eC;
 	}
 	
+	private Date getDataConvocacao(Empregado empregado, Convocacao convocacao) throws Exception {		
+		// Considerar o mês anterior ao vencimento do Aso, caso o vencimento seja antes
+		//  da data de convocação
+		Date dataConvocacao = null;
+		GerenciaConvocacao gC = findGerenciaConvocacaoByEmpregado(empregado, convocacao);
+		
+		dataConvocacao = getValidadeAso(empregado);
+		
+		if(dataConvocacao != null) {
+			dataConvocacao = Date.from(LocalDateTime.from(dataConvocacao.toInstant())
+								.minusMonths(1).atZone(ZoneId.systemDefault())
+								.toInstant());
+		}
+		
+		if(gC != null && dataConvocacao != null) {
+			//SETAR A MENOR DAS DUAS DATAS
+			if(gC.getFim().before(dataConvocacao))
+				dataConvocacao = gC.getFim(); 
+		}else if(gC != null) {
+			dataConvocacao = gC.getFim();
+		}
+		
+		return dataConvocacao;
+	}
+	
+	private Date getValidadeAso(Empregado empregado) throws Exception {
+		Aso aso = AsoFactory.newInstance().empregadoConvocacao()
+				.empregadoConvocacaoEmpregado(empregado).get();
+		aso = AsoBo.getInstance().getUltimoByEmpregado(aso);
+		
+		if(aso != null)
+			return aso.getValidade();
+		return null;
+	}
+	
 	private List<Exame> getExames(Empregado empregado, Convocacao convocacao) throws Exception{
+		List<GrupoMonitoramento> grupoMonitoramentosProfissiograma = new ArrayList<GrupoMonitoramento>();
+		List<GrupoMonitoramento> grupoMonitoramentosRecorrentes = new ArrayList<GrupoMonitoramento>();
+		
 		Profissiograma profissiograma = ProfissiogramaBo.getInstance()
 				.getById(convocacao.getProfissiograma().getId());
 		
-		//OBTER A LISTA DE GRUPOS DE MONITORAMENTO E ADICIONAR AO PROFISSIOGRAMA
+		//OBTER A LISTA DE GRUPOS DE MONITORAMENTO RECORRENTES
 		BooleanFilter recorrente = new BooleanFilter();
 		recorrente.setValue(1);
 		
@@ -365,23 +460,46 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		filter.setPageSize(Integer.MAX_VALUE);
 		filter.setRecorrente(recorrente);
 		
-		profissiograma.getGrupoMonitoramentos().addAll(
-									GrupoMonitoramentoBo.getInstance()
-														.getListLoadGrupoMonitoramentoExames(filter)
-														.getList());
+		grupoMonitoramentosRecorrentes = GrupoMonitoramentoBo.getInstance()
+											.getListLoadGrupoMonitoramentoExames(filter)
+											.getList();
+		
+		if(empregado.getGrupoMonitoramentos() == null)
+			empregado.setGrupoMonitoramentos(grupoMonitoramentosRecorrentes);
+		else
+			empregado.getGrupoMonitoramentos().addAll(grupoMonitoramentosRecorrentes);
+			
+		profissiograma.getGrupoMonitoramentos().addAll(grupoMonitoramentosRecorrentes);
+		
+		
+		
+		//REMOVER GRUPOS DE MONITORAMENTO REPETIDOS
+		profissiograma.getGrupoMonitoramentos().forEach(g->{
+			if(!grupoMonitoramentosProfissiograma.contains(g))
+				grupoMonitoramentosProfissiograma.add(g);
+		});
+		profissiograma.setGrupoMonitoramentos(grupoMonitoramentosProfissiograma);
 		
 		List<GrupoMonitoramento> grupoMonitoramentos = new ArrayList<GrupoMonitoramento>();
-		List<Exame> exames = new ArrayList<Exame>();
+		List<Exame> exames = new ArrayList<Exame>();		
 		
-		empregado.getGrupoMonitoramentos().forEach(g->{
-			if(profissiograma.getGrupoMonitoramentos().contains(g))
+		profissiograma.getGrupoMonitoramentos().forEach(g->{
+			if(empregado.getGrupoMonitoramentos().contains(g))
 				grupoMonitoramentos.add(g);
 		});
 		
 		grupoMonitoramentos.forEach(g->{
 			g.getGrupoMonitoramentoExames().forEach(gE->{
+				Date dataConvocacao = null;
 				boolean criteriosAtendidos = true;
 				
+				try {
+					dataConvocacao = getDataConvocacao(empregado, convocacao);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
+				//VERIFICAÇÃO DO ATENDIMENTO DOS CRITÉRIOS
 				loop:
 				for(Criterio criterio : gE.getCriterios()) {
 					String valor="";
@@ -390,7 +508,9 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					   case TipoCriterio.IDADE :
 						   LocalDate nascimento = empregado.getPessoa().getDataNascimento().toInstant()
 						   							.atZone(ZoneId.systemDefault()).toLocalDate();
-						   Period periodo = Period.between(nascimento, LocalDate.now());
+						   Period periodo = Period.between(nascimento, dataConvocacao != null ? 
+								   										LocalDate.from(dataConvocacao.toInstant()) : 
+							   											LocalDate.now());
 						   valor = periodo.getYears()+"";
 						   break;
 					      
@@ -462,12 +582,58 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					}
 				}
 				
-				if (criteriosAtendidos)
+				boolean periodicidadeAtendida = true;
+
+				//VERIFICAÇÃO DA PERIODICIDADE
+				if(gE.getPeriodicidade() != null) {
+					
+					//1 - OBTER O ÚLTIMO RESULTADO DESTE EMPREGADO PARA ESTE EXAME
+					ResultadoExame resultadoExame = ResultadoExameFactory.newInstance()
+							.empregadoConvocacao().empregadoConvocacaoEmpregado(empregado)
+							.exame(gE.getExame()).get();
+					
+					try {
+						resultadoExame = ResultadoExameBo.getInstance()
+								.getUltimoByEmpregadoExame(resultadoExame);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					
+					//2 - SE O RETORNO FOR DIFERENTE DE NULO, VERIFICAR SE O EXAME VAI VENCER NO
+					// ANO DO PERIÓDICO
+					if(resultadoExame != null) {
+						Date dataLimiteExame = dataConvocacao;
+						
+						if(dataLimiteExame != null) {
+							//OBTER O ÚLTIMO DIA DO ANO
+							dataLimiteExame.setMonth(11);
+							dataLimiteExame.setDate(31);
+							
+							//VERIFICAR SE O EXAME VAI VENCER NO ANO DO PERIÓDICO
+							if(Date.from(LocalDateTime.from(resultadoExame.getData().toInstant())
+										.plusMonths(gE.getPeriodicidade().getMeses())
+										.atZone(ZoneId.systemDefault())
+										.toInstant())
+									.after(dataLimiteExame))
+								periodicidadeAtendida = false;
+						}
+					}
+				}
+				
+				if (criteriosAtendidos && periodicidadeAtendida)
 					exames.add(gE.getExame());
 			});
 		});
 		
-		return exames;
+		//REMOVER EXAMES REPETIDOS
+		List<Exame> examesRetorno = new ArrayList<Exame>();
+		
+		exames.forEach(e->{
+			if(!examesRetorno.contains(e))
+				examesRetorno.add(e);
+		});		
+		
+		return examesRetorno;
 	}
 	
 	@Override
