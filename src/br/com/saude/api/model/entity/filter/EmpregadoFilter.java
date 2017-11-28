@@ -7,6 +7,7 @@ public class EmpregadoFilter extends GenericFilter {
 	private String matricula;
 	private String estadoCivil;
 	private String escolaridade;
+	private String vinculo;
 	private String ramal;
 	private String status;
 	private PessoaFilter pessoa;
@@ -41,6 +42,12 @@ public class EmpregadoFilter extends GenericFilter {
 	}
 	public void setEscolaridade(String escolaridade) {
 		this.escolaridade = escolaridade;
+	}
+	public String getVinculo() {
+		return vinculo;
+	}
+	public void setVinculo(String vinculo) {
+		this.vinculo = vinculo;
 	}
 	public String getRamal() {
 		return ramal;

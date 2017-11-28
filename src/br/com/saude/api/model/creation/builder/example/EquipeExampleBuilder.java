@@ -27,9 +27,15 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
 	}
 	
+	private void addAbreviacao() {
+		if (this.filter.getAbreviacao()!=null) 
+			this.entity.setAbreviacao(Helper.filterLike(this.filter.getAbreviacao()));
+	}
+	
 	@Override
 	protected void createExample() {
 		addNome();
+		addAbreviacao();
 	}
 
 	@Override

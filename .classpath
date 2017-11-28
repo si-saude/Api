@@ -67,5 +67,17 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/yasson-1.0.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/javatuples-1.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/itextpdf-5.4.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-3.17.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-examples-3.17.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-excelant-3.17.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-ooxml-schemas-3.17.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/poi-scratchpad-3.17.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

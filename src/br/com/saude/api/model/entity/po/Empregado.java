@@ -44,6 +44,10 @@ public class Empregado {
 	@Size(max = 128, message="Tamanho máximo para Escolaridade de Empregado: 128")
 	private String escolaridade;
 	
+	@Size(max = 32, message="Tamanho máximo para Vínculo de Empregado: 32")
+	@NotNull(message="É necessário informar o Vínculo de Empregado.")
+	private String vinculo;
+	
 	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
 	@JoinColumn(name = "pessoa_id")
 	private Pessoa pessoa;
@@ -125,6 +129,12 @@ public class Empregado {
 	}
 	public void setEscolaridade(String escolaridade) {
 		this.escolaridade = escolaridade;
+	}
+	public String getVinculo() {
+		return vinculo;
+	}
+	public void setVinculo(String vinculo) {
+		this.vinculo = vinculo;
 	}
 	public long getVersion() {
 		return version;

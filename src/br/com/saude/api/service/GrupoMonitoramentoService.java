@@ -1,5 +1,6 @@
 package br.com.saude.api.service;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.ws.rs.Consumes;
@@ -79,5 +80,19 @@ public class GrupoMonitoramentoService
 	@Path("/delete")
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
+	}
+	
+	@POST
+	@Path("/import")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response importFile(File arquivo) {
+		try {
+			GrupoMonitoramentoBo.getInstance().importFile(arquivo);
+			return Response.ok("Salvo com sucesso.").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 	}
 }

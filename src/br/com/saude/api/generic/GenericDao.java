@@ -63,6 +63,30 @@ public abstract class GenericDao<T> {
 		return entity;
 	}
 	
+	public List<T> saveList(List<T> entities) throws Exception {
+		Session session = HibernateHelper.getSession();
+		
+		try {
+			Transaction transaction = session.beginTransaction();
+			
+			for (T t : entities) {
+				if(this.functionBeforeSave != null)
+					t = this.functionBeforeSave.apply(new Pair<T,Session>(t,session));
+				
+				Field id = getId(t.getClass());
+				id.setAccessible(true);
+				id.set(t, id.get(session.merge(t)));
+			}
+			transaction.commit();
+		}catch(Exception ex) {
+			throw ex;
+		}finally {
+			session.close();
+		}
+		
+		return entities;
+	}
+	
 	private long getCount(Session session, GenericExampleBuilder<?,?> exampleBuilder) {
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(entityType);

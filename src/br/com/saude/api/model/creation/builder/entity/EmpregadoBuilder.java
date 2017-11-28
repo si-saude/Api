@@ -177,6 +177,7 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 		newEmpregado.setRamal(empregado.getRamal());
 		newEmpregado.setEstadoCivil(empregado.getEstadoCivil());
 		newEmpregado.setEscolaridade(empregado.getEscolaridade());
+		newEmpregado.setVinculo(empregado.getVinculo());
 		newEmpregado.setStatus(empregado.getStatus());
 		newEmpregado.setVersion(empregado.getVersion());
 		

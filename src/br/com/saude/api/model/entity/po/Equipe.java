@@ -20,6 +20,9 @@ public class Equipe {
 	@Column(unique=true)
 	private String nome;
 	
+	@Size(max = 3, message="Tamanho máximo para Abreviação da Equipe: 3")
+	private String abreviacao;
+	
 	@Version
 	private long version;
 
@@ -39,6 +42,14 @@ public class Equipe {
 		this.nome = nome;
 	}
 
+	public String getAbreviacao() {
+		return abreviacao;
+	}
+
+	public void setAbreviacao(String abreviacao) {
+		this.abreviacao = abreviacao;
+	}
+	
 	public long getVersion() {
 		return version;
 	}

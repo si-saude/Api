@@ -1,5 +1,9 @@
 package br.com.saude.api.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.ws.rs.Consumes;
@@ -10,6 +14,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
@@ -77,5 +84,20 @@ public class BaseService extends GenericServiceImpl<Base, BaseFilter, BaseBo>
 	@Path("/delete")
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
+	}
+	
+	@POST
+	@Path("/import")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response importFile(File arquivo) {
+		try {
+			BaseBo.getInstance().importFile(arquivo);
+			return Response.ok("Salvo com sucesso.").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+		
 	}
 }
