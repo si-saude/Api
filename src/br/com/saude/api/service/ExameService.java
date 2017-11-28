@@ -1,5 +1,6 @@
 package br.com.saude.api.service;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.ws.rs.Consumes;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
+import br.com.saude.api.model.business.EquipeBo;
 import br.com.saude.api.model.business.ExameBo;
 import br.com.saude.api.model.business.validate.ExameValidator;
 import br.com.saude.api.model.entity.filter.ExameFilter;
@@ -77,5 +79,19 @@ public class ExameService extends GenericServiceImpl<Exame,ExameFilter,ExameBo>
 	@Path("/delete")
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
+	}
+	
+	@POST
+	@Path("/import")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response importFile(File arquivo) {
+		try {
+			ExameBo.getInstance().importFile(arquivo);
+			return Response.ok("Salvo com sucesso.").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 	}
 }

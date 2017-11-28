@@ -1,14 +1,25 @@
 package br.com.saude.api.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import br.com.saude.api.generic.GenericConstant;
 import br.com.saude.api.util.RequestInterceptor;
@@ -23,6 +34,7 @@ import br.com.saude.api.util.constant.StatusEmpregado;
 import br.com.saude.api.util.constant.TipoConvocacao;
 import br.com.saude.api.util.constant.TipoCriterio;
 import br.com.saude.api.util.constant.TipoPessoa;
+import br.com.saude.api.util.constant.VinculoEmpregado;
 
 @Path("generic")
 @RequestInterceptor
@@ -110,4 +122,12 @@ public class UtilService {
 	public Response getEscolaridade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(Escolaridade.getInstance(),filter)).build();
 	}
+	
+	@GET
+	@Path("/vinculo-empregado")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getVinculoEmpregado(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(VinculoEmpregado.getInstance(),filter)).build();
+	}
+	
 }

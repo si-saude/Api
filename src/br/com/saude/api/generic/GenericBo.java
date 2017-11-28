@@ -110,11 +110,22 @@ public abstract class GenericBo<T, F extends GenericFilter, D extends GenericDao
 		return save(entity,null);
 	}
 	
+	public T saveList(List<T> entities) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return saveList(entities,null);
+	}
+	
 	protected T save(T entity, Function<B,B> loadFunction) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		entity = getDao().save(entity);
 		if(loadFunction!=null)
 			return loadFunction.apply(getBuilder(entity)).getEntity();
 		return getBuilder(entity).getEntity();
+	}
+	
+	protected T saveList(List<T> entities, Function<B,B> loadFunction) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		entities = getDao().saveList(entities);
+		if(loadFunction!=null)
+			return loadFunction.apply(getBuilder(entities)).getEntity();
+		return getBuilder(entities).getEntity();
 	}
 	
 	public void delete(Object id) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {

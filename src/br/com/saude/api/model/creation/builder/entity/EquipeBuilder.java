@@ -35,6 +35,7 @@ public class EquipeBuilder extends GenericEntityBuilder<Equipe,EquipeFilter> {
 		
 		newEquipe.setId(equipe.getId());
 		newEquipe.setNome(equipe.getNome());
+		newEquipe.setAbreviacao(equipe.getAbreviacao());
 		newEquipe.setVersion(equipe.getVersion());
 		
 		return newEquipe;

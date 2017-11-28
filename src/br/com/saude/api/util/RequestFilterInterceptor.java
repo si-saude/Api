@@ -25,23 +25,23 @@ public class RequestFilterInterceptor implements ContainerRequestFilter {
 	
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
-		String authorizationHeader =
-                requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-
-        if (!isTokenBasedAuthentication(authorizationHeader)) {
-            abortWithUnauthorized(requestContext);
-            return;
-        }
-        
-        String token = authorizationHeader
-                            .substring(AUTHENTICATION_SCHEME.length()).trim();
-
-        try {
-            validateToken(token);
-        } catch (Exception e) {
-            abortWithUnauthorized(requestContext);
-            return;
-        }
+//		String authorizationHeader =
+//                requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+//
+//        if (!isTokenBasedAuthentication(authorizationHeader)) {
+//            abortWithUnauthorized(requestContext);
+//            return;
+//        }
+//        
+//        String token = authorizationHeader
+//                            .substring(AUTHENTICATION_SCHEME.length()).trim();
+//
+//        try {
+//            validateToken(token);
+//        } catch (Exception e) {
+//            abortWithUnauthorized(requestContext);
+//            return;
+//        }
         
         try {
             validateArgument((ContainerRequest) requestContext);
