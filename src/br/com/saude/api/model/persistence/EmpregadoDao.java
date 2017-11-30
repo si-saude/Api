@@ -317,6 +317,10 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 		return getList(exampleBuilder,this.functionLoad);
 	}
 	
+	public PagedList<Empregado> getListFunctionLoadAll(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
+		return getList(exampleBuilder,this.functionLoadAll);
+	}
+	
 	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentos(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
 		return getList(exampleBuilder,this.functionLoadGrupoMonitoramentos);
 	}
