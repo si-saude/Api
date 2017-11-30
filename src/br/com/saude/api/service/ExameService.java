@@ -15,7 +15,6 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.EquipeBo;
 import br.com.saude.api.model.business.ExameBo;
 import br.com.saude.api.model.business.validate.ExameValidator;
 import br.com.saude.api.model.entity.filter.ExameFilter;
