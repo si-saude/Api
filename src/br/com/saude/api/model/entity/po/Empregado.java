@@ -263,5 +263,10 @@ public class Empregado {
 	public void setAssinaturaBase64(String assinaturaBase64) {
 		this.assinaturaBase64 = assinaturaBase64;
 	}
+	
+	@Override
+	public boolean equals(Object empregado) {
+		return ((Empregado)empregado).id == this.id && this.id > 0;
+	}
 
 }

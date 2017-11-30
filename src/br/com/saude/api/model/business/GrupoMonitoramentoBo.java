@@ -127,4 +127,18 @@ public class GrupoMonitoramentoBo extends
 			e.printStackTrace();
 		}
 	}
+	
+	public List<GrupoMonitoramento> fetchGMonitByNomeDB(String nome) throws IllegalAccessException, 
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException, Exception {
+		
+		GrupoMonitoramentoFilter filter = new GrupoMonitoramentoFilter();
+
+		filter.setNome(nome);
+		filter.setPageNumber(1);
+		filter.setPageSize(Integer.MAX_VALUE);
+		List<GrupoMonitoramento> gmonits = getDao().getListFunctionLoadAll(getExampleBuilder(filter).example()).getList();
+		if ( gmonits != null)
+			return gmonits;
+		return null;
+	}
 }
