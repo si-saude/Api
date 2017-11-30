@@ -22,6 +22,7 @@ import br.com.saude.api.model.creation.builder.entity.GrupoMonitoramentoBuilder;
 import br.com.saude.api.model.creation.builder.example.GrupoMonitoramentoExampleBuilder;
 import br.com.saude.api.model.entity.filter.GrupoMonitoramentoFilter;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
+import br.com.saude.api.model.entity.po.TipoGrupoMonitoramento;
 import br.com.saude.api.model.persistence.GrupoMonitoramentoDao;
 
 public class GrupoMonitoramentoBo extends
@@ -99,7 +100,10 @@ public class GrupoMonitoramentoBo extends
 						continue;
 					GrupoMonitoramento grupoMonitoramento = new GrupoMonitoramento();
 					grupoMonitoramento.setId((int) sheet.getRow(r).getCell(0).getNumericCellValue());
-					grupoMonitoramento.setNome(sheet.getRow(r).getCell(1).getStringCellValue());
+					TipoGrupoMonitoramento tipoGrupoMonitoramento = new TipoGrupoMonitoramento();
+					tipoGrupoMonitoramento.setId((int) sheet.getRow(r).getCell(1).getNumericCellValue());
+					grupoMonitoramento.setTipoGrupoMonitoramento(tipoGrupoMonitoramento);
+					grupoMonitoramento.setNome(sheet.getRow(r).getCell(2).getStringCellValue());
 					grupoMonitoramentos.add(grupoMonitoramento);
 				}
 			} else if (workbook instanceof XSSFWorkbook) {
@@ -110,7 +114,10 @@ public class GrupoMonitoramentoBo extends
 						continue;
 					GrupoMonitoramento grupoMonitoramento = new GrupoMonitoramento();
 					grupoMonitoramento.setId((int) sheet.getRow(r).getCell(0).getNumericCellValue());
-					grupoMonitoramento.setNome(sheet.getRow(r).getCell(1).getStringCellValue());
+					TipoGrupoMonitoramento tipoGrupoMonitoramento = new TipoGrupoMonitoramento();
+					tipoGrupoMonitoramento.setId((int) sheet.getRow(r).getCell(1).getNumericCellValue());
+					grupoMonitoramento.setTipoGrupoMonitoramento(tipoGrupoMonitoramento);
+					grupoMonitoramento.setNome(sheet.getRow(r).getCell(2).getStringCellValue());
 					grupoMonitoramentos.add(grupoMonitoramento);
 				}
 			}

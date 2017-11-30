@@ -15,7 +15,6 @@ import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.RelatorioMedicoBo;
-import br.com.saude.api.model.business.validate.BaseValidator;
 import br.com.saude.api.model.business.validate.RelatorioMedicoValidator;
 import br.com.saude.api.model.entity.filter.RelatorioMedicoFilter;
 import br.com.saude.api.model.entity.po.RelatorioMedico;
