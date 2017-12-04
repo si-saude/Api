@@ -452,7 +452,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		dataConvocacao = getValidadeAso(empregado);
 		
 		if(dataConvocacao != null) {
-			dataConvocacao = Date.from(LocalDateTime.from(dataConvocacao.toInstant())
+			dataConvocacao = Date.from(LocalDateTime.from(new java.sql.Date(dataConvocacao.getTime()).toLocalDate())
 								.minusMonths(1).atZone(ZoneId.systemDefault())
 								.toInstant());
 		}
@@ -498,11 +498,6 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 											.getListLoadGrupoMonitoramentoExames(filter)
 											.getList();
 		
-		if(empregado.getGrupoMonitoramentos() == null)
-			empregado.setGrupoMonitoramentos(grupoMonitoramentosRecorrentes);
-		else
-			empregado.getGrupoMonitoramentos().addAll(grupoMonitoramentosRecorrentes);
-			
 		profissiograma.getGrupoMonitoramentos().addAll(grupoMonitoramentosRecorrentes);
 		
 		
@@ -543,8 +538,9 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 						   LocalDate nascimento = empregado.getPessoa().getDataNascimento().toInstant()
 						   							.atZone(ZoneId.systemDefault()).toLocalDate();
 						   Period periodo = Period.between(nascimento, dataConvocacao != null ? 
-								   										LocalDate.from(dataConvocacao.toInstant()) : 
+								   								new java.sql.Date(dataConvocacao.getTime()).toLocalDate() : 
 							   											LocalDate.now());
+						   
 						   valor = periodo.getYears()+"";
 						   break;
 					      
@@ -648,7 +644,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 							dataLimiteExame.setDate(31);
 							
 							//VERIFICAR SE O EXAME VAI VENCER NO ANO DO PERIÓDICO
-							if(Date.from(LocalDateTime.from(resultadoExame.getData().toInstant())
+							if(Date.from(LocalDateTime.from(new java.sql.Date(resultadoExame.getData().getTime()).toLocalDate())
 										.plusMonths(gE.getPeriodicidade().getMeses())
 										.atZone(ZoneId.systemDefault())
 										.toInstant())
