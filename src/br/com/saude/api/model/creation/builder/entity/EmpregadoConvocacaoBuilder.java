@@ -5,15 +5,16 @@ import java.util.Map;
 import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
-import br.com.saude.api.generic.GenericFilter;
+import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
 
 public class EmpregadoConvocacaoBuilder 
-		extends GenericEntityBuilder<EmpregadoConvocacao, GenericFilter> {
+		extends GenericEntityBuilder<EmpregadoConvocacao, EmpregadoConvocacaoFilter> {
 
 	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadEmpregadoConvocacaoExames;
 	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadEmpregadoAll;
 	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadEmpregado;
+	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadConvocacao;
 	
 	public static EmpregadoConvocacaoBuilder newInstance(EmpregadoConvocacao empregadoConvocacao) {
 		return new EmpregadoConvocacaoBuilder(empregadoConvocacao);
@@ -54,6 +55,14 @@ public class EmpregadoConvocacaoBuilder
 			return empregadoConvocacoes.get("destino"); 
 		};
 		
+		this.loadConvocacao = empregadoConvocacoes -> {
+			if(empregadoConvocacoes.get("origem").getConvocacao() != null)
+				empregadoConvocacoes.get("destino").setConvocacao(ConvocacaoBuilder
+						.newInstance(empregadoConvocacoes.get("origem").getConvocacao())
+						.getEntity());
+			return empregadoConvocacoes.get("destino"); 
+		};
+		
 		this.loadEmpregadoConvocacaoExames = empregadoConvocacoes -> {
 			if(empregadoConvocacoes.get("origem").getEmpregadoConvocacaoExames() != null)
 				empregadoConvocacoes.get("destino").setEmpregadoConvocacaoExames(EmpregadoConvocacaoExameBuilder
@@ -69,6 +78,10 @@ public class EmpregadoConvocacaoBuilder
 	
 	public EmpregadoConvocacaoBuilder loadEmpregado() {
 		return (EmpregadoConvocacaoBuilder) this.loadProperty(this.loadEmpregado);
+	}
+	
+	public EmpregadoConvocacaoBuilder loadConvocacao() {
+		return (EmpregadoConvocacaoBuilder) this.loadProperty(this.loadConvocacao);
 	}
 	
 	public EmpregadoConvocacaoBuilder loadExames() {
@@ -88,7 +101,7 @@ public class EmpregadoConvocacaoBuilder
 	}
 
 	@Override
-	public EmpregadoConvocacao cloneFromFilter(GenericFilter filter) {
+	public EmpregadoConvocacao cloneFromFilter(EmpregadoConvocacaoFilter filter) {
 		return null;
 	}
 }
