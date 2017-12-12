@@ -328,4 +328,8 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentosExames(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
 		return getList(exampleBuilder,this.functionLoadGrupoMonitoramentosExames);
 	}
+	
+	protected Function<Empregado,Empregado> getFunctionLoad(){
+		return this.functionLoad;
+	}
 }
