@@ -8,6 +8,8 @@ import org.hibernate.Session;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.po.Convocacao;
+import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
 import br.com.saude.api.model.entity.po.Exame;
 
@@ -52,17 +54,18 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 	}
 	
 	private EmpregadoConvocacao loadConvocacao(EmpregadoConvocacao eC) {
-		if(eC.getConvocacao() != null)
-			Hibernate.initialize(eC.getConvocacao());
+		if(eC.getConvocacao() != null) {
+			Convocacao convocacao = (Convocacao) Hibernate.unproxy(eC.getConvocacao());
+			eC.setConvocacao(convocacao);
+		}
 		return eC;
 	}
 	
 	private EmpregadoConvocacao loadEmpregado(EmpregadoConvocacao eC) {
 		if(eC.getEmpregado() != null) {
-			Hibernate.initialize(eC.getEmpregado());
-			
-			if(eC.getEmpregado().getGerencia() != null)
-				Hibernate.initialize(eC.getEmpregado().getGerencia());
+
+			Object empregado = Hibernate.unproxy(eC.getEmpregado());
+			eC.setEmpregado(EmpregadoDao.getInstance().getFunctionLoad().apply((Empregado) empregado));
 		}
 		return eC;
 	}
