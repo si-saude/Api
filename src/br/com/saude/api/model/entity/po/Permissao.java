@@ -19,9 +19,7 @@ public class Permissao {
 	@Size(max = 100)
 	private String funcionalidade;
 	
-	private boolean leitura;
-	
-	private boolean escrita;
+	private boolean valor;
 	
 	@NotNull(message="É necessário informar o Perfil da Permissão.")
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -37,17 +35,11 @@ public class Permissao {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public boolean isLeitura() {
-		return leitura;
+	public boolean isValor() {
+		return valor;
 	}
-	public void setLeitura(boolean leitura) {
-		this.leitura = leitura;
-	}
-	public boolean isEscrita() {
-		return escrita;
-	}
-	public void setEscrita(boolean escrita) {
-		this.escrita = escrita;
+	public void setValor(boolean valor) {
+		this.valor = valor;
 	}
 	public long getVersion() {
 		return version;

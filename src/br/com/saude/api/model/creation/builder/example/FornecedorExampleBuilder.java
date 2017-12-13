@@ -36,7 +36,7 @@ public class FornecedorExampleBuilder extends GenericExampleBuilder<Fornecedor,F
 	}
 	
 	private void addTipoPessoa() {
-		if(this.filter.getTipoPessoa() != null)
+		if(this.filter.getTipoPessoa() != null && !this.filter.getTipoPessoa().equals(""))
 			this.entity.setTipoPessoa(this.filter.getTipoPessoa());
 	}
 

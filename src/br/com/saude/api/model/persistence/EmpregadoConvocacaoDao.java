@@ -1,5 +1,7 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.function.Function;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
@@ -56,8 +58,12 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 	}
 	
 	private EmpregadoConvocacao loadEmpregado(EmpregadoConvocacao eC) {
-		if(eC.getEmpregado() != null)
+		if(eC.getEmpregado() != null) {
 			Hibernate.initialize(eC.getEmpregado());
+			
+			if(eC.getEmpregado().getGerencia() != null)
+				Hibernate.initialize(eC.getEmpregado().getGerencia());
+		}
 		return eC;
 	}
 	
@@ -74,5 +80,9 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 	
 	public PagedList<EmpregadoConvocacao> getListFunctionLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder, this.functionLoad);
+	}
+	
+	protected Function<EmpregadoConvocacao,EmpregadoConvocacao> getFunctionLoad(){
+		return this.functionLoad;
 	}
 }

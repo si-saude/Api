@@ -26,19 +26,38 @@ public class ConvocacaoExampleBuilder extends GenericExampleBuilder<Convocacao, 
 		addProfissiograma();
 	}
 
+	protected void createExampleByTitulo() throws InstantiationException, IllegalAccessException {
+		addTituloEq();
+	}
+	
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		
 	}
 	
+	public GenericExampleBuilder<Convocacao, ConvocacaoFilter> exampleByTitulo()
+			throws InstantiationException, IllegalAccessException {
+		if(this.filter!=null) {
+			initialize();
+			createExampleByTitulo();
+			this.criterions.add(getExample());
+		}
+		return this;
+	}
+	
 	private void addTipo() {
-		if(this.filter.getTipo() != null)
+		if(this.filter.getTipo() != null && !this.filter.getTipo().equals(""))
 			this.entity.setTipo(Helper.filterLike(this.filter.getTipo()));
 	}
 	
 	private void addTitulo() {
 		if(this.filter.getTitulo() != null)
 			this.entity.setTitulo(Helper.filterLike(this.filter.getTitulo()));
+	}
+	
+	private void addTituloEq() {
+		if(this.filter.getTitulo() != null)
+			this.entity.setTitulo(this.filter.getTitulo());
 	}
 	
 	private void addProfissiograma() throws InstantiationException, IllegalAccessException {

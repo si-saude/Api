@@ -11,6 +11,7 @@ import br.com.saude.api.model.entity.po.Usuario;
 public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> {
 
 	private Function<Map<String,Usuario>,Usuario> loadPerfis;
+	private Function<Map<String,Usuario>,Usuario> loadPermissoes;
 	
 	public static UsuarioBuilder newInstance(Usuario usuario) {
 		return new UsuarioBuilder(usuario);
@@ -38,6 +39,17 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> 
 			}
 			return usuarios.get("destino");
 		};
+		
+		this.loadPermissoes = usuarios -> {
+			if ( usuarios.get("origem").getPerfis() != null ) {
+				usuarios.get("destino").setPerfis(PerfilBuilder
+						.newInstance(usuarios.get("origem").getPerfis())
+						.loadPermissoes()
+						.getEntityList());
+			}
+			return usuarios.get("destino");
+		};
+		
 	}
 
 	@Override
@@ -57,6 +69,10 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> 
 	
 	public UsuarioBuilder loadPerfis() {
 		return (UsuarioBuilder) this.loadProperty(this.loadPerfis);
+	}
+	
+	public UsuarioBuilder loadPermissoes() {
+		return (UsuarioBuilder) this.loadProperty(this.loadPermissoes);
 	}
 
 	@Override

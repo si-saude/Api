@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class ResultadoExame {
@@ -30,6 +31,15 @@ public class ResultadoExame {
 	private Date data;
 	
 	private boolean conforme;
+	
+	@Size(max = 64, message="Tamanho máximo para Tipo: 64")
+	private String tipo;
+	
+	@Size(max = 64, message="Tamanho máximo para Tipo: 64")
+	private String acao;
+	
+	@Size(max = 64, message="Tamanho máximo para Tipo: 64")
+	private String local;
 	
 	@Version
 	private long version;
@@ -72,6 +82,31 @@ public class ResultadoExame {
 
 	public void setExame(Exame exame) {
 		this.exame = exame;
+	}
+	
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getAcao() {
+		return acao;
+	}
+
+	public void setAcao(String acao) {
+		this.acao = acao;
+	}
+
+	public String getLocal() {
+		return local;
+	}
+
+	public void setLocal(String local) {
+		this.local = local;
 	}
 
 	public long getVersion() {

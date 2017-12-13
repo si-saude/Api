@@ -94,6 +94,14 @@ public abstract class GenericDao<T> {
 		for(Criterion criterion : exampleBuilder.getCriterions())
 			criteria.add(criterion);
 		
+		if(exampleBuilder.getCriterias() != null)
+			for(Triplet<String,CriteriaExample,JoinType> c: exampleBuilder.getCriterias()) {
+				Criteria example = criteria.createCriteria(c.getValue0(),c.getValue2());
+				for(Criterion criterion : c.getValue1().getCriterions())
+					example.add(criterion);
+				example.add(c.getValue1().getExample());
+			}
+		
 		criteria = finishCriteria(criteria,exampleBuilder);
 		
 		return (long)criteria.setProjection(Projections.rowCount()).uniqueResult();
@@ -143,6 +151,7 @@ public abstract class GenericDao<T> {
 					Criteria example = criteria.createCriteria(c.getValue0(),c.getValue2());
 					for(Criterion criterion : c.getValue1().getCriterions())
 						example.add(criterion);
+					example.add(c.getValue1().getExample());
 				}
 			
 			criteria = finishCriteria(criteria,exampleBuilder);

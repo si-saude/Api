@@ -1,14 +1,22 @@
 package br.com.saude.api.model.persistence;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.javatuples.Pair;
 
 import br.com.saude.api.generic.GenericDao;
+import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.HibernateHelper;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
 import br.com.saude.api.model.entity.po.Exame;
+import br.com.saude.api.model.entity.po.ResultadoExame;
 
 public class ConvocacaoDao extends GenericDao<Convocacao> {
 
@@ -127,5 +135,38 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 	
 	public Convocacao getByIdLoadAll(Object id) throws Exception {
 		return super.getById(id,this.functionLoadAll);
+	}
+	
+	public PagedList<Convocacao> getListLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder, this.functionLoadAll);
+	}
+	
+	public void saveList(List<Convocacao> convocacoes, List<EmpregadoConvocacao> empregadoConvocacoes, List<ResultadoExame> resultadoExames) throws Exception {
+		Session session = HibernateHelper.getSession();
+		
+		try {
+			Transaction transaction = session.beginTransaction();
+			
+			for (Convocacao c : convocacoes) {
+				Convocacao aux =  (Convocacao) session.merge(c);
+				c.setId(aux.getId());
+			}
+			
+			for (EmpregadoConvocacao ec : empregadoConvocacoes) {
+				EmpregadoConvocacao aux =  (EmpregadoConvocacao) session.merge(ec);
+				ec.setId(aux.getId());
+			}
+			
+			for (ResultadoExame re : resultadoExames) {
+				ResultadoExame aux =  (ResultadoExame) session.merge(re);
+				re.setId(aux.getId());
+			}
+			
+			transaction.commit();
+		}catch(Exception ex) {
+			throw ex;
+		}finally {
+			session.close();
+		}
 	}
 }

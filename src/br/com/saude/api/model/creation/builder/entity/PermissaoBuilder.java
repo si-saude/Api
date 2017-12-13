@@ -35,8 +35,7 @@ public class PermissaoBuilder extends GenericEntityBuilder<Permissao,GenericFilt
 		
 		newPermissao.setId(permissao.getId());
 		newPermissao.setFuncionalidade(permissao.getFuncionalidade());
-		newPermissao.setLeitura(permissao.isLeitura());
-		newPermissao.setEscrita(permissao.isEscrita());
+		newPermissao.setValor(permissao.isValor());
 		newPermissao.setVersion(permissao.getVersion());
 		
 		return newPermissao;
