@@ -34,8 +34,6 @@ public class GerenciaConvocacaoBuilder
 	protected GerenciaConvocacao clone(GerenciaConvocacao gerenciaConvocacao) {
 		GerenciaConvocacao newGerenciaConvocacao = new GerenciaConvocacao();
 		newGerenciaConvocacao.setId(gerenciaConvocacao.getId());
-		newGerenciaConvocacao.setInicio(gerenciaConvocacao.getInicio());
-		newGerenciaConvocacao.setFim(gerenciaConvocacao.getFim());
 		newGerenciaConvocacao.setSelecionado(gerenciaConvocacao.isSelecionado());
 		newGerenciaConvocacao.setVersion(gerenciaConvocacao.getVersion());
 		

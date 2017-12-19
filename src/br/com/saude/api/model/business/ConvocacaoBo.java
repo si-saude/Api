@@ -447,7 +447,6 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		// Considerar o mês anterior ao vencimento do Aso, caso o vencimento seja antes
 		//  da data de convocação
 		Date dataConvocacao = null;
-		GerenciaConvocacao gC = findGerenciaConvocacaoByEmpregado(empregado, convocacao);
 		
 		dataConvocacao = getValidadeAso(empregado);
 		
@@ -457,12 +456,12 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 								.toInstant());
 		}
 		
-		if(gC != null && dataConvocacao != null) {
+		if(convocacao != null && dataConvocacao != null) {
 			//SETAR A MENOR DAS DUAS DATAS
-			if(gC.getFim().before(dataConvocacao))
-				dataConvocacao = gC.getFim(); 
-		}else if(gC != null) {
-			dataConvocacao = gC.getFim();
+			if(convocacao.getFim().before(dataConvocacao))
+				dataConvocacao = convocacao.getFim(); 
+		}else if(convocacao != null) {
+			dataConvocacao = convocacao.getFim();
 		}
 		
 		return dataConvocacao;

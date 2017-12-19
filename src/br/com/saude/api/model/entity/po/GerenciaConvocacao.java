@@ -1,7 +1,5 @@
 package br.com.saude.api.model.entity.po;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,12 +24,6 @@ public class GerenciaConvocacao {
 	@NotNull(message="É necessário informar a Convocação da Gerência.")
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Convocacao convocacao;
-	
-	@NotNull(message="É necessário informar o Início do Cronograma.")
-	private Date inicio;
-	
-	@NotNull(message="É necessário informar o Fim do Cronograma.")
-	private Date fim;
 	
 	@Transient
 	private boolean selecionado;
@@ -61,22 +53,6 @@ public class GerenciaConvocacao {
 
 	public void setConvocacao(Convocacao convocacao) {
 		this.convocacao = convocacao;
-	}
-
-	public Date getInicio() {
-		return inicio;
-	}
-
-	public void setInicio(Date inicio) {
-		this.inicio = inicio;
-	}
-
-	public Date getFim() {
-		return fim;
-	}
-
-	public void setFim(Date fim) {
-		this.fim = fim;
 	}
 
 	public boolean isSelecionado() {

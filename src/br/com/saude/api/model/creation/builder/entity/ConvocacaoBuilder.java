@@ -74,6 +74,8 @@ public class ConvocacaoBuilder extends GenericEntityBuilder<Convocacao, Convocac
 		newConvocacao.setId(convocacao.getId());
 		newConvocacao.setTipo(convocacao.getTipo());
 		newConvocacao.setTitulo(convocacao.getTitulo());
+		newConvocacao.setInicio(convocacao.getInicio());
+		newConvocacao.setFim(convocacao.getFim());
 		newConvocacao.setVersion(convocacao.getVersion());
 		return newConvocacao;
 	}

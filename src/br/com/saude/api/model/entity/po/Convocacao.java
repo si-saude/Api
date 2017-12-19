@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -40,6 +41,12 @@ public class Convocacao {
 	
 	@OneToMany(mappedBy="convocacao", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<EmpregadoConvocacao> empregadoConvocacoes;
+	
+	@NotNull(message="É necessário informar o Início do Cronograma.")
+	private Date inicio;
+	
+	@NotNull(message="É necessário informar o Fim do Cronograma.")
+	private Date fim;
 	
 	@Version
 	private long version;
@@ -90,6 +97,22 @@ public class Convocacao {
 
 	public void setEmpregadoConvocacoes(List<EmpregadoConvocacao> empregadoConvocacoes) {
 		this.empregadoConvocacoes = empregadoConvocacoes;
+	}
+	
+	public Date getInicio() {
+		return inicio;
+	}
+
+	public void setInicio(Date inicio) {
+		this.inicio = inicio;
+	}
+
+	public Date getFim() {
+		return fim;
+	}
+
+	public void setFim(Date fim) {
+		this.fim = fim;
 	}
 
 	public long getVersion() {
