@@ -94,7 +94,6 @@ public class EmpregadoConvocacaoBuilder
 		newEmpregadoConvocacao.setId(empregadoConvocacao.getId());
 		newEmpregadoConvocacao.setAuditado(empregadoConvocacao.isAuditado());
 		newEmpregadoConvocacao.setSelecionado(empregadoConvocacao.isSelecionado());
-		newEmpregadoConvocacao.setDivergente(empregadoConvocacao.isDivergente());
 		newEmpregadoConvocacao.setConvocado(empregadoConvocacao.isConvocado());
 		newEmpregadoConvocacao.setVersion(empregadoConvocacao.getVersion());
 		return newEmpregadoConvocacao;
