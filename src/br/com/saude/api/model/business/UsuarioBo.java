@@ -5,11 +5,9 @@ import java.util.function.Function;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.business.validate.UsuarioValidator;
-import br.com.saude.api.model.creation.builder.entity.EmpregadoBuilder;
 import br.com.saude.api.model.creation.builder.entity.UsuarioBuilder;
 import br.com.saude.api.model.creation.builder.example.UsuarioExampleBuilder;
 import br.com.saude.api.model.entity.filter.UsuarioFilter;
-import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Usuario;
 import br.com.saude.api.model.persistence.UsuarioDao;
 
