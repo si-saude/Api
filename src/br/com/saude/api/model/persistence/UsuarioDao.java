@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
-import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Perfil;
 import br.com.saude.api.model.entity.po.Usuario;
 

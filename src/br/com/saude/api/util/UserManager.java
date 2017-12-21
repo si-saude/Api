@@ -1,6 +1,5 @@
 package br.com.saude.api.util;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
