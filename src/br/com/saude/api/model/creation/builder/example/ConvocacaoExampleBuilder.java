@@ -24,6 +24,8 @@ public class ConvocacaoExampleBuilder extends GenericExampleBuilder<Convocacao, 
 		addTipo();
 		addTitulo();
 		addProfissiograma();
+		addInicio();
+		addFim();
 	}
 
 	protected void createExampleByTitulo() throws InstantiationException, IllegalAccessException {
@@ -66,5 +68,13 @@ public class ConvocacaoExampleBuilder extends GenericExampleBuilder<Convocacao, 
 					.newInstance(this.filter.getProfissiograma()).getCriteriaExample();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("profissiograma", criteriaExample, JoinType.INNER_JOIN));
 		}
+	}
+	
+	private void addInicio() {
+		addData("inicio", this.filter.getInicio());
+	}
+	
+	private void addFim() {
+		addData("fim", this.filter.getFim());
 	}
 }

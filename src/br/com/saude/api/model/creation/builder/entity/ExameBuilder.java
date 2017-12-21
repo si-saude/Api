@@ -3,12 +3,8 @@ package br.com.saude.api.model.creation.builder.entity;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
-import br.com.saude.api.generic.GenericExampleBuilder;
-import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.filter.ExameFilter;
-import br.com.saude.api.model.entity.filter.ResultadoExameFilter;
 import br.com.saude.api.model.entity.po.Exame;
-import br.com.saude.api.model.entity.po.ResultadoExame;
 
 public class ExameBuilder extends GenericEntityBuilder<Exame,ExameFilter> {
 	
