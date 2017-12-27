@@ -12,6 +12,7 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> 
 
 	private Function<Map<String,Usuario>,Usuario> loadPerfis;
 	private Function<Map<String,Usuario>,Usuario> loadPermissoes;
+	private Function<Map<String,Usuario>,Usuario> loadPessoa;
 	
 	public static UsuarioBuilder newInstance(Usuario usuario) {
 		return new UsuarioBuilder(usuario);
@@ -31,6 +32,15 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> 
 	
 	@Override
 	protected void initializeFunctions() {
+		this.loadPessoa = usuarios -> {
+			if ( usuarios.get("origem").getPessoa() != null ) {
+				usuarios.get("destino").setPessoa(PessoaBuilder
+						.newInstance(usuarios.get("origem").getPessoa())
+						.getEntity());
+			}
+			return usuarios.get("destino");
+		};
+		
 		this.loadPerfis = usuarios -> {
 			if(usuarios.get("origem").getPerfis() != null) {
 				usuarios.get("destino").setPerfis(PerfilBuilder
@@ -73,6 +83,10 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> 
 	
 	public UsuarioBuilder loadPermissoes() {
 		return (UsuarioBuilder) this.loadProperty(this.loadPermissoes);
+	}
+	
+	public UsuarioBuilder loadPessoa() {
+		return (UsuarioBuilder) this.loadProperty(this.loadPessoa);
 	}
 
 	@Override

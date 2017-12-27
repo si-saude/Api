@@ -14,6 +14,7 @@ import br.com.saude.api.model.persistence.UsuarioDao;
 public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, UsuarioBuilder, 
 											UsuarioExampleBuilder> {
 	private Function<UsuarioBuilder, UsuarioBuilder> functionLoadPermissoes;
+	private Function<UsuarioBuilder, UsuarioBuilder> functionLoadPerfis;
 
 	private static UsuarioBo instance;
 	
@@ -23,8 +24,12 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 	
 	@Override
 	protected void initializeFunctions() {
-		this.functionLoadAll = builder -> {
+		this.functionLoadPerfis = builder -> {
 			return builder.loadPerfis();
+		};
+		
+		this.functionLoadAll = builder -> {
+			return builder.loadPerfis().loadPessoa();
 		};
 		
 		this.functionLoadPermissoes = builder -> {
@@ -39,18 +44,26 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 	}
 	
 	public PagedList<Usuario> getListLoadPerfis(UsuarioFilter filter) throws Exception{
-		return getList(getDao().getListLoadPerfis(getExampleBuilder(filter).example()), functionLoadAll);
+		return getList(getDao().getListLoadPerfis(getExampleBuilder(filter).example()), this.functionLoadPerfis);
+	}
+	
+	public PagedList<Usuario> getListLoadAll(UsuarioFilter filter) throws Exception{
+		return getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), functionLoadAll);
 	}
 	
 	public Usuario getByIdLoadPermissoes(Object id) throws Exception {
 		return getByEntity(getDao().getByIdLoadPermissoes(id), this.functionLoadPermissoes);
 	}
 	
+	public Usuario getByIdLoadAll(Object id) throws Exception {
+		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+	}
+	
 	@Override
 	public Usuario getById(Object id) throws Exception {
 		return getByEntity(getDao().getByIdLoadPerfis(id), this.functionLoadAll);
 	}
-	
+
 	public Usuario getFirstToAutenticacao(UsuarioFilter filter) throws Exception {
 		Usuario usuario = getBuilder(new Usuario()).cloneFromFilter(filter);
 		UsuarioValidator usuarioValidator = new UsuarioValidator();

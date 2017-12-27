@@ -14,6 +14,8 @@ import br.com.saude.api.model.entity.po.Usuario;
 public class UsuarioDao extends GenericDao<Usuario> {
 	
 	private Function<Usuario,Usuario> functionLoadPermissoes;
+	private Function<Usuario,Usuario> functionLoadPessoa;
+	private Function<Usuario,Usuario> functionLoadPerfis;
 
 	
 	private static UsuarioDao instance;
@@ -25,15 +27,25 @@ public class UsuarioDao extends GenericDao<Usuario> {
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = usuario -> {
-			//passei para a funcao loadPerfil o que estava sendo feito aqui 
+			usuario = loadPessoa(usuario);
+			usuario = loadPermissao(usuario); // faz tb load de perfis
+			
+			return usuario;
+		};
+		
+		this.functionLoadPerfis = usuario -> {
 			usuario = loadPerfil(usuario);
+			
 			return usuario;
 		};
 		
 		this.functionLoadPermissoes = usuario -> {
-			usuario = this.functionLoadAll.apply(usuario);
-			//criei a funcao loadPermissao para inicializar as permissoes
 			usuario = loadPermissao(usuario);
+			return usuario;
+		};
+		
+		this.functionLoadPessoa = usuario -> {
+			usuario = loadPessoa(usuario);
 			return usuario;
 		};
 		
@@ -63,13 +75,27 @@ public class UsuarioDao extends GenericDao<Usuario> {
 		return this.getById(id,this.functionLoadPermissoes);
 	}
 	
+	public Usuario getByIdLoadAll(Object id) throws Exception {
+		return this.getById(id,this.functionLoadAll);
+	}
+	
 	public PagedList<Usuario> getListLoadPerfis(GenericExampleBuilder<?, ?> usuarioExampleBuilder) throws Exception{
+		return this.getList(usuarioExampleBuilder, this.functionLoadPerfis);
+	}
+	
+	public PagedList<Usuario> getListLoadAll(GenericExampleBuilder<?, ?> usuarioExampleBuilder) throws Exception{
 		return this.getList(usuarioExampleBuilder, this.functionLoadAll);
 	}
 	
 	private Usuario loadPerfil(Usuario usuario) {
 		if(usuario.getPerfis() != null)
 			Hibernate.initialize(usuario.getPerfis());
+		return usuario;
+	}
+	
+	private Usuario loadPessoa(Usuario usuario) {
+		if (usuario.getPessoa() != null)
+			Hibernate.initialize(usuario.getPessoa());
 		return usuario;
 	}
 	
