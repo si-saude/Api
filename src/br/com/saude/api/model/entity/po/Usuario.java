@@ -42,6 +42,8 @@ public class Usuario {
 	@JoinColumn(name="pessoa_id")
 	private Pessoa pessoa;
 	
+	private boolean gestorCss;
+	
 	@Transient
 	private String token;
 	
@@ -90,4 +92,11 @@ public class Usuario {
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
+	public boolean isGestorCss() {
+		return gestorCss;
+	}
+	public void setGestorCss(boolean gestorCss) {
+		this.gestorCss = gestorCss;
+	}
+	
 }
