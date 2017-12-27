@@ -22,7 +22,7 @@ public class Demanda {
 	private Servico servico;
 	
 	@NotNull(message="É necessário informar a Equipe da Demanda.")
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Equipe equipe;
 	
 	@Min(value=1, message="Valor mínimo para Tempo Médio da Demanda: 1")

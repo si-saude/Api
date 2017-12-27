@@ -34,7 +34,7 @@ public class ServicoBuilder extends GenericEntityBuilder<Servico, ServicoFilter>
 			if(servicos.get("origem").getDemandas() != null) {
 				servicos.get("destino").setDemandas(DemandaBuilder
 						.newInstance((servicos.get("origem").getDemandas()))
-						.loadEquipe().getEntityList());
+						.getEntityList());
 			}
 			return servicos.get("destino");
 		};

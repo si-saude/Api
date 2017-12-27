@@ -3,6 +3,7 @@ package br.com.saude.api.model.entity.po;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,6 +23,7 @@ public class Servico {
 	
 	@NotNull(message="É necessário informar Nome do Serviço.")
 	@Size(max = 128, message="Tamanho máximo para Nome do Serviço: 128")
+	@Column(unique=true)
 	private String nome;
 	
 	@NotNull(message="É necessário informar Código do Serviço.")
