@@ -14,31 +14,30 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.ResultadoExameBo;
-import br.com.saude.api.model.business.validate.ResultadoExameValidator;
-import br.com.saude.api.model.entity.filter.ResultadoExameFilter;
-import br.com.saude.api.model.entity.imports.ResultadoExameImport;
-import br.com.saude.api.model.entity.po.ResultadoExame;
+import br.com.saude.api.model.business.PessoaBo;
+import br.com.saude.api.model.business.validate.BaseValidator;
+import br.com.saude.api.model.entity.filter.PessoaFilter;
+import br.com.saude.api.model.entity.po.Pessoa;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("resultado-exame")
+@Path("pessoa")
 @RequestInterceptor
-public class ResultadoExameService extends GenericServiceImpl<ResultadoExame, ResultadoExameFilter, ResultadoExameBo>
-implements GenericService<ResultadoExame, ResultadoExameFilter>{
+public class PessoaService extends GenericServiceImpl<Pessoa,PessoaFilter,PessoaBo>
+implements GenericService<Pessoa,PessoaFilter>{
 	
 	@Override
-	protected ResultadoExameBo getBo() {
-		return ResultadoExameBo.getInstance();
+	protected PessoaBo getBo() {
+		return PessoaBo.getInstance();
 	}
-	
+
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=ResultadoExameValidator.class)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=BaseValidator.class)
 	@Override
-	public Response save(ResultadoExame relatorioMedico) {
+	public Response save(Pessoa pessoa) {
 		try {
-			ResultadoExameBo.getInstance().save(relatorioMedico);
+			PessoaBo.getInstance().save(pessoa);
 			return Response.ok("Salvo com sucesso.").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -50,7 +49,7 @@ implements GenericService<ResultadoExame, ResultadoExameFilter>{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(ResultadoExameFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(PessoaFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -60,8 +59,9 @@ implements GenericService<ResultadoExame, ResultadoExameFilter>{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(ResultadoExameFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(PessoaFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		// TODO Auto-generated method stub
 		return super.getSelectListGeneric(filter);
 	}
 
@@ -79,21 +79,5 @@ implements GenericService<ResultadoExame, ResultadoExameFilter>{
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
-	
-	@POST
-	@Path("/import")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response importFile(ResultadoExameImport arquivo) {
-		try {
-			String matriculasErro = ResultadoExameBo.getInstance().importFile(arquivo);
-			if ( matriculasErro.length() > 0 )
-				return Response.ok("Salvo com erro nas seguintes matriculas: " + matriculasErro).build();
-			else
-				return Response.ok("Salvo com sucesso.").build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
-		}
-	}
+
 }

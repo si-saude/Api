@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -36,6 +37,10 @@ public class Usuario {
 	joinColumns = {@JoinColumn(name="usuario_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="perfil_id")})
 	private List<Perfil> perfis;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="pessoa_id")
+	private Pessoa pessoa;
 	
 	@Transient
 	private String token;
@@ -78,5 +83,11 @@ public class Usuario {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public Pessoa getPessoa() {
+		return pessoa;
+	}
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
 	}
 }
