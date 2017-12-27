@@ -70,6 +70,7 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> 
 			newUsuario.setId(usuario.getId());
 			newUsuario.setChave(usuario.getChave());
 			newUsuario.setSenha(usuario.getSenha());
+			newUsuario.setGestorCss(usuario.isGestorCss());
 			newUsuario.setVersion(usuario.getVersion());
 			
 			return newUsuario;
