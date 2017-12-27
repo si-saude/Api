@@ -39,9 +39,6 @@ public class EmpregadoConvocacao {
 	@Transient
 	private boolean selecionado;
 	
-	@Transient
-	private boolean divergente;
-	
 	@Version
 	private long version;
 
@@ -83,14 +80,6 @@ public class EmpregadoConvocacao {
 
 	public void setSelecionado(boolean selecionado) {
 		this.selecionado = selecionado;
-	}
-
-	public boolean isDivergente() {
-		return divergente;
-	}
-
-	public void setDivergente(boolean divergente) {
-		this.divergente = divergente;
 	}
 
 	public boolean isConvocado() {

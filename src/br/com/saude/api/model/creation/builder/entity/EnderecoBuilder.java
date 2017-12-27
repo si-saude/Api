@@ -30,11 +30,11 @@ public class EnderecoBuilder extends GenericEntityBuilder<Endereco,EnderecoFilte
 	
 	@Override
 	protected void initializeFunctions() {
-		this.loadCidade = cidades -> {
-			if(cidades.get("origem").getCidade() != null) {
-				cidades.get("destino").setCidade(CidadeBuilder.newInstance(cidades.get("origem").getCidade()).getEntity());
+		this.loadCidade = enderecos -> {
+			if(enderecos.get("origem").getCidade() != null) {
+				enderecos.get("destino").setCidade(CidadeBuilder.newInstance(enderecos.get("origem").getCidade()).getEntity());
 			}
-			return cidades.get("destino");
+			return enderecos.get("destino");
 		};
 	}
 

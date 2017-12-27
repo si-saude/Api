@@ -49,6 +49,7 @@ public class ResultadoExameDao extends GenericDao<ResultadoExame> {
 					.add(Restrictions.eq("empregado.id", 
 							resultadoExame.getEmpregadoConvocacao().getEmpregado().getId()))
 					.add(Restrictions.eq("exame.id", resultadoExame.getExame().getId()))
+					.add(Restrictions.eq("acao", "REALIZADO"))
 					.addOrder(Order.desc("data"))
 					.uniqueResult();
 		}catch (Exception ex) {
