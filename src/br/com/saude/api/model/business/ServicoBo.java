@@ -31,7 +31,7 @@ public class ServicoBo extends GenericBo<Servico, ServicoFilter,
 	
 	@Override
 	public Servico getById(Object id) throws Exception {
-		return super.getById(id, this.functionLoadAll);
+		return super.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
 	
 	@Override
