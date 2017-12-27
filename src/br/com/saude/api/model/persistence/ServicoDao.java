@@ -24,8 +24,8 @@ public class ServicoDao extends GenericDao<Servico> {
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = servico ->{
-			if(servico.getDemandas() != null)
-				Hibernate.initialize(servico.getDemandas());
+			if(servico.getAtividades() != null)
+				Hibernate.initialize(servico.getAtividades());
 			return servico;
 		};
 	}

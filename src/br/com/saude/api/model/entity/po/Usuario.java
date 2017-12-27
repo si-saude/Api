@@ -42,6 +42,7 @@ public class Usuario {
 	@JoinColumn(name="pessoa_id")
 	private Pessoa pessoa;
 	
+	@Column(name="gestorcss")
 	private boolean gestorCss;
 	
 	@Transient

@@ -11,7 +11,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Demanda {
+public class Atividade {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

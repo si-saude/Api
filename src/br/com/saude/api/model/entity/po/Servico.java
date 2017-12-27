@@ -39,7 +39,12 @@ public class Servico {
 	private boolean publico;
 	
 	@OneToMany(mappedBy="servico", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<Demanda> demandas;
+	private List<Atividade> atividades;
+	
+	private int intervalo;
+
+	@Column(name="quantidadesolicitacaointervalo")
+	private int quantidadeSolicitacaoIntervalo;
 	
 	@Version
 	private long version;
@@ -92,12 +97,28 @@ public class Servico {
 		this.publico = publico;
 	}
 	
-	public List<Demanda> getDemandas() {
-		return demandas;
+	public List<Atividade> getAtividades() {
+		return atividades;
 	}
 
-	public void setDemandas(List<Demanda> demandas) {
-		this.demandas = demandas;
+	public void setAtividades(List<Atividade> atividades) {
+		this.atividades = atividades;
+	}
+	
+	public int getIntervalo() {
+		return intervalo;
+	}
+
+	public void setIntervalo(int intervalo) {
+		this.intervalo = intervalo;
+	}
+
+	public int getQuantidadeSolicitacaoIntervalo() {
+		return quantidadeSolicitacaoIntervalo;
+	}
+
+	public void setQuantidadeSolicitacaoIntervalo(int quantidadeSolicitacaoIntervalo) {
+		this.quantidadeSolicitacaoIntervalo = quantidadeSolicitacaoIntervalo;
 	}
 
 	public long getVersion() {

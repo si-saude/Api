@@ -21,6 +21,8 @@ public class ServicoExampleBuilder extends GenericExampleBuilder<Servico, Servic
 		addGrupo();
 		addNome();
 		addPublico();
+		addIntervalo();
+		addQuantidadeSolicitacaoIntervalo();
 	}
 
 	@Override
@@ -45,6 +47,16 @@ public class ServicoExampleBuilder extends GenericExampleBuilder<Servico, Servic
 	
 	private void addPublico() {
 		this.entity.setPublico(this.addBoolean("publico", this.filter.getPublico()));
+	}
+	
+	private void addIntervalo() {
+		if(this.filter.getIntervalo() > 0)
+			this.entity.setIntervalo(this.filter.getIntervalo());
+	}
+	
+	private void addQuantidadeSolicitacaoIntervalo() {
+		if(this.filter.getQuantidadeSolicitacaoIntervalo() > 0)
+			this.entity.setQuantidadeSolicitacaoIntervalo(this.filter.getQuantidadeSolicitacaoIntervalo());
 	}
 
 }

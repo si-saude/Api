@@ -25,7 +25,7 @@ public class ServicoBo extends GenericBo<Servico, ServicoFilter,
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadDemandas();
+			return builder.loadAtividades();
 		};
 	}
 	
@@ -36,7 +36,7 @@ public class ServicoBo extends GenericBo<Servico, ServicoFilter,
 	
 	@Override
 	public Servico save(Servico servico) throws Exception {
-		servico.getDemandas().forEach(d->d.setServico(servico));
+		servico.getAtividades().forEach(d->d.setServico(servico));
 		return super.save(servico);
 	}
 

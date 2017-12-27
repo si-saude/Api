@@ -44,12 +44,17 @@ public class UsuarioExampleBuilder extends GenericExampleBuilder<Usuario,Usuario
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("pessoa", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
+	
+	protected void addGestoCss() {
+		this.entity.setGestorCss(this.addBoolean("gestorCss", this.filter.getGestorCss()));
+	}
 
 	public List<Criterion> getExampleAutenticacao() throws InstantiationException, IllegalAccessException {
 		if(this.filter != null) {
 			initialize();
 			addChaveEq();
 			addSenhaEq();
+			addGestoCss();
 			this.criterions.add(Example.create(this.entity));
 			return this.criterions;
 		}
@@ -61,6 +66,7 @@ public class UsuarioExampleBuilder extends GenericExampleBuilder<Usuario,Usuario
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addChave();
 		addPessoa();
+		addGestoCss();
 	}
 
 	@Override

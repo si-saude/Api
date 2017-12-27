@@ -10,7 +10,7 @@ import br.com.saude.api.model.entity.po.Servico;
 
 public class ServicoBuilder extends GenericEntityBuilder<Servico, ServicoFilter> {
 
-	private Function<Map<String,Servico>,Servico> loadDemandas;
+	private Function<Map<String,Servico>,Servico> loadAtividades;
 	
 	public static ServicoBuilder newInstance(Servico servico) {
 		return new ServicoBuilder(servico);
@@ -30,10 +30,10 @@ public class ServicoBuilder extends GenericEntityBuilder<Servico, ServicoFilter>
 
 	@Override
 	protected void initializeFunctions() {
-		this.loadDemandas = servicos -> {
-			if(servicos.get("origem").getDemandas() != null) {
-				servicos.get("destino").setDemandas(DemandaBuilder
-						.newInstance((servicos.get("origem").getDemandas()))
+		this.loadAtividades = servicos -> {
+			if(servicos.get("origem").getAtividades() != null) {
+				servicos.get("destino").setAtividades(AtividadeBuilder
+						.newInstance((servicos.get("origem").getAtividades()))
 						.getEntityList());
 			}
 			return servicos.get("destino");
@@ -50,6 +50,8 @@ public class ServicoBuilder extends GenericEntityBuilder<Servico, ServicoFilter>
 		newServico.setNome(servico.getNome());
 		newServico.setUrl(servico.getUrl());
 		newServico.setPublico(servico.isPublico());
+		newServico.setIntervalo(servico.getIntervalo());
+		newServico.setQuantidadeSolicitacaoIntervalo(servico.getQuantidadeSolicitacaoIntervalo());
 		newServico.setVersion(servico.getVersion());
 		
 		return newServico;
@@ -60,7 +62,7 @@ public class ServicoBuilder extends GenericEntityBuilder<Servico, ServicoFilter>
 		return null;
 	}
 	
-	public ServicoBuilder loadDemandas() {
-		return (ServicoBuilder)loadProperty(this.loadDemandas);
+	public ServicoBuilder loadAtividades() {
+		return (ServicoBuilder)loadProperty(this.loadAtividades);
 	}
 }

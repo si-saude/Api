@@ -9,7 +9,7 @@ public class ServicoValidator extends GenericValidator<Servico> {
 	public void validate(Servico servico) throws Exception {
 		super.validate(servico);
 		
-		if(servico.getDemandas() != null)
-			new DemandaValidator().validate(servico.getDemandas());
+		if(servico.getAtividades() != null)
+			new AtividadeValidator().validate(servico.getAtividades());
 	}
 }
