@@ -1,15 +1,10 @@
 package br.com.saude.api.model.entity.po;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,9 +32,6 @@ public class Servico {
 	private String url;
 	
 	private boolean publico;
-	
-	@OneToMany(mappedBy="servico", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<Atividade> atividades;
 	
 	private int intervalo;
 
@@ -95,14 +87,6 @@ public class Servico {
 
 	public void setPublico(boolean publico) {
 		this.publico = publico;
-	}
-	
-	public List<Atividade> getAtividades() {
-		return atividades;
-	}
-
-	public void setAtividades(List<Atividade> atividades) {
-		this.atividades = atividades;
 	}
 	
 	public int getIntervalo() {

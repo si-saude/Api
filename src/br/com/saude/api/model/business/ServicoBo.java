@@ -24,20 +24,6 @@ public class ServicoBo extends GenericBo<Servico, ServicoFilter,
 	
 	@Override
 	protected void initializeFunctions() {
-		this.functionLoadAll = builder -> {
-			return builder.loadAtividades();
-		};
-	}
-	
-	@Override
-	public Servico getById(Object id) throws Exception {
-		return super.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
-	}
-	
-	@Override
-	public Servico save(Servico servico) throws Exception {
-		servico.getAtividades().forEach(d->d.setServico(servico));
-		return super.save(servico);
-	}
 
+	}
 }

@@ -9,8 +9,6 @@ import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.po.Servico;
 
 public class ServicoBuilder extends GenericEntityBuilder<Servico, ServicoFilter> {
-
-	private Function<Map<String,Servico>,Servico> loadAtividades;
 	
 	public static ServicoBuilder newInstance(Servico servico) {
 		return new ServicoBuilder(servico);
@@ -30,14 +28,7 @@ public class ServicoBuilder extends GenericEntityBuilder<Servico, ServicoFilter>
 
 	@Override
 	protected void initializeFunctions() {
-		this.loadAtividades = servicos -> {
-			if(servicos.get("origem").getAtividades() != null) {
-				servicos.get("destino").setAtividades(AtividadeBuilder
-						.newInstance((servicos.get("origem").getAtividades()))
-						.getEntityList());
-			}
-			return servicos.get("destino");
-		};
+
 	}
 
 	@Override
@@ -60,9 +51,5 @@ public class ServicoBuilder extends GenericEntityBuilder<Servico, ServicoFilter>
 	@Override
 	public Servico cloneFromFilter(ServicoFilter filter) {
 		return null;
-	}
-	
-	public ServicoBuilder loadAtividades() {
-		return (ServicoBuilder)loadProperty(this.loadAtividades);
 	}
 }
