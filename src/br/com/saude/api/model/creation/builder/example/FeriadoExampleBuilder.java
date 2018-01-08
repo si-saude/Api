@@ -21,7 +21,7 @@ public class FeriadoExampleBuilder extends GenericExampleBuilder<Feriado,Feriado
 	}
 	
 	private void addData() {
-		this.addData("data", this.filter.getData());
+		super.addData("data", this.filter.getData());
 	}
 	
 	@Override

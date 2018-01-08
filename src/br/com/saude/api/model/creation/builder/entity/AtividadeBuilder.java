@@ -8,33 +8,36 @@ import br.com.saude.api.model.entity.po.Atividade;
 
 public class AtividadeBuilder extends GenericEntityBuilder<Atividade, GenericFilter> {
 
-	public static AtividadeBuilder newInstance(Atividade demanda) {
-		return new AtividadeBuilder(demanda);
+	public static AtividadeBuilder newInstance(Atividade atividade) {
+		return new AtividadeBuilder(atividade);
 	}
 	
-	public static AtividadeBuilder newInstance(List<Atividade> demandas) {
-		return new AtividadeBuilder(demandas);
+	public static AtividadeBuilder newInstance(List<Atividade> atividades) {
+		return new AtividadeBuilder(atividades);
 	}
 	
-	private AtividadeBuilder(Atividade demanda) {
-		super(demanda);
+	private AtividadeBuilder(Atividade atividade) {
+		super(atividade);
 	}
 	
-	private AtividadeBuilder(List<Atividade> demandas) {
-		super(demandas);
+	private AtividadeBuilder(List<Atividade> atividades) {
+		super(atividades);
 	}
 
 	@Override
 	protected void initializeFunctions() {}
 
 	@Override
-	protected Atividade clone(Atividade demanda) {
+	protected Atividade clone(Atividade atividade) {
 		Atividade newAtividade = new Atividade();
 		
-		newAtividade.setId(demanda.getId());
-		newAtividade.setTempoMedio(demanda.getTempoMedio());
-		newAtividade.setVersion(demanda.getVersion());
-		newAtividade.setEquipe(demanda.getEquipe());
+		newAtividade.setId(atividade.getId());
+		newAtividade.setTempoMedio(atividade.getTempoMedio());
+		newAtividade.setVersion(atividade.getVersion());
+		
+		if(atividade.getEquipe() != null)
+			newAtividade.setEquipe(EquipeBuilder
+					.newInstance(atividade.getEquipe()).getEntity());
 		
 		return newAtividade;
 	}

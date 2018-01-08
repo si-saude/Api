@@ -21,6 +21,8 @@ import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.Sexo;
 import br.com.saude.api.util.constant.StatusEmpregado;
+import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
+import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.util.constant.TipoConvocacao;
 import br.com.saude.api.util.constant.TipoCriterio;
 import br.com.saude.api.util.constant.TipoPessoa;
@@ -84,6 +86,20 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStatusEmpregado(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(StatusEmpregado.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/status-tarefa")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStatusTarefa(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(StatusTarefa.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/status-fila-espera-ocupacional")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStatusFilaEsperaOcupacional(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(StatusFilaEsperaOcupacional.getInstance(),filter)).build();
 	}
 	
 	@GET
