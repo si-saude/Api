@@ -65,6 +65,15 @@ public class ExameService extends GenericServiceImpl<Exame,ExameFilter,ExameBo>
 		return super.getSelectListGeneric(filter);
 	}
 
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/selectListAll")
+	public Response getSelectListAll(ExameFilter filter) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return Response.ok(ExameBo.getInstance().getSelectListAll(filter)).build();
+	}
+	
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

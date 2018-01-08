@@ -1,5 +1,6 @@
 package br.com.saude.api.service;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.ws.rs.Consumes;
@@ -87,6 +88,23 @@ implements GenericService<ResultadoExame, ResultadoExameFilter>{
 	public Response importFile(ResultadoExameImport arquivo) {
 		try {
 			String matriculasErro = ResultadoExameBo.getInstance().importFile(arquivo);
+			if ( matriculasErro.length() > 0 )
+				return Response.ok("Salvo com erro nas seguintes matriculas: " + matriculasErro).build();
+			else
+				return Response.ok("Salvo com sucesso.").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path("/import-txt")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response importFileFromTxt(File arquivo) {
+		try {
+			String matriculasErro = ResultadoExameBo.getInstance().importFileFromTxt(arquivo);
 			if ( matriculasErro.length() > 0 )
 				return Response.ok("Salvo com erro nas seguintes matriculas: " + matriculasErro).build();
 			else

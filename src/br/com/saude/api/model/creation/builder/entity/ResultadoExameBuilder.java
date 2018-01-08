@@ -1,13 +1,18 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.ResultadoExameFilter;
 import br.com.saude.api.model.entity.po.ResultadoExame;
 
 public class ResultadoExameBuilder extends GenericEntityBuilder<ResultadoExame, ResultadoExameFilter> {
-
+	
+	private Function<Map<String,ResultadoExame>,ResultadoExame> loadItemResultadoExames;
+	private Function<Map<String,ResultadoExame>,ResultadoExame> loadEmpregadoConvocacao;
+	
 	public static ResultadoExameBuilder newInstance(ResultadoExame resultadoExame) {
 		return new ResultadoExameBuilder(resultadoExame);
 	}
@@ -26,7 +31,21 @@ public class ResultadoExameBuilder extends GenericEntityBuilder<ResultadoExame, 
 
 	@Override
 	protected void initializeFunctions() {
+		this.loadItemResultadoExames = resultadoExames -> {
+			if(resultadoExames.get("origem").getItemResultadoExames()!= null) {
+				resultadoExames.get("destino").setItemResultadoExames(ItemResultadoExameBuilder.
+						newInstance(resultadoExames.get("origem").getItemResultadoExames()).getEntityList());
+			}
+			return resultadoExames.get("destino");
+		};
 		
+		this.loadEmpregadoConvocacao = resultadoExames -> {
+			if(resultadoExames.get("origem").getEmpregadoConvocacao()!= null) {
+				resultadoExames.get("destino").setEmpregadoConvocacao(EmpregadoConvocacaoBuilder.
+						newInstance(resultadoExames.get("origem").getEmpregadoConvocacao()).getEntity());
+			}
+			return resultadoExames.get("destino");
+		};
 	}
 
 	@Override
@@ -41,10 +60,6 @@ public class ResultadoExameBuilder extends GenericEntityBuilder<ResultadoExame, 
 		newResultadoExame.setTipo(resultadoExame.getTipo());
 		newResultadoExame.setVersion(resultadoExame.getVersion());
 		
-		if(resultadoExame.getEmpregadoConvocacao() != null)
-			newResultadoExame.setEmpregadoConvocacao(EmpregadoConvocacaoBuilder
-					.newInstance(resultadoExame.getEmpregadoConvocacao()).loadEmpregado().loadConvocacao().getEntity());
-		
 		if(resultadoExame.getExame() != null)
 			newResultadoExame.setExame(ExameBuilder
 					.newInstance(resultadoExame.getExame()).getEntity());
@@ -56,5 +71,14 @@ public class ResultadoExameBuilder extends GenericEntityBuilder<ResultadoExame, 
 	public ResultadoExame cloneFromFilter(ResultadoExameFilter filter) {
 		return null;
 	}
+	
+	public ResultadoExameBuilder loadItemResultadoExames() {
+		return (ResultadoExameBuilder) this.loadProperty(this.loadItemResultadoExames); 
+	}
+	
+	public ResultadoExameBuilder loadEmpregadoConvocacao() {
+		return (ResultadoExameBuilder) this.loadProperty(this.loadEmpregadoConvocacao);
+	}
+	
 
 }

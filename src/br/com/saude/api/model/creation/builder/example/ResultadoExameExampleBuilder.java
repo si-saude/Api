@@ -21,6 +21,7 @@ public class ResultadoExameExampleBuilder extends GenericExampleBuilder<Resultad
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addEmpregadoConvocacao();
 		addExame();
 		addData();
 		addConforme();
@@ -65,6 +66,14 @@ public class ResultadoExameExampleBuilder extends GenericExampleBuilder<Resultad
 	private void addLocal() {
 		if ( this.filter.getLocal() != null ) {
 			this.entity.setLocal(Helper.filterLike(this.filter.getLocal()));
+		}
+	}
+	
+	private void addEmpregadoConvocacao() throws InstantiationException, IllegalAccessException {
+		if ( this.filter.getEmpregadoConvocacao() != null ) {
+			CriteriaExample criteriaExample = EmpregadoConvocacaoExampleBuilder
+					.newInstance(this.filter.getEmpregadoConvocacao()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("empregadoConvocacao", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
 	

@@ -9,6 +9,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
+import java.lang.reflect.Field;
 
 public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 	protected T entity;
@@ -93,8 +94,20 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 			CriteriaExample criteriaExample = new CriteriaExample();
 			initialize();
 			createExample();
+			
+			for(Triplet<String,CriteriaExample,JoinType> criteria : this.criterias) {
+				try {
+					Field field = this.entity.getClass().getDeclaredField(criteria.getValue0());
+					field.setAccessible(true);
+					field.set(this.entity, criteria.getValue1().getEntity());
+				} catch (IllegalArgumentException | NoSuchFieldException | SecurityException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			criteriaExample.setCriterions(this.criterions);
 			criteriaExample.setExample(getExample());
+			criteriaExample.setEntity(this.entity);
 			return criteriaExample;
 		}
 		return null;

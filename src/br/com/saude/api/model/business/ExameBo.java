@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -31,13 +32,35 @@ public class ExameBo extends GenericBo<Exame, ExameFilter, ExameDao, ExameBuilde
 
 	@Override
 	protected void initializeFunctions() {
-
+		this.functionLoadAll = builder -> {
+			return builder.loadCampoExames();
+		};
 	}
 
 	public static ExameBo getInstance() {
 		if (instance == null)
 			instance = new ExameBo();
 		return instance;
+	}
+	
+	@Override
+	public Exame getById(Object id) throws Exception {
+		return this.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+	}
+	
+	public List<Exame> getSelectListAll(ExameFilter filter)
+			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, Exception {
+		return super.getSelectList(getDao().getListLoadAll(getExampleBuilder(filter).exampleSelectList()).getList(), 
+				this.functionLoadAll);
+	}
+	
+	@Override
+	public Exame save(Exame exame) throws Exception {
+
+		exame.getCampoExames().forEach(e -> e.setExame(exame));
+
+		return super.save(exame);
 	}
 
 	public void importFile(File arquivo) throws IllegalAccessException, IllegalArgumentException,

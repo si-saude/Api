@@ -20,4 +20,7 @@ public class TipoConvocacao extends GenericConstant {
 	public final String RETORNO_AO_TRABALHO		= "RETORNO AO TRABALHO";
 	public final String MUDANCA_DE_FUNCAO		= "MUDANÇA DE FUNÇÃO";
 	public final String DEMISSIONAL				= "DEMISSIONAL";
+	public final String ESPECIAL				= "ESPECIAL";
+	public final String SUPLETIVO				= "SUPLETIVO";
+	public final String ADMISSIONAL				= "ADMISSIONAL";
 }

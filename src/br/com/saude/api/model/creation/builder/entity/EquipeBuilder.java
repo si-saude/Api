@@ -1,12 +1,16 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.po.Equipe;
 
 public class EquipeBuilder extends GenericEntityBuilder<Equipe,EquipeFilter> {
+	
+	private Function<Map<String,Equipe>,Equipe> loadCoordenador;
 
 	public static EquipeBuilder newInstance(Equipe equipe) {
 		return new EquipeBuilder(equipe);
@@ -26,6 +30,13 @@ public class EquipeBuilder extends GenericEntityBuilder<Equipe,EquipeFilter> {
 	
 	@Override
 	protected void initializeFunctions() {
+		this.loadCoordenador = equipes ->{
+			if(equipes.get("origem").getCoordenador() != null) {
+				equipes.get("destino").setCoordenador(ProfissionalBuilder.newInstance(
+						equipes.get("origem").getCoordenador()).getEntity());
+			}
+			return equipes.get("destino");
+		};
 	
 	}
 
@@ -41,6 +52,10 @@ public class EquipeBuilder extends GenericEntityBuilder<Equipe,EquipeFilter> {
 		return newEquipe;
 	}
 
+	public EquipeBuilder loadCoordenador() {
+		return (EquipeBuilder) this.loadProperty(this.loadCoordenador);
+	}
+	
 	@Override
 	public Equipe cloneFromFilter(EquipeFilter filter) {
 		return null;

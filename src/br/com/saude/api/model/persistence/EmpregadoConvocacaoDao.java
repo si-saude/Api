@@ -38,6 +38,7 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 		this.functionLoadAll = eC -> {
 			eC = this.functionLoad.apply(eC);
 			eC = loadEmpregadoConvocacaoExames(eC);
+			eC = loadResultadoExames(eC);
 			return eC;
 		};
 		
@@ -51,6 +52,12 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 			
 			return eC;
 		};
+	}
+	
+	@Override
+	protected PagedList<EmpregadoConvocacao> getList(GenericExampleBuilder<?, ?> exampleBuilder,
+			Function<EmpregadoConvocacao, EmpregadoConvocacao> function) throws Exception { 
+		return super.getList(exampleBuilder, this.functionLoad);
 	}
 	
 	private EmpregadoConvocacao loadConvocacao(EmpregadoConvocacao eC) {
@@ -77,12 +84,23 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 		return eC;
 	}
 	
+	private EmpregadoConvocacao loadResultadoExames(EmpregadoConvocacao eC) {
+		if (eC.getResultadoExames() != null) {
+			Hibernate.initialize(eC.getResultadoExames());
+			eC.getResultadoExames().forEach(r -> {
+				if ( r.getItemResultadoExames() != null )
+					Hibernate.initialize(r.getItemResultadoExames());
+			});
+		}
+		return eC;
+	}
+	
 	public EmpregadoConvocacao getByIdLoadAll(Object id) throws Exception {
 		return super.getById(id, this.functionLoadAll);
 	}
 	
 	public PagedList<EmpregadoConvocacao> getListFunctionLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
-		return super.getList(exampleBuilder, this.functionLoad);
+		return super.getList(exampleBuilder, this.functionLoadAll);
 	}
 	
 	protected Function<EmpregadoConvocacao,EmpregadoConvocacao> getFunctionLoad(){

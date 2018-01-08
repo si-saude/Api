@@ -1,10 +1,15 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -12,19 +17,22 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class Exame {
+	
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
 	@NotNull(message="É necessário informar o Código do Exame.")
-	@Size(max = 10, message="Tamanho máximo para Código: 10")
+	@Size(max = 10, message="Tamanho máximo para Código do Exame: 10")
 	@Column(unique=true)
 	private String codigo;
-	
 	
 	@NotNull(message="É necessário informar a Descrição do Exame.")
 	@Size(max = 150, message="Tamanho máximo para Descrição do Exame: 150")
 	private String descricao;
+	
+	@OneToMany(mappedBy="exame", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<CampoExame> campoExames;
 	
 	@Version
 	private long version;
@@ -56,12 +64,17 @@ public class Exame {
 	public void setVersion(long version) {
 		this.version = version;
 	}
-	
 	public boolean isExigeRelatorio() {
 		return exigeRelatorio;
 	}
 	public void setExigeRelatorio(boolean exigeRelatorio) {
 		this.exigeRelatorio = exigeRelatorio;
+	}
+	public List<CampoExame> getCampoExames() {
+		return campoExames;
+	}
+	public void setCampoExames(List<CampoExame> campoExames) {
+		this.campoExames = campoExames;
 	}
 	@Override
 	public boolean equals(Object exame) {

@@ -5,7 +5,7 @@ import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class ResultadoExameFilter extends GenericFilter {
-
+	private EmpregadoConvocacaoFilter empregadoConvocacao;
 	private ExameFilter exame;
 	private DateFilter data;
 	private String tipo;
@@ -13,6 +13,12 @@ public class ResultadoExameFilter extends GenericFilter {
 	private String local;
 	private BooleanFilter conforme;
 	
+	public EmpregadoConvocacaoFilter getEmpregadoConvocacao() {
+		return empregadoConvocacao;
+	}
+	public void setEmpregadoConvocacao(EmpregadoConvocacaoFilter empregadoConvocacao) {
+		this.empregadoConvocacao = empregadoConvocacao;
+	}
 	public ExameFilter getExame() {
 		return exame;
 	}
