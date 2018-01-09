@@ -27,7 +27,7 @@ public class EmpregadoConvocacaoBo
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = builder -> {
-			return builder.loadEmpregado().loadConvocacao();
+			return builder.loadEmpregado().loadConvocacao().loadResultadoExames();
 		};
 		
 		this.functionLoadAll = builder -> {
@@ -48,7 +48,11 @@ public class EmpregadoConvocacaoBo
 	
 	@Override
 	public EmpregadoConvocacao save(EmpregadoConvocacao eC) throws Exception {
-		eC.getEmpregadoConvocacaoExames().forEach(e->e.setEmpregadoConvocacao(eC));
+		eC.getEmpregadoConvocacaoExames().forEach(e-> e.setEmpregadoConvocacao(eC));
+		eC.getResultadoExames().forEach(rE -> { 
+			rE.setEmpregadoConvocacao(eC);
+			rE.getItemResultadoExames().forEach(iRE -> iRE.setResultadoExame(rE));
+		});
 		return super.save(eC);
 	}
 }

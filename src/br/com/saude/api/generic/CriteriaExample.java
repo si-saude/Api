@@ -8,6 +8,8 @@ import org.hibernate.criterion.Example;
 public class CriteriaExample {
 	private Example example;
 	private List<Criterion> criterions;
+	private Object entity;
+	
 	public Example getExample() {
 		return example;
 	}
@@ -20,4 +22,11 @@ public class CriteriaExample {
 	public void setCriterions(List<Criterion> criterions) {
 		this.criterions = criterions;
 	}
+	public Object getEntity() {
+		return entity;
+	}
+	public void setEntity(Object entity) {
+		this.entity = entity;
+	}
+	
 }

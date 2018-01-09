@@ -25,6 +25,7 @@ public class EmpregadoConvocacaoExampleBuilder
 		addConvocacao();
 		addAuditado();
 		addConvocado();
+		addResultadoAuditado();
 	}
 
 	@Override
@@ -54,5 +55,9 @@ public class EmpregadoConvocacaoExampleBuilder
 	
 	protected void addConvocado() {
 		this.entity.setConvocado(this.addBoolean("convocado", this.filter.getConvocado()));
+	}
+	
+	protected void addResultadoAuditado() {
+		this.entity.setResultadoAuditado(this.addBoolean("resultadoAuditado", this.filter.getResultadoAuditado()));
 	}
 }

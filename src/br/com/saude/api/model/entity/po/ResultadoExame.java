@@ -1,13 +1,16 @@
 package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,6 +29,9 @@ public class ResultadoExame {
 	@NotNull(message="É necessário informar o Exame do Resultado.")
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Exame exame;
+	
+	@OneToMany(mappedBy="resultadoExame", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<ItemResultadoExame> itemResultadoExames;
 	
 	@NotNull(message="É necessário informar a Data do Resultado.")
 	private Date data;
@@ -84,6 +90,13 @@ public class ResultadoExame {
 		this.exame = exame;
 	}
 	
+	public List<ItemResultadoExame> getItemResultadoExames() {
+		return itemResultadoExames;
+	}
+
+	public void setItemResultadoExames(List<ItemResultadoExame> itemResultadoExames) {
+		this.itemResultadoExames = itemResultadoExames;
+	}
 
 	public String getTipo() {
 		return tipo;

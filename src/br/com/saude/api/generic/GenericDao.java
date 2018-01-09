@@ -154,7 +154,7 @@ public abstract class GenericDao<T> {
 					example.add(c.getValue1().getExample());
 				}
 			
-			criteria = finishCriteria(criteria,exampleBuilder);
+			criteria = finishCriteria(criteria,exampleBuilder);			
 			list = criteria.list();
 			
 			if(function != null)

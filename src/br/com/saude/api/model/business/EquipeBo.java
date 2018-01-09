@@ -31,13 +31,21 @@ public class EquipeBo extends GenericBo<Equipe, EquipeFilter, EquipeDao, EquipeB
 
 	@Override
 	protected void initializeFunctions() {
-
+		this.functionLoadAll = builder -> {
+			return builder.loadCoordenador();
+		};
 	}
 
 	public static EquipeBo getInstance() {
 		if (instance == null)
 			instance = new EquipeBo();
 		return instance;
+	}
+	
+	@Override
+	public Equipe getById(Object id) throws Exception {
+		Equipe equipe = getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+		return equipe;
 	}
 
 	public void importFile(File arquivo) throws IllegalAccessException, IllegalArgumentException,

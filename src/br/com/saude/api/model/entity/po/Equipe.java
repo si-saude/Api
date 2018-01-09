@@ -2,9 +2,13 @@ package br.com.saude.api.model.entity.po;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,6 +26,10 @@ public class Equipe {
 	
 	@Size(max = 3, message="Tamanho máximo para Abreviação da Equipe: 3")
 	private String abreviacao;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	
+	private Profissional coordenador;
 	
 	@Version
 	private long version;
@@ -48,6 +56,14 @@ public class Equipe {
 
 	public void setAbreviacao(String abreviacao) {
 		this.abreviacao = abreviacao;
+	}
+	
+	public Profissional getCoordenador() {
+		return coordenador;
+	}
+
+	public void setCoordenador(Profissional coordenador) {
+		this.coordenador = coordenador;
 	}
 	
 	public long getVersion() {

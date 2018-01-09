@@ -5,7 +5,7 @@ import br.com.saude.api.generic.GenericFilter;
 public class EquipeFilter extends GenericFilter {
 	private String nome;
 	private String abreviacao;
-	
+	private ProfissionalFilter coordenador;
 
 	public String getNome() {
 		return nome;
@@ -21,6 +21,14 @@ public class EquipeFilter extends GenericFilter {
 
 	public void setAbreviacao(String abreviacao) {
 		this.abreviacao = abreviacao;
+	}
+	
+	public ProfissionalFilter getCoordenador() {
+		return coordenador;
+	}
+
+	public void setCoordenador(ProfissionalFilter coordenador) {
+		this.coordenador = coordenador;
 	}
 	
 }

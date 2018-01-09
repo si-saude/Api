@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 
 import br.com.saude.api.generic.GenericConstant;
 import br.com.saude.api.util.RequestInterceptor;
+import br.com.saude.api.util.constant.AcaoResultadoExame;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.Escolaridade;
 import br.com.saude.api.util.constant.EstadoCivil;
@@ -25,6 +26,7 @@ import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.util.constant.TipoConvocacao;
 import br.com.saude.api.util.constant.TipoCriterio;
 import br.com.saude.api.util.constant.TipoPessoa;
+import br.com.saude.api.util.constant.TipoResultadoExame;
 import br.com.saude.api.util.constant.VinculoEmpregado;
 
 @Path("generic")
@@ -135,4 +137,17 @@ public class UtilService {
 		return Response.ok(getMap(VinculoEmpregado.getInstance(),filter)).build();
 	}
 	
+	@GET
+	@Path("/acao-resultado-exame")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAcaoResultadoExame(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(AcaoResultadoExame.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/tipo-resultado-exame")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTipoResultadoExame(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TipoResultadoExame.getInstance(),filter)).build();
+	}
 }

@@ -88,7 +88,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 	}
 
 	@Override
-	protected void createExampleSelectList() {
-		
+	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		addEmpregado();
 	}
 }
