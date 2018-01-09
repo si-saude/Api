@@ -23,6 +23,11 @@ public class LocalizacaoExampleBuilder extends GenericExampleBuilder<Localizacao
 			this.criterions.add(Restrictions.ne("id", (int)this.filter.getId()));
 	}
 	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
+	}
+	
 	private void addNome() {
 		if(this.filter.getNome()!=null)
 			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
@@ -30,6 +35,7 @@ public class LocalizacaoExampleBuilder extends GenericExampleBuilder<Localizacao
 
 	@Override
 	protected void createExample() {
+		addId();
 		addNome();
 	}
 

@@ -34,7 +34,8 @@ public class TarefaBuilder extends GenericEntityBuilder<Tarefa, TarefaFilter> {
 		
 		Tarefa newTarefa = new Tarefa();
 		newTarefa.setId(tarefa.getId());
-		newTarefa.setHorario(tarefa.getHorario());
+		newTarefa.setInicio(tarefa.getInicio());
+		newTarefa.setFim(tarefa.getFim());
 		newTarefa.setAtualizacao(tarefa.getAtualizacao());
 		newTarefa.setStatus(tarefa.getStatus());
 		newTarefa.setVersion(tarefa.getVersion());

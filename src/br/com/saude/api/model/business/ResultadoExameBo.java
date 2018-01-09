@@ -91,7 +91,6 @@ public class ResultadoExameBo extends
 
 			XSSFSheet sheet = (XSSFSheet) workbook.getSheetAt(0);
 			System.out.println(sheet.toString());
-			int rows = sheet.getPhysicalNumberOfRows();
 			for (int r = 0; r < 4; r++) {
 				if (r == 0)
 					continue;

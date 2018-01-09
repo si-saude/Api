@@ -18,5 +18,7 @@ public class StatusFilaEsperaOcupacional extends GenericConstant {
 	
 	public final String AGUARDANDO 				= "AGUARDANDO";
 	public final String EM_ATENDIMENTO			= "EM ATENDIMENTO";
+	public final String AUSENTE 				= "AUSENTE";
 	public final String ALMOCO 					= "ALMOÇO";
+	public final String FINALIZADO				= "FINALIZADO";
 }

@@ -1,6 +1,7 @@
 package br.com.saude.api.model.creation.builder.example;
 
 
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
@@ -23,6 +24,11 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 	private void addMi() {
 		if(this.filter.getMi() != null)
 			this.entity.setMi(Helper.filterLike(this.filter.getMi()));
+	}
+	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
 	}
 	
 	private void addDataAso() {
@@ -71,6 +77,7 @@ public class ProfissionalExampleBuilder extends GenericExampleBuilder<Profission
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
 		addEmpregado();
 		addDataAso();
 		addMi();
