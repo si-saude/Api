@@ -53,4 +53,8 @@ public class GrupoMonitoramentoExampleBuilder
 	protected void addRelatorio() {
 		this.entity.setRelatorio(this.addBoolean("relatorio", this.filter.getRelatorio()));
 	}
+	
+	protected void addAuditoriaAso() {
+		this.entity.setAuditoriaAso(this.addBoolean("auditoriaAso", this.filter.getAuditoriaAso()));
+	}
 }
