@@ -23,6 +23,7 @@ public class AtendimentoExampleBuilder extends GenericExampleBuilder<Atendimento
 		addTarefa();
 		addFilaEsperaOcupacional();
 		addFilaAtendimentoOcupacional();
+		addAso();
 	}
 
 	@Override
@@ -51,6 +52,14 @@ public class AtendimentoExampleBuilder extends GenericExampleBuilder<Atendimento
 			CriteriaExample criteriaExample = TarefaExampleBuilder
 					.newInstance(this.filter.getTarefa()).getCriteriaExample();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("tarefa", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addAso() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getAso()!=null) {
+			CriteriaExample criteriaExample = AsoExampleBuilder
+					.newInstance(this.filter.getAso()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("aso", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
 }

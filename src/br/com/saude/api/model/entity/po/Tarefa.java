@@ -19,13 +19,11 @@ public class Tarefa {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar o Início da Tarefa.")
 	private Date inicio;
 	
-	@NotNull(message="É necessário informar o Fim da Tarefa.")
-	private Date fim;
-	
 	private Date atualizacao;
+	
+	private Date fim;
 	
 	@NotNull(message="É necessário informar o Serviço da Tarefa.")
 	@ManyToOne(fetch=FetchType.EAGER)

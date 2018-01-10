@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -29,6 +30,9 @@ public class Atendimento {
 	@NotNull(message="É necessário informar a Tarefa.")
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private Tarefa tarefa;
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private Aso aso;
 	
 	@Transient
 	private RegraAtendimento regra;
@@ -82,5 +86,13 @@ public class Atendimento {
 
 	public void setRegra(RegraAtendimento regra) {
 		this.regra = regra;
+	}
+
+	public Aso getAso() {
+		return aso;
+	}
+
+	public void setAso(Aso aso) {
+		this.aso = aso;
 	}
 }

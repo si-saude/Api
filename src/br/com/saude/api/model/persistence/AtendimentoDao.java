@@ -6,6 +6,7 @@ import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Atendimento;
+import br.com.saude.api.model.entity.po.Aso;
 
 public class AtendimentoDao extends GenericDao<Atendimento> {
 
@@ -26,6 +27,9 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 		this.functionLoadAll = atendimento -> {
 			if(atendimento.getTarefa() != null)
 				Hibernate.initialize(atendimento.getTarefa());
+			
+			if(atendimento.getAso() != null)
+				atendimento.setAso((Aso)Hibernate.unproxy(atendimento.getAso()));
 			return atendimento;
 		};
 	}
