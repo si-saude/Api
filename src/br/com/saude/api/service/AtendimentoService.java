@@ -49,6 +49,18 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/registrar-solicitacao-atendimento")
+	public Response registrarSolicitacaoAtendimento(Atendimento atendimento) {
+		try {
+			return Response.ok(getBo().registrarSolicitacaoAtendimento(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@CustomValidator(validatorClass=AtendimentoValidator.class)
 	@Path("/iniciar")
 	public Response iniciar(Atendimento atendimento) {
