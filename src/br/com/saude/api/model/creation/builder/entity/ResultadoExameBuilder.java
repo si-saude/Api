@@ -56,6 +56,7 @@ public class ResultadoExameBuilder extends GenericEntityBuilder<ResultadoExame, 
 		newResultadoExame.setConforme(resultadoExame.isConforme());
 		newResultadoExame.setAcao(resultadoExame.getAcao());
 		newResultadoExame.setData(resultadoExame.getData());
+		newResultadoExame.setDataRecebimento(resultadoExame.getDataRecebimento());
 		newResultadoExame.setLocal(resultadoExame.getLocal());
 		newResultadoExame.setTipo(resultadoExame.getTipo());
 		newResultadoExame.setVersion(resultadoExame.getVersion());

@@ -287,8 +287,8 @@ public class ResultadoExameBo extends
 				if ( !eC.isPresent() ) {
 					List<EmpregadoConvocacao> eCs = this.fetchEmpregadoConvocacaoDB(matricula, convocacaoDate, convocacaoTipo);
 					if ( eCs == null ) {
-						if ( !matriculasNaoCadastradas.contains(matricula) );
-							matriculasNaoCadastradas += matricula + ",";
+						if ( !matriculasNaoCadastradas.contains(matricula) )
+							matriculasNaoCadastradas += matricula + ", ";
 						continue;
 					} else empregadoConvocacao = eCs.get(0);
 				} else empregadoConvocacao = eC.get();
@@ -298,8 +298,8 @@ public class ResultadoExameBo extends
 				if ( !ex.isPresent() ) {
 					List<Exame> es = this.fetchExameByCodigo(codigoExame);
 					if ( es == null ) {
-						if ( !matriculasNaoCadastradas.contains(matricula) );
-							matriculasNaoCadastradas += matricula + ",";
+						if ( !matriculasNaoCadastradas.contains(matricula) )
+							matriculasNaoCadastradas += matricula + ", ";
 						continue;
 					} else exame = es.get(0);
 				} else exame = ex.get();

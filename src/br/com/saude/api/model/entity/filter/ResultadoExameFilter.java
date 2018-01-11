@@ -8,6 +8,7 @@ public class ResultadoExameFilter extends GenericFilter {
 	private EmpregadoConvocacaoFilter empregadoConvocacao;
 	private ExameFilter exame;
 	private DateFilter data;
+	private DateFilter dataRecebimento;
 	private String tipo;
 	private String acao;
 	private String local;
@@ -55,4 +56,11 @@ public class ResultadoExameFilter extends GenericFilter {
 	public void setConforme(BooleanFilter conforme) {
 		this.conforme = conforme;
 	}
+	public DateFilter getDataRecebimento() {
+		return dataRecebimento;
+	}
+	public void setDataRecebimento(DateFilter dataRecebimento) {
+		this.dataRecebimento = dataRecebimento;
+	}
+	
 }

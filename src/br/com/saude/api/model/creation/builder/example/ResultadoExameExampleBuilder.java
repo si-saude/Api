@@ -24,6 +24,7 @@ public class ResultadoExameExampleBuilder extends GenericExampleBuilder<Resultad
 		addEmpregadoConvocacao();
 		addExame();
 		addData();
+		addDataRecebimento();
 		addConforme();
 		addTipo();
 		addLocal();
@@ -45,6 +46,10 @@ public class ResultadoExameExampleBuilder extends GenericExampleBuilder<Resultad
 	
 	private void addData() {
 		this.addData("data", this.filter.getData());
+	}
+	
+	private void addDataRecebimento() {
+		this.addData("dataRecebimento", this.filter.getDataRecebimento());
 	}
 	
 	private void addConforme() {
