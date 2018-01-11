@@ -28,12 +28,12 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 			return builder.loadPerfis();
 		};
 		
-		this.functionLoadAll = builder -> {
-			return builder.loadPerfis().loadPessoa();
-		};
-		
 		this.functionLoadPermissoes = builder -> {
-			return this.functionLoadAll.apply(builder).loadPermissoes();
+			return builder.loadPerfis().loadPermissoes();
+		};
+
+		this.functionLoadAll = builder -> {
+			return this.functionLoadPermissoes.apply(builder).loadPessoa();
 		};
 	}
 	

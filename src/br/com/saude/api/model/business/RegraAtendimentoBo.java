@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.lang.reflect.InvocationTargetException;
+
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RegraAtendimentoBuilder;
@@ -40,5 +42,23 @@ RegraAtendimentoDao, RegraAtendimentoBuilder, RegraAtendimentoExampleBuilder> {
 	public PagedList<RegraAtendimento> getList(RegraAtendimentoFilter filter) throws Exception {
 		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), 
 				this.functionLoadAll);
+	}
+
+	@Override
+	public RegraAtendimento save(RegraAtendimento regraAtendimento) throws IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+
+		if ( regraAtendimento.getRegraAtendimentoEquipes() != null ) {
+			regraAtendimento.getRegraAtendimentoEquipes().forEach(rAE -> {
+				rAE.setRegraAtendimento(regraAtendimento);
+				if ( rAE.getRegraAtendimentoEquipeRequisitos() != null ) {
+					rAE.getRegraAtendimentoEquipeRequisitos().forEach(rAER -> {
+						rAER.setRegraAtendimentoEquipe(rAE);
+					});
+				}
+			});
+		}
+
+		return super.save(regraAtendimento);
 	}
 }

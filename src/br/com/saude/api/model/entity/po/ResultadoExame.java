@@ -36,6 +36,8 @@ public class ResultadoExame {
 	@NotNull(message="É necessário informar a Data do Resultado.")
 	private Date data;
 	
+	private Date dataRecebimento;
+	
 	private boolean conforme;
 	
 	@Size(max = 64, message="Tamanho máximo para Tipo: 64")
@@ -129,4 +131,14 @@ public class ResultadoExame {
 	public void setVersion(long version) {
 		this.version = version;
 	}
+
+	public Date getDataRecebimento() {
+		return dataRecebimento;
+	}
+
+	public void setDataRecebimento(Date dataRecebimento) {
+		this.dataRecebimento = dataRecebimento;
+	}
+	
+	
 }
