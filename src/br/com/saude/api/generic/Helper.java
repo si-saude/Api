@@ -1,5 +1,9 @@
 package br.com.saude.api.generic;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
@@ -11,6 +15,19 @@ public class Helper {
 		stringBuilder.append(str);
 		stringBuilder.append("%");
 		return stringBuilder.toString();
+	}
+	
+	public static Date getNow() {
+		return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static Date getToday() {
+		Date today = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+		today.setHours(0);
+		today.setMinutes(0);
+		today.setSeconds(0);
+		return today;
 	}
 	
 	public static Criterion getCriterionDateFilter(String propertyName, DateFilter dateFilter) {

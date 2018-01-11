@@ -5,18 +5,26 @@ import br.com.saude.api.generic.GenericFilter;
 
 public class TarefaFilter extends GenericFilter {
 
-	private DateFilter horario;
+	private DateFilter inicio;
+	private DateFilter fim;
 	private DateFilter atualizacao;
 	private ServicoFilter servico;
 	private EmpregadoFilter cliente;
 	private ProfissionalFilter responsavel;
 	private EquipeFilter equipe;
 	private String status;
-	public DateFilter getHorario() {
-		return horario;
+	
+	public DateFilter getInicio() {
+		return inicio;
 	}
-	public void setHorario(DateFilter horario) {
-		this.horario = horario;
+	public void setInicio(DateFilter inicio) {
+		this.inicio = inicio;
+	}
+	public DateFilter getFim() {
+		return fim;
+	}
+	public void setFim(DateFilter fim) {
+		this.fim = fim;
 	}
 	public DateFilter getAtualizacao() {
 		return atualizacao;

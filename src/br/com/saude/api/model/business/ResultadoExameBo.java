@@ -76,13 +76,11 @@ public class ResultadoExameBo extends
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = builder -> {
-			builder = builder.loadEmpregadoConvocacao();
-			return builder;
+			return builder.loadEmpregadoConvocacao();
 		};
 		
 		this.functionLoadAll = builder -> {
-			builder = builder.loadItemResultadoExames();
-			return builder;
+			return this.functionLoad.apply(builder).loadItemResultadoExames();
 		};
 	}
 	

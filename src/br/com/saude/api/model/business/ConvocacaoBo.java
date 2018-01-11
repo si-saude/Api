@@ -447,8 +447,7 @@ convocacao.getEmpregadoConvocacoes().forEach(eC->{
 	}
 	
 	private Date getValidadeAso(Empregado empregado) throws Exception {
-		Aso aso = AsoFactory.newInstance().empregadoConvocacao()
-				.empregadoConvocacaoEmpregado(empregado).get();
+		Aso aso = AsoFactory.newInstance().empregado(empregado).get();
 		aso = AsoBo.getInstance().getUltimoByEmpregado(aso);
 		
 		if(aso != null)

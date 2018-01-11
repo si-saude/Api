@@ -23,7 +23,7 @@ public class FilaEsperaOcupacional {
 	@NotNull(message="É necessário informar a Tarefa da Fila.")
 	private Servico servico;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@NotNull(message="É necessário informar a Localização da Fila.")
 	private Localizacao localizacao;
 	
@@ -34,6 +34,7 @@ public class FilaEsperaOcupacional {
 	@NotNull(message="É necessário informar o Horário do Check-in.")
 	private Date horarioCheckin;
 	
+	@NotNull(message="É necessário informar a Atualização.")
 	private Date atualizacao;
 	
 	@NotNull(message="É necessário informar o Status da Fila.")

@@ -19,10 +19,11 @@ public class Tarefa {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar o Horário da Tarefa.")
-	private Date horario;
+	private Date inicio;
 	
 	private Date atualizacao;
+	
+	private Date fim;
 	
 	@NotNull(message="É necessário informar o Serviço da Tarefa.")
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -52,14 +53,6 @@ public class Tarefa {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public Date getHorario() {
-		return horario;
-	}
-
-	public void setHorario(Date horario) {
-		this.horario = horario;
 	}
 
 	public Date getAtualizacao() {
@@ -108,6 +101,22 @@ public class Tarefa {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public Date getInicio() {
+		return inicio;
+	}
+
+	public void setInicio(Date inicio) {
+		this.inicio = inicio;
+	}
+
+	public Date getFim() {
+		return fim;
+	}
+
+	public void setFim(Date fim) {
+		this.fim = fim;
 	}
 
 	public long getVersion() {

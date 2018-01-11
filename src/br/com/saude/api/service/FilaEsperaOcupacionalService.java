@@ -1,6 +1,5 @@
 package br.com.saude.api.service;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.ws.rs.Consumes;
@@ -18,10 +17,11 @@ import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.FilaEsperaOcupacionalBo;
 import br.com.saude.api.model.business.validate.FilaEsperaOcupacionalValidator;
 import br.com.saude.api.model.entity.filter.FilaEsperaOcupacionalFilter;
+import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("FilaEsperaOcupacional")
+@Path("fila-espera-ocupacional")
 @RequestInterceptor
 public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaOcupacional, FilaEsperaOcupacionalFilter, FilaEsperaOcupacionalBo>
 							implements GenericService<FilaEsperaOcupacional, FilaEsperaOcupacionalFilter>{
@@ -38,8 +38,32 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 	@Override
 	public Response save(FilaEsperaOcupacional filaEsperaOcupacional) {
 		try {
-			FilaEsperaOcupacionalBo.getInstance().save(filaEsperaOcupacional);
+			getBo().save(filaEsperaOcupacional);
 			return Response.ok("Salvo com sucesso.").build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path("/check-in")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response checkIn(FilaEsperaOcupacional filaEsperaOcupacional) {
+		try {
+			return Response.ok(getBo().checkIn(filaEsperaOcupacional)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path("/refresh")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response refresh(Atendimento atendimento) {
+		try {
+			return Response.ok(getBo().refresh(atendimento)).build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}

@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.FilaEsperaOcupacionalFilter;
@@ -9,6 +11,8 @@ import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
 public class FilaEsperaOcupacionalBuilder 
 	extends GenericEntityBuilder<FilaEsperaOcupacional, FilaEsperaOcupacionalFilter> {
 
+	private Function<Map<String,FilaEsperaOcupacional>,FilaEsperaOcupacional> loadLocalizacao;
+	
 	public static FilaEsperaOcupacionalBuilder newInstance(FilaEsperaOcupacional fila) {
 		return new FilaEsperaOcupacionalBuilder(fila);
 	}
@@ -27,7 +31,12 @@ public class FilaEsperaOcupacionalBuilder
 
 	@Override
 	protected void initializeFunctions() {
-		
+		this.loadLocalizacao = filas -> {
+			if(filas.get("origem").getLocalizacao() != null)
+				filas.get("destino").setLocalizacao(LocalizacaoBuilder
+						.newInstance(filas.get("origem").getLocalizacao()).getEntity());
+			return filas.get("destino");
+		};
 	}
 
 	@Override
@@ -45,14 +54,14 @@ public class FilaEsperaOcupacionalBuilder
 		if(fila.getEmpregado()!=null)
 			newFila.setEmpregado(EmpregadoBuilder.newInstance(fila.getEmpregado()).getEntity());
 		
-		if(fila.getLocalizacao()!=null)
-			newFila.setLocalizacao(LocalizacaoBuilder.newInstance(fila.getLocalizacao())
-					.getEntity());
-		
 		if(fila.getServico()!=null)
 			newFila.setServico(ServicoBuilder.newInstance(fila.getServico()).getEntity());
 		
 		return newFila;
+	}
+	
+	public FilaEsperaOcupacionalBuilder loadLocalizacao() {
+		return (FilaEsperaOcupacionalBuilder) loadProperty(this.loadLocalizacao);
 	}
 
 	@Override

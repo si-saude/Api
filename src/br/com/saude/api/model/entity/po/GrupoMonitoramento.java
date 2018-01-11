@@ -45,6 +45,7 @@ public class GrupoMonitoramento {
 	
 	private boolean relatorio;
 	
+	private boolean auditoriaAso;
 	
 	@Version
 	private long version;
@@ -117,12 +118,20 @@ public class GrupoMonitoramento {
 	public boolean equals(Object grupoMonitoramento) {
 		return ((GrupoMonitoramento)grupoMonitoramento).id == this.id && this.id > 0;
 	}
-	
-	public boolean getRelatorio() {
+
+	public boolean isRelatorio() {
 		return relatorio;
 	}
 
 	public void setRelatorio(boolean relatorio) {
 		this.relatorio = relatorio;
+	}
+
+	public boolean isAuditoriaAso() {
+		return auditoriaAso;
+	}
+
+	public void setAuditoriaAso(boolean auditoriaAso) {
+		this.auditoriaAso = auditoriaAso;
 	}
 }

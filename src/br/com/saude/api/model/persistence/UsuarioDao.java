@@ -14,7 +14,6 @@ import br.com.saude.api.model.entity.po.Usuario;
 public class UsuarioDao extends GenericDao<Usuario> {
 	
 	private Function<Usuario,Usuario> functionLoadPermissoes;
-	private Function<Usuario,Usuario> functionLoadPessoa;
 	private Function<Usuario,Usuario> functionLoadPerfis;
 
 	
@@ -41,11 +40,6 @@ public class UsuarioDao extends GenericDao<Usuario> {
 		
 		this.functionLoadPermissoes = usuario -> {
 			usuario = loadPermissao(usuario);
-			return usuario;
-		};
-		
-		this.functionLoadPessoa = usuario -> {
-			usuario = loadPessoa(usuario);
 			return usuario;
 		};
 		
