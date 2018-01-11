@@ -1,5 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
@@ -105,8 +106,14 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 		}
 	}
 	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
+	}
+	
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
 		addChave();
 		addMatricula();
 		addEstadoCivil();
@@ -124,6 +131,7 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		addId();
 		addChave();
 		addMatricula();
 		addEstadoCivil();

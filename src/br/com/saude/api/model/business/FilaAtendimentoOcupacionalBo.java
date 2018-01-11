@@ -65,9 +65,9 @@ public class FilaAtendimentoOcupacionalBo
 				if(fila.getLocalizacao() == null)
 					throw new Exception("É necessário informar a Localização para entrar na Fila de Atendimento.");
 				
-				// 2 - VERIFICAR SE O PROFISSIONAL FOI INFORMADO
-						if(fila.getProfissional() == null)
-							throw new Exception("É necessário informar o Profissional para entrar na Fila de Atendimento.");
+		// 2 - VERIFICAR SE O PROFISSIONAL FOI INFORMADO
+				if(fila.getProfissional() == null)
+					throw new Exception("É necessário informar o Profissional para entrar na Fila de Atendimento.");
 	}
 	
 	public List<FilaAtendimentoOcupacional> entrar(FilaAtendimentoOcupacional fila) throws Exception{
