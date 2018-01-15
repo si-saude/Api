@@ -22,6 +22,7 @@ import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
+import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Atividade;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
@@ -29,6 +30,7 @@ import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.persistence.AtendimentoDao;
 import br.com.saude.api.util.constant.GrupoServico;
+import br.com.saude.api.util.constant.StatusAso;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
@@ -130,10 +132,23 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		Date now = Helper.getNow();
 		
-		if(finalizouAtendimento(atendimento))
+		if(finalizouAtendimento(atendimento)) {
 			atendimento.getFilaEsperaOcupacional().setStatus(
 					StatusFilaEsperaOcupacional.getInstance().FINALIZADO);
-		else
+			
+			//VERIFICA SE FOI ATENDIMENTO MÉDICO PARA CRIAÇÃO DO ASO
+			if(atendimento.getFilaAtendimentoOcupacional()
+					.getProfissional().getEquipe().getAbreviacao().contains("MED")) {
+				
+				atendimento.setAso(new Aso());
+				atendimento.getAso().setAtendimento(atendimento);
+				atendimento.getAso().setData(now);
+				atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional()
+						.getEmpregado());
+				atendimento.getAso().setStatus(StatusAso.getInstance().PENDENTE_AUDITORIA);
+				atendimento.getAso().setValidade(getValidadeAso(atendimento));
+			}
+		} else
 			atendimento.getFilaEsperaOcupacional().setStatus(
 					StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 		
@@ -147,6 +162,12 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		atendimento.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
 		
 		return save(addAtualizacao(atendimento));
+	}
+	
+	//TO DO
+	private Date getValidadeAso(Atendimento atendimento) {
+		
+		return null;
 	}
 	
 	private boolean finalizouAtendimento(Atendimento atendimento) throws Exception {
