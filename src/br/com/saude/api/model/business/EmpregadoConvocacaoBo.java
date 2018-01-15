@@ -27,17 +27,17 @@ public class EmpregadoConvocacaoBo
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = builder -> {
-			return builder.loadEmpregado().loadConvocacao().loadResultadoExames();
+			return builder.loadEmpregado().loadConvocacao();
 		};
 		
 		this.functionLoadAll = builder -> {
-			return this.functionLoad.apply(builder).loadExames();
+			return this.functionLoad.apply(builder).loadExames().loadResultadoExames();
 		};
 	}
 	
 	@Override
 	public PagedList<EmpregadoConvocacao> getList(EmpregadoConvocacaoFilter filter) throws Exception {
-		return super.getList(getDao().getListFunctionLoadAll(getExampleBuilder(filter).example()), 
+		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), 
 				this.functionLoad);
 	}
 

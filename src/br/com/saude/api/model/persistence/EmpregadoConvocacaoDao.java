@@ -99,6 +99,10 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 		return super.getById(id, this.functionLoadAll);
 	}
 	
+	public PagedList<EmpregadoConvocacao> getListFunctionLoad(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder, this.functionLoad);
+	}
+	
 	public PagedList<EmpregadoConvocacao> getListFunctionLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder, this.functionLoadAll);
 	}
