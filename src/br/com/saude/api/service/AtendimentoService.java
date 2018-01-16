@@ -113,6 +113,18 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/voltar")
+	public Response voltar(FilaAtendimentoOcupacional fila) {
+		try {
+			return Response.ok(FilaAtendimentoOcupacionalBo.getInstance().voltar(fila)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/entrar")
 	public Response entrar(FilaAtendimentoOcupacional fila) {
 		try {

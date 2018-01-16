@@ -140,6 +140,40 @@ public class FilaAtendimentoOcupacionalBo
 		return filaAtendimentoOcupacionais.getList().get(0);
 	}
 	
+	public List<FilaAtendimentoOcupacional> voltar(FilaAtendimentoOcupacional fila) throws Exception{
+		
+		// 1, 2 
+		verificacaoInicial(fila);
+		
+		// 3 - OBTER A FILA
+		fila = obterFilaDoProfissional(fila);
+		
+		// 4 - CHECAR STATUS
+		if(!fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().INDISPONIVEL) &&
+				!fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().ALMOCO) &&
+				!fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO))
+			throw new Exception("Não é possível voltar para a fila de atendimento. "
+					+ "Status: "+fila.getStatus());
+		
+		// 5 - ATUALIZAR
+		if(fila.getAtualizacoes() == null)
+			fila.setAtualizacoes(new ArrayList<FilaAtendimentoOcupacionalAtualizacao>());
+		
+		fila.setAtualizacao(Helper.getNow());
+		fila.setStatus(StatusFilaAtendimentoOcupacional.getInstance().DISPONIVEL);
+		fila.getAtualizacoes().add(FilaAtendimentoOcupacionalAtualizacaoFactory.newInstance()
+				.filaAtendimentoOcupacional(fila)
+				.status(fila.getStatus())
+				.tempo(calcularTempoAtualizacao(fila))
+				.get());
+		
+		// 6 - SALVAR NO BANCO
+		getDao().save(fila);
+		
+		// 7 - RETORNAR LISTA ATUALIZADA
+		return obterFilaAtual(fila);
+	}
+	
 	public List<FilaAtendimentoOcupacional> pausar(FilaAtendimentoOcupacional fila) throws Exception{
 		
 		// 1, 2 
