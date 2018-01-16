@@ -23,4 +23,5 @@ public class StatusFilaAtendimentoOcupacional  extends GenericConstant {
 	public final String LANCAMENTO_DE_INFORMACOES	= "LANÇAMENTO DE INFORMAÇÕES";
 	public final String ALMOCO 						= "ALMOÇO";
 	public final String ENCERRADO 					= "ENCERRADO";
+	public final String ENCERRADO_AUTOMATICAMENTE	= "ENCERRADO AUTOMATICAMENTE";
 }
