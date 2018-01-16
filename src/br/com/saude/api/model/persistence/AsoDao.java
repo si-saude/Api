@@ -29,8 +29,21 @@ public class AsoDao extends GenericDao<Aso> {
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = aso -> {
+			aso = this.functionLoad.apply(aso);
+			
+			if(aso.getAsoAlteracoes() != null)
+				Hibernate.initialize(aso.getAsoAlteracoes());
+			
+			return aso;
+		};
+		
+		this.functionLoad = aso -> {
 			if(aso.getAtendimento() != null)
 				aso.setAtendimento((Atendimento)Hibernate.unproxy(aso.getAtendimento()));
+			
+			if(aso.getEmpregado() != null)
+				Hibernate.initialize(aso.getEmpregado());
+			
 			return aso;
 		};
 	}
@@ -41,6 +54,11 @@ public class AsoDao extends GenericDao<Aso> {
 	
 	public PagedList<Aso> getListLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder,this.functionLoadAll);
+	}
+	
+	@Override
+	public PagedList<Aso> getList(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder,this.functionLoad);
 	}
 	
 	@SuppressWarnings("deprecation")

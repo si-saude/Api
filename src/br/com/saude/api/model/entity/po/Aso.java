@@ -1,7 +1,9 @@
 package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,9 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Aso {
@@ -34,6 +38,13 @@ public class Aso {
 	
 	@NotNull(message="É necessário informar a Validade do ASO.")
 	private Date validade;
+	
+	@NotNull(message="É necessário informar o Status do ASO.")
+	@Size(max = 32, message="Tamanho máximo para Status do ASO: 32")
+	private String status;
+	
+	@OneToMany(mappedBy="aso", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<AsoAlteracao> asoAlteracoes;
 	
 	@Version
 	private long version;
@@ -85,4 +96,21 @@ public class Aso {
 	public void setData(Date data) {
 		this.data = data;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public List<AsoAlteracao> getAsoAlteracoes() {
+		return asoAlteracoes;
+	}
+
+	public void setAsoAlteracoes(List<AsoAlteracao> asoAlteracoes) {
+		this.asoAlteracoes = asoAlteracoes;
+	}
+	
 }
