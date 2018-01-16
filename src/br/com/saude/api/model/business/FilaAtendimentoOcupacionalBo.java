@@ -335,6 +335,8 @@ public class FilaAtendimentoOcupacionalBo
 	
 	public Atendimento atualizar(FilaAtendimentoOcupacional fila) throws Exception {
 		
+		Atendimento atendimento = new Atendimento();
+		
 		verificacaoInicial(fila);
 		
 		if(fila.getId() == 0)
@@ -356,9 +358,11 @@ public class FilaAtendimentoOcupacionalBo
 			
 			if(atendimentos.getTotal() > 0)
 				return atendimentos.getList().get(0);
+			
+			atendimento.setFilaAtendimentoOcupacional(fila);
 		}
 		
-		return new Atendimento();
+		return atendimento;
 	}
 	
 	protected long calcularTempoAtualizacao(FilaAtendimentoOcupacional fila) {
