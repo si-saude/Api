@@ -53,7 +53,11 @@ public class FilaAtendimentoOcupacionalDao extends GenericDao<FilaAtendimentoOcu
 		};
 		
 		this.loadAtualizacoes = fila -> {
-			fila = this.functionLoad.apply(fila);
+			if(fila.getProfissional().getEquipe() != null)
+				Hibernate.initialize(fila.getProfissional().getEquipe());
+			
+			if(fila.getLocalizacao() != null)
+				Hibernate.initialize(fila.getLocalizacao());
 			
 			if(fila.getAtualizacoes() != null)
 				Hibernate.initialize(fila.getAtualizacoes());
