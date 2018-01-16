@@ -19,11 +19,13 @@ import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.filter.LocalizacaoFilter;
 import br.com.saude.api.model.entity.filter.ProfissionalFilter;
+import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.persistence.FilaAtendimentoOcupacionalDao;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
+import br.com.saude.api.util.constant.StatusTarefa;
 
 public class FilaAtendimentoOcupacionalBo 
 	extends GenericBo<FilaAtendimentoOcupacional, FilaAtendimentoOcupacionalFilter, 
@@ -70,10 +72,53 @@ public class FilaAtendimentoOcupacionalBo
 					throw new Exception("É necessário informar o Profissional para entrar na Fila de Atendimento.");
 	}
 	
-	public List<FilaAtendimentoOcupacional> entrar(FilaAtendimentoOcupacional fila) throws Exception{
+	private void encerrarAutomaticamente(FilaAtendimentoOcupacional fila) throws Exception {
+		FilaAtendimentoOcupacionalFilter filaFilter = new FilaAtendimentoOcupacionalFilter();
+		filaFilter.setPageNumber(1);
+		filaFilter.setPageSize(Integer.MAX_VALUE);
+		filaFilter.setProfissional(new ProfissionalFilter());
+		filaFilter.getProfissional().setId(fila.getProfissional().getId());
+		filaFilter.setInicio(new DateFilter());
+		filaFilter.getInicio().setTypeFilter(TypeFilter.MENOR);
+		filaFilter.getInicio().setInicio(Helper.getToday());
 		
-		// 1, 2
+		PagedList<FilaAtendimentoOcupacional> filas = getList(filaFilter);
+		
+		if(filas.getTotal() > 0) {
+			Date now = Helper.getNow();
+			
+			filas.getList().forEach(f -> {
+				long time = f.getInicio().getTime();
+				
+				f.setStatus(StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO_AUTOMATICAMENTE);
+				
+				if(f.getAtualizacoes() != null)
+					for(FilaAtendimentoOcupacionalAtualizacao a : f.getAtualizacoes())
+						time += a.getTempo() * (60 * 1000) % 60;
+				else
+					f.setAtualizacoes(new ArrayList<FilaAtendimentoOcupacionalAtualizacao>());
+				
+				f.setFim(new Date());
+				f.getFim().setTime(time);
+				f.getAtualizacoes().add(FilaAtendimentoOcupacionalAtualizacaoFactory.newInstance()
+						.filaAtendimentoOcupacional(fila)
+						.status(fila.getStatus())
+						.tempo(calcularTempoAtualizacao(fila))
+						.get());
+				f.setAtualizacao(now);
+			});
+			
+			saveList(filas.getList());
+		}
+	}
+	
+	public List<Atendimento> entrar(FilaAtendimentoOcupacional fila) throws Exception{
+		
+		// 1
 		verificacaoInicial(fila);
+		
+		// 2 - ENCERRAR FILA DO DIA ANTERIOR
+		encerrarAutomaticamente(fila);
 		
 		// 3 - VERIFICAR SE JÁ ESTÁ NA FILA
 		Date today = Helper.getToday();
@@ -103,19 +148,24 @@ public class FilaAtendimentoOcupacionalBo
 		getDao().save(fila);
 		
 		// 6 - RETORNAR FILA DO DIA, DO LOCAL, ATUALIZADA		
-		return obterFilaAtual(fila);
+		return obterListaAtual(fila);
 	}
 	
-	private List<FilaAtendimentoOcupacional> obterFilaAtual(FilaAtendimentoOcupacional fila) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception{
-		FilaAtendimentoOcupacionalFilter filaFilter = new FilaAtendimentoOcupacionalFilter();
-		filaFilter.setPageNumber(1);
-		filaFilter.setPageSize(Integer.MAX_VALUE);
-		filaFilter.setLocalizacao(new LocalizacaoFilter());
-		filaFilter.getLocalizacao().setId(fila.getLocalizacao().getId());
-		filaFilter.setInicio(new DateFilter());
-		filaFilter.getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
-		filaFilter.getInicio().setInicio(Helper.getToday());
-		return getList(filaFilter).getList();
+	private List<Atendimento> obterListaAtual(FilaAtendimentoOcupacional fila) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception{
+		
+		AtendimentoFilter filter = new AtendimentoFilter();
+		filter.setPageNumber(1);
+		filter.setPageSize(Integer.MAX_VALUE);
+		filter.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
+		filter.getFilaAtendimentoOcupacional().setLocalizacao(new LocalizacaoFilter());
+		filter.getFilaAtendimentoOcupacional().getLocalizacao().setId(fila.getLocalizacao().getId());
+		filter.getFilaAtendimentoOcupacional().setInicio(new DateFilter());
+		filter.getFilaAtendimentoOcupacional().getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
+		filter.getFilaAtendimentoOcupacional().getInicio().setInicio(Helper.getToday());
+		filter.setTarefa(new TarefaFilter());
+		filter.getTarefa().setStatus(StatusTarefa.getInstance().EXECUCAO);
+		
+		return AtendimentoBo.getInstance().getList(filter).getList();
 	}
 	
 	private FilaAtendimentoOcupacional obterFilaDoProfissional(FilaAtendimentoOcupacional fila) throws Exception {
@@ -140,7 +190,7 @@ public class FilaAtendimentoOcupacionalBo
 		return filaAtendimentoOcupacionais.getList().get(0);
 	}
 	
-	public List<FilaAtendimentoOcupacional> voltar(FilaAtendimentoOcupacional fila) throws Exception{
+	public List<Atendimento> voltar(FilaAtendimentoOcupacional fila) throws Exception{
 		
 		// 1, 2 
 		verificacaoInicial(fila);
@@ -171,10 +221,10 @@ public class FilaAtendimentoOcupacionalBo
 		getDao().save(fila);
 		
 		// 7 - RETORNAR LISTA ATUALIZADA
-		return obterFilaAtual(fila);
+		return obterListaAtual(fila);
 	}
 	
-	public List<FilaAtendimentoOcupacional> pausar(FilaAtendimentoOcupacional fila) throws Exception{
+	public List<Atendimento> pausar(FilaAtendimentoOcupacional fila) throws Exception{
 		
 		// 1, 2 
 		verificacaoInicial(fila);
@@ -206,10 +256,10 @@ public class FilaAtendimentoOcupacionalBo
 		getDao().save(fila);
 		
 		// 7 - RETORNAR LISTA ATUALIZADA
-		return obterFilaAtual(fila);
+		return obterListaAtual(fila);
 	}
 	
-	public List<FilaAtendimentoOcupacional> registrarAlmoco(FilaAtendimentoOcupacional fila) throws Exception{
+	public List<Atendimento> registrarAlmoco(FilaAtendimentoOcupacional fila) throws Exception{
 		
 		// 1, 2 
 		verificacaoInicial(fila);
@@ -241,10 +291,10 @@ public class FilaAtendimentoOcupacionalBo
 		getDao().save(fila);
 		
 		// 7 - RETORNAR LISTA ATUALIZADA
-		return obterFilaAtual(fila);
+		return obterListaAtual(fila);
 	}
 	
-	public List<FilaAtendimentoOcupacional> encerrar(FilaAtendimentoOcupacional fila) throws Exception{
+	public List<Atendimento> encerrar(FilaAtendimentoOcupacional fila) throws Exception{
 		
 		// 1, 2 
 		verificacaoInicial(fila);
@@ -276,7 +326,11 @@ public class FilaAtendimentoOcupacionalBo
 		getDao().save(fila);
 		
 		// 7 - RETORNAR LISTA ATUALIZADA
-		return obterFilaAtual(fila);
+		return obterListaAtual(fila);
+	}
+	
+	public List<Atendimento> atualizarLista(FilaAtendimentoOcupacional fila) throws Exception{
+		return obterListaAtual(fila);
 	}
 	
 	public Atendimento atualizar(FilaAtendimentoOcupacional fila) throws Exception {

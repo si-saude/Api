@@ -68,7 +68,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				this.functionLoadAll);
 	}
 	
-	private Atendimento addAtualizacao(Atendimento atendimento) {
+	protected Atendimento addAtualizacao(Atendimento atendimento) {
 		
 		if(atendimento.getFilaAtendimentoOcupacional().getAtualizacoes() == null)
 			atendimento.getFilaAtendimentoOcupacional().setAtualizacoes(
@@ -81,12 +81,13 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 					.tempo(FilaAtendimentoOcupacionalBo.getInstance()
 							.calcularTempoAtualizacao(atendimento.getFilaAtendimentoOcupacional()))
 					.get());
+		
+		atendimento.getFilaAtendimentoOcupacional().setAtualizacao(Helper.getNow());
 		return atendimento;
 	}
 	
 	public Atendimento iniciar(Atendimento atendimento) throws Exception {
 		
-		atendimento.getFilaAtendimentoOcupacional().setAtualizacao(Helper.getNow());
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
 		
@@ -95,13 +96,10 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	public Atendimento registrarAusencia(Atendimento atendimento) throws Exception {
 		
-		Date now = Helper.getNow();
-		
-		atendimento.getFilaAtendimentoOcupacional().setAtualizacao(now);
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().DISPONIVEL);
 		
-		atendimento.getFilaEsperaOcupacional().setAtualizacao(now);
+		atendimento.getFilaEsperaOcupacional().setAtualizacao(Helper.getNow());
 		atendimento.getFilaEsperaOcupacional().setStatus(
 				StatusFilaEsperaOcupacional.getInstance().AUSENTE);
 		
@@ -110,8 +108,6 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	public Atendimento liberar(Atendimento atendimento) throws Exception {
 		
-		Date now = Helper.getNow();
-		
 		if(finalizouAtendimento(atendimento))
 			atendimento.getFilaEsperaOcupacional().setStatus(
 					StatusFilaEsperaOcupacional.getInstance().FINALIZADO);
@@ -119,9 +115,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 			atendimento.getFilaEsperaOcupacional().setStatus(
 					StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 		
-		atendimento.getFilaEsperaOcupacional().setAtualizacao(now);
+		atendimento.getFilaEsperaOcupacional().setAtualizacao(Helper.getNow());
 		
-		atendimento.getFilaAtendimentoOcupacional().setAtualizacao(now);
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().LANCAMENTO_DE_INFORMACOES);
 		
@@ -154,7 +149,6 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		atendimento.getFilaEsperaOcupacional().setAtualizacao(now);
 		
-		atendimento.getFilaAtendimentoOcupacional().setAtualizacao(now);
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().DISPONIVEL);
 		
