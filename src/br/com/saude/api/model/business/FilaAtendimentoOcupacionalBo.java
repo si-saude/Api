@@ -168,7 +168,7 @@ public class FilaAtendimentoOcupacionalBo
 		return AtendimentoBo.getInstance().getList(filter).getList();
 	}
 	
-	private FilaAtendimentoOcupacional obterFilaDoProfissional(FilaAtendimentoOcupacional fila) throws Exception {
+	private FilaAtendimentoOcupacional obterFilaDoProfissionalNaLocalizacao(FilaAtendimentoOcupacional fila) throws Exception {
 		
 		FilaAtendimentoOcupacionalFilter filaFilter = new FilaAtendimentoOcupacionalFilter();
 		filaFilter.setPageNumber(1);
@@ -190,13 +190,33 @@ public class FilaAtendimentoOcupacionalBo
 		return filaAtendimentoOcupacionais.getList().get(0);
 	}
 	
+	private FilaAtendimentoOcupacional obterFilaDoProfissional(FilaAtendimentoOcupacional fila) throws Exception {
+		
+		FilaAtendimentoOcupacionalFilter filaFilter = new FilaAtendimentoOcupacionalFilter();
+		filaFilter.setPageNumber(1);
+		filaFilter.setPageSize(1);
+		filaFilter.setProfissional(new ProfissionalFilter());
+		filaFilter.getProfissional().setId(fila.getProfissional().getId());
+		filaFilter.setInicio(new DateFilter());
+		filaFilter.getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
+		filaFilter.getInicio().setInicio(Helper.getToday());
+		
+		PagedList<FilaAtendimentoOcupacional> filaAtendimentoOcupacionais = 
+				getList(filaFilter, this.functionLoadAll);
+		
+		if(filaAtendimentoOcupacionais.getTotal() > 0)
+			filaAtendimentoOcupacionais.getList().get(0);
+		
+		return fila;
+	}
+	
 	public List<Atendimento> voltar(FilaAtendimentoOcupacional fila) throws Exception{
 		
 		// 1, 2 
 		verificacaoInicial(fila);
 		
 		// 3 - OBTER A FILA
-		fila = obterFilaDoProfissional(fila);
+		fila = obterFilaDoProfissionalNaLocalizacao(fila);
 		
 		// 4 - CHECAR STATUS
 		if(!fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().INDISPONIVEL) &&
@@ -230,7 +250,7 @@ public class FilaAtendimentoOcupacionalBo
 		verificacaoInicial(fila);
 		
 		// 3 - OBTER A FILA
-		fila = obterFilaDoProfissional(fila);
+		fila = obterFilaDoProfissionalNaLocalizacao(fila);
 		
 		// 4 - CHECAR STATUS
 		if(fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO) ||
@@ -265,7 +285,7 @@ public class FilaAtendimentoOcupacionalBo
 		verificacaoInicial(fila);
 		
 		// 3 - OBTER A FILA
-		fila = obterFilaDoProfissional(fila);
+		fila = obterFilaDoProfissionalNaLocalizacao(fila);
 		
 		// 4 - CHECAR STATUS
 		if(fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO) ||
@@ -300,7 +320,7 @@ public class FilaAtendimentoOcupacionalBo
 		verificacaoInicial(fila);
 		
 		// 3 - OBTER A FILA
-		fila = obterFilaDoProfissional(fila);
+		fila = obterFilaDoProfissionalNaLocalizacao(fila);
 		
 		// 4 - CHECAR STATUS
 		if(fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO) ||
@@ -337,10 +357,19 @@ public class FilaAtendimentoOcupacionalBo
 		
 		Atendimento atendimento = new Atendimento();
 		
-		verificacaoInicial(fila);
+		//VERIFICAR SE INFORMOU O PROFISSIONAL
+		if(fila.getProfissional() == null)
+			throw new Exception("É necessário informar o Profissional para atualizar a Fila de Atendimento.");
 		
-		if(fila.getId() == 0)
-			fila = obterFilaDoProfissional(fila);
+		//VERIFICAR SE EXISTE FILA APENAS PELO PROFISSIONAL.
+		fila = obterFilaDoProfissional(fila);
+		
+		if(fila.getId() == 0) {
+			if(fila.getLocalizacao() == null)
+				throw new Exception("É necessário informar a Localização para entrar na Fila de Atendimento.");
+			
+			fila = obterFilaDoProfissionalNaLocalizacao(fila);
+		}
 		
 		if(fila.getId() > 0) {
 			//VERIFICAR SE HÁ ALGUM ATENDIMENTO PARA ESTE PROFISSIONAL,
