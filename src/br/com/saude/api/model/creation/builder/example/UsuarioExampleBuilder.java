@@ -55,7 +55,7 @@ public class UsuarioExampleBuilder extends GenericExampleBuilder<Usuario,Usuario
 			addChaveEq();
 			addSenhaEq();
 			addGestoCss();
-			this.criterions.add(Example.create(this.entity));
+			this.criterions.add(this.finishExampleFunction.apply(Example.create(this.entity)));
 			return this.criterions;
 		}
 		else

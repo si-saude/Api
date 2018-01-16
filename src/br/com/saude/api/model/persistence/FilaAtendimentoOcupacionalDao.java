@@ -1,5 +1,7 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.function.Function;
+
 import org.hibernate.Hibernate;
 
 import br.com.saude.api.generic.GenericDao;
@@ -9,6 +11,8 @@ import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 
 public class FilaAtendimentoOcupacionalDao extends GenericDao<FilaAtendimentoOcupacional> {
 
+	private Function<FilaAtendimentoOcupacional,FilaAtendimentoOcupacional> loadAtualizacoes;
+	
 	private static FilaAtendimentoOcupacionalDao instance;
 	
 	private FilaAtendimentoOcupacionalDao() {
@@ -29,6 +33,15 @@ public class FilaAtendimentoOcupacionalDao extends GenericDao<FilaAtendimentoOcu
 			return fila;
 		};
 		
+		this.functionBeforeSave = pair -> {
+			FilaAtendimentoOcupacional fila = pair.getValue0();
+			
+			if (fila.getAtualizacoes() != null)
+				fila.getAtualizacoes().forEach(a -> a.setFila(fila));
+			
+			return fila;
+		};
+		
 		this.functionLoadAll = fila -> {
 			fila = this.functionLoad.apply(fila);
 			
@@ -36,6 +49,15 @@ public class FilaAtendimentoOcupacionalDao extends GenericDao<FilaAtendimentoOcu
 				Hibernate.initialize(fila.getLocalizacao());
 			if(fila.getAtualizacoes() != null)
 				Hibernate.initialize(fila.getAtualizacoes());
+			return fila;
+		};
+		
+		this.loadAtualizacoes = fila -> {
+			fila = this.functionLoad.apply(fila);
+			
+			if(fila.getAtualizacoes() != null)
+				Hibernate.initialize(fila.getAtualizacoes());
+			
 			return fila;
 		};
 	}
@@ -50,6 +72,6 @@ public class FilaAtendimentoOcupacionalDao extends GenericDao<FilaAtendimentoOcu
 	
 	@Override
 	public PagedList<FilaAtendimentoOcupacional> getList(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
-		return super.getList(exampleBuilder,this.functionLoad);
+		return super.getList(exampleBuilder,this.loadAtualizacoes);
 	}
 }

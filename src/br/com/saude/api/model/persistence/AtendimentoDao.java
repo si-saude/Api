@@ -30,6 +30,7 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 			
 			if(atendimento.getAso() != null)
 				atendimento.setAso((Aso)Hibernate.unproxy(atendimento.getAso()));
+			
 			return atendimento;
 		};
 	}

@@ -61,7 +61,7 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 	
 	@Override
 	public Usuario getById(Object id) throws Exception {
-		return getByEntity(getDao().getByIdLoadPerfis(id), this.functionLoadAll);
+		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
 
 	public Usuario getFirstToAutenticacao(UsuarioFilter filter) throws Exception {
@@ -69,6 +69,6 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 		UsuarioValidator usuarioValidator = new UsuarioValidator();
 		usuarioValidator.validate(usuario);
 		usuario = getDao().getFirst(getExampleBuilder(filter).getExampleAutenticacao());
-		return getBuilder(usuario).getEntity();
+		return usuario != null ? getBuilder(usuario).getEntity() : null;
 	}
 }

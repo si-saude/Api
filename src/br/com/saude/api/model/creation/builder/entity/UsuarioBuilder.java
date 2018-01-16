@@ -64,18 +64,15 @@ public class UsuarioBuilder extends GenericEntityBuilder<Usuario,UsuarioFilter> 
 
 	@Override
 	protected Usuario clone(Usuario usuario) {
-		if(usuario != null) {
-			Usuario newUsuario = new Usuario();
-			
-			newUsuario.setId(usuario.getId());
-			newUsuario.setChave(usuario.getChave());
-			newUsuario.setSenha(usuario.getSenha());
-			newUsuario.setGestorCss(usuario.isGestorCss());
-			newUsuario.setVersion(usuario.getVersion());
-			
-			return newUsuario;
-		}
-		return null;
+		Usuario newUsuario = new Usuario();
+		
+		newUsuario.setId(usuario.getId());
+		newUsuario.setChave(usuario.getChave());
+		newUsuario.setSenha(usuario.getSenha());
+		newUsuario.setGestorCss(usuario.isGestorCss());
+		newUsuario.setVersion(usuario.getVersion());
+		
+		return newUsuario;
 	}
 	
 	public UsuarioBuilder loadPerfis() {

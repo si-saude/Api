@@ -286,23 +286,25 @@ public class FilaAtendimentoOcupacionalBo
 		if(fila.getId() == 0)
 			fila = obterFilaDoProfissional(fila);
 		
-		//VERIFICAR SE HÁ ALGUM ATENDIMENTO PARA ESTE PROFISSIONAL,
-		//CUJO STATUS SEJA AGUARDANDO EMPREGADO
-		AtendimentoFilter atendimentofilter = new AtendimentoFilter();
-		atendimentofilter.setPageNumber(1);
-		atendimentofilter.setPageSize(1);
-		atendimentofilter.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
-		atendimentofilter.getFilaAtendimentoOcupacional().setId(fila.getId());
-		atendimentofilter.getFilaAtendimentoOcupacional().setStatus(
-				StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO);
+		if(fila.getId() > 0) {
+			//VERIFICAR SE HÁ ALGUM ATENDIMENTO PARA ESTE PROFISSIONAL,
+			//CUJO STATUS SEJA AGUARDANDO EMPREGADO
+			AtendimentoFilter atendimentofilter = new AtendimentoFilter();
+			atendimentofilter.setPageNumber(1);
+			atendimentofilter.setPageSize(1);
+			atendimentofilter.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
+			atendimentofilter.getFilaAtendimentoOcupacional().setId(fila.getId());
+			atendimentofilter.getFilaAtendimentoOcupacional().setStatus(
+					StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO);
+			
+			PagedList<Atendimento> atendimentos = AtendimentoBo.getInstance()
+					.getListLoadAll(atendimentofilter);
+			
+			if(atendimentos.getTotal() > 0)
+				return atendimentos.getList().get(0);
+		}
 		
-		PagedList<Atendimento> atendimentos = AtendimentoBo.getInstance()
-				.getListLoadAll(atendimentofilter);
-		
-		if(atendimentos.getTotal() > 0)
-			return atendimentos.getList().get(0);
-		
-		return null;
+		return new Atendimento();
 	}
 	
 	protected long calcularTempoAtualizacao(FilaAtendimentoOcupacional fila) {
