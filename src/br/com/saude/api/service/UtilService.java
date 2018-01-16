@@ -17,6 +17,7 @@ import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.Escolaridade;
 import br.com.saude.api.util.constant.EstadoCivil;
 import br.com.saude.api.util.constant.Funcionalidade;
+import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.Sexo;
@@ -149,5 +150,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getTipoResultadoExame(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(TipoResultadoExame.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/grupo-servico")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getGrupoServico(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(GrupoServico.getInstance(),filter)).build();
 	}
 }

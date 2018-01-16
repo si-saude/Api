@@ -70,7 +70,7 @@ public class FilaEsperaOcupacionalBo
 	public String checkIn(FilaEsperaOcupacional fila) throws Exception {
 		// 1 - VERIFICAR SE A LOCALIZAÇÃO FOI INFORMADA
 		if(fila.getLocalizacao() == null)
-			return "É necessário informar a Localização para realizar o Check-in.";
+			throw new Exception("É necessário informar a Localização para realizar o Check-in.");
 		
 		// 2 - VERIFICAR SE O EMPREGADO EXISTE
 		if(fila.getEmpregado() != null && fila.getEmpregado().getPessoa() != null) {
@@ -93,9 +93,9 @@ public class FilaEsperaOcupacionalBo
 			if(empregados.getTotal() > 0)
 				fila.setEmpregado(empregados.getList().get(0));
 			else
-				return "Não foi possível encontrar o cadastro do Empregado.";
+				throw new Exception("Não foi possível encontrar o cadastro do Empregado.");
 		}else
-			return "Não foi possível encontrar o cadastro do Empregado.";
+			throw new Exception("Não foi possível encontrar o cadastro do Empregado.");
 		
 		// 3 - VERIFICAR SE JÁ FOI FEITO CHECK-IN
 		Date today = Helper.getToday();
@@ -113,8 +113,8 @@ public class FilaEsperaOcupacionalBo
 				getList(filaFilter, this.functionLoadAll);
 		
 		if(filaEsperaOcupacionais.getTotal() > 0)
-			return "Já foi feito o Check-in deste Empregado na Localização: "
-					+filaEsperaOcupacionais.getList().get(0).getLocalizacao().getNome()+".";
+			throw new Exception("Já foi feito o Check-in deste Empregado na Localização: "
+					+filaEsperaOcupacionais.getList().get(0).getLocalizacao().getNome()+".");
 		
 		// 4 - VERIFICAR SE EXISTE AGENDAMENTO (TAREFA) PARA ESTE EMPREGADO (CLIENTE),
 		// CUJO GRUPO DO SERVIÇO SEJA ATENDIMENTO OCUPACIONAL, E STATUS DIFERENTE DE
@@ -140,13 +140,14 @@ public class FilaEsperaOcupacionalBo
 			.getList(TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluidoCancelado());
 		
 		if(tarefas.getTotal() == 0)
-			return "Não há agendamento para este Empregado.";
+			throw new Exception("Não há agendamento para este Empregado.");
 		
 		// 5 - INSTANCIAR FILA
 		fila.setHorarioCheckin(Helper.getNow());
 		fila.setAtualizacao(fila.getHorarioCheckin());
 		fila.setTempoEspera(0);
 		fila.setStatus(StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
+		fila.setServico(tarefas.getList().get(0).getServico());
 		
 		// 6 - INSERIR NO BANCO
 		getDao().save(fila);
@@ -200,6 +201,7 @@ public class FilaEsperaOcupacionalBo
 		atendimentofilter.setPageNumber(1);
 		atendimentofilter.setPageSize(Integer.MAX_VALUE);
 		atendimentofilter.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
+		atendimentofilter.getFilaAtendimentoOcupacional().setInicio(new DateFilter());
 		atendimentofilter.getFilaAtendimentoOcupacional().getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
 		atendimentofilter.getFilaAtendimentoOcupacional().getInicio().setInicio(today);
 		atendimentofilter.getFilaAtendimentoOcupacional().setStatus(
