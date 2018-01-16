@@ -207,10 +207,10 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		empConFilter.getEmpregado().setId(atendimento.getTarefa().getCliente().getId());
 		empConFilter.setConvocacao(new ConvocacaoFilter());
 		empConFilter.getConvocacao().setInicio(new DateFilter());
-		empConFilter.getConvocacao().getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
+		empConFilter.getConvocacao().getInicio().setTypeFilter(TypeFilter.MENOR_IGUAL);
 		empConFilter.getConvocacao().getInicio().setInicio(atendimento.getTarefa().getInicio());
 		empConFilter.getConvocacao().setFim(new DateFilter());
-		empConFilter.getConvocacao().getFim().setTypeFilter(TypeFilter.MENOR_IGUAL);
+		empConFilter.getConvocacao().getFim().setTypeFilter(TypeFilter.MAIOR_IGUAL);
 		empConFilter.getConvocacao().getFim().setInicio(atendimento.getTarefa().getInicio());
 		empConFilter.getConvocacao().setTipo("***");
 		

@@ -47,7 +47,7 @@ public class EquipeBo extends GenericBo<Equipe, EquipeFilter, EquipeDao, EquipeB
 		Equipe equipe = getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 		return equipe;
 	}
-
+	
 	public void importFile(File arquivo) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		try {
