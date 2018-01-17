@@ -120,7 +120,7 @@ public class FilaAtendimentoOcupacionalBo
 		// 2 - ENCERRAR FILA DO DIA ANTERIOR
 		encerrarAutomaticamente(fila);
 		
-		// 3 - VERIFICAR SE JÁ ESTÁ NA FILA
+		// 3 - VERIFICAR SE JÁ ESTÁ NA FILA COM STATUS DIFERENTE DE ENCERRADO
 		Date today = Helper.getToday();
 		
 		FilaAtendimentoOcupacionalFilter filaFilter = new FilaAtendimentoOcupacionalFilter();
@@ -133,7 +133,8 @@ public class FilaAtendimentoOcupacionalBo
 		filaFilter.getInicio().setInicio(today);
 		
 		PagedList<FilaAtendimentoOcupacional> filaAtendimentoOcupacionais = 
-				getList(filaFilter,this.functionLoadLocalizacao);
+				getList(getExampleBuilder(filaFilter).exampleStatusDiferenteEncerrado(),
+						this.functionLoadLocalizacao);
 		
 		if(filaAtendimentoOcupacionais.getTotal() > 0)
 			throw new Exception("O Profissional já está na Fila de Atendimento da Localização: "+

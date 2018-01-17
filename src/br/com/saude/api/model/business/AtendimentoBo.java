@@ -19,7 +19,6 @@ import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
-import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Aso;
@@ -178,13 +177,10 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		 
 		TarefaFilter tarefaFilter = new TarefaFilter();
 		tarefaFilter.setPageNumber(1);
-		tarefaFilter.setPageSize(1);
+		tarefaFilter.setPageSize(2);
 		tarefaFilter.setCliente(new EmpregadoFilter());
 		tarefaFilter.getCliente().setMatricula(atendimento.getFilaEsperaOcupacional()
 				.getEmpregado().getMatricula());
-		tarefaFilter.setEquipe(new EquipeFilter());
-		tarefaFilter.getEquipe().setAbreviacao(atendimento.getFilaAtendimentoOcupacional()
-				.getProfissional().getEquipe().getAbreviacao());
 		tarefaFilter.setServico(new ServicoFilter());
 		tarefaFilter.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
 		
@@ -199,6 +195,13 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		PagedList<Tarefa> tarefas = TarefaBo.getInstance().getList(
 					TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluido());
+		
+		//VERIFICAR SE RETORNOU A PRÓPRIA TAREFA
+		if(tarefas.getTotal() > 0) {
+			if(tarefas.getList().stream().filter(t->t.getId() == atendimento.getTarefa().getId())
+					.count() > 0)
+				tarefas.setTotal(tarefas.getTotal() - 1);
+		}
 		
 		return tarefas.getTotal() == 0;
 	}

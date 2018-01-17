@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
+import br.com.saude.api.model.business.PessoaBo;
 import br.com.saude.api.model.entity.filter.PessoaFilter;
 import br.com.saude.api.model.entity.po.Pessoa;
 
@@ -59,6 +60,8 @@ public class PessoaBuilder extends GenericEntityBuilder<Pessoa,PessoaFilter>{
 		newPessoa.setRg(pessoa.getRg());
 		newPessoa.setSexo(pessoa.getSexo());
 		newPessoa.setEmail(pessoa.getEmail());
+		
+		newPessoa = PessoaBo.getInstance().loadIdade(newPessoa);
 		
 		return newPessoa;
 	}

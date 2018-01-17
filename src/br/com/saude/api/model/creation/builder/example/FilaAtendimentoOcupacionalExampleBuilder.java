@@ -9,6 +9,7 @@ import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
+import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 
 public class FilaAtendimentoOcupacionalExampleBuilder
 	extends GenericExampleBuilder<FilaAtendimentoOcupacional, FilaAtendimentoOcupacionalFilter>{
@@ -20,11 +21,31 @@ public class FilaAtendimentoOcupacionalExampleBuilder
 	private FilaAtendimentoOcupacionalExampleBuilder(FilaAtendimentoOcupacionalFilter filter) {
 		super(filter);
 	}
+	
+	public GenericExampleBuilder<FilaAtendimentoOcupacional, FilaAtendimentoOcupacionalFilter> exampleStatusDiferenteEncerrado()
+			throws InstantiationException, IllegalAccessException {
+		if(this.filter!=null) {
+			initialize();
+			createExampleStatusDiferenteEncerrado();
+			this.criterions.add(getExample());
+		}
+		return this;
+	}
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addId();
 		addStatus();
+		addInicio();
+		addAtualizacao();
+		addFim();
+		addLocalizacao();
+		addProfissional();
+	}
+	
+	protected void createExampleStatusDiferenteEncerrado() throws InstantiationException, IllegalAccessException {
+		addId();
+		addStatusDiferenteEncerrado();
 		addInicio();
 		addAtualizacao();
 		addFim();
@@ -45,6 +66,11 @@ public class FilaAtendimentoOcupacionalExampleBuilder
 	private void addStatus() {
 		if(this.filter.getStatus() != null)
 			this.entity.setStatus(Helper.filterLike(this.filter.getStatus()));
+	}
+	
+	private void addStatusDiferenteEncerrado() {
+		this.criterions.add(Restrictions.ne("status", 
+				StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO));
 	}
 	
 	private void addAtualizacao() {

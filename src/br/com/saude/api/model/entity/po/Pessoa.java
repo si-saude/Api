@@ -61,6 +61,8 @@ public class Pessoa {
 	@JoinColumn(name = "empregado_id")
 	private Empregado empregado;
 	
+	private int idade;
+	
 	@Version
 	private long version;
 	
@@ -129,5 +131,11 @@ public class Pessoa {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public int getIdade() {
+		return idade;
+	}
+	public void setIdade(int idade) {
+		this.idade = idade;
 	}
 }
