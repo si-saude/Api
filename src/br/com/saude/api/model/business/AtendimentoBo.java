@@ -168,8 +168,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	//TO DO
 	private Date getValidadeAso(Atendimento atendimento) {
-		
-		return null;
+		return new Date();
 	}
 	
 	private boolean finalizouAtendimento(Atendimento atendimento) throws Exception {
