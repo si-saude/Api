@@ -6,6 +6,8 @@ import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Atendimento;
+import br.com.saude.api.model.entity.po.Localizacao;
+import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.Aso;
 
 public class AtendimentoDao extends GenericDao<Atendimento> {
@@ -26,10 +28,28 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 	protected void initializeFunctions() {
 		this.functionLoadAll = atendimento -> {
 			if(atendimento.getTarefa() != null)
-				Hibernate.initialize(atendimento.getTarefa());
+				atendimento.setTarefa((Tarefa) Hibernate.unproxy(atendimento.getTarefa()));
 			
 			if(atendimento.getAso() != null)
 				atendimento.setAso((Aso)Hibernate.unproxy(atendimento.getAso()));
+			
+			if(atendimento.getFilaAtendimentoOcupacional().getLocalizacao() != null)
+				atendimento.getFilaAtendimentoOcupacional().setLocalizacao(
+						(Localizacao) Hibernate.unproxy(atendimento.getFilaAtendimentoOcupacional().getLocalizacao()));
+			
+			if(atendimento.getFilaEsperaOcupacional().getLocalizacao() != null)
+				atendimento.getFilaEsperaOcupacional().setLocalizacao(
+						(Localizacao) Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getLocalizacao()));
+			
+			return atendimento;
+		};
+		
+		this.functionBeforeSave = pair -> {
+			Atendimento atendimento = pair.getValue0();
+			
+			if(atendimento.getFilaAtendimentoOcupacional().getAtualizacoes() != null)
+				atendimento.getFilaAtendimentoOcupacional().getAtualizacoes().forEach(a->
+					a.setFila(atendimento.getFilaAtendimentoOcupacional()));
 			
 			return atendimento;
 		};

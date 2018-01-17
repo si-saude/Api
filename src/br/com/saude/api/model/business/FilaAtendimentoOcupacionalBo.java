@@ -82,7 +82,7 @@ public class FilaAtendimentoOcupacionalBo
 		filaFilter.getInicio().setTypeFilter(TypeFilter.MENOR);
 		filaFilter.getInicio().setInicio(Helper.getToday());
 		
-		PagedList<FilaAtendimentoOcupacional> filas = getList(filaFilter);
+		PagedList<FilaAtendimentoOcupacional> filas = getListAll(filaFilter);
 		
 		if(filas.getTotal() > 0) {
 			Date now = Helper.getNow();
@@ -101,9 +101,9 @@ public class FilaAtendimentoOcupacionalBo
 				f.setFim(new Date());
 				f.getFim().setTime(time);
 				f.getAtualizacoes().add(FilaAtendimentoOcupacionalAtualizacaoFactory.newInstance()
-						.filaAtendimentoOcupacional(fila)
-						.status(fila.getStatus())
-						.tempo(calcularTempoAtualizacao(fila))
+						.filaAtendimentoOcupacional(f)
+						.status(f.getStatus())
+						.tempo(calcularTempoAtualizacao(f))
 						.get());
 				f.setAtualizacao(now);
 			});
@@ -165,7 +165,7 @@ public class FilaAtendimentoOcupacionalBo
 		filter.setTarefa(new TarefaFilter());
 		filter.getTarefa().setStatus(StatusTarefa.getInstance().EXECUCAO);
 		
-		return AtendimentoBo.getInstance().getList(filter).getList();
+		return AtendimentoBo.getInstance().getListLoadAll(filter).getList();
 	}
 	
 	private FilaAtendimentoOcupacional obterFilaDoProfissionalNaLocalizacao(FilaAtendimentoOcupacional fila) throws Exception {
@@ -379,14 +379,18 @@ public class FilaAtendimentoOcupacionalBo
 			atendimentofilter.setPageSize(1);
 			atendimentofilter.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
 			atendimentofilter.getFilaAtendimentoOcupacional().setId(fila.getId());
-			atendimentofilter.getFilaAtendimentoOcupacional().setStatus(
-					StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO);
+//			atendimentofilter.getFilaAtendimentoOcupacional().setStatus(
+//					StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO);
 			
 			PagedList<Atendimento> atendimentos = AtendimentoBo.getInstance()
 					.getListLoadAll(atendimentofilter);
 			
-			if(atendimentos.getTotal() > 0)
-				return atendimentos.getList().get(0);
+			if(atendimentos.getTotal() > 0) {
+				atendimento = atendimentos.getList().get(0);
+				atendimento.getFilaEsperaOcupacional().setEmpregado(EmpregadoBo
+						.getInstance().getById(atendimento.getFilaEsperaOcupacional().getEmpregado().getId()));
+				return atendimento;
+			}
 			
 			atendimento.setFilaAtendimentoOcupacional(fila);
 		}
@@ -396,5 +400,9 @@ public class FilaAtendimentoOcupacionalBo
 	
 	protected long calcularTempoAtualizacao(FilaAtendimentoOcupacional fila) {
 		return (Helper.getNow().getTime() - fila.getAtualizacao().getTime()) / (60 * 1000) % 60;
+	}
+	
+	public PagedList<FilaAtendimentoOcupacional> getListAll(FilaAtendimentoOcupacionalFilter filter) throws Exception {
+		return super.getList(filter, this.functionLoadAll);
 	}
 }

@@ -52,6 +52,9 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	protected Atendimento clone(Atendimento atendimento) {
 		Atendimento newAtendimento = new Atendimento();
 		
+		newAtendimento.setId(atendimento.getId());
+		newAtendimento.setVersion(atendimento.getVersion());
+		
 		if(atendimento.getFilaAtendimentoOcupacional() != null)
 			newAtendimento.setFilaAtendimentoOcupacional(FilaAtendimentoOcupacionalBuilder
 					.newInstance(atendimento.getFilaAtendimentoOcupacional())
@@ -61,6 +64,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 		if(atendimento.getFilaEsperaOcupacional() != null)
 			newAtendimento.setFilaEsperaOcupacional(FilaEsperaOcupacionalBuilder
 					.newInstance(atendimento.getFilaEsperaOcupacional())
+					.loadLocalizacao()
 					.getEntity());
 		
 		return newAtendimento;

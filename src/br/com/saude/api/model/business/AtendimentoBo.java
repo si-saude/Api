@@ -88,6 +88,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	public Atendimento iniciar(Atendimento atendimento) throws Exception {
 		
+		atendimento = getById(atendimento.getId());
+		
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
 		
@@ -95,6 +97,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	}
 	
 	public Atendimento registrarAusencia(Atendimento atendimento) throws Exception {
+		
+		atendimento = getById(atendimento.getId());
 		
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().DISPONIVEL);
@@ -107,6 +111,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	}
 	
 	public Atendimento liberar(Atendimento atendimento) throws Exception {
+		
+		atendimento = getById(atendimento.getId());
 		
 		if(finalizouAtendimento(atendimento))
 			atendimento.getFilaEsperaOcupacional().setStatus(
@@ -124,6 +130,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	}
 	
 	public Atendimento finalizar(Atendimento atendimento) throws Exception {
+		
+		atendimento = getById(atendimento.getId());
 		
 		Date now = Helper.getNow();
 		
