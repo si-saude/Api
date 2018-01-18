@@ -114,7 +114,7 @@ public class FilaEsperaOcupacionalBo
 		filaFilter.getHorarioCheckin().setInicio(today);
 		
 		PagedList<FilaEsperaOcupacional> filaEsperaOcupacionais = 
-				getList(filaFilter, this.functionLoadAll);
+				getList(getDao().getListLoadAll(getExampleBuilder(filaFilter).example()), this.functionLoadAll);
 		
 		if(filaEsperaOcupacionais.getTotal() > 0)
 			throw new Exception("Já foi feito o Check-in deste Empregado na Localização: "

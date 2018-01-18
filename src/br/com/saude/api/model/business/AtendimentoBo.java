@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -210,28 +212,10 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		return tarefas.getTotal() == 0;
 	}
 	
-	@SuppressWarnings("deprecation")
-	public String registrarSolicitacaoAtendimento(Atendimento atendimento) throws Exception {
-		
-		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO, CUJA DATA INFORMADA ESTÁ NO PERÍODO
-		// DO CRONOGRAMA, CUJO TIPO DA CONVOCAÇÃO CORRESPONDA AO SERVIÇO SELECIONADO
-		EmpregadoConvocacaoFilter empConFilter = new EmpregadoConvocacaoFilter();
-		empConFilter.setPageNumber(1);
-		empConFilter.setPageSize(1);
-		empConFilter.setEmpregado(new EmpregadoFilter());
-		empConFilter.getEmpregado().setId(atendimento.getTarefa().getCliente().getId());
-		empConFilter.setConvocacao(new ConvocacaoFilter());
-		empConFilter.getConvocacao().setInicio(new DateFilter());
-		empConFilter.getConvocacao().getInicio().setTypeFilter(TypeFilter.MENOR_IGUAL);
-		empConFilter.getConvocacao().getInicio().setInicio(atendimento.getTarefa().getInicio());
-		empConFilter.getConvocacao().setFim(new DateFilter());
-		empConFilter.getConvocacao().getFim().setTypeFilter(TypeFilter.MAIOR_IGUAL);
-		empConFilter.getConvocacao().getFim().setInicio(atendimento.getTarefa().getInicio());
-		empConFilter.getConvocacao().setTipo("***");
-		
+	private String getTipoAtendimento(Atendimento atendimento) {
 		switch(atendimento.getTarefa().getServico().getGrupo()) {
 			case GrupoServico.ATENDIMENTO_OCUPACIONAL:
-				
+			
 				switch(atendimento.getTarefa().getServico().getCodigo()) {
 					//ADMISSIONAL
 					case "0001":
@@ -245,8 +229,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 						
 					//PERIÓDICO
 					case "0003":
-						empConFilter.getConvocacao().setTipo(TipoConvocacao.getInstance().PERIODICO);
-						break;
+						return TipoConvocacao.getInstance().PERIODICO;
 						
 					//RETORNO AO TRABALHO
 					case "0004":
@@ -273,9 +256,31 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 						
 						break;
 				}
-				
-				break;
+			break;
 		}
+		return "***";
+	}
+	
+	@SuppressWarnings("deprecation")
+	public String registrarSolicitacaoAtendimento(Atendimento atendimento) throws Exception {
+		
+		String tipoAtendimento = getTipoAtendimento(atendimento);
+		
+		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO, CUJA DATA INFORMADA ESTÁ NO PERÍODO
+		// DO CRONOGRAMA, CUJO TIPO DA CONVOCAÇÃO CORRESPONDA AO SERVIÇO SELECIONADO
+		EmpregadoConvocacaoFilter empConFilter = new EmpregadoConvocacaoFilter();
+		empConFilter.setPageNumber(1);
+		empConFilter.setPageSize(1);
+		empConFilter.setEmpregado(new EmpregadoFilter());
+		empConFilter.getEmpregado().setId(atendimento.getTarefa().getCliente().getId());
+		empConFilter.setConvocacao(new ConvocacaoFilter());
+		empConFilter.getConvocacao().setInicio(new DateFilter());
+		empConFilter.getConvocacao().getInicio().setTypeFilter(TypeFilter.MENOR_IGUAL);
+		empConFilter.getConvocacao().getInicio().setInicio(atendimento.getTarefa().getInicio());
+		empConFilter.getConvocacao().setFim(new DateFilter());
+		empConFilter.getConvocacao().getFim().setTypeFilter(TypeFilter.MAIOR_IGUAL);
+		empConFilter.getConvocacao().getFim().setInicio(atendimento.getTarefa().getInicio());
+		empConFilter.getConvocacao().setTipo(tipoAtendimento);
 		
 		PagedList<EmpregadoConvocacao> empConList = 
 				EmpregadoConvocacaoBo.getInstance().getList(empConFilter);
@@ -289,12 +294,41 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 			throw new Exception("Não foi possível solicitar o serviço, pois não foi realizada "
 					+ "a auditoria do resultado dos exames.");
 		
-		// 3 - LOAD ALL DO SERVIÇO DA TAREFA DO ATENDIMENTO
+		// 3 - VERIFICAR SE A SOLICITAÇÃO JÁ FOI REALIZADA PREVIAMENTE
+		Date f = Date.from(LocalDateTime.ofInstant(atendimento.getTarefa().getInicio().toInstant(), ZoneId.systemDefault())
+				.plusDays(1)
+				.atZone(ZoneId.systemDefault())
+				.toInstant());
+		
+//		Date f = Date.from(LocalDateTime.from(new java.sql.Date(atendimento.getTarefa().getInicio().getTime()).toLocalDate())
+//				.plusDays(1)
+//				.atZone(ZoneId.systemDefault())
+//				.toInstant());
+		
+		TarefaFilter filter = new TarefaFilter();
+		filter.setPageNumber(1);
+		filter.setPageSize(1);
+		filter.setCliente(new EmpregadoFilter());
+		filter.getCliente().setId(atendimento.getTarefa().getCliente().getId());
+		filter.setServico(new ServicoFilter());
+		filter.getServico().setId(atendimento.getTarefa().getServico().getId());
+		filter.setInicio(new DateFilter());
+		filter.getInicio().setInicio(atendimento.getTarefa().getInicio());
+		filter.getInicio().setFim(f);
+		filter.getInicio().setTypeFilter(TypeFilter.ENTRE);
+		
+		PagedList<Tarefa> ts = TarefaBo.getInstance().getList(filter);
+		
+		if(ts.getTotal() > 0)
+			throw new Exception("Não foi possível solicitar o serviço, pois já foi realizada "
+					+ "uma solicitação para o mesmo dia.");
+		
+		// 4 - LOAD ALL DO SERVIÇO DA TAREFA DO ATENDIMENTO
 		atendimento.getTarefa().setServico(
 				ServicoBo.getInstance()
 				.getById(atendimento.getTarefa().getServico().getId()));
 		
-		// 4 - INSTANCIAR UMA TAREFA PARA CADA ATIVIDADE DO SERVIÇO.
+		// 5 - INSTANCIAR UMA TAREFA PARA CADA ATIVIDADE DO SERVIÇO.
 		// SERVIÇO PERIÓDICO RESERVA TODA A AGENDA DO DIA.
 		Tarefa tarefa = null;
 		List<Tarefa> tarefas = new ArrayList<Tarefa>();
@@ -316,7 +350,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 			tarefas.add(tarefa);
 		}
 		
-		// 5 - SALVAR NO BANCO
+		// 6 - SALVAR NO BANCO
 		TarefaBo.getInstance().saveList(tarefas);
 		
 		return "Atendimento registrado com sucesso.";

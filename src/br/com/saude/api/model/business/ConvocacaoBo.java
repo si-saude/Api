@@ -613,7 +613,7 @@ convocacao.getEmpregadoConvocacoes().forEach(eC->{
 					// ANO DO PERIÓDICO
 					if(resultadoExame != null && dataConvocacao != null) {								
 						//VERIFICAR SE O EXAME VAI VENCER NO ANO DO PERIÓDICO
-						if(Date.from(LocalDateTime.from(new java.sql.Date(resultadoExame.getData().getTime()).toLocalDate())
+						if(Date.from(LocalDateTime.ofInstant(resultadoExame.getData().toInstant(), ZoneId.systemDefault())
 									.plusMonths(gE.getPeriodicidade().getMeses())
 									.atZone(ZoneId.systemDefault())
 									.toInstant())

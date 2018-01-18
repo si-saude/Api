@@ -1,5 +1,7 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
+
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
@@ -17,6 +19,7 @@ public class ServicoExampleBuilder extends GenericExampleBuilder<Servico, Servic
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
 		addCodigo();
 		addGrupo();
 		addNome();
@@ -28,6 +31,11 @@ public class ServicoExampleBuilder extends GenericExampleBuilder<Servico, Servic
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		addPublico();
+	}
+	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
 	}
 	
 	private void addNome() {
