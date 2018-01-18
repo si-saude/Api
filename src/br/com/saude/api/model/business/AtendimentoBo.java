@@ -120,6 +120,11 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		atendimento = getById(atendimento.getId());
 		
+		if(atendimento.getFilaAtendimentoOcupacional().getStatus() != 
+				StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO)
+			throw new Exception("Não é possível liberar o empregado. Status: "+
+					atendimento.getFilaAtendimentoOcupacional().getStatus());
+		
 		if(finalizouAtendimento(atendimento))
 			atendimento.getFilaEsperaOcupacional().setStatus(
 					StatusFilaEsperaOcupacional.getInstance().FINALIZADO);
@@ -138,6 +143,13 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	public Atendimento finalizar(Atendimento atendimento) throws Exception {
 		
 		atendimento = getById(atendimento.getId());
+		
+		if(atendimento.getFilaAtendimentoOcupacional().getStatus() != 
+				StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO &&
+				atendimento.getFilaAtendimentoOcupacional().getStatus() != 
+					StatusFilaAtendimentoOcupacional.getInstance().LANCAMENTO_DE_INFORMACOES)
+			throw new Exception("Não é possível finalizar o atendimento. Status: "+
+					atendimento.getFilaAtendimentoOcupacional().getStatus());
 		
 		Date now = Helper.getNow();
 		
