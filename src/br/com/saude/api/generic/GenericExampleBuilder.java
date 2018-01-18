@@ -34,6 +34,7 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 		if(this.filter!=null) {
 			initialize();
 			createExample();
+			setProperties();
 			this.criterions.add(getExample());
 		}
 		return this;
@@ -95,15 +96,7 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 			initialize();
 			createExample();
 			
-			for(Triplet<String,CriteriaExample,JoinType> criteria : this.criterias) {
-				try {
-					Field field = this.entity.getClass().getDeclaredField(criteria.getValue0());
-					field.setAccessible(true);
-					field.set(this.entity, criteria.getValue1().getEntity());
-				} catch (IllegalArgumentException | NoSuchFieldException | SecurityException e) {
-					e.printStackTrace();
-				}
-			}
+			setProperties();
 			
 			criteriaExample.setCriterions(this.criterions);
 			criteriaExample.setExample(getExample());
@@ -120,15 +113,7 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 			initialize();
 			function.apply(this);
 			
-			for(Triplet<String,CriteriaExample,JoinType> criteria : this.criterias) {
-				try {
-					Field field = this.entity.getClass().getDeclaredField(criteria.getValue0());
-					field.setAccessible(true);
-					field.set(this.entity, criteria.getValue1().getEntity());
-				} catch (IllegalArgumentException | NoSuchFieldException | SecurityException e) {
-					e.printStackTrace();
-				}
-			}
+			setProperties();
 			
 			criteriaExample.setCriterions(this.criterions);
 			criteriaExample.setExample(getExample());
@@ -136,6 +121,18 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 			return criteriaExample;
 		}
 		return null;
+	}
+	
+	private void setProperties() throws IllegalAccessException {
+		for(Triplet<String,CriteriaExample,JoinType> criteria : this.criterias) {
+			try {
+				Field field = this.entity.getClass().getDeclaredField(criteria.getValue0());
+				field.setAccessible(true);
+				field.set(this.entity, criteria.getValue1().getEntity());
+			} catch (IllegalArgumentException | NoSuchFieldException | SecurityException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public F getFilter() {
