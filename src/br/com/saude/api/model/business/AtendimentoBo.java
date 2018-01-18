@@ -172,9 +172,21 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		return save(addAtualizacao(atendimento));
 	}
 	
-	//TO DO
 	private Date getValidadeAso(Atendimento atendimento) {
-		return new Date();
+		
+		int meses = 0;
+		String tipoTipoAtendimento = getTipoAtendimento(atendimento);
+		
+		switch(tipoTipoAtendimento) {
+			case TipoConvocacao.PERIODICO:
+				meses = 12;
+				break;
+		}
+		
+		return Date.from(LocalDateTime.ofInstant(Helper.getToday().toInstant(), ZoneId.systemDefault())
+				.plusMonths(meses)
+				.atZone(ZoneId.systemDefault())
+				.toInstant());
 	}
 	
 	private boolean finalizouAtendimento(Atendimento atendimento) throws Exception {
@@ -229,7 +241,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 						
 					//PERIÓDICO
 					case "0003":
-						return TipoConvocacao.getInstance().PERIODICO;
+						return TipoConvocacao.PERIODICO;
 						
 					//RETORNO AO TRABALHO
 					case "0004":

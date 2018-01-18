@@ -16,11 +16,11 @@ public class TipoConvocacao extends GenericConstant {
 		return instance;
 	}
 	
-	public final String PERIODICO 				= "PERIÓDICO";
-	public final String RETORNO_AO_TRABALHO		= "RETORNO AO TRABALHO";
-	public final String MUDANCA_DE_FUNCAO		= "MUDANÇA DE FUNÇÃO";
-	public final String DEMISSIONAL				= "DEMISSIONAL";
-	public final String ESPECIAL				= "ESPECIAL";
-	public final String SUPLETIVO				= "SUPLETIVO";
-	public final String ADMISSIONAL				= "ADMISSIONAL";
+	public static final String PERIODICO 				= "PERIÓDICO";
+	public static final String RETORNO_AO_TRABALHO		= "RETORNO AO TRABALHO";
+	public static final String MUDANCA_DE_FUNCAO		= "MUDANÇA DE FUNÇÃO";
+	public static final String DEMISSIONAL				= "DEMISSIONAL";
+	public static final String ESPECIAL				= "ESPECIAL";
+	public static final String SUPLETIVO				= "SUPLETIVO";
+	public static final String ADMISSIONAL				= "ADMISSIONAL";
 }
