@@ -34,7 +34,6 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 		if(this.filter!=null) {
 			initialize();
 			createExample();
-			setProperties();
 			this.criterions.add(getExample());
 		}
 		return this;
@@ -101,6 +100,7 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 			criteriaExample.setCriterions(this.criterions);
 			criteriaExample.setExample(getExample());
 			criteriaExample.setEntity(this.entity);
+			criteriaExample.setCriterias(this.criterias);
 			return criteriaExample;
 		}
 		return null;
@@ -118,6 +118,7 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 			criteriaExample.setCriterions(this.criterions);
 			criteriaExample.setExample(getExample());
 			criteriaExample.setEntity(this.entity);
+			criteriaExample.setCriterias(this.criterias);
 			return criteriaExample;
 		}
 		return null;

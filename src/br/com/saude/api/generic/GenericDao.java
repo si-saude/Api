@@ -152,6 +152,16 @@ public abstract class GenericDao<T> {
 					for(Criterion criterion : c.getValue1().getCriterions())
 						example.add(criterion);
 					example.add(c.getValue1().getExample());
+					
+					//SOLUÇÃO TEMPORÁRIA. SUBSTITUIR POR MÉTODO RECURSIVO
+					if(c.getValue1().getCriterias() != null) {
+						for(Triplet<String,CriteriaExample,JoinType> cc: c.getValue1().getCriterias()) {
+							Criteria ex = example.createCriteria(cc.getValue0(),cc.getValue2());
+							for(Criterion cr : cc.getValue1().getCriterions())
+								ex.add(cr);
+							ex.add(cc.getValue1().getExample());
+						}
+					}
 				}
 			
 			criteria = finishCriteria(criteria,exampleBuilder);			

@@ -660,19 +660,19 @@ public class ResultadoExameBo extends
 		switch (Character.toString(currentLine.charAt(2))) {
 
 		case "P":
-			return TipoConvocacao.getInstance().PERIODICO;
+			return TipoConvocacao.PERIODICO;
 		case "M":
-			return TipoConvocacao.getInstance().MUDANCA_DE_FUNCAO;
+			return TipoConvocacao.MUDANCA_DE_FUNCAO;
 		case "D":
-			return TipoConvocacao.getInstance().DEMISSIONAL;
+			return TipoConvocacao.DEMISSIONAL;
 		case "E":
-			return TipoConvocacao.getInstance().ESPECIAL;
+			return TipoConvocacao.ESPECIAL;
 		case "R":
-			return TipoConvocacao.getInstance().RETORNO_AO_TRABALHO;
+			return TipoConvocacao.RETORNO_AO_TRABALHO;
 		case "S":
-			return TipoConvocacao.getInstance().SUPLETIVO;
+			return TipoConvocacao.SUPLETIVO;
 		case "A":
-			return TipoConvocacao.getInstance().ADMISSIONAL;
+			return TipoConvocacao.ADMISSIONAL;
 
 		}
 
