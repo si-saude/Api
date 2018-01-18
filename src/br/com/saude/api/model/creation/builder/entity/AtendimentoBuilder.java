@@ -58,7 +58,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 		if(atendimento.getFilaAtendimentoOcupacional() != null)
 			newAtendimento.setFilaAtendimentoOcupacional(FilaAtendimentoOcupacionalBuilder
 					.newInstance(atendimento.getFilaAtendimentoOcupacional())
-					.loadLocalizacao()
+					.loadLocalizacao().loadAtualizacoes()
 					.getEntity());
 		
 		if(atendimento.getFilaEsperaOcupacional() != null)

@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -61,6 +62,7 @@ public class Pessoa {
 	@JoinColumn(name = "empregado_id")
 	private Empregado empregado;
 	
+	@Transient
 	private int idade;
 	
 	@Version
