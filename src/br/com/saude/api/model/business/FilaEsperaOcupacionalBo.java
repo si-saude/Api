@@ -367,7 +367,7 @@ public class FilaEsperaOcupacionalBo
 		}
 				
 		// 8 - RETORNAR A LISTA DE ATENDIMENTO
-		return atendimentos.getList();
+		return  AtendimentoBo.getInstance().getBuilder(atendimentos.getList()).loadTarefa().getEntityList();
 	}
 	
 	private long calcularTempoAtualizacao(FilaEsperaOcupacional fila) {
