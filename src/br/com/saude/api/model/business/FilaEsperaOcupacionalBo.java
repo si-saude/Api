@@ -251,110 +251,110 @@ public class FilaEsperaOcupacionalBo
 			// NA LISTA DE ATENDIMENTO, COM AS RESPECTIVAS FILAS E TAREFAS ATUALIZADAS
 			RegraAtendimento regraAux = regra;
 			fila.getList().forEach(filaEspera->{
+				
+				AtendimentoFilter aF = new AtendimentoFilter();
+				aF.setPageNumber(1);
+				aF.setPageSize(Integer.MAX_VALUE);
+				aF.setFilaEsperaOcupacional(new FilaEsperaOcupacionalFilter());
+				aF.getFilaEsperaOcupacional().setId(filaEspera.getId());
+				aF.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
+				aF.getFilaAtendimentoOcupacional().setInicio(new DateFilter());
+				aF.getFilaAtendimentoOcupacional().getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
+				aF.getFilaAtendimentoOcupacional().getInicio().setInicio(today);
+				aF.getFilaAtendimentoOcupacional().setLocalizacao(new LocalizacaoFilter());
+				aF.getFilaAtendimentoOcupacional().getLocalizacao().setId(localizacao.getId());
+				aF.getFilaAtendimentoOcupacional().setStatus(
+						StatusFilaAtendimentoOcupacional.getInstance().LANCAMENTO_DE_INFORMACOES);
+				PagedList<Atendimento> aList = new PagedList<Atendimento>(); 
+				try {
+					aList = AtendimentoBo.getInstance().getListLoadAll(aF);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 				FilaAtendimentoOcupacional remove = null;
-				for(FilaAtendimentoOcupacional filaAtendimento : filaAtendimentos.getList()) {
-					if(filaAtendimento.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().DISPONIVEL)) {
-						//VERIFICAR SE EXISTE ATENDIMENTO PARA ESTE EMPREGADO, NO DIA, NO LOCAL,
-						//NA EQUIPE DO PROFISSIONAL, CUJO STATUS DA TAREFA SEJA DIFERENTE DE CANCELADO
-						AtendimentoFilter aF = new AtendimentoFilter();
-						aF.setPageNumber(1);
-						aF.setPageSize(Integer.MAX_VALUE);
-						aF.setFilaEsperaOcupacional(new FilaEsperaOcupacionalFilter());
-						aF.getFilaEsperaOcupacional().setId(filaEspera.getId());
-						aF.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
-						aF.getFilaAtendimentoOcupacional().setInicio(new DateFilter());
-						aF.getFilaAtendimentoOcupacional().getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
-						aF.getFilaAtendimentoOcupacional().getInicio().setInicio(today);
-						aF.getFilaAtendimentoOcupacional().setLocalizacao(new LocalizacaoFilter());
-						aF.getFilaAtendimentoOcupacional().getLocalizacao().setId(localizacao.getId());
-						aF.getFilaAtendimentoOcupacional().setStatus(
-								StatusFilaAtendimentoOcupacional.getInstance().LANCAMENTO_DE_INFORMACOES);
-						aF.setTarefa(new TarefaFilter());
-						aF.getTarefa().setEquipe(new EquipeFilter());
-						aF.getTarefa().getEquipe().setAbreviacao(
-								filaAtendimento.getProfissional().getEquipe().getAbreviacao());
+				for(FilaAtendimentoOcupacional filaAtendimento : filaAtendimentos.getList()) {	
+					//SE EXISTIR, VERIFICAR SE PELA REGRA SELECIONADA, A EQUIPE DO PROFISSIONAL
+					//DEPENDE DE ALGUMA DAS EQUIPES EXISTENTES NA LISTA DE EQUIPES PENDENTES
+					//DA FILA DE ESPERA
+					if(aList.getTotal() > 0) {
+						List<RegraAtendimentoEquipe> regraAtendimentoEquipe = 
+								regraAux.getRegraAtendimentoEquipes().stream()
+								.filter(r->r.getEquipe().getId() == 
+									filaAtendimento.getProfissional().getEquipe().getId())
+								.collect(Collectors.toList());
 						
-						PagedList<Atendimento> aList = new PagedList<Atendimento>(); 
-						try {
-							aList = AtendimentoBo.getInstance().getListLoadAll(aF);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						
-						//SE EXISTIR, VERIFICAR SE PELA REGRA SELECIONADA, A EQUIPE DO PROFISSIONAL
-						//DEPENDE DE ALGUMA DAS EQUIPES EXISTENTES NA LISTA DE EQUIPES PENDENTES
-						//DA FILA DE ESPERA
-						if(aList.getTotal() > 0) {
-							List<RegraAtendimentoEquipe> regraAtendimentoEquipe = 
-									regraAux.getRegraAtendimentoEquipes().stream()
-									.filter(r->r.getEquipe().getId() == 
-										filaAtendimento.getProfissional().getEquipe().getId())
-									.collect(Collectors.toList());
+						if(regraAtendimentoEquipe != null && regraAtendimentoEquipe.size() > 0) {
+							PagedList<Atendimento> aListAux = aList;
 							
-							if(regraAtendimentoEquipe != null && regraAtendimentoEquipe.size() > 0) {
-								if(aList.getList().stream().filter(f->
-									f.getFilaAtendimentoOcupacional().getProfissional().getEquipe().getId()
-										== regraAtendimentoEquipe.get(0).getEquipe().getId()) 
-											.collect(Collectors.toList()).size() > 0 ) {
-									continue;
-								}
+							if(regraAtendimentoEquipe.get(0).getRegraAtendimentoEquipeRequisitos()
+								.stream().filter(r -> {
+									return aListAux.getList().stream().filter(a->{
+											return a.getFilaAtendimentoOcupacional().getProfissional()
+													.getEquipe().getId() == r.getEquipe().getId();
+									}).count() > 0;
+								}).count() > 0) {
+								continue;
 							}
 						}
-						
-						//OBTER A TAREFA
-						PagedList<Tarefa> tarefas = new PagedList<Tarefa>(); 
-						TarefaFilter tarefaFilter = new TarefaFilter();
-						tarefaFilter.setPageNumber(1);
-						tarefaFilter.setPageSize(1);
-						tarefaFilter.setCliente(new EmpregadoFilter());
-						tarefaFilter.getCliente().setMatricula(filaEspera.getEmpregado().getMatricula());
-						tarefaFilter.setEquipe(new EquipeFilter());
-						tarefaFilter.getEquipe().setAbreviacao(
-								filaAtendimento.getProfissional().getEquipe().getAbreviacao());
-						tarefaFilter.setServico(new ServicoFilter());
-						tarefaFilter.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
-						
-						Calendar calendar = Calendar.getInstance();
-						calendar.setTime(today);
-						calendar.add(Calendar.DATE, 1);
-						
-						tarefaFilter.setInicio(new DateFilter());
-						tarefaFilter.getInicio().setTypeFilter(TypeFilter.ENTRE);
-						tarefaFilter.getInicio().setInicio(today);
-						tarefaFilter.getInicio().setFim(calendar.getTime());
-						try {
-							tarefas = TarefaBo.getInstance().getList(
-									TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluidoCancelado());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						
-						//ATUALIZAR REFERENCIAS
-						Tarefa tarefa = tarefas.getList().get(0);
-						tarefa.setInicio(Helper.getNow());
-						tarefa.setAtualizacao(tarefa.getInicio());
-						tarefa.setResponsavel(filaAtendimento.getProfissional());
-						tarefa.setStatus(StatusTarefa.getInstance().EXECUCAO);
-						
-						filaAtendimento.setAtualizacao(tarefa.getAtualizacao());
-						filaAtendimento.setStatus(StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO);
-						
-						filaEspera.setAtualizacao(filaAtendimento.getAtualizacao());
-						filaEspera.setStatus(StatusFilaEsperaOcupacional.getInstance().EM_ATENDIMENTO);
-						filaEspera.setTempoEspera(filaEspera.getTempoEspera() + calcularTempoAtualizacao(filaEspera));
-						
-						//INSTANCIAR
-						Atendimento atendimento = new Atendimento();
-						atendimento.setFilaAtendimentoOcupacional(filaAtendimento);
-						atendimento.setFilaEsperaOcupacional(filaEspera);
-						atendimento.setTarefa(tarefa);
-						
-						//ADD NA LISTA
-						atendimentos.getList().add(atendimento);
-						
-						remove = filaAtendimento;
-						break;
 					}
+					
+					//OBTER A TAREFA
+					PagedList<Tarefa> tarefas = new PagedList<Tarefa>(); 
+					TarefaFilter tarefaFilter = new TarefaFilter();
+					tarefaFilter.setPageNumber(1);
+					tarefaFilter.setPageSize(1);
+					tarefaFilter.setCliente(new EmpregadoFilter());
+					tarefaFilter.getCliente().setMatricula(filaEspera.getEmpregado().getMatricula());
+					tarefaFilter.setEquipe(new EquipeFilter());
+					tarefaFilter.getEquipe().setAbreviacao(
+							filaAtendimento.getProfissional().getEquipe().getAbreviacao());
+					tarefaFilter.setServico(new ServicoFilter());
+					tarefaFilter.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
+					
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(today);
+					calendar.add(Calendar.DATE, 1);
+					
+					tarefaFilter.setInicio(new DateFilter());
+					tarefaFilter.getInicio().setTypeFilter(TypeFilter.ENTRE);
+					tarefaFilter.getInicio().setInicio(today);
+					tarefaFilter.getInicio().setFim(calendar.getTime());
+					try {
+						tarefas = TarefaBo.getInstance().getList(
+								TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluidoCancelado());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					if(tarefas.getTotal() == 0)
+						continue;
+					
+					//ATUALIZAR REFERENCIAS
+					Tarefa tarefa = tarefas.getList().get(0);
+					tarefa.setInicio(Helper.getNow());
+					tarefa.setAtualizacao(tarefa.getInicio());
+					tarefa.setResponsavel(filaAtendimento.getProfissional());
+					tarefa.setStatus(StatusTarefa.getInstance().EXECUCAO);
+					
+					filaAtendimento.setAtualizacao(tarefa.getAtualizacao());
+					filaAtendimento.setStatus(StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO);
+					
+					filaEspera.setAtualizacao(filaAtendimento.getAtualizacao());
+					filaEspera.setStatus(StatusFilaEsperaOcupacional.getInstance().EM_ATENDIMENTO);
+					filaEspera.setTempoEspera(filaEspera.getTempoEspera() + calcularTempoAtualizacao(filaEspera));
+					
+					//INSTANCIAR
+					Atendimento atendimento = new Atendimento();
+					atendimento.setFilaAtendimentoOcupacional(filaAtendimento);
+					atendimento.setFilaEsperaOcupacional(filaEspera);
+					atendimento.setTarefa(tarefa);
+					
+					//ADD NA LISTA
+					atendimentos.getList().add(atendimento);
+					
+					remove = filaAtendimento;
+					break;
 				}
 				
 				if(remove != null)
