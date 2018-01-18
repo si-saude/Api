@@ -67,6 +67,11 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				this.functionLoadAll);
 	}
 	
+	public PagedList<Atendimento> getListLoadAllTarefaStatusNaoConcluidoCancelado(AtendimentoFilter filter) throws Exception {
+		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).exampleTarefaStatusNaoConcluidoCancelado()), 
+				this.functionLoadAll);
+	}
+	
 	protected Atendimento addAtualizacao(Atendimento atendimento) {
 		
 		if(atendimento.getFilaAtendimentoOcupacional().getAtualizacoes() == null)

@@ -17,10 +17,27 @@ public class AtendimentoExampleBuilder extends GenericExampleBuilder<Atendimento
 	private AtendimentoExampleBuilder(AtendimentoFilter filter) {
 		super(filter);
 	}
+	
+	public GenericExampleBuilder<Atendimento, AtendimentoFilter> exampleTarefaStatusNaoConcluidoCancelado()
+			throws InstantiationException, IllegalAccessException {
+		if(this.filter!=null) {
+			initialize();
+			createExampleTarefaStatusNaoConcluidoCancelado();
+			this.criterions.add(getExample());
+		}
+		return this;
+	}
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addTarefa();
+		addFilaEsperaOcupacional();
+		addFilaAtendimentoOcupacional();
+		addAso();
+	}
+	
+	protected void createExampleTarefaStatusNaoConcluidoCancelado() throws InstantiationException, IllegalAccessException {
+		addTarefaStatusNaoConcluidoCancelado();
 		addFilaEsperaOcupacional();
 		addFilaAtendimentoOcupacional();
 		addAso();
@@ -51,6 +68,14 @@ public class AtendimentoExampleBuilder extends GenericExampleBuilder<Atendimento
 		if(this.filter.getTarefa()!=null) {
 			CriteriaExample criteriaExample = TarefaExampleBuilder
 					.newInstance(this.filter.getTarefa()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("tarefa", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addTarefaStatusNaoConcluidoCancelado() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getTarefa()!=null) {
+			CriteriaExample criteriaExample = TarefaExampleBuilder
+					.newInstance(this.filter.getTarefa()).getCriteriaExampleStatusNaoConcluidoCancelado();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("tarefa", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}

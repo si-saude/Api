@@ -1,5 +1,7 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import java.util.function.Function;
+
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
@@ -12,12 +14,27 @@ import br.com.saude.api.util.constant.StatusTarefa;
 
 public class TarefaExampleBuilder extends GenericExampleBuilder<Tarefa, TarefaFilter> {
 
+	private Function<TarefaExampleBuilder,TarefaExampleBuilder> functionStatusNaoConcluidoCancelado;
+	
 	public static TarefaExampleBuilder newInstance(TarefaFilter filter) {
 		return new TarefaExampleBuilder(filter);
 	}
 	
 	private TarefaExampleBuilder(TarefaFilter filter) {
 		super(filter);
+		
+		this.functionStatusNaoConcluidoCancelado = exampleBuilder -> {
+			try {
+				exampleBuilder.createExampleStatusNaoConcluidoCancelado();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			return exampleBuilder;
+		};
+	}
+	
+	public CriteriaExample getCriteriaExampleStatusNaoConcluidoCancelado() throws InstantiationException, IllegalAccessException {
+		return super.getCriteriaExample(this.functionStatusNaoConcluidoCancelado);
 	}
 	
 	public GenericExampleBuilder<Tarefa, TarefaFilter> exampleStatusNaoConcluidoCancelado() throws InstantiationException, IllegalAccessException {

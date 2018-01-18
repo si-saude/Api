@@ -112,6 +112,31 @@ public abstract class GenericExampleBuilder<T,F extends GenericFilter> {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public CriteriaExample getCriteriaExample(Function function) throws InstantiationException, IllegalAccessException {
+		if(this.filter != null) {
+			CriteriaExample criteriaExample = new CriteriaExample();
+			initialize();
+			function.apply(this);
+			
+			for(Triplet<String,CriteriaExample,JoinType> criteria : this.criterias) {
+				try {
+					Field field = this.entity.getClass().getDeclaredField(criteria.getValue0());
+					field.setAccessible(true);
+					field.set(this.entity, criteria.getValue1().getEntity());
+				} catch (IllegalArgumentException | NoSuchFieldException | SecurityException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			criteriaExample.setCriterions(this.criterions);
+			criteriaExample.setExample(getExample());
+			criteriaExample.setEntity(this.entity);
+			return criteriaExample;
+		}
+		return null;
+	}
 
 	public F getFilter() {
 		return filter;

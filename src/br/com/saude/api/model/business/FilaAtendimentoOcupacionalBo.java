@@ -374,17 +374,16 @@ public class FilaAtendimentoOcupacionalBo
 		
 		if(fila.getId() > 0) {
 			//VERIFICAR SE HÁ ALGUM ATENDIMENTO PARA ESTE PROFISSIONAL,
-			//CUJO STATUS SEJA AGUARDANDO EMPREGADO
-			AtendimentoFilter atendimentofilter = new AtendimentoFilter();
-			atendimentofilter.setPageNumber(1);
-			atendimentofilter.setPageSize(1);
-			atendimentofilter.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
-			atendimentofilter.getFilaAtendimentoOcupacional().setId(fila.getId());
-//			atendimentofilter.getFilaAtendimentoOcupacional().setStatus(
-//					StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO);
+			//CUJA TAREFA DIFERENTE NÃO CONCLUÍDA NEM CANCELADA
+			AtendimentoFilter atendimentoFilter = new AtendimentoFilter();
+			atendimentoFilter.setPageNumber(1);
+			atendimentoFilter.setPageSize(1);
+			atendimentoFilter.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
+			atendimentoFilter.getFilaAtendimentoOcupacional().setId(fila.getId());
+			atendimentoFilter.setTarefa(new TarefaFilter());
 			
 			PagedList<Atendimento> atendimentos = AtendimentoBo.getInstance()
-					.getListLoadAll(atendimentofilter);
+					.getListLoadAllTarefaStatusNaoConcluidoCancelado(atendimentoFilter);
 			
 			if(atendimentos.getTotal() > 0) {
 				atendimento = atendimentos.getList().get(0);
