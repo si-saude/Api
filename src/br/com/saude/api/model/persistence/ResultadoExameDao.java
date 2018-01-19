@@ -63,7 +63,7 @@ public class ResultadoExameDao extends GenericDao<ResultadoExame> {
 			throw ex;
 		}
 		finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 		
 		return resultadoExame;

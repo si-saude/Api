@@ -76,7 +76,7 @@ public class AsoDao extends GenericDao<Aso> {
 			throw ex;
 		}
 		finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 		
 		return aso;

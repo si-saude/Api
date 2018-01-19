@@ -125,7 +125,7 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 			throw ex;
 		}
 		finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 		
 		return convocacao;
@@ -164,7 +164,7 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 		}catch(Exception ex) {
 			throw ex;
 		}finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 	}
 }
