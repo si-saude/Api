@@ -120,8 +120,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		atendimento = getById(atendimento.getId());
 		
-		if(atendimento.getFilaAtendimentoOcupacional().getStatus() != 
-				StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO)
+		if(!atendimento.getFilaAtendimentoOcupacional().getStatus()
+				.equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO))
 			throw new Exception("Não é possível liberar o empregado. Status: "+
 					atendimento.getFilaAtendimentoOcupacional().getStatus());
 		
@@ -144,10 +144,10 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		atendimento = getById(atendimento.getId());
 		
-		if(atendimento.getFilaAtendimentoOcupacional().getStatus() != 
-				StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO &&
-				atendimento.getFilaAtendimentoOcupacional().getStatus() != 
-					StatusFilaAtendimentoOcupacional.getInstance().LANCAMENTO_DE_INFORMACOES)
+		if(!(atendimento.getFilaAtendimentoOcupacional().getStatus()
+				.equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO)) &&
+			!(atendimento.getFilaAtendimentoOcupacional().getStatus()
+					.equals(StatusFilaAtendimentoOcupacional.getInstance().LANCAMENTO_DE_INFORMACOES)))
 			throw new Exception("Não é possível finalizar o atendimento. Status: "+
 					atendimento.getFilaAtendimentoOcupacional().getStatus());
 		

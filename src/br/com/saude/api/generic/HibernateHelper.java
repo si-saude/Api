@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 public class HibernateHelper {
 	
 	private static SessionFactory sessionFactory;
+	private static boolean busy;
 	
 	private static SessionFactory getSessionFactory() {
 		if(sessionFactory == null)
@@ -20,6 +21,21 @@ public class HibernateHelper {
 	}
 	
 	public static Session getSession() {
+		while( busy ) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		busy = true;
 		return getSessionFactory().openSession();
 	}
+	
+	public static void close(Session session) {
+		session.close();
+		busy = false;
+	}
+	
 }

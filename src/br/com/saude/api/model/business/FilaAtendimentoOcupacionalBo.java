@@ -166,7 +166,15 @@ public class FilaAtendimentoOcupacionalBo
 		filter.setTarefa(new TarefaFilter());
 		filter.getTarefa().setStatus(StatusTarefa.getInstance().EXECUCAO);
 		
-		return AtendimentoBo.getInstance().getListLoadAll(filter).getList();
+		PagedList<Atendimento> p = new PagedList<Atendimento>(); 
+		
+		try {			
+			p = AtendimentoBo.getInstance().getListLoadAll(filter);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return p.getList();
 	}
 	
 	private FilaAtendimentoOcupacional obterFilaDoProfissionalNaLocalizacao(FilaAtendimentoOcupacional fila) throws Exception {

@@ -79,6 +79,10 @@ public class EmpregadoBo
 	public PagedList<Empregado> getList(EmpregadoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
 	}
+	
+	public PagedList<Empregado> getListEq(EmpregadoFilter filter) throws Exception {
+		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).exampleEq()), this.functionLoad);
+	}
 
 	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentosExames(EmpregadoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoadGrupoMonitoramentosExames(getExampleBuilder(filter).example()),

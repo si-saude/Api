@@ -25,9 +25,19 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 			this.entity.setChave(Helper.filterLike(this.filter.getChave()));
 	}
 	
+	private void addChaveEq() {
+		if(this.filter.getChave()!= null)
+			this.entity.setChave(this.filter.getChave());
+	}
+	
 	private void addMatricula() {
 		if(this.filter.getMatricula()!= null)
 			this.entity.setMatricula(Helper.filterLike(this.filter.getMatricula()));
+	}
+	
+	private void addMatriculaEq() {
+		if(this.filter.getMatricula()!= null)
+			this.entity.setMatricula(this.filter.getMatricula());
 	}
 	
 	private void addEstadoCivil() {
@@ -109,6 +119,33 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 	private void addId() {
 		if(this.filter.getId() > 0)
 			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
+	}
+	
+	public GenericExampleBuilder<Empregado, EmpregadoFilter> exampleEq()
+			throws InstantiationException, IllegalAccessException {
+		if(this.filter!=null) {
+			initialize();
+			createExampleEq();
+			this.criterions.add(getExample());
+		}
+		return this;
+	}
+	
+	protected void createExampleEq() throws InstantiationException, IllegalAccessException {
+		addId();
+		addChaveEq();
+		addMatriculaEq();
+		addEstadoCivil();
+		addEscolaridade();
+		addRamal();
+		addStatus();
+		addBase();
+		addPessoa();
+		addCargo();
+		addFuncao();
+		addGhe();
+		addGhee();
+		addRegime();
 	}
 	
 	@Override

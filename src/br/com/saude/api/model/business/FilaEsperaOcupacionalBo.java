@@ -92,7 +92,7 @@ public class FilaEsperaOcupacionalBo
 			filter.getPessoa().getDataNascimento()
 				.setInicio(fila.getEmpregado().getPessoa().getDataNascimento());
 			
-			PagedList<Empregado> empregados = EmpregadoBo.getInstance().getList(filter);
+			PagedList<Empregado> empregados = EmpregadoBo.getInstance().getListEq(filter);
 			
 			if(empregados.getTotal() > 0)
 				fila.setEmpregado(empregados.getList().get(0));

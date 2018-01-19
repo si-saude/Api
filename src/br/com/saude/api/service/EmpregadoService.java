@@ -53,6 +53,15 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-eq")
+	public Response getListEq(EmpregadoFilter filter) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return Response.ok(getBo().getListEq(filter).getGenericPagedList()).build();
+	}
 
 	@Override
 	@POST

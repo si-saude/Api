@@ -57,7 +57,7 @@ public abstract class GenericDao<T> {
 		}catch(Exception ex) {
 			throw ex;
 		}finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 		
 		return entity;
@@ -81,7 +81,7 @@ public abstract class GenericDao<T> {
 		}catch(Exception ex) {
 			throw ex;
 		}finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 		
 		return entities;
@@ -117,7 +117,7 @@ public abstract class GenericDao<T> {
 		}catch(Exception ex) {
 			throw ex;
 		}finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 	}
 	
@@ -180,7 +180,7 @@ public abstract class GenericDao<T> {
 			throw ex;
 		}
 		finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 		
 		return pagedList;
@@ -212,7 +212,7 @@ public abstract class GenericDao<T> {
 			throw ex;
 		}
 		finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 		
 		return entity;
@@ -235,7 +235,7 @@ public abstract class GenericDao<T> {
 			throw ex;
 		}
 		finally {
-			session.close();
+			HibernateHelper.close(session);
 		}
 		return entity;
 	}
