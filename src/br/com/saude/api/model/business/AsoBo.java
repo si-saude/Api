@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.AsoBuilder;
 import br.com.saude.api.model.creation.builder.example.AsoExampleBuilder;
@@ -59,12 +60,15 @@ public class AsoBo
 	
 	@Override
 	public Aso save(Aso aso) throws Exception {
-//		
+		
 //		if(aso.getAsoAlteracoes() == null)
 //			aso.setAsoAlteracoes(new ArrayList<AsoAlteracao>());
 //		
 //		AsoAlteracao asoAlteracao = new AsoAlteracao();
+//		asoAlteracao.setAso(aso);
+//		asoAlteracao.setData(Helper.getNow());
 //		
+		
 		return super.save(aso);
 	}
 }
