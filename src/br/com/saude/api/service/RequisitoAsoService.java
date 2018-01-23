@@ -20,7 +20,7 @@ import br.com.saude.api.model.entity.filter.RequisitoAsoFilter;
 import br.com.saude.api.model.entity.po.RequisitoAso;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("RequisitoAso")
+@Path("requisito-aso")
 @RequestInterceptor
 public class RequisitoAsoService extends GenericServiceImpl<RequisitoAso,RequisitoAsoFilter,RequisitoAsoBo>
 							implements GenericService<RequisitoAso,RequisitoAsoFilter>{

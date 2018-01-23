@@ -57,7 +57,9 @@ import br.com.saude.api.model.persistence.EmpregadoDao;
 import br.com.saude.api.model.persistence.ExameDao;
 import br.com.saude.api.model.persistence.ProfissiogramaDao;
 import br.com.saude.api.model.persistence.ResultadoExameDao;
+import br.com.saude.api.util.constant.AcaoResultadoExame;
 import br.com.saude.api.util.constant.TipoConvocacao;
+import br.com.saude.api.util.constant.TipoResultadoExame;
 
 public class ResultadoExameBo extends
 		GenericBo<ResultadoExame, ResultadoExameFilter, ResultadoExameDao, ResultadoExameBuilder, ResultadoExameExampleBuilder> {
@@ -440,8 +442,8 @@ public class ResultadoExameBo extends
 						resultadoExame.getItemResultadoExames().add(itemResultadoExame);
 						resultadoExame.setEmpregadoConvocacao(empregadoConvocacao);
 						resultadoExame.setExame(exame);
-						resultadoExame.setAcao("REALIZADO");
-						resultadoExame.setTipo("PRECLINICO");
+						resultadoExame.setAcao(AcaoResultadoExame.getInstance().REALIZADO);
+						resultadoExame.setTipo(TipoResultadoExame.getInstance().PRECLINICO);
 						resultadoExame.setLocal("PMSO");
 						resultadoExame.setData(resultadoExameDate);
 						resultadoExames.add(resultadoExame);
