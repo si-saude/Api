@@ -1,5 +1,6 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -43,9 +44,17 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 			Convocacao convocacao = pair.getValue0();
 			Session session = pair.getValue1();
 			
+			List<Exame> exames = new ArrayList<Exame>();
+			
 			convocacao.getEmpregadoConvocacoes().forEach(e->{
 				e.getEmpregadoConvocacaoExames().forEach(ex->{
-					ex.setExame(session.get(Exame.class, ex.getExame().getId()));
+					int index = exames.indexOf(ex.getExame());
+					if(index >= 0)
+						ex.setExame(exames.get(index));
+					else {
+						ex.setExame(session.get(Exame.class, ex.getExame().getId()));
+						exames.add(ex.getExame());
+					}
 				});
 			});
 			

@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -48,6 +49,9 @@ public class Aso {
 	
 	@Version
 	private long version;
+	
+	@Transient
+	private Usuario usuario;
 
 	public int getId() {
 		return id;
@@ -112,5 +116,12 @@ public class Aso {
 	public void setAsoAlteracoes(List<AsoAlteracao> asoAlteracoes) {
 		this.asoAlteracoes = asoAlteracoes;
 	}
-	
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 }

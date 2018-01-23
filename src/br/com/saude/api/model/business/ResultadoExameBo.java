@@ -63,6 +63,9 @@ import br.com.saude.api.util.constant.TipoResultadoExame;
 
 public class ResultadoExameBo extends
 		GenericBo<ResultadoExame, ResultadoExameFilter, ResultadoExameDao, ResultadoExameBuilder, ResultadoExameExampleBuilder> {
+	
+	private Function<ResultadoExameBuilder,ResultadoExameBuilder> loadItemResultadoExames;
+	
 	private static ResultadoExameBo instance;
 
 	private ResultadoExameBo() {
@@ -83,6 +86,10 @@ public class ResultadoExameBo extends
 		
 		this.functionLoadAll = builder -> {
 			return this.functionLoad.apply(builder).loadItemResultadoExames();
+		};
+		
+		this.loadItemResultadoExames = builder -> {
+			return builder.loadItemResultadoExames();
 		};
 	}
 	
@@ -585,6 +592,10 @@ public class ResultadoExameBo extends
 	@Override
 	public PagedList<ResultadoExame> getList(ResultadoExameFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
+	}
+	
+	public PagedList<ResultadoExame> getListLoadItemResultadoExames(ResultadoExameFilter filter) throws Exception {
+		return super.getList(getDao().getListLoadItemResultadoExames(getExampleBuilder(filter).example()), this.loadItemResultadoExames);
 	}
 	
 	@Override

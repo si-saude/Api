@@ -171,11 +171,6 @@ public class FilaEsperaOcupacionalBo
 			throw new Exception("É necessário informar a Regra de Atendimento.");
 		
 		regra = RegraAtendimentoBo.getInstance().getById(regra.getId());
-		regra.getRegraAtendimentoEquipes().sort(new Comparator<RegraAtendimentoEquipe>() {
-			public int compare(RegraAtendimentoEquipe o1, RegraAtendimentoEquipe o2) {
-				return new Integer(o1.getId()).compareTo(o2.getId()) ;
-			}
-		});
 		
 		// 2 - VERIFICAR SE A LOCALIZAÇÃO FOI INFORMADA
 		if(at.getFilaEsperaOcupacional() == null || 

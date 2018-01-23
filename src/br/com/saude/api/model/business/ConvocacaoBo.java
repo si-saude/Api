@@ -38,9 +38,11 @@ import br.com.saude.api.model.creation.factory.entity.AsoFactory;
 import br.com.saude.api.model.creation.factory.entity.ExameFactory;
 import br.com.saude.api.model.creation.factory.entity.ResultadoExameFactory;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
+import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.filter.GerenciaFilter;
 import br.com.saude.api.model.entity.filter.GrupoMonitoramentoFilter;
+import br.com.saude.api.model.entity.filter.ResultadoExameFilter;
 import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Criterio;
@@ -387,8 +389,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			convocacao.setEmpregadoConvocacoes(new ArrayList<EmpregadoConvocacao>());
 		
 		//VERIFICAR OS EXAMES DOS EMPREGADOS
-convocacao.getEmpregadoConvocacoes().forEach(eC->{
-			
+		convocacao.getEmpregadoConvocacoes().forEach(eC->{
 			try {
 				if(!eC.isAuditado()) {
 					List<Exame> exames = getExames(eC.getEmpregado(), convocacao);
@@ -430,9 +431,10 @@ convocacao.getEmpregadoConvocacoes().forEach(eC->{
 		dataConvocacao = getValidadeAso(empregado);
 		
 		if(dataConvocacao != null) {
-			dataConvocacao = Date.from(LocalDateTime.from(new java.sql.Date(dataConvocacao.getTime()).toLocalDate())
-								.minusMonths(1).atZone(ZoneId.systemDefault())
-								.toInstant());
+			dataConvocacao = Date.from(LocalDateTime.ofInstant(dataConvocacao.toInstant(), ZoneId.systemDefault())
+										.minusMonths(1)
+										.atZone(ZoneId.systemDefault())
+										.toInstant());
 		}
 		
 		if(convocacao != null && dataConvocacao != null) {
@@ -646,11 +648,30 @@ convocacao.getEmpregadoConvocacoes().forEach(eC->{
 	
 	@Override
 	public Convocacao save(Convocacao convocacao) throws Exception {
+		
 		convocacao.getGerenciaConvocacoes().forEach(g->g.setConvocacao(convocacao));
 		convocacao.getEmpregadoConvocacoes().forEach(e->{
 			e.setConvocacao(convocacao);
 			e.getEmpregadoConvocacaoExames().forEach(eC->eC.setEmpregadoConvocacao(e));
+			
+			//CARREGAR OS RESULTADOS DE EXAME
+			if(e.getId() > 0) {
+				ResultadoExameFilter rFilter = new ResultadoExameFilter();
+				rFilter.setPageNumber(1);
+				rFilter.setPageSize(Integer.MAX_VALUE);
+				rFilter.setEmpregadoConvocacao(new EmpregadoConvocacaoFilter());
+				rFilter.getEmpregadoConvocacao().setId(e.getId());
+				
+				try {
+					e.setResultadoExames(ResultadoExameBo.getInstance()
+							.getListLoadItemResultadoExames(rFilter).getList());
+					e.getResultadoExames().forEach(r->r.setEmpregadoConvocacao(e));
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
 		});
+		
 		return super.save(convocacao);
 	}
 }
