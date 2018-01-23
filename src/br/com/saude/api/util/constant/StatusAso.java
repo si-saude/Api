@@ -16,8 +16,8 @@ public class StatusAso extends GenericConstant {
 		return instance;
 	}
 	
-	public final String PENDENTE_AUDITORIA 				= "PENDENTE DE AUDITORIA";
-	public final String PENDENTE_CORRECAO 				= "PENDENTE DE CORREÇÃO";
-	public final String PENDENTE_ARQUIVAMENTO			= "PENDENTE DE ARQUIVAMENTO";
-	public final String ARQUIVADO 						= "ARQUIVADO";
+	public static final String PENDENTE_AUDITORIA 				= "PENDENTE DE AUDITORIA";
+	public static final String PENDENTE_CORRECAO 				= "PENDENTE DE CORREÇÃO";
+	public static final String PENDENTE_ARQUIVAMENTO			= "PENDENTE DE ARQUIVAMENTO";
+	public static final String ARQUIVADO 						= "ARQUIVADO";
 }
