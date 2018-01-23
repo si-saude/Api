@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -21,6 +22,9 @@ public class RequisitoAso {
 	
 	@Version
 	private long version;
+	
+	@Transient
+	private boolean conforme;
 
 	public int getId() {
 		return id;
@@ -44,5 +48,13 @@ public class RequisitoAso {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public boolean isConforme() {
+		return conforme;
+	}
+
+	public void setConforme(boolean conforme) {
+		this.conforme = conforme;
 	}
 }

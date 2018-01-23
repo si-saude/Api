@@ -42,7 +42,9 @@ public class ResultadoExameBuilder extends GenericEntityBuilder<ResultadoExame, 
 		this.loadEmpregadoConvocacao = resultadoExames -> {
 			if(resultadoExames.get("origem").getEmpregadoConvocacao()!= null) {
 				resultadoExames.get("destino").setEmpregadoConvocacao(EmpregadoConvocacaoBuilder.
-						newInstance(resultadoExames.get("origem").getEmpregadoConvocacao()).getEntity());
+						newInstance(resultadoExames.get("origem").getEmpregadoConvocacao())
+						.loadEmpregado()
+						.getEntity());
 			}
 			return resultadoExames.get("destino");
 		};

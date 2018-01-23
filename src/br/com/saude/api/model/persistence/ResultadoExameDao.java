@@ -1,5 +1,7 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.function.Function;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -18,6 +20,8 @@ import br.com.saude.api.model.entity.po.ResultadoExame;
 
 public class ResultadoExameDao extends GenericDao<ResultadoExame> {
 
+	private Function<ResultadoExame,ResultadoExame> loadItemResultadoExames;
+	
 	private static ResultadoExameDao instance;
 	
 	private ResultadoExameDao() {
@@ -39,6 +43,11 @@ public class ResultadoExameDao extends GenericDao<ResultadoExame> {
 		
 		this.functionLoadAll = resultadoExame -> {
 			resultadoExame = this.functionLoad.apply(resultadoExame);
+			resultadoExame = loadItemResultadoExames(resultadoExame);
+			return resultadoExame;
+		};
+		
+		this.loadItemResultadoExames = resultadoExame -> {
 			resultadoExame = loadItemResultadoExames(resultadoExame);
 			return resultadoExame;
 		};
@@ -102,5 +111,9 @@ public class ResultadoExameDao extends GenericDao<ResultadoExame> {
 	
 	public PagedList<ResultadoExame> getListFunctionLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder,this.functionLoadAll);
+	}
+	
+	public PagedList<ResultadoExame> getListLoadItemResultadoExames(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder,this.loadItemResultadoExames);
 	}
 }
