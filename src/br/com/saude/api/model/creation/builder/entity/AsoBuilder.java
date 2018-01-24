@@ -43,6 +43,7 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 			if(asos.get("origem").getAtendimento() != null)
 				asos.get("destino").setAtendimento(AtendimentoBuilder
 						.newInstance(asos.get("origem").getAtendimento())
+						.loadTarefa()
 						.getEntity());
 			return asos.get("destino");
 		};
@@ -64,7 +65,10 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 		newAso.setId(aso.getId());
 		newAso.setData(aso.getData());
 		newAso.setValidade(aso.getValidade());
+		newAso.setStatus(aso.getStatus());
 		newAso.setVersion(aso.getVersion());
+		newAso.setConforme(aso.isConforme());
+		newAso.setNaoConformidades(aso.getNaoConformidades());
 		
 		return newAso;
 	}

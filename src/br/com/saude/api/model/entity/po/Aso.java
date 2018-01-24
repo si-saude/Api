@@ -47,6 +47,10 @@ public class Aso {
 	@OneToMany(mappedBy="aso", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<AsoAlteracao> asoAlteracoes;
 	
+	private boolean conforme;
+	
+	private String naoConformidades;
+
 	@Version
 	private long version;
 	
@@ -116,6 +120,14 @@ public class Aso {
 	public void setAsoAlteracoes(List<AsoAlteracao> asoAlteracoes) {
 		this.asoAlteracoes = asoAlteracoes;
 	}
+	
+	public boolean isConforme() {
+		return conforme;
+	}
+
+	public void setConforme(boolean conforme) {
+		this.conforme = conforme;
+	}
 
 	public Usuario getUsuario() {
 		return usuario;
@@ -123,5 +135,13 @@ public class Aso {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+	
+	public String getNaoConformidades() {
+		return naoConformidades;
+	}
+
+	public void setNaoConformidades(String naoConformidades) {
+		this.naoConformidades = naoConformidades;
 	}
 }

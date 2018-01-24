@@ -11,6 +11,7 @@ import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.Atendimento;
+import br.com.saude.api.model.entity.po.Tarefa;
 
 public class AsoDao extends GenericDao<Aso> {
 
@@ -38,8 +39,11 @@ public class AsoDao extends GenericDao<Aso> {
 		};
 		
 		this.functionLoad = aso -> {
-			if(aso.getAtendimento() != null)
+			if(aso.getAtendimento() != null) {
 				aso.setAtendimento((Atendimento)Hibernate.unproxy(aso.getAtendimento()));
+				aso.getAtendimento().setTarefa((Tarefa) Hibernate.unproxy(aso.getAtendimento().getTarefa()));
+				aso.getAtendimento().getFilaAtendimentoOcupacional().getAtualizacoes().size();
+			}
 			
 			if(aso.getEmpregado() != null)
 				Hibernate.initialize(aso.getEmpregado());

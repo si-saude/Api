@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.hibernate.proxy.HibernateProxy;
+
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
@@ -55,17 +57,25 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 		newAtendimento.setId(atendimento.getId());
 		newAtendimento.setVersion(atendimento.getVersion());
 		
-		if(atendimento.getFilaAtendimentoOcupacional() != null)
-			newAtendimento.setFilaAtendimentoOcupacional(FilaAtendimentoOcupacionalBuilder
-					.newInstance(atendimento.getFilaAtendimentoOcupacional())
-					.loadLocalizacao().loadAtualizacoes()
-					.getEntity());
+		if(atendimento.getFilaAtendimentoOcupacional() != null) {
+			FilaAtendimentoOcupacionalBuilder filaAtendBuilder = FilaAtendimentoOcupacionalBuilder
+					.newInstance(atendimento.getFilaAtendimentoOcupacional());
+			
+			if(!(atendimento.getFilaAtendimentoOcupacional().getLocalizacao() instanceof HibernateProxy))
+				filaAtendBuilder = filaAtendBuilder.loadLocalizacao();
+			
+			newAtendimento.setFilaAtendimentoOcupacional(filaAtendBuilder.loadAtualizacoes().getEntity());
+		}
 		
-		if(atendimento.getFilaEsperaOcupacional() != null)
-			newAtendimento.setFilaEsperaOcupacional(FilaEsperaOcupacionalBuilder
-					.newInstance(atendimento.getFilaEsperaOcupacional())
-					.loadLocalizacao()
-					.getEntity());
+		if(atendimento.getFilaEsperaOcupacional() != null) {
+			FilaEsperaOcupacionalBuilder filaEsperaBuilder = FilaEsperaOcupacionalBuilder
+					.newInstance(atendimento.getFilaEsperaOcupacional());
+			
+			if(!(atendimento.getFilaEsperaOcupacional().getLocalizacao() instanceof HibernateProxy))
+				filaEsperaBuilder = filaEsperaBuilder.loadLocalizacao();
+			
+			newAtendimento.setFilaEsperaOcupacional(filaEsperaBuilder.getEntity());
+		}
 		
 		return newAtendimento;
 	}

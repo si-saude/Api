@@ -1,16 +1,11 @@
 package br.com.saude.api.model.business;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-
 import br.com.saude.api.generic.GenericBo;
-import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.AsoBuilder;
 import br.com.saude.api.model.creation.builder.example.AsoExampleBuilder;
 import br.com.saude.api.model.entity.filter.AsoFilter;
 import br.com.saude.api.model.entity.po.Aso;
-import br.com.saude.api.model.entity.po.AsoAlteracao;
 import br.com.saude.api.model.persistence.AsoDao;
 
 public class AsoBo 
