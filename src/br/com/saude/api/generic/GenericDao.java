@@ -134,7 +134,6 @@ public abstract class GenericDao<T> {
 		List<T> list;
 		PagedList<T> pagedList = new PagedList<T>();
 		List<Criterion> criterions = exampleBuilder.getCriterions();
-		List<Triplet<String,CriteriaExample,JoinType>> criterias = exampleBuilder.getCriterias();
 		Session session = HibernateHelper.getSession();
 		
 		try {
@@ -146,24 +145,7 @@ public abstract class GenericDao<T> {
 				for(Criterion criterion : criterions)
 					criteria.add(criterion);
 			
-			if(criterias != null)
-				for(Triplet<String,CriteriaExample,JoinType> c: criterias) {
-					Criteria example = criteria.createCriteria(c.getValue0(),c.getValue2());
-					for(Criterion criterion : c.getValue1().getCriterions())
-						example.add(criterion);
-					example.add(c.getValue1().getExample());
-					
-					//SOLUÇÃO TEMPORÁRIA. SUBSTITUIR POR MÉTODO RECURSIVO
-					if(c.getValue1().getCriterias() != null) {
-						for(Triplet<String,CriteriaExample,JoinType> cc: c.getValue1().getCriterias()) {
-							Criteria ex = example.createCriteria(cc.getValue0(),cc.getValue2());
-							for(Criterion cr : cc.getValue1().getCriterions())
-								ex.add(cr);
-							ex.add(cc.getValue1().getExample());
-						}
-					}
-				}
-			
+			criteria = loopCriterias(criteria, exampleBuilder.getCriterias());			
 			criteria = finishCriteria(criteria,exampleBuilder);			
 			list = criteria.list();
 			
@@ -184,6 +166,19 @@ public abstract class GenericDao<T> {
 		}
 		
 		return pagedList;
+	}
+	
+	private Criteria loopCriterias(Criteria criteria, List<Triplet<String,CriteriaExample,JoinType>> criterias) {
+		if(criterias != null)
+			for(Triplet<String,CriteriaExample,JoinType> c: criterias) {
+				Criteria example = criteria.createCriteria(c.getValue0(),c.getValue2());
+				for(Criterion criterion : c.getValue1().getCriterions())
+					example.add(criterion);
+				example.add(c.getValue1().getExample());
+				
+				example = loopCriterias(example, c.getValue1().getCriterias());
+			}
+		return criteria;
 	}
 	
 	public T getFirst(List<Criterion> criterions) throws Exception{

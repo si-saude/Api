@@ -166,7 +166,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				atendimento.getAso().setData(now);
 				atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional()
 						.getEmpregado());
-				atendimento.getAso().setStatus(StatusAso.getInstance().PENDENTE_AUDITORIA);
+				atendimento.getAso().setStatus(StatusAso.PENDENTE_AUDITORIA);
 				atendimento.getAso().setValidade(getValidadeAso(atendimento));
 			}
 		} else

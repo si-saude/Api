@@ -73,7 +73,7 @@ public class AsoDao extends GenericDao<Aso> {
 			aso = (Aso) session.createCriteria(Aso.class)
 					.createAlias("empregado", "empregado")
 					.add(Restrictions.eq("empregado.id", aso.getEmpregado().getId()))
-//					.add(Restrictions.eq("conforme", true))
+					.add(Restrictions.eq("conforme", true))
 					.addOrder(Order.desc("validade"))
 					.uniqueResult();
 		}catch (Exception ex) {
