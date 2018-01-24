@@ -90,7 +90,6 @@ public class AsoBo
 		}		
 		
 		AsoAlteracao asoAlteracao = new AsoAlteracao();
-		asoAlteracao.setAso(aso);
 		asoAlteracao.setData(Helper.getNow());
 		asoAlteracao.setUsuario(aso.getUsuario());
 		asoAlteracao.setStatus(aso.getStatus());
@@ -99,6 +98,7 @@ public class AsoBo
 			aso.setAsoAlteracoes(new ArrayList<AsoAlteracao>());
 		
 		aso.getAsoAlteracoes().add(asoAlteracao);
+		aso.getAsoAlteracoes().forEach(aA->aA.setAso(aso));		
 		
 		return super.save(aso);
 	}
