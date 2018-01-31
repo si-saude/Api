@@ -114,4 +114,21 @@ implements GenericService<ResultadoExame, ResultadoExameFilter>{
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
+	
+	@POST
+	@Path("/valid-txt")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response validFileFromTxt(File arquivo) {
+		try {
+			String matriculasErro = ResultadoExameBo.getInstance().validFileFromTxt(arquivo);
+			if ( matriculasErro.length() > 0 )
+				return Response.ok("Validado com erro nas seguintes matriculas: " + matriculasErro).build();
+			else
+				return Response.ok("Validado com sucesso.").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 }

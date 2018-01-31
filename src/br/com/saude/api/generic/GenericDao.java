@@ -171,7 +171,7 @@ public abstract class GenericDao<T> {
 	private Criteria loopCriterias(Criteria criteria, List<Triplet<String,CriteriaExample,JoinType>> criterias) {
 		if(criterias != null)
 			for(Triplet<String,CriteriaExample,JoinType> c: criterias) {
-				Criteria example = criteria.createCriteria(c.getValue0(),c.getValue2());
+				Criteria example = criteria.createCriteria(c.getValue0(),c.getValue0(),c.getValue2());
 				for(Criterion criterion : c.getValue1().getCriterions())
 					example.add(criterion);
 				example.add(c.getValue1().getExample());

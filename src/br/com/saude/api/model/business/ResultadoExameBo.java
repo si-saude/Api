@@ -247,6 +247,295 @@ public class ResultadoExameBo extends
 		matriculasNaoCadastradas = matriculasNaoCadastradas.substring(0, matriculasNaoCadastradas.length() - 2);
 		return matriculasNaoCadastradas;
 	}
+	
+	public String validFileFromTxt(File arquivo) throws InstantiationException, IllegalAccessException, Exception {
+		List<EmpregadoConvocacao> empregadoConvocacoes = new ArrayList<EmpregadoConvocacao>();
+		List<Exame> exames = new ArrayList<Exame>();
+		List<ResultadoExame> resultadoExames = new ArrayList<ResultadoExame>();
+		List<ItemResultadoExame> itemResultadoExames = new ArrayList<ItemResultadoExame>();
+		String matriculasNaoCadastradas = "";
+		BufferedReader br = null;
+		FileReader fr = null;
+
+		try {
+			fr = new FileReader(arquivo);
+			br = new BufferedReader(fr);
+
+			String currentLine;
+			String resultadoVariasLinhas = "";
+
+			while ( (currentLine = br.readLine()) != null ) {
+				if ( String.valueOf(currentLine.charAt(0)).equals("M") ) continue;
+				String tipoImportacao = String.valueOf(currentLine.charAt(1));
+				String matricula = currentLine.substring(16, 38).trim();
+				String convocacaoTipo = this.getTipoConvocacaoFromLineTxt(currentLine);
+				String data = currentLine.substring(38, 46);
+				String codigoExame = currentLine.substring(46, 53);
+				String codigoCampo = currentLine.substring(53, 56);
+				String linha = currentLine.substring(56, 58);
+				String resultado = currentLine.substring(58, currentLine.length());
+				DateFormat format = new SimpleDateFormat("yyyyMMdd");
+				Date convocacaoDate = format.parse(data);
+				Date resultadoExameDate = null;
+				if (codigoCampo.equals("010") ) {
+					DateFormat formatRED = new SimpleDateFormat("yyyyMMdd");
+					resultadoExameDate = formatRED.parse(resultado);
+				}
+				
+				EmpregadoConvocacao empregadoConvocacao = null;
+				Optional<EmpregadoConvocacao> eC = empregadoConvocacoes.stream().filter(ec -> {
+					if ( ec.getEmpregado().getMatricula() == matricula && 
+							ec.getConvocacao().getTipo() == convocacaoTipo &&
+							convocacaoDate.after(ec.getConvocacao().getInicio()) &&
+							convocacaoDate.before( ec.getConvocacao().getFim()) )
+							return true;
+					return false;
+				}).findFirst();
+				if ( !eC.isPresent() ) {
+					List<EmpregadoConvocacao> eCs = this.fetchEmpregadoConvocacaoDB(matricula, convocacaoDate, convocacaoTipo);
+					if ( eCs == null ) {
+						if ( !matriculasNaoCadastradas.contains(matricula) )
+							matriculasNaoCadastradas += matricula + ", ";
+						continue;
+					} else empregadoConvocacao = eCs.get(0);
+				} else empregadoConvocacao = eC.get();
+				
+				Exame exame = null;
+				Optional<Exame> ex = exames.stream().filter(ex1 -> ex1.getCodigo().equals(codigoExame)).findFirst();
+				if ( !ex.isPresent() ) {
+					List<Exame> es = this.fetchExameByCodigo(codigoExame);
+					if ( es == null ) {
+						if ( !matriculasNaoCadastradas.contains(matricula) )
+							matriculasNaoCadastradas += matricula + ", ";
+						continue;
+					} else exame = es.get(0);
+				} else exame = ex.get();
+				
+				ItemResultadoExame itemResultadoExame = new ItemResultadoExame();
+				
+				CampoExame campoExame = null;
+				Optional<CampoExame> cE = exame.getCampoExames().stream().
+						filter(e -> e.getCodigo().equals(codigoCampo)).findFirst();
+				if ( !cE.isPresent() ) continue;
+				else campoExame = cE.get();
+				
+				final int empregadoConvocacaoId = empregadoConvocacao.getId();
+				final int exameId = exame.getId();
+				Optional<ResultadoExame> rE = resultadoExames.stream().filter(r -> {
+					if ( r.getEmpregadoConvocacao().getId() == empregadoConvocacaoId &&
+							r.getExame().getId() == exameId)
+						return true;
+					return false;
+				}).findFirst();
+				
+				ResultadoExame resultadoExame = null;
+				
+				//se o tipo da importacao é alteracao
+				if (tipoImportacao.equals("A")) {
+					
+					// se resultado exame ja existe na lista, quer dizer que ja foi setada a data e deve-se setar os outros campos
+					if ( rE.isPresent() ) {
+						resultadoExame = rE.get();
+						//busca o campo na lista
+						Optional<ItemResultadoExame> iRE = itemResultadoExames.stream().filter(i -> {
+							if ( i.getResultadoExame().getEmpregadoConvocacao().getId() == empregadoConvocacaoId &&
+									i.getResultadoExame().getExame().getId() == exameId &&
+									i.getCodigo().equals(codigoCampo)) 
+								return true;
+							return false;
+						}).findFirst();
+						
+						resultadoVariasLinhas += resultado + " ";
+						//verifica se o campo possui mais de uma linha
+						if ( Integer.parseInt(linha) > 1 ) {
+							// se o campo possui mais de uma linha e ja foi add na lista de campos, atualiza seu resultado
+							if ( iRE.isPresent() ) {
+								itemResultadoExame = iRE.get();
+								
+								// verifica se o campo existe no resultado exame
+								Optional<ItemResultadoExame> i = resultadoExame.getItemResultadoExames().stream().
+									filter(iREx -> iREx.getCodigo().equals(codigoCampo)).findFirst();
+								
+								// se nao existe, nao deve ser atualizado
+								if ( !i.isPresent() ) continue;
+								
+								//constroi item resultado exame e atualiza a lista de itens resultado exames
+								itemResultadoExame = i.get();
+								itemResultadoExames.remove(itemResultadoExames.indexOf(itemResultadoExame));
+								itemResultadoExame.setResultado(resultadoVariasLinhas);
+								itemResultadoExames.add(itemResultadoExame);
+								
+								//atualiza a lista de resultado exames e de item resultado exames em resultado exame
+								resultadoExames.remove(resultadoExames.indexOf(resultadoExame));
+								resultadoExame.getItemResultadoExames().remove(resultadoExame.getItemResultadoExames().indexOf(i.get()));
+								resultadoExame.getItemResultadoExames().add(itemResultadoExame);
+								resultadoExames.add(resultadoExame);
+							// se o campo possui mais de uma linha e nao esta add na lista de campos, cria um novo campo e add na lista
+							} else {
+								itemResultadoExame.setResultadoExame(resultadoExame);
+								itemResultadoExame.setCodigo(campoExame.getCodigo());
+								itemResultadoExame.setTitulo(campoExame.getTitulo());
+								itemResultadoExame.setResultado(resultadoVariasLinhas);
+								itemResultadoExames.add(itemResultadoExame);
+								resultadoExames.remove(resultadoExames.indexOf(resultadoExame));
+								resultadoExame.getItemResultadoExames().add(itemResultadoExame);
+								resultadoExames.add(resultadoExame);
+							}
+						//se o campo n possui mais de uma linha, ele deve ser atualizado
+						} else {
+							resultadoVariasLinhas = "";
+							
+							// pega o campo do resultado exame que deve ser atualizado 
+							Optional<ItemResultadoExame> iREx = resultadoExame.getItemResultadoExames().stream().
+									filter(iR -> iR.getCodigo().equals(codigoCampo)).findFirst();
+							
+							// se o campo nao existe no resultado exame, continua
+							if ( !iREx.isPresent() ) continue;
+							
+							int indexIREx = resultadoExame.getItemResultadoExames().indexOf(iREx.get());
+							itemResultadoExame = resultadoExame.getItemResultadoExames().get(indexIREx);
+							itemResultadoExame.setResultado(resultado);
+							itemResultadoExames.add(itemResultadoExame);
+							resultadoExames.remove(resultadoExames.indexOf(resultadoExame));
+							resultadoExame.getItemResultadoExames().add(itemResultadoExame);
+							resultadoExames.add(resultadoExame);	
+						}
+					// se resultado exame nao existe na lista, deve ser buscado no banco
+					} else {
+						//busca o resultado exame do banco
+						List<ResultadoExame> rEs = fetchResultadoExameDB(empregadoConvocacao, exame);
+						// se n existir no banco, continua
+						if ( rEs != null ) {
+							resultadoExame = rEs.get(0);
+							
+							//se o primeiro campo nao for um de data, continua
+							if ( !campoExame.getCodigo().equals("010") ) continue;
+							
+							//busca o item resultado exame que contenha um campo data dentro do resultado exame
+							Optional<ItemResultadoExame> iREx = resultadoExame.getItemResultadoExames().stream().filter(iRE -> 
+								iRE.getCodigo().equals("010")).findFirst();
+							
+							//se nao existir um campo data no resultado exame, continua
+							if ( !iREx.isPresent() ) continue;
+							
+							//se existir o campo data, ele deve ser atualizado e add na lista de itens e de resultados
+							itemResultadoExame = iREx.get();
+
+							int indexIREx = resultadoExame.getItemResultadoExames().indexOf(itemResultadoExame);
+							resultadoExame.getItemResultadoExames().get(indexIREx).setResultado(resultado);
+							itemResultadoExames.add(itemResultadoExame);
+							resultadoExame.setData(resultadoExameDate);				
+							resultadoExames.add(resultadoExame);
+							resultadoVariasLinhas = "";
+						} else continue;
+					}
+				//se o tipo de importacao for adicionar
+				} else {
+					// se o resultado exame nao existe na lista
+					if ( !rE.isPresent() ) {
+						// deve ser adicionado um novo resultado exame atraves do campo data
+						if ( !codigoCampo.equals("010") ) continue;
+						
+						resultadoExame = new ResultadoExame();
+						
+						if (resultadoExame.getItemResultadoExames() == null)
+							resultadoExame.setItemResultadoExames(new ArrayList<ItemResultadoExame>());
+						
+						itemResultadoExame.setResultadoExame(resultadoExame);
+						itemResultadoExame.setCodigo(campoExame.getCodigo());
+						itemResultadoExame.setTitulo(campoExame.getTitulo());
+						itemResultadoExame.setResultado(resultado);
+						itemResultadoExames.add(itemResultadoExame);
+						resultadoExame.getItemResultadoExames().add(itemResultadoExame);
+						resultadoExame.setEmpregadoConvocacao(empregadoConvocacao);
+						resultadoExame.setExame(exame);
+						resultadoExame.setAcao(AcaoResultadoExame.getInstance().REALIZADO);
+						resultadoExame.setTipo(TipoResultadoExame.getInstance().PRECLINICO);
+						resultadoExame.setLocal("PMSO");
+						resultadoExame.setData(resultadoExameDate);
+						resultadoExames.add(resultadoExame);
+						resultadoVariasLinhas = "";
+					// se o resultado exame existe na lista, deve ser atualizado 
+					} else {
+						resultadoExame = rE.get();
+						
+						// se existe mais de uma linha para o resultado exame, o seu resultado deve ser atualizado ou criado um item
+						if ( Integer.parseInt(linha) > 1 ) {
+							
+							// busca o item resultado exame dentro da lista
+							Optional<ItemResultadoExame> iRE = itemResultadoExames.stream().filter(i -> {
+								if ( i.getResultadoExame().getEmpregadoConvocacao().getId() == empregadoConvocacaoId &&
+										i.getResultadoExame().getExame().getId() == exameId &&
+										i.getCodigo().equals(codigoCampo)) 
+									return true;
+								return false;
+							}).findFirst();
+							
+							resultadoVariasLinhas += resultado + " ";
+							
+							//se existir o item resultado exame na lista, atualiza o resultado
+							if ( iRE.isPresent() ) {
+								itemResultadoExame = iRE.get();
+								
+								// verifica se o campo existe no resultado exame
+								Optional<ItemResultadoExame> i = resultadoExame.getItemResultadoExames().stream().
+									filter(iREx -> iREx.getCodigo().equals(codigoCampo)).findFirst();
+								
+								// se nao existe, nao deve ser atualizado
+								if ( !i.isPresent() ) continue;
+								
+								//constroi item resultado exame e atualiza a lista de itens resultado exames
+								itemResultadoExame = i.get();
+								itemResultadoExames.remove(itemResultadoExames.indexOf(itemResultadoExame));
+								itemResultadoExame.setResultado(resultadoVariasLinhas);
+								itemResultadoExames.add(itemResultadoExame);
+								
+								//atualiza a lista de resultado exames e de item resultado exames em resultado exame
+								resultadoExames.remove(resultadoExames.indexOf(resultadoExame));
+								resultadoExame.getItemResultadoExames().remove(resultadoExame.getItemResultadoExames().indexOf(i.get()));
+								resultadoExame.getItemResultadoExames().add(itemResultadoExame);
+								resultadoExames.add(resultadoExame);
+							//se nao existe o item resultado exame na lista, deve ser criado um e add
+							} else {
+								itemResultadoExame.setResultadoExame(resultadoExame);
+								itemResultadoExame.setCodigo(campoExame.getCodigo());
+								itemResultadoExame.setTitulo(campoExame.getTitulo());
+								itemResultadoExame.setResultado(resultadoVariasLinhas);
+								itemResultadoExames.add(itemResultadoExame);
+								resultadoExames.remove(resultadoExames.indexOf(resultadoExame));
+								resultadoExame.getItemResultadoExames().add(itemResultadoExame);
+								resultadoExames.add(resultadoExame);
+							}
+						// se nao existe mais de uma linha no item resultado exame, deve atualizado o resultado exame
+						} else {
+							resultadoVariasLinhas = "";
+							itemResultadoExame.setResultadoExame(resultadoExame);
+							itemResultadoExame.setCodigo(campoExame.getCodigo());
+							itemResultadoExame.setTitulo(campoExame.getTitulo());
+							itemResultadoExame.setResultado(resultado);
+							itemResultadoExames.add(itemResultadoExame);
+							resultadoExames.remove(resultadoExames.indexOf(resultadoExame));
+							resultadoExame.getItemResultadoExames().add(itemResultadoExame);
+							resultadoExames.add(resultadoExame);
+						}
+					}
+				}
+				
+			}
+			try {
+				ResultadoExameValidator rEV = new ResultadoExameValidator();
+				rEV.validate(resultadoExames);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if(matriculasNaoCadastradas.length() > 1)
+			matriculasNaoCadastradas = matriculasNaoCadastradas.substring(0, matriculasNaoCadastradas.length() - 2);
+		return matriculasNaoCadastradas;
+	}
 
 	public String importFileFromTxt(File arquivo) throws InstantiationException, IllegalAccessException, Exception {
 		List<EmpregadoConvocacao> empregadoConvocacoes = new ArrayList<EmpregadoConvocacao>();
@@ -533,7 +822,9 @@ public class ResultadoExameBo extends
 			e.printStackTrace();
 		}
 
-		matriculasNaoCadastradas = matriculasNaoCadastradas.substring(0, matriculasNaoCadastradas.length() - 2);
+		if(matriculasNaoCadastradas.length() > 1)
+			matriculasNaoCadastradas = matriculasNaoCadastradas.substring(0, matriculasNaoCadastradas.length() - 2);
+		
 		return matriculasNaoCadastradas;
 	}
 

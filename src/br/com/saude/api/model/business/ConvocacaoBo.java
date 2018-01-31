@@ -298,8 +298,8 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			stringReplacer = stringReplacer.replace("exames", exames);
 			
 			//GERAR PDF
-			pdfUri = new URI(uri.getPath()+"/"+Objects.toString(eC.getEmpregado().getChave()+"-","")
-					+eC.getEmpregado().getPessoa().getNome().replace(' ', '_')+".pdf");
+			pdfUri = new URI(uri.getPath()+"/"+Objects.toString(eC.getEmpregado().getMatricula().trim()+"-","")
+			+"EXAMES_COMPLEMENTARES.pdf");
 			pdf = new File(pdfUri.getPath());
 			OutputStream stream = new FileOutputStream(pdf);
 			Document doc = new Document();

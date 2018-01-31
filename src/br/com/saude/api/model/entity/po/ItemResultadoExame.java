@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class ItemResultadoExame {
@@ -24,6 +25,7 @@ public class ItemResultadoExame {
 	
 	private String titulo;
 	
+	@Size(max = 2048, message="Tamanho máximo para Resultado: 2048")
 	private String resultado;
 	
 	@Version
