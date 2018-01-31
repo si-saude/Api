@@ -21,7 +21,6 @@ import br.com.saude.api.model.entity.po.RegraAtendimento;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("regra-atendimento")
-@RequestInterceptor
 public class RegraAtendimentoService
 	extends GenericServiceImpl<RegraAtendimento, RegraAtendimentoFilter, 
 								RegraAtendimentoBo>
@@ -32,6 +31,7 @@ public class RegraAtendimentoService
 		return RegraAtendimentoBo.getInstance();
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -46,6 +46,7 @@ public class RegraAtendimentoService
 		}
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -66,6 +67,7 @@ public class RegraAtendimentoService
 		return super.getSelectListGeneric(filter);
 	}
 
+	@RequestInterceptor
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -73,6 +75,7 @@ public class RegraAtendimentoService
 		return super.getGeneric(new Integer(id));
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

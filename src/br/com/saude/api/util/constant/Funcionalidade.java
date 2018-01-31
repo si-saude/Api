@@ -31,11 +31,7 @@ public class Funcionalidade extends GenericConstant {
 	public static final String EMPREGADO_CONVOCACAO_ALTERAR		 				= "EMPREGADO-CONVOCACAO_ALTERAR";
 	public static final String EMPREGADO_CONVOCACAO_REMOVER 					= "EMPREGADO-CONVOCACAO_REMOVER";
 	public static final String EMPREGADO_CONVOCACAO_DETALHE 					= "EMPREGADO-CONVOCACAO_DETALHE";
-	public static final String ATENDIMENTO_LISTAR						= "CONVOCACAO_LISTAR";
-	public static final String ATENDIMENTO_ADICIONAR 			    	= "ATENDIMENTO_ADICIONAR";
-	public static final String ATENDIMENTO_ALTERAR		 			= "ATENDIMENTO_ALTERAR";
-	public static final String ATENDIMENTO_REMOVER 					= "ATENDIMENTO_REMOVER";
-	public static final String ATENDIMENTO_DETALHE 					= "ATENDIMENTO_DETALHE";
+	public static final String ATENDIMENTO						= "ATENDIMENTO";
 	public static final String EXAME_LISTAR						= "EXAME_LISTAR";
 	public static final String EXAME_ADICIONAR 			    	= "EXAME_ADICIONAR";
 	public static final String EXAME_ALTERAR		 				= "EXAME_ALTERAR";

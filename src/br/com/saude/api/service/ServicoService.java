@@ -21,7 +21,6 @@ import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("servico")
-@RequestInterceptor
 public class ServicoService extends GenericServiceImpl<Servico,ServicoFilter,ServicoBo>
 							implements GenericService<Servico,ServicoFilter>{
 
@@ -31,6 +30,7 @@ public class ServicoService extends GenericServiceImpl<Servico,ServicoFilter,Ser
 		return ServicoBo.getInstance();
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -44,7 +44,8 @@ public class ServicoService extends GenericServiceImpl<Servico,ServicoFilter,Ser
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
-	
+
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -65,6 +66,7 @@ public class ServicoService extends GenericServiceImpl<Servico,ServicoFilter,Ser
 		return super.getSelectListGeneric(filter);
 	}
 
+	@RequestInterceptor
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -72,6 +74,7 @@ public class ServicoService extends GenericServiceImpl<Servico,ServicoFilter,Ser
 		return super.getGeneric(new Integer(id));
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
