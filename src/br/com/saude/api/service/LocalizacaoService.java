@@ -21,7 +21,6 @@ import br.com.saude.api.model.entity.po.Localizacao;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("localizacao")
-@RequestInterceptor
 public class LocalizacaoService extends GenericServiceImpl<Localizacao,LocalizacaoFilter,LocalizacaoBo>
 								implements GenericService<Localizacao,LocalizacaoFilter>{
 	
@@ -29,7 +28,8 @@ public class LocalizacaoService extends GenericServiceImpl<Localizacao,Localizac
 	protected LocalizacaoBo getBo() {
 		return LocalizacaoBo.getInstance();
 	}
-	
+
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -43,7 +43,8 @@ public class LocalizacaoService extends GenericServiceImpl<Localizacao,Localizac
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
-	
+
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -64,6 +65,7 @@ public class LocalizacaoService extends GenericServiceImpl<Localizacao,Localizac
 		return super.getSelectListGeneric(filter);
 	}
 
+	@RequestInterceptor
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -71,6 +73,7 @@ public class LocalizacaoService extends GenericServiceImpl<Localizacao,Localizac
 		return super.getGeneric(new Integer(id));
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

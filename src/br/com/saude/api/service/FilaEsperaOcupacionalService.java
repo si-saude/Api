@@ -22,7 +22,6 @@ import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("fila-espera-ocupacional")
-@RequestInterceptor
 public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaOcupacional, FilaEsperaOcupacionalFilter, FilaEsperaOcupacionalBo>
 							implements GenericService<FilaEsperaOcupacional, FilaEsperaOcupacionalFilter>{
 
@@ -30,7 +29,8 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 	protected FilaEsperaOcupacionalBo getBo() {
 		return FilaEsperaOcupacionalBo.getInstance();
 	}
-	
+
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -68,7 +68,8 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
-
+	
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -79,6 +80,7 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 		return super.getListGeneric(filter);
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -89,6 +91,7 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 		return super.getSelectListGeneric(filter);
 	}
 
+	@RequestInterceptor
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -96,6 +99,7 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 		return super.getGeneric(new Integer(id));
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
