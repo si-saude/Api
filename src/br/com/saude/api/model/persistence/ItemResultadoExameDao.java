@@ -3,7 +3,10 @@ package br.com.saude.api.model.persistence;
 import org.hibernate.Hibernate;
 
 import br.com.saude.api.generic.GenericDao;
+import br.com.saude.api.generic.GenericExampleBuilder;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.ItemResultadoExame;
+import br.com.saude.api.model.entity.po.ResultadoExame;
 
 public class ItemResultadoExameDao extends GenericDao<ItemResultadoExame> {
 
@@ -31,6 +34,10 @@ public class ItemResultadoExameDao extends GenericDao<ItemResultadoExame> {
 			item = loadResultadoExame(item);
 			return item;
 		};
+	}
+	
+	public PagedList<ItemResultadoExame> getListFunctionLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder,this.functionLoadAll);
 	}
 	
 	public ItemResultadoExame getByIdLoadAll(Object id) throws Exception {
