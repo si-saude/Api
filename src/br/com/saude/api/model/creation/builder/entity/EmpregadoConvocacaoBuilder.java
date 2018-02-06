@@ -1,5 +1,7 @@
 package br.com.saude.api.model.creation.builder.entity;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -7,6 +9,7 @@ import java.util.function.Function;
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.entity.po.EmpregadoConvocacaoExame;
 
 public class EmpregadoConvocacaoBuilder 
 		extends GenericEntityBuilder<EmpregadoConvocacao, EmpregadoConvocacaoFilter> {
@@ -65,10 +68,20 @@ public class EmpregadoConvocacaoBuilder
 		};
 		
 		this.loadEmpregadoConvocacaoExames = empregadoConvocacoes -> {
-			if(empregadoConvocacoes.get("origem").getEmpregadoConvocacaoExames() != null)
-				empregadoConvocacoes.get("destino").setEmpregadoConvocacaoExames(EmpregadoConvocacaoExameBuilder
+			if(empregadoConvocacoes.get("origem").getEmpregadoConvocacaoExames() != null) {
+				List<EmpregadoConvocacaoExame> list = EmpregadoConvocacaoExameBuilder
 						.newInstance(empregadoConvocacoes.get("origem").getEmpregadoConvocacaoExames())
-						.getEntityList());
+						.getEntityList();
+				
+				Collections.sort(list, new Comparator<EmpregadoConvocacaoExame>() {
+			        @Override
+			        public int compare(EmpregadoConvocacaoExame e1, EmpregadoConvocacaoExame e2){
+			        	return e1.getExame().getCodigo().compareTo(e2.getExame().getCodigo());
+			        }
+			    });
+				
+				empregadoConvocacoes.get("destino").setEmpregadoConvocacaoExames(list);
+			}
 			return empregadoConvocacoes.get("destino");
 		};
 		

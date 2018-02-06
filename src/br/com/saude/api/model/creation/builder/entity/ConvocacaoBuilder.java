@@ -1,5 +1,7 @@
 package br.com.saude.api.model.creation.builder.entity;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -7,6 +9,7 @@ import java.util.function.Function;
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.po.Convocacao;
+import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
 
 public class ConvocacaoBuilder extends GenericEntityBuilder<Convocacao, ConvocacaoFilter> {
 
@@ -50,20 +53,44 @@ public class ConvocacaoBuilder extends GenericEntityBuilder<Convocacao, Convocac
 		};
 		
 		this.loadEmpregadoConvocacoesAll  = convocacoes -> {
-			if(convocacoes.get("origem").getEmpregadoConvocacoes() != null)
-				convocacoes.get("destino").setEmpregadoConvocacoes(EmpregadoConvocacaoBuilder
+			if(convocacoes.get("origem").getEmpregadoConvocacoes() != null) {
+				List<EmpregadoConvocacao> list = EmpregadoConvocacaoBuilder
 						.newInstance(convocacoes.get("origem").getEmpregadoConvocacoes())
 						.loadEmpregadoAll().loadExames()
-						.getEntityList());
+						.getEntityList();
+				
+				Collections.sort(list, new Comparator<EmpregadoConvocacao>() {
+			        @Override
+			        public int compare(EmpregadoConvocacao e1, EmpregadoConvocacao e2){
+			        	return (e1.getEmpregado().getGerencia().getCodigoCompleto() +" - "+
+			        			e1.getEmpregado().getPessoa().getNome()).compareTo(
+			        					e2.getEmpregado().getGerencia().getCodigoCompleto() +" - "+
+			    			        			e2.getEmpregado().getPessoa().getNome());
+			        }
+			    });
+				
+				convocacoes.get("destino").setEmpregadoConvocacoes(list);
+			}
 			return convocacoes.get("destino");
 		};
 		
 		this.loadEmpregadoConvocacoes  = convocacoes -> {
-			if(convocacoes.get("origem").getEmpregadoConvocacoes() != null)
-				convocacoes.get("destino").setEmpregadoConvocacoes(EmpregadoConvocacaoBuilder
+			if(convocacoes.get("origem").getEmpregadoConvocacoes() != null) {
+				List<EmpregadoConvocacao> list = EmpregadoConvocacaoBuilder
 						.newInstance(convocacoes.get("origem").getEmpregadoConvocacoes())
 						.loadEmpregado().loadExames()
-						.getEntityList());
+						.getEntityList();
+				
+				Collections.sort(list, new Comparator<EmpregadoConvocacao>() {
+			        @Override
+			        public int compare(EmpregadoConvocacao e1, EmpregadoConvocacao e2){
+			        	return (e1.getEmpregado().getGerencia().getCodigoCompleto()).compareTo(
+			        					e2.getEmpregado().getGerencia().getCodigoCompleto());
+			        }
+			    });
+				
+				convocacoes.get("destino").setEmpregadoConvocacoes(list);
+			}
 			return convocacoes.get("destino");
 		};
 	}

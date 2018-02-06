@@ -26,6 +26,7 @@ public class GrupoMonitoramentoExampleBuilder
 		addTipoGrupoMonitoramento();
 		addRelatorio();
 		addRecorrente();
+		addAuditoriaAso();
 	}
 
 	@Override
