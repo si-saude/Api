@@ -48,6 +48,7 @@ public class ExameBuilder extends GenericEntityBuilder<Exame,ExameFilter> {
 		newExame.setVersion(exame.getVersion());
 		newExame.setCodigo(exame.getCodigo());
 		newExame.setDescricao(exame.getDescricao());
+		newExame.setOrdem(exame.getOrdem());
 
 		return newExame;
 	}

@@ -34,6 +34,8 @@ public class Exame {
 	@OneToMany(mappedBy="exame", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<CampoExame> campoExames;
 	
+	private int ordem;
+	
 	@Version
 	private long version;
 	
@@ -69,6 +71,12 @@ public class Exame {
 	}
 	public void setExigeRelatorio(boolean exigeRelatorio) {
 		this.exigeRelatorio = exigeRelatorio;
+	}
+	public int getOrdem() {
+		return ordem;
+	}
+	public void setOrdem(int ordem) {
+		this.ordem = ordem;
 	}
 	public List<CampoExame> getCampoExames() {
 		return campoExames;

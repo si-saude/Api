@@ -201,7 +201,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	@Path("/list")
 	public Response getList(AtendimentoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		return super.getListGeneric(filter);
+		return Response.ok(getBo().getListLoadAll(filter).getGenericPagedList()).build();
 	}
 
 	@Override

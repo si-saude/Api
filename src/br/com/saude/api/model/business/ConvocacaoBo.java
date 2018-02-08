@@ -648,7 +648,6 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 	
 	@Override
 	public Convocacao save(Convocacao convocacao) throws Exception {
-		
 		convocacao.getGerenciaConvocacoes().forEach(g->g.setConvocacao(convocacao));
 		convocacao.getEmpregadoConvocacoes().forEach(e->{
 			e.setConvocacao(convocacao);
@@ -665,7 +664,11 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 				try {
 					e.setResultadoExames(ResultadoExameBo.getInstance()
 							.getListLoadItemResultadoExames(rFilter).getList());
-					e.getResultadoExames().forEach(r->r.setEmpregadoConvocacao(e));
+					e.getResultadoExames().forEach(r-> {
+						r.setEmpregadoConvocacao(e);
+						r.getItemResultadoExames().forEach(i -> i.setResultadoExame(r));
+					});
+						
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
