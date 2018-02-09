@@ -108,8 +108,11 @@ public class TarefaExampleBuilder extends GenericExampleBuilder<Tarefa, TarefaFi
 	}
 	
 	private void addStatus() {
-		if(this.filter.getStatus() != null)
-			this.entity.setStatus(this.filter.getStatus());
+		if(this.filter.getStatus() != null) {
+			if ( this.filter.getStatus().equals("EXECUCAO") )
+				this.entity.setStatus(StatusTarefa.getInstance().EXECUCAO);
+			else this.entity.setStatus(this.filter.getStatus());
+		}	
 	}
 	
 	private void addStatusNaoConcluido() {
