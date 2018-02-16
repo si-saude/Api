@@ -15,6 +15,7 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 	private Function<Map<String,Profissional>,Profissional> loadCurriculo;
 	private Function<Map<String,Profissional>,Profissional> loadEquipe;
 	private Function<Map<String,Profissional>,Profissional> loadLocalizacao;
+	private Function<Map<String,Profissional>,Profissional> loadServicos;
 	
 	public static ProfissionalBuilder newInstance(Profissional profissional) {
 		return new ProfissionalBuilder(profissional);
@@ -92,6 +93,13 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 			return profissionais.get("destino");
 		};
 		
+		this.loadServicos = profissionais -> {
+			if(profissionais.get("origem").getServicos()!=null) {
+				profissionais.get("destino").setServicos(ServicoBuilder.newInstance(profissionais.get("origem").getServicos()).getEntityList());
+			}
+			return profissionais.get("destino");
+		};
+		
 	}
 	
 	public ProfissionalBuilder loadEmpregado() {
@@ -113,6 +121,10 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 	public ProfissionalBuilder loadLocalizacao() {
 		return (ProfissionalBuilder) this.loadProperty(this.loadLocalizacao);
 	}
+	
+	public ProfissionalBuilder loadServicos() {
+		return (ProfissionalBuilder) this.loadProperty(this.loadServicos);
+	} 
 
 	@Override
 	public Profissional cloneFromFilter(ProfissionalFilter filter) {

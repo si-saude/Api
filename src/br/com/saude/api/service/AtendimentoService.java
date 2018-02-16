@@ -23,7 +23,6 @@ import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("atendimento")
-@RequestInterceptor
 public class AtendimentoService extends GenericServiceImpl<Atendimento, AtendimentoFilter, AtendimentoBo>
 							implements GenericService<Atendimento, AtendimentoFilter>{
 
@@ -31,7 +30,8 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	protected AtendimentoBo getBo() {
 		return AtendimentoBo.getInstance();
 	}
-	
+
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -58,6 +58,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -71,6 +72,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -84,6 +86,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -97,6 +100,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -110,6 +114,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -122,6 +127,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -134,6 +140,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -146,6 +153,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -158,6 +166,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -170,6 +179,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -182,6 +192,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -194,6 +205,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -204,6 +216,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		return Response.ok(getBo().getListLoadAll(filter).getGenericPagedList()).build();
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -214,6 +227,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		return super.getSelectListGeneric(filter);
 	}
 
+	@RequestInterceptor
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -221,6 +235,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		return super.getGeneric(new Integer(id));
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

@@ -22,7 +22,6 @@ import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("empregado")
-@RequestInterceptor
 public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilter,EmpregadoBo>
 								implements GenericService<Empregado,EmpregadoFilter>{
 	
@@ -31,6 +30,7 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 		return EmpregadoBo.getInstance();
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -44,6 +44,7 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 		}
 	}
 	
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -63,6 +64,7 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 		return Response.ok(getBo().getListEq(filter).getGenericPagedList()).build();
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -73,6 +75,7 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 		return super.getSelectListGeneric(filter);
 	}
 
+	@RequestInterceptor
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -80,6 +83,7 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 		return super.getGeneric(new Integer(id));
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -88,6 +92,7 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
 	
+	@RequestInterceptor
 	@POST
 	@Path("/import")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
