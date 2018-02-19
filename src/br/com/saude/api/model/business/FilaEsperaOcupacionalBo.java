@@ -480,12 +480,17 @@ public class FilaEsperaOcupacionalBo
 								if(tarefas.getTotal() == 0)
 									continue;
 								
-								//ATUALIZAR REFERENCIAS
 								Tarefa tarefa = tarefas.getList().get(0);
 								
 								if(tarefa.getStatus().equals(StatusTarefa.getInstance().EXECUCAO))
 									continue;
 								
+								//SE O PROFISSIONAL NÃO ATENDER AO SERVIÇO, CONTINUAR
+								if(fA.getProfissional().getServicos().stream().filter(s->
+										s.getId() == tarefa.getServico().getId()).count() == 0)
+									continue;
+								
+								//ATUALIZAR REFERENCIAS
 								tarefa.setInicio(Helper.getNow());
 								tarefa.setAtualizacao(tarefa.getInicio());
 								tarefa.setResponsavel(fA.getProfissional());
