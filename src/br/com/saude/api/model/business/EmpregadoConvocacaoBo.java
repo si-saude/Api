@@ -8,8 +8,6 @@ import br.com.saude.api.model.creation.builder.entity.EmpregadoConvocacaoBuilder
 import br.com.saude.api.model.creation.builder.example.EmpregadoConvocacaoExampleBuilder;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
-import br.com.saude.api.model.entity.po.EmpregadoConvocacaoExame;
-import br.com.saude.api.model.entity.po.GerenciaConvocacao;
 import br.com.saude.api.model.entity.po.ResultadoExame;
 import br.com.saude.api.model.persistence.EmpregadoConvocacaoDao;
 

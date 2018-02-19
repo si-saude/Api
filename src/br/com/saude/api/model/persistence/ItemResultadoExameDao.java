@@ -6,7 +6,6 @@ import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.ItemResultadoExame;
-import br.com.saude.api.model.entity.po.ResultadoExame;
 
 public class ItemResultadoExameDao extends GenericDao<ItemResultadoExame> {
 
