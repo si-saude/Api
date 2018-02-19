@@ -12,6 +12,7 @@ public class AsoFilter extends GenericFilter {
 	private DateFilter validade;
 	private BooleanFilter conforme;
 	private String naoConformidades;
+	private String status;
 	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
@@ -48,5 +49,11 @@ public class AsoFilter extends GenericFilter {
 	}
 	public void setNaoConformidades(String naoConformidades) {
 		this.naoConformidades = naoConformidades;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

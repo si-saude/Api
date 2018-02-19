@@ -36,10 +36,10 @@ public class Helper {
 				case ENTRE: return Restrictions.between(propertyName, 
 								dateFilter.getInicio(), 
 								dateFilter.getFim());
-			case MAIOR_IGUAL:
-				case MAIOR: return Restrictions.gt(propertyName, dateFilter.getInicio());
-			case MENOR_IGUAL:
-				case MENOR: return Restrictions.lt(propertyName, dateFilter.getInicio());
+			case MAIOR_IGUAL:return Restrictions.ge(propertyName, dateFilter.getInicio());
+			case MAIOR:return Restrictions.gt(propertyName, dateFilter.getInicio());
+			case MENOR_IGUAL:return Restrictions.le(propertyName, dateFilter.getInicio());
+			case MENOR: return Restrictions.lt(propertyName, dateFilter.getInicio());
 			case IGUAL: return Restrictions.eq(propertyName, dateFilter.getInicio());
 			case DIFERENTE: return Restrictions.ne(propertyName, dateFilter.getInicio());
 			default:

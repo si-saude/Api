@@ -58,6 +58,18 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 	}
 	
 	@POST
+	@Path("/check-out")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response checkOut(FilaEsperaOcupacional filaEsperaOcupacional) {
+		try {
+			return Response.ok(getBo().checkOut(filaEsperaOcupacional)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
 	@Path("/refresh")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)

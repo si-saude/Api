@@ -68,7 +68,7 @@ public class FilaAtendimentoOcupacionalBo
 					throw new Exception("É necessário informar a Localização para entrar na Fila de Atendimento.");
 				
 		// 2 - VERIFICAR SE O PROFISSIONAL FOI INFORMADO
-				if(fila.getProfissional() == null)
+				if(fila.getProfissional() == null || fila.getProfissional().getId() == 0)
 					throw new Exception("É necessário informar o Profissional para entrar na Fila de Atendimento.");
 	}
 	
@@ -82,7 +82,8 @@ public class FilaAtendimentoOcupacionalBo
 		filaFilter.getInicio().setTypeFilter(TypeFilter.MENOR);
 		filaFilter.getInicio().setInicio(Helper.getToday());
 		
-		PagedList<FilaAtendimentoOcupacional> filas = getListAll(filaFilter);
+		PagedList<FilaAtendimentoOcupacional> filas = getListAll(
+				getDao().getListLoadAll(getExampleBuilder(filaFilter).exampleStatusDiferenteEncerrado()));
 		
 		if(filas.getTotal() > 0) {
 			Date now = Helper.getNow();
@@ -94,7 +95,7 @@ public class FilaAtendimentoOcupacionalBo
 				
 				if(f.getAtualizacoes() != null)
 					for(FilaAtendimentoOcupacionalAtualizacao a : f.getAtualizacoes())
-						time += a.getTempo() * (60 * 1000) % 60;
+						time += a.getTempo() * (60 * 1000);
 				else
 					f.setAtualizacoes(new ArrayList<FilaAtendimentoOcupacionalAtualizacao>());
 				
@@ -117,10 +118,14 @@ public class FilaAtendimentoOcupacionalBo
 		// 1
 		verificacaoInicial(fila);
 		
-		// 2 - ENCERRAR FILA DO DIA ANTERIOR
+		// 2 - CANCELAR AS TAREFAS DO GRUPO DE SERVIÇO ATEND. OCUPACIONAL,
+		// DA EQUIPE DO PROFISSIONAL, ONDE NÃO EXISTA CHECK-IN REALIZADO PELO CLIENTE
+		TarefaBo.getInstance().gerarCancelamentoAtendimento();
+		
+		// 3 - ENCERRAR FILA DO DIA ANTERIOR
 		encerrarAutomaticamente(fila);
 		
-		// 3 - VERIFICAR SE JÁ ESTÁ NA FILA COM STATUS DIFERENTE DE ENCERRADO
+		// 4 - VERIFICAR SE JÁ ESTÁ NA FILA COM STATUS DIFERENTE DE ENCERRADO
 		Date today = Helper.getToday();
 		
 		FilaAtendimentoOcupacionalFilter filaFilter = new FilaAtendimentoOcupacionalFilter();
@@ -140,15 +145,15 @@ public class FilaAtendimentoOcupacionalBo
 			throw new Exception("O Profissional já está na Fila de Atendimento da Localização: "+
 					filaAtendimentoOcupacionais.getList().get(0).getLocalizacao().getNome()+".");
 		
-		// 4 - INSTANCIAR FILA
+		// 5 - INSTANCIAR FILA
 		fila.setInicio(Helper.getNow());
 		fila.setAtualizacao(fila.getInicio());
 		fila.setStatus(StatusFilaAtendimentoOcupacional.getInstance().DISPONIVEL);
 		
-		// 5 - INSERIR NO BANCO
+		// 6 - INSERIR NO BANCO
 		getDao().save(fila);
 		
-		// 6 - RETORNAR FILA DO DIA, DO LOCAL, ATUALIZADA		
+		// 7 - RETORNAR FILA DO DIA, DO LOCAL, ATUALIZADA		
 		return obterListaAtual(fila);
 	}
 	
@@ -359,7 +364,12 @@ public class FilaAtendimentoOcupacionalBo
 	}
 	
 	public List<Atendimento> atualizarLista(FilaAtendimentoOcupacional fila) throws Exception{
-		return obterListaAtual(fila);
+		if(fila.getLocalizacao() != null && fila.getLocalizacao().getId() > 0) {
+			Atendimento atendimento = new Atendimento();
+			atendimento.setFilaAtendimentoOcupacional(fila);
+			return AtendimentoBo.getInstance().getListFilaAtendimentoLocalizacaoDoMomento(atendimento);
+		}
+		return new ArrayList<Atendimento>();
 	}
 	
 	public Atendimento atualizar(FilaAtendimentoOcupacional fila) throws Exception {
@@ -412,5 +422,10 @@ public class FilaAtendimentoOcupacionalBo
 	
 	public PagedList<FilaAtendimentoOcupacional> getListAll(FilaAtendimentoOcupacionalFilter filter) throws Exception {
 		return super.getList(filter, this.functionLoadAll);
+	}
+	
+	public PagedList<FilaAtendimentoOcupacional> 
+		getListAll(PagedList<FilaAtendimentoOcupacional> pagedList) throws Exception {
+		return super.getList(pagedList, this.functionLoadAll);
 	}
 }

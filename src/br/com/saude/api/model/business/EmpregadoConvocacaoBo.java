@@ -11,7 +11,7 @@ import br.com.saude.api.model.persistence.EmpregadoConvocacaoDao;
 public class EmpregadoConvocacaoBo 
 	extends GenericBo<EmpregadoConvocacao, EmpregadoConvocacaoFilter, 
 		EmpregadoConvocacaoDao, EmpregadoConvocacaoBuilder, EmpregadoConvocacaoExampleBuilder> {
-
+	
 	private static EmpregadoConvocacaoBo instance;
 	
 	private EmpregadoConvocacaoBo() {
@@ -39,6 +39,11 @@ public class EmpregadoConvocacaoBo
 	public PagedList<EmpregadoConvocacao> getList(EmpregadoConvocacaoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), 
 				this.functionLoad);
+	}
+	
+	public PagedList<EmpregadoConvocacao> getListLoadAll(EmpregadoConvocacaoFilter filter) throws Exception {
+		return super.getList(getDao().getListFunctionLoadAll(getExampleBuilder(filter).example()), 
+				this.functionLoadAll);
 	}
 
 	@Override

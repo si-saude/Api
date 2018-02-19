@@ -88,6 +88,19 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@CustomValidator(validatorClass=AtendimentoValidator.class)
+	@Path("/devolver-pra-fila")
+	public Response devolverPraFila(Atendimento atendimento) {
+		try {
+			return Response.ok(getBo().devolverPraFila(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=AtendimentoValidator.class)
 	@Path("/liberar")
 	public Response liberar(Atendimento atendimento) {
 		try {
@@ -105,6 +118,19 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	public Response finalizar(Atendimento atendimento) {
 		try {
 			return Response.ok(getBo().finalizar(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=AtendimentoValidator.class)
+	@Path("/finalizar-pausar")
+	public Response finalizarPausar(Atendimento atendimento) {
+		try {
+			return Response.ok(getBo().finalizarPausar(atendimento)).build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}

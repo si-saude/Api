@@ -42,7 +42,7 @@ public class UsuarioService extends GenericServiceImpl<Usuario,UsuarioFilter,Usu
 			usuario = UserManager.getInstance().authenticate(usuario);
 			return Response.ok(usuario).build();
 		}else {
-			return Response.status(Response.Status.OK).entity("Usuário ou senha inválidos.").build();
+			return Response.status(Response.Status.FORBIDDEN).entity("Usuário ou senha inválidos.").build();
 		}
 	}
 	

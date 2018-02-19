@@ -25,6 +25,11 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 			this.criterions.add(Restrictions.ne("id", (int)this.filter.getId()));
 	}
 	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
+	}
+	
 	private void addNome() {
 		if(this.filter.getNome()!=null)
 			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
@@ -45,6 +50,7 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 	
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
 		addNome();
 		addAbreviacao();
 		addCoordenador();

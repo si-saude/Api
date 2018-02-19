@@ -6,7 +6,6 @@ import org.javatuples.Triplet;
 
 import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
-import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.FilaEsperaOcupacionalFilter;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
 
@@ -45,7 +44,7 @@ public class FilaEsperaOcupacionalExampleBuilder
 	
 	private void addStatus() {
 		if(this.filter.getStatus() != null)
-			this.entity.setStatus(Helper.filterLike(this.filter.getStatus()));
+			this.entity.setStatus(this.filter.getStatus());
 	}
 	
 	private void addAtualizacao() {

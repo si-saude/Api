@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.lang.reflect.InvocationTargetException;
+
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.model.creation.builder.entity.TarefaBuilder;
 import br.com.saude.api.model.creation.builder.example.TarefaExampleBuilder;
@@ -25,5 +27,9 @@ extends GenericBo<Tarefa, TarefaFilter, TarefaDao, TarefaBuilder, TarefaExampleB
 	@Override
 	protected void initializeFunctions() {
 		
+	}
+	
+	public void gerarCancelamentoAtendimento() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		getDao().gerarCancelamentoAtendimento();
 	}
 }

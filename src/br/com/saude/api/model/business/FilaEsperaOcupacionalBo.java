@@ -72,7 +72,7 @@ public class FilaEsperaOcupacionalBo
 		return super.getList(filter,this.functionLoadAll);
 	}
 	
-	public String checkIn(FilaEsperaOcupacional fila) throws Exception {
+	private PagedList<FilaEsperaOcupacional> check(FilaEsperaOcupacional fila) throws Exception {
 		// 1 - VERIFICAR SE A LOCALIZAÇÃO FOI INFORMADA
 		if(fila.getLocalizacao() == null)
 			throw new Exception("É necessário informar a Localização para realizar o Check-in.");
@@ -114,51 +114,150 @@ public class FilaEsperaOcupacionalBo
 		filaFilter.getHorarioCheckin().setTypeFilter(TypeFilter.MAIOR_IGUAL);
 		filaFilter.getHorarioCheckin().setInicio(today);
 		
-		PagedList<FilaEsperaOcupacional> filaEsperaOcupacionais = 
-				getList(getDao().getListLoadAll(getExampleBuilder(filaFilter).example()), this.functionLoadAll);
+		return getList(getDao().getListLoadAll(getExampleBuilder(filaFilter).example()), this.functionLoadAll);
+	}
+	
+	public String checkOut(FilaEsperaOcupacional fila) throws Exception {
 		
-		if(filaEsperaOcupacionais.getTotal() > 0)
-			throw new Exception("Já foi feito o Check-in deste Empregado na Localização: "
+		PagedList<FilaEsperaOcupacional> filaEsperaOcupacionais = check(fila);
+		
+		if(filaEsperaOcupacionais.getTotal() > 0) {
+			fila = filaEsperaOcupacionais.getList().get(0);
+			fila.setStatus(StatusFilaEsperaOcupacional.getInstance().ALMOCO);
+			getDao().save(fila);
+		}else
+			throw new Exception("Não foi encontrado o Check-in do Empregado.");
+		
+		return "Registro de Almoço realizado para o Empregado "+fila.getEmpregado().getPessoa().getNome()+".";
+	}
+	
+	public String checkIn(FilaEsperaOcupacional fila) throws Exception {
+		
+		Date today = Helper.getToday();
+		PagedList<FilaEsperaOcupacional> filaEsperaOcupacionais = check(fila);
+		
+		if(filaEsperaOcupacionais.getTotal() > 0) {
+			
+			fila = filaEsperaOcupacionais.getList().get(0);
+			
+			//SE ESTIVER EM ALMOÇO, VOLTAR PARA A FILA
+			if(fila.getStatus().equals(StatusFilaEsperaOcupacional.getInstance().ALMOCO)) {
+				fila.setStatus(StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
+				
+				getDao().save(fila);
+				
+				return "Empregado "+fila.getEmpregado().getPessoa().getNome()+" inserido na fila de espera. "+
+						"Favor aguardar chamada.";
+			}else
+				throw new Exception("Já foi feito o Check-in deste Empregado na Localização: "
 					+filaEsperaOcupacionais.getList().get(0).getLocalizacao().getNome()+".");
+		}
 		
 		// 4 - VERIFICAR SE EXISTE AGENDAMENTO (TAREFA) PARA ESTE EMPREGADO (CLIENTE),
 		// CUJO GRUPO DO SERVIÇO SEJA ATENDIMENTO OCUPACIONAL, E STATUS DIFERENTE DE
 		// CONCLUÍDO E CANCELADO, E A DATA DA TAREFA ESTÁ ENTRE O DIA ATUAL E O SEGUINTE
-		TarefaFilter tarefaFilter = new TarefaFilter();
-		tarefaFilter.setPageNumber(1);
-		tarefaFilter.setPageSize(1);
-		tarefaFilter.setCliente(new EmpregadoFilter());
-		tarefaFilter.getCliente().setMatricula(fila.getEmpregado().getMatricula());
-		tarefaFilter.setServico(new ServicoFilter());
-		tarefaFilter.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
-		
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(today);
-		calendar.add(Calendar.DATE, 1);
-		
-		tarefaFilter.setInicio(new DateFilter());
-		tarefaFilter.getInicio().setTypeFilter(TypeFilter.ENTRE);
-		tarefaFilter.getInicio().setInicio(today);
-		tarefaFilter.getInicio().setFim(calendar.getTime());
-		
-		PagedList<Tarefa> tarefas = TarefaBo.getInstance()
-			.getList(TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluidoCancelado());
-		
-		if(tarefas.getTotal() == 0)
-			throw new Exception("Não há agendamento para este Empregado.");
+		Tarefa tarefa = checkPendecia(fila.getEmpregado()); 
+		if(tarefa == null) {
+			TarefaFilter tarefaFilter = new TarefaFilter();
+			tarefaFilter.setPageNumber(1);
+			tarefaFilter.setPageSize(1);
+			tarefaFilter.setCliente(new EmpregadoFilter());
+			tarefaFilter.getCliente().setMatricula(fila.getEmpregado().getMatricula());
+			tarefaFilter.setServico(new ServicoFilter());
+			tarefaFilter.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
+			
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(today);
+			calendar.add(Calendar.DATE, 1);
+			
+			tarefaFilter.setInicio(new DateFilter());
+			tarefaFilter.getInicio().setTypeFilter(TypeFilter.ENTRE);
+			tarefaFilter.getInicio().setInicio(today);
+			tarefaFilter.getInicio().setFim(calendar.getTime());
+			
+			PagedList<Tarefa> tarefas = TarefaBo.getInstance()
+				.getList(TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluidoCancelado());
+			
+			if(tarefas.getTotal() == 0)
+				throw new Exception("Não há agendamento para este Empregado.");
+			
+			tarefa = tarefas.getList().get(0);
+		}
 		
 		// 5 - INSTANCIAR FILA
 		fila.setHorarioCheckin(Helper.getNow());
 		fila.setAtualizacao(fila.getHorarioCheckin());
 		fila.setTempoEspera(0);
 		fila.setStatus(StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
-		fila.setServico(tarefas.getList().get(0).getServico());
+		fila.setServico(tarefa.getServico());
 		
 		// 6 - INSERIR NO BANCO
 		getDao().save(fila);
 		
 		return "Empregado "+fila.getEmpregado().getPessoa().getNome()+" inserido na fila de espera. "+
 				"Favor aguardar chamada.";
+	}
+	
+	@SuppressWarnings("deprecation")
+	protected Tarefa checkPendecia(Empregado empregado) throws Exception {
+		
+		//VERIFICAR SE EXISTE TAREFA ABERTA ANTERIOR AO DIA ATUAL
+		TarefaFilter tarefaFilter = new TarefaFilter();
+		tarefaFilter.setPageNumber(1);
+		tarefaFilter.setPageSize(Integer.MAX_VALUE);
+		tarefaFilter.setCliente(new EmpregadoFilter());
+		tarefaFilter.getCliente().setId(empregado.getId());
+		tarefaFilter.setServico(new ServicoFilter());
+		tarefaFilter.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
+		tarefaFilter.setInicio(new DateFilter());
+		tarefaFilter.getInicio().setInicio(Helper.getToday());
+		tarefaFilter.getInicio().setTypeFilter(TypeFilter.MENOR);
+		tarefaFilter.setStatus(StatusTarefa.getInstance().ABERTA);
+		
+		PagedList<Tarefa> tarefas = TarefaBo.getInstance().getList(tarefaFilter);
+		
+		if(tarefas.getTotal() > 0) {
+			//ORDENAR POR DATA INICIO E PEGAR A MAIOR DATA
+			tarefas.getList().sort(new Comparator<Tarefa>() {
+				public int compare(Tarefa arg0, Tarefa arg1) {
+					return arg1.getInicio().compareTo(arg0.getInicio());
+				}
+			});
+			
+			Date data = Date.from(tarefas.getList().get(0).getInicio().toInstant());
+			Date dataInicio = Date.from(data.toInstant());
+			dataInicio.setHours(0);
+			dataInicio.setMinutes(0);
+			
+			Date dataFim = Date.from(tarefas.getList().get(0).getInicio().toInstant());
+			dataFim.setHours(23);
+			dataFim.setMinutes(59);
+			
+			//VERIFICAR SE EXISTE TAREFA CONCLUÍDA PARA A MESMA DATA. SE EXISTIR, RETORNAR
+			tarefaFilter = new TarefaFilter();
+			tarefaFilter.setPageNumber(1);
+			tarefaFilter.setPageSize(1);
+			tarefaFilter.setCliente(new EmpregadoFilter());
+			tarefaFilter.getCliente().setId(empregado.getId());
+			tarefaFilter.setServico(new ServicoFilter());
+			tarefaFilter.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
+			tarefaFilter.setStatus(StatusTarefa.getInstance().CONCLUIDA);
+			tarefaFilter.setInicio(new DateFilter());
+			tarefaFilter.getInicio().setInicio(dataInicio);
+			tarefaFilter.getInicio().setFim(dataFim);
+			tarefaFilter.getInicio().setTypeFilter(TypeFilter.ENTRE);
+			
+			tarefas = TarefaBo.getInstance().getList(tarefaFilter);
+			
+			if(tarefas.getTotal() > 0) {
+				Tarefa tarefa = tarefas.getList().get(0);
+				tarefa.setInicio(dataInicio);
+				tarefa.setFim(dataFim);
+				return tarefa;
+			}
+		}
+		
+		return null;
 	}
 	
 	public List<Atendimento> refresh(Atendimento at) throws Exception {
@@ -249,11 +348,14 @@ public class FilaEsperaOcupacionalBo
 				RegraAtendimento regraAux = regra;
 				fila.getList().forEach(filaEspera->{
 					
+					Tarefa tarefaPendencia = null;
+					
 					AtendimentoFilter aF = new AtendimentoFilter();
 					aF.setPageNumber(1);
 					aF.setPageSize(Integer.MAX_VALUE);
 					aF.setFilaEsperaOcupacional(new FilaEsperaOcupacionalFilter());
-					aF.getFilaEsperaOcupacional().setId(filaEspera.getId());
+					aF.getFilaEsperaOcupacional().setEmpregado(new EmpregadoFilter());
+					aF.getFilaEsperaOcupacional().getEmpregado().setId(filaEspera.getEmpregado().getId());
 					aF.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
 					aF.getFilaAtendimentoOcupacional().setInicio(new DateFilter());
 					aF.getFilaAtendimentoOcupacional().getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
@@ -262,10 +364,32 @@ public class FilaEsperaOcupacionalBo
 					aF.getFilaAtendimentoOcupacional().getLocalizacao().setId(localizacao.getId());
 					aF.setTarefa(new TarefaFilter());
 					aF.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
+					aF.getTarefa().setServico(new ServicoFilter());
+					aF.getTarefa().getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
 					
 					PagedList<Atendimento> aList = new PagedList<Atendimento>(); 
 					try {
 						aList = AtendimentoBo.getInstance().getListLoadAll(aF);
+						
+						//VERIFICAR SE EXISTE PENDÊNCIA PARA O EMPREGADO. CASO EXISTA, OBTER A DATA DOS 
+						//ATENDIMENTOS JÁ REALIZADOS E ADICIONÁ-LOS EM aList
+						tarefaPendencia = checkPendecia(filaEspera.getEmpregado());
+						if(tarefaPendencia != null) {							
+							aF.getFilaAtendimentoOcupacional().setInicio(new DateFilter());
+							aF.getFilaAtendimentoOcupacional().getInicio().setInicio(tarefaPendencia.getInicio());
+							aF.getFilaAtendimentoOcupacional().getInicio().setFim(tarefaPendencia.getFim());
+							aF.getFilaAtendimentoOcupacional().getInicio().setTypeFilter(TypeFilter.ENTRE);
+							
+							PagedList<Atendimento> a = AtendimentoBo.getInstance().getListLoadAll(aF);
+							
+							if(a.getTotal() > 0) {
+								if(aList.getList() == null)
+									aList.setList(new ArrayList<Atendimento>());
+								
+								aList.getList().addAll(a.getList());
+								aList.setTotal(aList.getTotal()+a.getList().size());
+							}								
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -293,7 +417,7 @@ public class FilaEsperaOcupacionalBo
 									if(aList.getTotal() == 0)
 										continue;
 									
-									if(rE.getRegraAtendimentoEquipeRequisitos().size() != aList.getTotal())
+									if(rE.getRegraAtendimentoEquipeRequisitos().size() > aList.getTotal())
 										continue;
 									
 									List<Atendimento> listAtendimento = aList.getList();
@@ -312,7 +436,7 @@ public class FilaEsperaOcupacionalBo
 								tarefaFilter.setPageNumber(1);
 								tarefaFilter.setPageSize(1);
 								tarefaFilter.setCliente(new EmpregadoFilter());
-								tarefaFilter.getCliente().setMatricula(filaEspera.getEmpregado().getMatricula());
+								tarefaFilter.getCliente().setId(filaEspera.getEmpregado().getId());
 								tarefaFilter.setEquipe(new EquipeFilter());
 								tarefaFilter.getEquipe().setAbreviacao(
 										fA.getProfissional().getEquipe().getAbreviacao());
@@ -330,6 +454,25 @@ public class FilaEsperaOcupacionalBo
 								try {
 									tarefas = TarefaBo.getInstance().getList(
 											TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluidoCancelado());
+									
+									//SE TIVER PENDÊNCIA, OBTER AS TAREFAS DO DIA DA PENDÊNCIA E ADICIONAR EM tarefas
+									if(tarefaPendencia != null) {
+										tarefaFilter.setInicio(new DateFilter());
+										tarefaFilter.getInicio().setTypeFilter(TypeFilter.ENTRE);
+										tarefaFilter.getInicio().setInicio(tarefaPendencia.getInicio());
+										tarefaFilter.getInicio().setFim(tarefaPendencia.getFim());
+										
+										PagedList<Tarefa> t = TarefaBo.getInstance().getList(
+												TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluidoCancelado());
+										
+										if(t.getTotal() > 0) {
+											if(tarefas.getList() == null)
+												tarefas.setList(new ArrayList<Tarefa>());
+											
+											tarefas.getList().addAll(t.getList());
+											tarefas.setTotal(tarefas.getTotal()+t.getList().size());
+										}
+									}
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -339,23 +482,28 @@ public class FilaEsperaOcupacionalBo
 								
 								//ATUALIZAR REFERENCIAS
 								Tarefa tarefa = tarefas.getList().get(0);
+								
+								if(tarefa.getStatus().equals(StatusTarefa.getInstance().EXECUCAO))
+									continue;
+								
 								tarefa.setInicio(Helper.getNow());
 								tarefa.setAtualizacao(tarefa.getInicio());
 								tarefa.setResponsavel(fA.getProfissional());
 								tarefa.setStatus(StatusTarefa.getInstance().EXECUCAO);
 								
-								fA.setAtualizacao(tarefa.getAtualizacao());
 								fA.setStatus(StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO);
 								
-								filaEspera.setAtualizacao(fA.getAtualizacao());
 								filaEspera.setStatus(StatusFilaEsperaOcupacional.getInstance().EM_ATENDIMENTO);
 								filaEspera.setTempoEspera(filaEspera.getTempoEspera() + calcularTempoAtualizacao(filaEspera));
+								filaEspera.setAtualizacao(tarefa.getAtualizacao());
 								
 								//INSTANCIAR
 								Atendimento atendimento = new Atendimento();
 								atendimento.setFilaAtendimentoOcupacional(fA);
 								atendimento.setFilaEsperaOcupacional(filaEspera);
 								atendimento.setTarefa(tarefa);
+								atendimento = AtendimentoBo.getInstance().addAtualizacao(atendimento);
+								fA.setAtualizacao(tarefa.getAtualizacao());
 								
 								//ADD NA LISTA
 								atendimentos.getList().add(atendimento);

@@ -6,7 +6,6 @@ import org.javatuples.Triplet;
 
 import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
-import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
@@ -65,12 +64,14 @@ public class FilaAtendimentoOcupacionalExampleBuilder
 	
 	private void addStatus() {
 		if(this.filter.getStatus() != null)
-			this.entity.setStatus(Helper.filterLike(this.filter.getStatus()));
+			this.entity.setStatus(this.filter.getStatus());
 	}
 	
 	private void addStatusDiferenteEncerrado() {
 		this.criterions.add(Restrictions.ne("status", 
 				StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO));
+		this.criterions.add(Restrictions.ne("status", 
+				StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO_AUTOMATICAMENTE));
 	}
 	
 	private void addAtualizacao() {

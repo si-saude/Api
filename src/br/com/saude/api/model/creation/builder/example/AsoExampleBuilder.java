@@ -21,6 +21,7 @@ public class AsoExampleBuilder extends GenericExampleBuilder<Aso, AsoFilter> {
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addStatus();
 		addData();
 		addValidade();
 		addEmpregado();
@@ -32,6 +33,11 @@ public class AsoExampleBuilder extends GenericExampleBuilder<Aso, AsoFilter> {
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		
+	}
+	
+	private void addStatus() {
+		if(this.filter.getStatus() != null && this.filter.getStatus().length() > 0)
+			this.entity.setStatus(this.filter.getStatus());
 	}
 
 	private void addData() {
