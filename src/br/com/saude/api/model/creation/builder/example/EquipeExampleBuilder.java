@@ -52,6 +52,7 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addId();
 		addNome();
+		addId();
 		addAbreviacao();
 		addCoordenador();
 	}

@@ -52,6 +52,10 @@ public class ServicoBuilder extends GenericEntityBuilder<Servico, ServicoFilter>
 		newServico.setPublico(servico.isPublico());
 		newServico.setIntervalo(servico.getIntervalo());
 		newServico.setQuantidadeSolicitacaoIntervalo(servico.getQuantidadeSolicitacaoIntervalo());
+		if ( servico.getRegraAtendimento() != null ) {
+			newServico.setRegraAtendimento(RegraAtendimentoBuilder.
+					newInstance(servico.getRegraAtendimento()).getEntity());	
+		}
 		newServico.setVersion(servico.getVersion());
 		
 		return newServico;

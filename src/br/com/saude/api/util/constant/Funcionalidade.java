@@ -16,6 +16,7 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String AGENDA												= "AGENDA";
 	public static final String AUDITORIA_RESULTADO_EXAME_LISTAR						= "AUDITORIA-RESULTADO-EXAME_LISTAR";
 	public static final String AUDITORIA_RESULTADO_EXAME_ADICIONAR 			    	= "AUDITORIA-RESULTADO-EXAME_ADICIONAR";
 	public static final String AUDITORIA_RESULTADO_EXAME_ALTERAR		 			= "AUDITORIA-RESULTADO-EXAME_ALTERAR";
@@ -32,6 +33,7 @@ public class Funcionalidade extends GenericConstant {
 	public static final String EMPREGADO_CONVOCACAO_REMOVER 					= "EMPREGADO-CONVOCACAO_REMOVER";
 	public static final String EMPREGADO_CONVOCACAO_DETALHE 					= "EMPREGADO-CONVOCACAO_DETALHE";
 	public static final String ATENDIMENTO						= "ATENDIMENTO";
+	public static final String ATENDIMENTO_GERENCIAR						= "ATENDIMENTO_GERENCIAR";
 	public static final String EXAME_LISTAR						= "EXAME_LISTAR";
 	public static final String EXAME_ADICIONAR 			    	= "EXAME_ADICIONAR";
 	public static final String EXAME_ALTERAR		 				= "EXAME_ALTERAR";
@@ -92,6 +94,7 @@ public class Funcionalidade extends GenericConstant {
 	public static final String FERIADO_ALTERAR		 			= "FERIADO_ALTERAR";
 	public static final String FERIADO_REMOVER 					= "FERIADO_REMOVER";
 	public static final String FERIADO_DETALHE 					= "FERIADO_DETALHE";
+	public static final String FILA_ESPERA_OCUPACIONAL_RECEPCAO = "FILA-ESPERA-OCUPACIONAL-RECEPCAO";
 	public static final String FORNECEDOR_LISTAR						= "FORNECEDOR_LISTAR";
 	public static final String FORNECEDOR_ADICIONAR 			    	= "FORNECEDOR_ADICIONAR";
 	public static final String FORNECEDOR_ALTERAR		 			= "FORNECEDOR_ALTERAR";

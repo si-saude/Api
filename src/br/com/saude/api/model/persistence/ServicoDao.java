@@ -37,4 +37,5 @@ public class ServicoDao extends GenericDao<Servico> {
 	public PagedList<Servico> getListLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder, this.functionLoadAll);
 	}
+	
 }

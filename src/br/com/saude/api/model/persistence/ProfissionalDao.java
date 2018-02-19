@@ -32,6 +32,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 			profissional = this.functionLoad.apply(profissional);
 			profissional = loadCurriculo(profissional);
 			profissional = loadProfissionalConselho(profissional);
+			profissional = loadServico(profissional);
 			return profissional;
 		};
 		
@@ -89,6 +90,12 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 	private Profissional loadLocalizacao(Profissional profissional) {
 		if(profissional.getLocalizacao()!=null)
 			Hibernate.initialize(profissional.getLocalizacao());
+		return profissional;
+	}
+	
+	private Profissional loadServico(Profissional profissional) {
+		if (profissional.getServicos()!=null)
+			Hibernate.initialize(profissional.getServicos());
 		return profissional;
 	}
 	
