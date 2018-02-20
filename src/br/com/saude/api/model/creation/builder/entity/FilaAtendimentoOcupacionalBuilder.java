@@ -60,7 +60,7 @@ public class FilaAtendimentoOcupacionalBuilder
 		
 		if(fila.getProfissional() != null)
 			newFila.setProfissional(ProfissionalBuilder.newInstance(fila.getProfissional())
-					.loadEquipe()
+					.loadEquipe().loadServicos()
 					.getEntity());
 		
 		return newFila;

@@ -161,8 +161,11 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				.add(Restrictions.or(
 						Restrictions.and(Restrictions.ne("filaAtendimentoOcupacional.status", 
 											StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO), 
-										Restrictions.ne("filaAtendimentoOcupacional.status", 
-											StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO)), 
+										Restrictions.and(
+													Restrictions.ne("filaAtendimentoOcupacional.status", 
+															StatusFilaAtendimentoOcupacional.getInstance().AGUARDANDO_EMPREGADO), 
+													Restrictions.ne("filaAtendimentoOcupacional.status", 
+															StatusFilaAtendimentoOcupacional.getInstance().LANCAMENTO_DE_INFORMACOES))), 
 						Restrictions.isNotNull("tarefa.id")));
 			
 			ProjectionList pL = Projections.projectionList();
