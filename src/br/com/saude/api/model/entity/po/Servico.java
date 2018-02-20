@@ -41,9 +41,6 @@ public class Servico {
 	
 	@OneToMany(mappedBy="servico", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Atividade> atividades;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
-	private RegraAtendimento regraAtendimento;
 
 	private int intervalo;
 
@@ -123,14 +120,6 @@ public class Servico {
 
 	public void setQuantidadeSolicitacaoIntervalo(int quantidadeSolicitacaoIntervalo) {
 		this.quantidadeSolicitacaoIntervalo = quantidadeSolicitacaoIntervalo;
-	}
-	
-	public RegraAtendimento getRegraAtendimento() {
-		return regraAtendimento;
-	}
-
-	public void setRegraAtendimento(RegraAtendimento regraAtendimento) {
-		this.regraAtendimento = regraAtendimento;
 	}
 	
 	public long getVersion() {

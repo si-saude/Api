@@ -63,6 +63,15 @@ public class ProfissionalService
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/selectListSimples")
+	public Response getSelectListSimples(ProfissionalFilter filter) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return Response.ok(ProfissionalBo.getInstance().getSelectListSimples(filter)).build();
+	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

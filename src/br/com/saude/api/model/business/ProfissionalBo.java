@@ -1,6 +1,8 @@
 package br.com.saude.api.model.business;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
@@ -65,9 +67,7 @@ public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, 
 		return newProfissional;
 	}
 	
-	@Override
-	public List<Profissional> getSelectList(ProfissionalFilter filter) throws Exception {
-		return super.getSelectList(this.getDao().getListFunctionLoad(this.getExampleBuilder(filter).exampleSelectList()).getList(), this.functionLoadAll);
+	public List<Profissional> getSelectListSimples(ProfissionalFilter filter) throws Exception {
+		return super.getSelectList(this.getDao().getListFunctionLoad(this.getExampleBuilder(filter).exampleSelectList()).getList(), this.functionLoad);
 	}
-	
 }
