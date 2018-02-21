@@ -28,6 +28,7 @@ public class TarefaDao extends GenericDao<Tarefa> {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void gerarCancelamentoAtendimento() {
 		Session session = HibernateHelper.getSession();
 		
@@ -44,6 +45,8 @@ public class TarefaDao extends GenericDao<Tarefa> {
 			queryBuilder.append(" and not exists (select 1 from filaesperaocupacional fe " + 
 					"		  where fe.empregado_id = t.cliente_id " + 
 					"		    and date_trunc('day', t.inicio) = date_trunc('day', fe.horarioCheckin)) ");
+			
+			session.createSQLQuery(queryBuilder.toString()).executeUpdate();
 			
 			transaction.commit();
 		}catch(Exception ex) {

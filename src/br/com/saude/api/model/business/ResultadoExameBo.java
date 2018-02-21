@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -283,7 +284,12 @@ public class ResultadoExameBo extends
 				Date resultadoExameDate = null;
 				if (codigoCampo.equals("010") ) {
 					DateFormat formatRED = new SimpleDateFormat("yyyyMMdd");
-					resultadoExameDate = formatRED.parse(resultado);
+					
+					try {
+						resultadoExameDate = formatRED.parse(resultado);
+					}catch(ParseException ex) {
+						continue;
+					}
 				}
 				
 				EmpregadoConvocacao empregadoConvocacao = null;
@@ -863,7 +869,12 @@ public class ResultadoExameBo extends
 				Date resultadoExameDate = null;
 				if (codigoCampo.equals("010") ) {
 					DateFormat formatRED = new SimpleDateFormat("yyyyMMdd");
-					resultadoExameDate = formatRED.parse(resultado);
+					
+					try {
+						resultadoExameDate = formatRED.parse(resultado);
+					}catch(ParseException ex) {
+						continue;
+					}
 				}
 				
 				if ( junpLines != null && matricula.equals(junpLines.getValue0()) && 

@@ -243,13 +243,13 @@ public class FilaAtendimentoOcupacionalBo
 		if(fila.getAtualizacoes() == null)
 			fila.setAtualizacoes(new ArrayList<FilaAtendimentoOcupacionalAtualizacao>());
 		
-		fila.setAtualizacao(Helper.getNow());
 		fila.setStatus(StatusFilaAtendimentoOcupacional.getInstance().DISPONIVEL);
 		fila.getAtualizacoes().add(FilaAtendimentoOcupacionalAtualizacaoFactory.newInstance()
 				.filaAtendimentoOcupacional(fila)
 				.status(fila.getStatus())
 				.tempo(calcularTempoAtualizacao(fila))
 				.get());
+		fila.setAtualizacao(Helper.getNow());
 		
 		// 6 - SALVAR NO BANCO
 		getDao().save(fila);
@@ -277,13 +277,13 @@ public class FilaAtendimentoOcupacionalBo
 		if(fila.getAtualizacoes() == null)
 			fila.setAtualizacoes(new ArrayList<FilaAtendimentoOcupacionalAtualizacao>());
 		
-		fila.setAtualizacao(Helper.getNow());
 		fila.setStatus(StatusFilaAtendimentoOcupacional.getInstance().INDISPONIVEL);
 		fila.getAtualizacoes().add(FilaAtendimentoOcupacionalAtualizacaoFactory.newInstance()
 				.filaAtendimentoOcupacional(fila)
 				.status(fila.getStatus())
 				.tempo(calcularTempoAtualizacao(fila))
 				.get());
+		fila.setAtualizacao(Helper.getNow());
 		
 		
 		// 6 - SALVAR NO BANCO
@@ -312,13 +312,13 @@ public class FilaAtendimentoOcupacionalBo
 		if(fila.getAtualizacoes() == null)
 			fila.setAtualizacoes(new ArrayList<FilaAtendimentoOcupacionalAtualizacao>());
 		
-		fila.setAtualizacao(Helper.getNow());
 		fila.setStatus(StatusFilaAtendimentoOcupacional.getInstance().ALMOCO);
 		fila.getAtualizacoes().add(FilaAtendimentoOcupacionalAtualizacaoFactory.newInstance()
 				.filaAtendimentoOcupacional(fila)
 				.status(fila.getStatus())
 				.tempo(calcularTempoAtualizacao(fila))
 				.get());
+		fila.setAtualizacao(Helper.getNow());
 		
 		
 		// 6 - SALVAR NO BANCO
@@ -347,13 +347,13 @@ public class FilaAtendimentoOcupacionalBo
 		if(fila.getAtualizacoes() == null)
 			fila.setAtualizacoes(new ArrayList<FilaAtendimentoOcupacionalAtualizacao>());
 		
-		fila.setAtualizacao(Helper.getNow());
 		fila.setStatus(StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO);
 		fila.getAtualizacoes().add(FilaAtendimentoOcupacionalAtualizacaoFactory.newInstance()
 				.filaAtendimentoOcupacional(fila)
 				.status(fila.getStatus())
 				.tempo(calcularTempoAtualizacao(fila))
 				.get());
+		fila.setAtualizacao(Helper.getNow());
 		
 		
 		// 6 - SALVAR NO BANCO

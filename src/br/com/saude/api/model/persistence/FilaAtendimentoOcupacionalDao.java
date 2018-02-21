@@ -1,5 +1,6 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -8,6 +9,7 @@ import org.hibernate.Hibernate;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.Servico;
 
@@ -28,15 +30,19 @@ public class FilaAtendimentoOcupacionalDao extends GenericDao<FilaAtendimentoOcu
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected void initializeFunctions() {
 		this.functionLoad = fila -> {
 			if(fila.getProfissional().getEquipe() != null)
-				Hibernate.initialize(fila.getProfissional().getEquipe());
-			
-			if(fila.getProfissional().getServicos() != null)
 				fila.getProfissional()
-					.setServicos((List<Servico>) Hibernate.unproxy(fila.getProfissional().getServicos()));
+					.setEquipe((Equipe) Hibernate.unproxy(fila.getProfissional().getEquipe()));
+			
+			if(fila.getProfissional().getServicos() != null) {
+				List<Servico> servicos = new ArrayList<Servico>();
+				fila.getProfissional().getServicos().forEach(s->{
+					servicos.add((Servico)Hibernate.unproxy(s));
+				});
+				fila.getProfissional().setServicos(servicos);
+			}
 			
 			return fila;
 		};
@@ -61,8 +67,7 @@ public class FilaAtendimentoOcupacionalDao extends GenericDao<FilaAtendimentoOcu
 		};
 		
 		this.loadAtualizacoes = fila -> {
-			if(fila.getProfissional().getEquipe() != null)
-				Hibernate.initialize(fila.getProfissional().getEquipe());
+			fila = this.functionLoad.apply(fila);
 			
 			if(fila.getLocalizacao() != null)
 				Hibernate.initialize(fila.getLocalizacao());
