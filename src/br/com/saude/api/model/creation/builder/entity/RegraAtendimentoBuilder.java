@@ -21,11 +21,11 @@ public class RegraAtendimentoBuilder
 		return new RegraAtendimentoBuilder(regras);
 	}
 	
-	private RegraAtendimentoBuilder(RegraAtendimento regra) {
+	protected RegraAtendimentoBuilder(RegraAtendimento regra) {
 		super(regra);
 	}
 	
-	private RegraAtendimentoBuilder(List<RegraAtendimento> regras) {
+	protected RegraAtendimentoBuilder(List<RegraAtendimento> regras) {
 		super(regras);
 	}
 
