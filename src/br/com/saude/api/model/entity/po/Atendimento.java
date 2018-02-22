@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
@@ -33,9 +32,6 @@ public class Atendimento {
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private Aso aso;
-	
-	@Transient
-	private RegraAtendimento regra;
 	
 	@Version
 	private long version;
@@ -78,14 +74,6 @@ public class Atendimento {
 
 	public void setVersion(long version) {
 		this.version = version;
-	}
-
-	public RegraAtendimento getRegra() {
-		return regra;
-	}
-
-	public void setRegra(RegraAtendimento regra) {
-		this.regra = regra;
 	}
 
 	public Aso getAso() {

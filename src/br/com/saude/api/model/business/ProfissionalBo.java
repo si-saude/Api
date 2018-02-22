@@ -1,8 +1,6 @@
 package br.com.saude.api.model.business;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
