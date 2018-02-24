@@ -361,7 +361,7 @@ public class FilaEsperaOcupacionalBo
 					
 					PagedList<Atendimento> aList = new PagedList<Atendimento>(); 
 					try {
-						aList = AtendimentoBo.getInstance().getListLoadAll(aF);
+						aList = AtendimentoBo.getInstance().getListLoadAll(aF);						
 						
 						//VERIFICAR SE EXISTE PENDÊNCIA PARA O EMPREGADO. CASO EXISTA, OBTER A DATA DOS 
 						//ATENDIMENTOS JÁ REALIZADOS E ADICIONÁ-LOS EM aList
@@ -382,6 +382,24 @@ public class FilaEsperaOcupacionalBo
 								aList.setTotal(aList.getTotal()+a.getList().size());
 							}								
 						}
+						
+						//OBTER OS ATENDIMENTOS EM LANÇAMENTO DE INFORMAÇÕES
+						aF.getFilaAtendimentoOcupacional().setInicio(new DateFilter());
+						aF.getFilaAtendimentoOcupacional().getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
+						aF.getFilaAtendimentoOcupacional().getInicio().setInicio(today);
+						aF.getFilaAtendimentoOcupacional().setStatus(StatusFilaAtendimentoOcupacional
+								.getInstance().LANCAMENTO_DE_INFORMACOES);
+						aF.getTarefa().setStatus(StatusTarefa.getInstance().EXECUCAO);
+						
+						PagedList<Atendimento> a = AtendimentoBo.getInstance().getListLoadAll(aF);
+						
+						if(a.getTotal() > 0) {
+							if(aList.getList() == null)
+								aList.setList(new ArrayList<Atendimento>());
+							
+							aList.getList().addAll(a.getList());
+							aList.setTotal(aList.getTotal()+a.getList().size());
+						}						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
