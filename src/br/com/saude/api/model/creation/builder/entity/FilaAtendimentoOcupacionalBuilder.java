@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.hibernate.LazyInitializationException;
+
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
@@ -58,10 +60,18 @@ public class FilaAtendimentoOcupacionalBuilder
 		newFila.setStatus(fila.getStatus());
 		newFila.setVersion(fila.getVersion());
 		
-		if(fila.getProfissional() != null)
-			newFila.setProfissional(ProfissionalBuilder.newInstance(fila.getProfissional())
-					.loadEquipe().loadServicos()
-					.getEntity());
+		if(fila.getProfissional() != null) {
+			ProfissionalBuilder builder = ProfissionalBuilder.newInstance(fila.getProfissional())
+					.loadEquipe();
+			
+			try {
+				builder = builder.loadServicos();
+			}catch(LazyInitializationException ex) {
+				
+			}
+			
+			newFila.setProfissional(builder.getEntity());
+		}
 		
 		return newFila;
 	}
