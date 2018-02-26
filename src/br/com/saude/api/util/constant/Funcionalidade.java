@@ -44,6 +44,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String AUDITORIA_ASO_ALTERAR		 			= "AUDITORIA-ASO_ALTERAR";
 	public static final String AUDITORIA_ASO_REMOVER 					= "AUDITORIA-ASO_REMOVER";
 	public static final String AUDITORIA_ASO_DETALHE 					= "AUDITORIA-ASO_DETALHE";
+	public static final String INDICADOR_SAST_LISTAR						= "INDICADOR-SAST_LISTAR";
+	public static final String INDICADOR_SAST_ADICIONAR 			    	= "INDICADOR-SAST_ADICIONAR";
+	public static final String INDICADOR_SAST_ALTERAR		 			= "INDICADOR-SAST_ALTERAR";
+	public static final String INDICADOR_SAST_REMOVER 					= "INDICADOR-SAST_REMOVER";
+	public static final String INDICADOR_SAST_DETALHE 					= "INDICADOR-SAST_DETALHE";
 	public static final String EMPREGADO_LISTAR 				= "EMPREGADO_LISTAR";
 	public static final String EMPREGADO_ADICIONAR 			    = "EMPREGADO_ADICIONAR";
 	public static final String EMPREGADO_ALTERAR 				= "EMPREGADO_ALTERAR";

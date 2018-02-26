@@ -13,6 +13,7 @@ import br.com.saude.api.model.entity.po.Atendimento;
 public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, AtendimentoFilter> {
 
 	private Function<Map<String,Atendimento>,Atendimento> loadTarefa;
+	private Function<Map<String,Atendimento>,Atendimento> loadTriagens;
 	private Function<Map<String,Atendimento>,Atendimento> loadAso;
 	
 	public static AtendimentoBuilder newInstance(Atendimento atendimento) {
@@ -46,6 +47,14 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 				atendimentos.get("destino").setAso(AsoBuilder
 						.newInstance(atendimentos.get("origem").getAso())
 						.getEntity());
+			return atendimentos.get("destino");
+		};
+		
+		this.loadTriagens = atendimentos -> {
+			if (atendimentos.get("origem").getTriagens() != null)
+				atendimentos.get("destino").setTriagens(TriagemBuilder
+						.newInstance(atendimentos.get("origem").getTriagens())
+						.getEntityList());
 			return atendimentos.get("destino");
 		};
 	}
@@ -86,6 +95,10 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	
 	public AtendimentoBuilder loadAso() {
 		return (AtendimentoBuilder) this.loadProperty(this.loadAso);
+	}
+	
+	public AtendimentoBuilder loadTriagens() {
+		return (AtendimentoBuilder) this.loadProperty(this.loadTriagens);
 	}
 
 	@Override

@@ -73,6 +73,9 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				atendimento.getFilaEsperaOcupacional().setLocalizacao(
 						(Localizacao) Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getLocalizacao()));
 			
+			if(atendimento.getTriagens() != null)
+				Hibernate.initialize(atendimento.getTriagens());
+			
 			return atendimento;
 		};
 		
