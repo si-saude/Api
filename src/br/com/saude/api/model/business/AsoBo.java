@@ -16,6 +16,7 @@ import br.com.saude.api.model.entity.po.AsoAlteracao;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.entity.po.Ghe;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.RequisitoAso;
 import br.com.saude.api.model.persistence.AsoDao;
@@ -105,6 +106,16 @@ public class AsoBo
 				if(eCc != null)
 					r.setConteudo(r.getConteudo().replace("[TIPO_CONVOCACAO]", 
 							": "+eCc.getConvocacao().getTipo()));
+			}else if(r.getConteudo().contains("[RISCOS_GHE]")) {
+				if(empregado.getGhe() != null) {
+					try {
+						Ghe ghe = GheBo.getInstance().getById(empregado.getGhe());
+						r.setConteudo(r.getConteudo().replace("[RISCOS_GHE]", 
+								": "+ghe.getDescricao()));					
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 		
