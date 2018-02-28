@@ -113,7 +113,7 @@ public abstract class GenericBo<T, F extends GenericFilter, D extends GenericDao
 	protected T getByEntity(T entity, Function<B,B> loadFunction) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		if(loadFunction!=null)
 			return loadFunction.apply(getBuilder(entity)).getEntity();
-		return getBuilder(entity).getEntity();
+		return entity != null ? getBuilder(entity).getEntity() : null;
 	}
 	
 	public T save(T entity) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {

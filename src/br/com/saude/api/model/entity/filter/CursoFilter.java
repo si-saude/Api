@@ -6,6 +6,7 @@ public class CursoFilter extends GenericFilter {
 	private String nome;
 	private String descricao;
 	private int validade;
+	
 	public String getNome() {
 		return nome;
 	}
@@ -24,4 +25,5 @@ public class CursoFilter extends GenericFilter {
 	public void setValidade(int validade) {
 		this.validade = validade;
 	}
+	
 }
