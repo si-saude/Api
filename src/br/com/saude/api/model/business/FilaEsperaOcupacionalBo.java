@@ -142,7 +142,8 @@ public class FilaEsperaOcupacionalBo
 			fila = filaEsperaOcupacionais.getList().get(0);
 			
 			//SE ESTIVER EM ALMOÇO, VOLTAR PARA A FILA
-			if(fila.getStatus().equals(StatusFilaEsperaOcupacional.getInstance().ALMOCO)) {
+			if(fila.getStatus().equals(StatusFilaEsperaOcupacional.getInstance().ALMOCO) ||
+					fila.getStatus().equals(StatusFilaEsperaOcupacional.getInstance().AUSENTE)) {
 				fila.setStatus(StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 				
 				getDao().save(fila);
