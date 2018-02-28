@@ -17,12 +17,14 @@ import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.Escolaridade;
 import br.com.saude.api.util.constant.EstadoCivil;
 import br.com.saude.api.util.constant.Funcionalidade;
+import br.com.saude.api.util.constant.GrupoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.Sexo;
 import br.com.saude.api.util.constant.StatusEmpregado;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
+import br.com.saude.api.util.constant.StatusSimNao;
 import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.util.constant.TipoConvocacao;
 import br.com.saude.api.util.constant.TipoCriterio;
@@ -157,5 +159,19 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGrupoServico(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(GrupoServico.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/grupo-pergunta-ficha-coleta")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getGrupoPerguntaFichaColeta(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(GrupoPerguntaFichaColeta.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/status-sim-nao")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStatusSimNao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(StatusSimNao.getInstance(),filter)).build();
 	}
 }
