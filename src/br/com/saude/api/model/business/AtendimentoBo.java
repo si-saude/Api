@@ -17,6 +17,7 @@ import br.com.saude.api.model.creation.builder.entity.AtendimentoBuilder;
 import br.com.saude.api.model.creation.builder.entity.TarefaBuilder;
 import br.com.saude.api.model.creation.builder.example.AtendimentoExampleBuilder;
 import br.com.saude.api.model.creation.builder.example.TarefaExampleBuilder;
+import br.com.saude.api.model.creation.factory.entity.AtendimentoFactory;
 import br.com.saude.api.model.creation.factory.entity.FilaAtendimentoOcupacionalAtualizacaoFactory;
 import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
@@ -145,7 +146,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		getDao().devolverPraFila(atendimento);
 		
-		return FilaAtendimentoOcupacionalBo.getInstance().atualizar(fila);
+		return FilaAtendimentoOcupacionalBo.getInstance().atualizar(AtendimentoFactory
+				.newInstance().filaAtendimento(fila).get());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -185,7 +187,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		getDao().devolverPraFila(atendimento);
 		
-		return FilaAtendimentoOcupacionalBo.getInstance().atualizar(fila);
+		return FilaAtendimentoOcupacionalBo.getInstance().atualizar(AtendimentoFactory
+				.newInstance().filaAtendimento(fila).get());
 	}
 	
 	public Atendimento liberar(Atendimento atendimento) throws Exception {
@@ -262,7 +265,17 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		atendimento.getTarefa().setFim(now);
 		atendimento.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
 		
+		atendimento = gerarRisco(atendimento);
+		
 		return save(addAtualizacao(atendimento));
+	}
+	
+	private Atendimento gerarRisco(Atendimento atendimento) {
+		
+		
+		
+		
+		return atendimento;
 	}
 	
 	public Atendimento finalizarPausar(Atendimento atendimento) throws Exception {

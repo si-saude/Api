@@ -27,7 +27,7 @@ public class PerguntaFichaColetaFilter extends GenericFilter {
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
-	public BooleanFilter isInativo() {
+	public BooleanFilter getInativo() {
 		return inativo;
 	}
 	public void setInativo(BooleanFilter inativo) {

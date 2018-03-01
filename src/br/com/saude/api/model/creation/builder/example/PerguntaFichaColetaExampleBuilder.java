@@ -37,7 +37,7 @@ public class PerguntaFichaColetaExampleBuilder extends GenericExampleBuilder<Per
 	}
 	
 	private void addInativo() {
-		this.entity.setInativo(this.addBoolean("inativo", this.filter.isInativo()));
+		this.entity.setInativo(this.addBoolean("inativo", this.filter.getInativo()));
 	}
 	
 }

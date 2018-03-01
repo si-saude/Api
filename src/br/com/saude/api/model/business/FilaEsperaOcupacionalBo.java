@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
@@ -22,17 +23,21 @@ import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.filter.FilaEsperaOcupacionalFilter;
 import br.com.saude.api.model.entity.filter.LocalizacaoFilter;
+import br.com.saude.api.model.entity.filter.PerguntaFichaColetaFilter;
 import br.com.saude.api.model.entity.filter.PessoaFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Empregado;
+import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
 import br.com.saude.api.model.entity.po.Localizacao;
+import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.RegraAtendimento;
 import br.com.saude.api.model.entity.po.RegraAtendimentoEquipe;
 import br.com.saude.api.model.entity.po.RegraAtendimentoLocalizacao;
+import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.persistence.FilaEsperaOcupacionalDao;
 import br.com.saude.api.util.constant.GrupoServico;
@@ -193,6 +198,27 @@ public class FilaEsperaOcupacionalBo
 		fila.setServico(tarefa.getServico());
 		
 		// 6 - CRIAR A FICHA DE COLETA, COM AS RESPOSTAS PARA AS PERGUNTAS ATIVAS
+		PerguntaFichaColetaFilter perguntaFilter = new PerguntaFichaColetaFilter();
+		perguntaFilter.setPageNumber(1);
+		perguntaFilter.setPageSize(Integer.MAX_VALUE);
+		perguntaFilter.setInativo(new BooleanFilter());
+		perguntaFilter.getInativo().setValue(2);
+		
+		PagedList<PerguntaFichaColeta> perguntas = 
+				PerguntaFichaColetaBo.getInstance().getListLoadAll(perguntaFilter);
+		
+		if(perguntas.getTotal() > 0) {
+			fila.setFichaColeta(new FichaColeta());
+			fila.getFichaColeta().setRespostaFichaColetas(new ArrayList<RespostaFichaColeta>());
+			
+			//PARA CADA PERGUNTA, CRIAR UMA RESPOSTA
+			for(PerguntaFichaColeta pergunta : perguntas.getList()) {
+				RespostaFichaColeta resposta = new RespostaFichaColeta();
+				resposta.setPergunta(pergunta);
+				resposta.setFicha(fila.getFichaColeta());
+				fila.getFichaColeta().getRespostaFichaColetas().add(resposta);
+			}
+		}
 		
 		// 7 - INSERIR NO BANCO
 		getDao().save(fila);

@@ -77,13 +77,13 @@ public class IndicadorSastFilter extends GenericFilter {
 	public void setEquipe(EquipeFilter equipe) {
 		this.equipe = equipe;
 	}
-	public BooleanFilter isObrigatorio() {
+	public BooleanFilter getObrigatorio() {
 		return obrigatorio;
 	}
 	public void setObrigatorio(BooleanFilter obrigatorio) {
 		this.obrigatorio = obrigatorio;
 	}
-	public BooleanFilter isInativo() {
+	public BooleanFilter getInativo() {
 		return inativo;
 	}
 	public void setInativo(BooleanFilter inativo) {

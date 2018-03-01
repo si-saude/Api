@@ -69,11 +69,11 @@ public class IndicadorSastExampleBuilder  extends GenericExampleBuilder<Indicado
 	}
 	
 	private void addObrigatorio() {
-		this.entity.setObrigatorio(this.addBoolean("obrigatorio", this.filter.isObrigatorio()));
+		this.entity.setObrigatorio(this.addBoolean("obrigatorio", this.filter.getObrigatorio()));
 	}
 	
 	private void addInativo() {
-		this.entity.setInativo(this.addBoolean("inativo", this.filter.isInativo()));
+		this.entity.setInativo(this.addBoolean("inativo", this.filter.getInativo()));
 	}
 	
 	private void addCodigo() {

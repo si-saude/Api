@@ -6,7 +6,7 @@ import br.com.saude.api.generic.GenericFilter;
 public class DiagnosticoFilter extends GenericFilter {
 	private String codigo;
 	private String descricao;
-	private BooleanFilter inativo = new BooleanFilter();
+	private BooleanFilter inativo;
 	private EixoFilter eixo;
 	
 	public String getCodigo() {
