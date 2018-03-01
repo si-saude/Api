@@ -12,6 +12,7 @@ public class FilaEsperaOcupacionalBuilder
 	extends GenericEntityBuilder<FilaEsperaOcupacional, FilaEsperaOcupacionalFilter> {
 
 	private Function<Map<String,FilaEsperaOcupacional>,FilaEsperaOcupacional> loadLocalizacao;
+	private Function<Map<String,FilaEsperaOcupacional>,FilaEsperaOcupacional> loadFichaColeta;
 	
 	public static FilaEsperaOcupacionalBuilder newInstance(FilaEsperaOcupacional fila) {
 		return new FilaEsperaOcupacionalBuilder(fila);
@@ -35,6 +36,13 @@ public class FilaEsperaOcupacionalBuilder
 			if(filas.get("origem").getLocalizacao() != null)
 				filas.get("destino").setLocalizacao(LocalizacaoBuilder
 						.newInstance(filas.get("origem").getLocalizacao()).getEntity());
+			return filas.get("destino");
+		};
+		
+		this.loadFichaColeta = filas -> {
+			if(filas.get("origem").getFichaColeta() != null)
+				filas.get("destino").setFichaColeta(FichaColetaBuilder
+						.newInstance(filas.get("origem").getFichaColeta()).getEntity());
 			return filas.get("destino");
 		};
 	}
@@ -62,6 +70,10 @@ public class FilaEsperaOcupacionalBuilder
 	
 	public FilaEsperaOcupacionalBuilder loadLocalizacao() {
 		return (FilaEsperaOcupacionalBuilder) loadProperty(this.loadLocalizacao);
+	}
+	
+	public FilaEsperaOcupacionalBuilder loadFichaColeta() {
+		return (FilaEsperaOcupacionalBuilder) loadProperty(this.loadFichaColeta);
 	}
 
 	@Override

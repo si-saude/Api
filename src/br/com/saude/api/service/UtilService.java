@@ -28,6 +28,7 @@ import br.com.saude.api.util.constant.StatusSimNao;
 import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.util.constant.TipoConvocacao;
 import br.com.saude.api.util.constant.TipoCriterio;
+import br.com.saude.api.util.constant.TipoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.TipoPessoa;
 import br.com.saude.api.util.constant.TipoResultadoExame;
 import br.com.saude.api.util.constant.VinculoEmpregado;
@@ -166,6 +167,13 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGrupoPerguntaFichaColeta(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(GrupoPerguntaFichaColeta.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/tipo-pergunta-ficha-coleta")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTipoPerguntaFichaColeta(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TipoPerguntaFichaColeta.getInstance(),filter)).build();
 	}
 	
 	@GET

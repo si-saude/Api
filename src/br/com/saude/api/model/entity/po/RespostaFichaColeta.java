@@ -1,11 +1,15 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -29,8 +33,8 @@ public class RespostaFichaColeta {
 	@Size(max = 2048, message="Tamanho máximo para Conteúdo da Pergunta: 2048")
 	private String conteudo;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	private ItemRespostaFichaColeta item;
+	@OneToMany(mappedBy="resposta", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<ItemRespostaFichaColeta> itens;
 	
 	@Version
 	private long version;
@@ -67,12 +71,12 @@ public class RespostaFichaColeta {
 		this.conteudo = conteudo;
 	}
 
-	public ItemRespostaFichaColeta getItem() {
-		return item;
+	public List<ItemRespostaFichaColeta> getItens() {
+		return itens;
 	}
 
-	public void setItem(ItemRespostaFichaColeta item) {
-		this.item = item;
+	public void setItens(List<ItemRespostaFichaColeta> itens) {
+		this.itens = itens;
 	}
 
 	public long getVersion() {

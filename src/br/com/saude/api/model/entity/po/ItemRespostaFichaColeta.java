@@ -20,6 +20,9 @@ public class ItemRespostaFichaColeta {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private ItemRespostaFichaColeta item;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private RespostaFichaColeta resposta;
+	
 	@NotNull(message="É necessário informar o Conteúdo do Item da Resposta.")
 	@Size(max = 2048, message="Tamanho máximo para Conteúdo do Item da Resposta: 2048")
 	private String conteudo;
@@ -33,6 +36,14 @@ public class ItemRespostaFichaColeta {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public RespostaFichaColeta getResposta() {
+		return resposta;
+	}
+
+	public void setResposta(RespostaFichaColeta resposta) {
+		this.resposta = resposta;
 	}
 
 	public ItemRespostaFichaColeta getItem() {

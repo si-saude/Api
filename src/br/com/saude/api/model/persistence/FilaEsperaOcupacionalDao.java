@@ -26,6 +26,10 @@ public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> 
 		this.functionLoadAll = fila -> {
 			if(fila.getLocalizacao() != null)
 				Hibernate.initialize(fila.getLocalizacao());
+			
+			if(fila.getFichaColeta() != null)
+				Hibernate.initialize(fila.getFichaColeta());
+			
 			return fila;
 		};
 	}

@@ -41,6 +41,9 @@ public class FilaEsperaOcupacional {
 	@Size(max = 64, message="Tamanho máximo para Status da Fila: 64")
 	private String status;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private FichaColeta fichaColeta;
+	
 	private long tempoEspera;
 	
 	private Date saida;
@@ -118,6 +121,14 @@ public class FilaEsperaOcupacional {
 
 	public void setTempoEspera(long tempoEspera) {
 		this.tempoEspera = tempoEspera;
+	}
+
+	public FichaColeta getFichaColeta() {
+		return fichaColeta;
+	}
+
+	public void setFichaColeta(FichaColeta fichaColeta) {
+		this.fichaColeta = fichaColeta;
 	}
 
 	public long getVersion() {

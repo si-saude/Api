@@ -1,9 +1,14 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,6 +31,13 @@ public class PerguntaFichaColeta {
 	@NotNull(message="É necessário informar o Código da Pergunta.")
 	@Size(max = 4, message="Tamanho máximo para Código da Pergunta: 4")
 	private String codigo;
+	
+	@NotNull(message="É necessário informar o Descrição da Pergunta.")
+	@Size(max = 1024, message="Tamanho máximo para Descrição da Pergunta: 1024")
+	private String descricao;
+	
+	@OneToMany(mappedBy="pergunta", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<ItemPerguntaFichaColeta> itens;
 	
 	private boolean inativo;
 	
@@ -88,5 +100,21 @@ public class PerguntaFichaColeta {
 
 	public void setQuantidadeDeItens(int quantidadeDeItens) {
 		this.quantidadeDeItens = quantidadeDeItens;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public List<ItemPerguntaFichaColeta> getItens() {
+		return itens;
+	}
+
+	public void setItens(List<ItemPerguntaFichaColeta> itens) {
+		this.itens = itens;
 	}
 }

@@ -60,7 +60,7 @@ public class FilaEsperaOcupacionalBo
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadLocalizacao();
+			return builder.loadLocalizacao().loadFichaColeta();
 		};
 	}
 	
