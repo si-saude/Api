@@ -513,6 +513,15 @@ public class FilaEsperaOcupacionalBo
 										}).count() > 0;
 									}).count() != rE.getRegraAtendimentoEquipeRequisitos().size())
 										continue;
+									
+									//SE FOR ACOLHIMENTO, NÃO LEVAR EM CONSIDERAÇÃO OS ATENDIMENTOS
+									//CUJA TAREFA ESTEJA EM EXECUÇÃO
+									if(rE.getEquipe().getAbreviacao().equals("ACO") && listAtendimento.stream()
+											.filter(a->a.getTarefa().getStatus().equals(
+													StatusTarefa.getInstance().EXECUCAO))
+											.count() > 0 ) {
+										continue;
+									}
 								}
 								
 								//OBTER A TAREFA
