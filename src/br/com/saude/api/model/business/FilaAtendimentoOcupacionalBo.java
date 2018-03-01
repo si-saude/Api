@@ -372,9 +372,10 @@ public class FilaAtendimentoOcupacionalBo
 		return new ArrayList<Atendimento>();
 	}
 	
-	public Atendimento atualizar(FilaAtendimentoOcupacional fila) throws Exception {
+	public Atendimento atualizar(Atendimento atendimento) throws Exception {
 		
-		Atendimento atendimento = new Atendimento();
+		FilaAtendimentoOcupacional fila = getBuilder(atendimento.getFilaAtendimentoOcupacional())
+				.getEntity();
 		
 		//VERIFICAR SE INFORMOU O PROFISSIONAL
 		if(fila.getProfissional() == null)
@@ -404,14 +405,18 @@ public class FilaAtendimentoOcupacionalBo
 					.getListLoadAllTarefaStatusNaoConcluidoCancelado(atendimentoFilter);
 			
 			if(atendimentos.getTotal() > 0) {
-				atendimento = atendimentos.getList().get(0);
-				atendimento.getFilaEsperaOcupacional().setEmpregado(EmpregadoBo
-						.getInstance().getById(atendimento.getFilaEsperaOcupacional().getEmpregado().getId()));
-				return atendimento;
-			}
+				Atendimento atendimentoAux = atendimentos.getList().get(0);
+				atendimentoAux.getFilaEsperaOcupacional().setEmpregado(EmpregadoBo
+						.getInstance().getById(atendimentoAux.getFilaEsperaOcupacional().getEmpregado().getId()));
+				atendimentoAux.getFilaEsperaOcupacional().setFichaColeta(
+						atendimento.getFilaEsperaOcupacional().getFichaColeta());
+				return atendimentoAux;
+			}else
+				atendimento = new Atendimento();
 			
 			atendimento.setFilaAtendimentoOcupacional(fila);
-		}
+		}else
+			atendimento = new Atendimento();
 		
 		return atendimento;
 	}
