@@ -192,7 +192,9 @@ public class FilaEsperaOcupacionalBo
 		fila.setStatus(StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 		fila.setServico(tarefa.getServico());
 		
-		// 6 - INSERIR NO BANCO
+		// 6 - CRIAR A FICHA DE COLETA, COM AS RESPOSTAS PARA AS PERGUNTAS ATIVAS
+		
+		// 7 - INSERIR NO BANCO
 		getDao().save(fila);
 		
 		return "Empregado "+fila.getEmpregado().getPessoa().getNome()+" inserido na fila de espera. "+
