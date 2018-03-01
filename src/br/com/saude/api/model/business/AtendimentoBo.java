@@ -31,6 +31,7 @@ import br.com.saude.api.model.entity.po.Atividade;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
+import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.persistence.AtendimentoDao;
 import br.com.saude.api.util.constant.GrupoServico;
@@ -272,8 +273,10 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	private Atendimento gerarRisco(Atendimento atendimento) {
 		
-		
-		
+		if(atendimento.getTriagens() != null) {
+			RiscoEmpregado risco = new RiscoEmpregado();
+			
+		}
 		
 		return atendimento;
 	}
