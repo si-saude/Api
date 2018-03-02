@@ -305,7 +305,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				r1 = 0.95;
 			
 			RiscoEmpregado risco = new RiscoEmpregado();
-			risco.setEmpregado(atendimento.getFilaEsperaOcupacional().getEmpregado());
+			risco.setRiscoPotencial(atendimento.getFilaEsperaOcupacional().getRiscoPotencial());
 			risco.setEquipe(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe());
 			risco.setTriagens(atendimento.getTriagens());
 			risco.setValor(r1);

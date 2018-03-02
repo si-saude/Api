@@ -19,8 +19,8 @@ public class RiscoEmpregado {
 	
 	private double valor;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	private Empregado empregado;
+	@ManyToOne(fetch=FetchType.LAZY)
+	private RiscoPotencial riscoPotencial;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Equipe equipe;
@@ -47,12 +47,12 @@ public class RiscoEmpregado {
 		this.valor = valor;
 	}
 
-	public Empregado getEmpregado() {
-		return empregado;
+	public RiscoPotencial getRiscoPotencial() {
+		return riscoPotencial;
 	}
 
-	public void setEmpregado(Empregado empregado) {
-		this.empregado = empregado;
+	public void setRiscoPotencial(RiscoPotencial riscoPotencial) {
+		this.riscoPotencial = riscoPotencial;
 	}
 
 	public Equipe getEquipe() {
