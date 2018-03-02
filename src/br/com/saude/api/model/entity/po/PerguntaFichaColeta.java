@@ -41,8 +41,6 @@ public class PerguntaFichaColeta {
 	
 	private boolean inativo;
 	
-	private int quantidadeDeItens;
-	
 	@Version
 	private long version;
 
@@ -92,14 +90,6 @@ public class PerguntaFichaColeta {
 
 	public void setVersion(long version) {
 		this.version = version;
-	}
-
-	public int getQuantidadeDeItens() {
-		return quantidadeDeItens;
-	}
-
-	public void setQuantidadeDeItens(int quantidadeDeItens) {
-		this.quantidadeDeItens = quantidadeDeItens;
 	}
 
 	public String getDescricao() {

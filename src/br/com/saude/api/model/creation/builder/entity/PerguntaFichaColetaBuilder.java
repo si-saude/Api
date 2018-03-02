@@ -49,7 +49,6 @@ public class PerguntaFichaColetaBuilder extends GenericEntityBuilder<PerguntaFic
 		clonePerguntaFichaColeta.setCodigo(perguntaFichaColeta.getCodigo());
 		clonePerguntaFichaColeta.setGrupo(perguntaFichaColeta.getGrupo());
 		clonePerguntaFichaColeta.setInativo(perguntaFichaColeta.isInativo());
-		clonePerguntaFichaColeta.setQuantidadeDeItens(perguntaFichaColeta.getQuantidadeDeItens());
 		clonePerguntaFichaColeta.setDescricao(perguntaFichaColeta.getDescricao());
 		clonePerguntaFichaColeta.setTipo(perguntaFichaColeta.getTipo());
 		

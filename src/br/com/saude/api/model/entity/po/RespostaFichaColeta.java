@@ -29,7 +29,6 @@ public class RespostaFichaColeta {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private FichaColeta ficha;
 	
-	@NotNull(message="É necessário informar o Conteúdo da Resposta.")
 	@Size(max = 2048, message="Tamanho máximo para Conteúdo da Pergunta: 2048")
 	private String conteudo;
 	
