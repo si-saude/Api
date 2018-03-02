@@ -4,9 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -44,6 +46,9 @@ public class Ghe {
 	
 	@Min(value=0, message="Valor mínimo para Duração da Jornada do GHE: 0")
 	private int duracaoJornada;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private RiscoGhe risco;
 	
 	@Version
 	private long version;
@@ -126,5 +131,13 @@ public class Ghe {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public RiscoGhe getRisco() {
+		return risco;
+	}
+
+	public void setRisco(RiscoGhe risco) {
+		this.risco = risco;
 	}
 }

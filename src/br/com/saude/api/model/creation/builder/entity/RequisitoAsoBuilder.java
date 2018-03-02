@@ -35,7 +35,7 @@ public class RequisitoAsoBuilder extends GenericEntityBuilder<RequisitoAso, Requ
 		
 		newRequisito.setId(requisito.getId());
 		newRequisito.setConteudo(requisito.getConteudo());
-		newRequisito.setVersion(newRequisito.getVersion());
+		newRequisito.setVersion(requisito.getVersion());
 		
 		return newRequisito;
 	}

@@ -52,14 +52,20 @@ public class EmpregadoConvocacaoBo
 	@Override
 	public EmpregadoConvocacao getById(Object id) throws Exception {
 		EmpregadoConvocacao empregadoConvocacao = super.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
-		empregadoConvocacao.getResultadoExames().sort(new Comparator<ResultadoExame>() {
-			public int compare(ResultadoExame arg0, ResultadoExame arg1) {
-				if ( arg0.getExame().getOrdem() == 0 ) {
-					arg0.getExame().setOrdem(Integer.MAX_VALUE);
+		
+		if(empregadoConvocacao.getResultadoExames() != null){
+			empregadoConvocacao.getResultadoExames().forEach(r->{
+				if(r.getExame().getOrdem() == 0)
+					r.getExame().setOrdem(Integer.MAX_VALUE);
+			});
+			
+			empregadoConvocacao.getResultadoExames().sort(new Comparator<ResultadoExame>() {
+				public int compare(ResultadoExame arg0, ResultadoExame arg1) {					
+					return new Integer(arg0.getExame().getOrdem()).compareTo(arg1.getExame().getOrdem());
 				}
-				return ( arg0.getExame().getOrdem() - arg1.getExame().getOrdem() );
-			}
-		});
+			});
+		}
+		
 		return empregadoConvocacao;
 	}
 	

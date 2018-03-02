@@ -225,6 +225,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String RESULTADO_EXAME_ALTERAR		 			= "RESULTADO-EXAME_ALTERAR";
 	public static final String RESULTADO_EXAME_REMOVER 					= "RESULTADO-EXAME_REMOVER";
 	public static final String RESULTADO_EXAME_DETALHE 					= "RESULTADO-EXAME_DETALHE";
+	public static final String RISCO_GHE_LISTAR						= "RISCO-GHE_LISTAR";
+	public static final String RISCO_GHE_ADICIONAR 			    	= "RISCO-GHE_ADICIONAR";
+	public static final String RISCO_GHE_ALTERAR		 			= "RISCO-GHE_ALTERAR";
+	public static final String RISCO_GHE_REMOVER 					= "RISCO-GHE_REMOVER";
+	public static final String RISCO_GHE_DETALHE 					= "RISCO-GHE_DETALHE";
 	public static final String SERVICO_LISTAR						= "SERVICO_LISTAR";
 	public static final String SERVICO_ADICIONAR 			    	= "SERVICO_ADICIONAR";
 	public static final String SERVICO_ALTERAR		 			= "SERVICO_ALTERAR";

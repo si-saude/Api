@@ -13,6 +13,8 @@ public class GheFilter extends GenericFilter {
 	private String descricaoAmbiente;
 	private String descricaoTarefas;
 	private int duracaoJornada;
+	private RiscoGheFilter risco;
+	
 	public String getNome() {
 		return nome;
 	}
@@ -60,5 +62,11 @@ public class GheFilter extends GenericFilter {
 	}
 	public void setDuracaoJornada(int duracaoJornada) {
 		this.duracaoJornada = duracaoJornada;
+	}
+	public RiscoGheFilter getRisco() {
+		return risco;
+	}
+	public void setRisco(RiscoGheFilter risco) {
+		this.risco = risco;
 	}
 }

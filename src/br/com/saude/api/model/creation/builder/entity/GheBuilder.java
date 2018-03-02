@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.GheFilter;
@@ -8,6 +10,8 @@ import br.com.saude.api.model.entity.po.Ghe;
 
 public class GheBuilder extends GenericEntityBuilder<Ghe, GheFilter> {
 
+	private Function<Map<String,Ghe>,Ghe> loadAll;
+	
 	public static GheBuilder newInstance(Ghe ghe) {
 		return new GheBuilder(ghe);
 	}
@@ -26,7 +30,14 @@ public class GheBuilder extends GenericEntityBuilder<Ghe, GheFilter> {
 	
 	@Override
 	protected void initializeFunctions() {
-		
+		this.loadAll = ghes -> {
+			
+			if(ghes.get("origem").getRisco() != null)
+				ghes.get("destino").setRisco(RiscoGheBuilder
+						.newInstance(ghes.get("origem").getRisco()).getEntity());
+			
+			return ghes.get("destino");
+		};
 	}
 
 	@Override
@@ -45,6 +56,10 @@ public class GheBuilder extends GenericEntityBuilder<Ghe, GheFilter> {
 		newGhe.setVersion(ghe.getVersion());
 		
 		return newGhe;
+	}
+	
+	public GheBuilder loadAll() {
+		return (GheBuilder) this.loadProperty(this.loadAll);
 	}
 
 	@Override

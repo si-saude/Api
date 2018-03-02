@@ -434,6 +434,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 					//PERIÓDICO
 					case "0003":
 						return TipoConvocacao.PERIODICO;
+					case "1003":
+						return TipoConvocacao.PERIODICO;
 						
 					//RETORNO AO TRABALHO
 					case "0004":
