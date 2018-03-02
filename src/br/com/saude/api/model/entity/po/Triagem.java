@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ public class Triagem {
 	
 	private int indice = -1;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private RiscoEmpregado riscoEmpregado;
 	
 	@Version
