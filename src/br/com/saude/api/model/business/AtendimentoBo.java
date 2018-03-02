@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import br.com.saude.api.generic.DateFilter;
@@ -34,6 +35,7 @@ import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.Tarefa;
+import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.AtendimentoDao;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusAso;
@@ -274,18 +276,41 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	private Atendimento gerarRisco(Atendimento atendimento) {
 		
-		if(atendimento.getTriagens() != null) {
-			RiscoEmpregado risco = new RiscoEmpregado();
+		if(atendimento.getTriagens() != null && atendimento.getTriagens().size() > 0) {			
+			List<Triagem> triagens = atendimento.getTriagens().stream().filter(t->t.getIndice() >= 0)
+					.collect(Collectors.toList());
 			
-			long qtdResposta = atendimento.getTriagens().stream().filter(t->t.getIndice() >= 0).count();
+			//CARREGAR OS INDICADORES
+			triagens.forEach(t->{
+				try {
+					t.setIndicadorSast(
+							IndicadorSastBo.getInstance().getById(t.getIndicadorSast().getId()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
 			
-			double r0 = 0.95 - atendimento.getTriagens().stream().filter(t->t.getIndice() >= 0)
+			double r0 = 0.95 - triagens.stream()
 					.flatMapToInt(t-> IntStream.of(t.getIndice())).average().getAsDouble();
 			
 			double r01 = Math.log10(atendimento.getFilaAtendimentoOcupacional()
 				.getProfissional().getEquipe().getPrioridadeSast() + 1) /
 					(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe()
-								.getPrioridadeSast() + qtdResposta);
+								.getPrioridadeSast() + triagens.size());
+			
+			double r1 = r0 + r01;
+			
+			if (triagens.stream().filter(t->t.getIndice() <= 
+					t.getIndicadorSast().getCritico()).count() > 0)
+				r1 = 0.95;
+			
+			RiscoEmpregado risco = new RiscoEmpregado();
+			risco.setEmpregado(atendimento.getFilaEsperaOcupacional().getEmpregado());
+			risco.setEquipe(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe());
+			risco.setTriagens(atendimento.getTriagens());
+			risco.setValor(r1);
+			
+			atendimento.getTriagens().forEach(t->t.setRiscoEmpregado(risco));
 		}
 		
 		return atendimento;
