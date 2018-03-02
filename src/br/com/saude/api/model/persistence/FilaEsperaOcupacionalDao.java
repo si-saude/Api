@@ -1,11 +1,17 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Hibernate;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
+import br.com.saude.api.model.entity.po.ItemRespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 
 public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> {
 
@@ -27,11 +33,42 @@ public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> 
 			if(fila.getLocalizacao() != null)
 				Hibernate.initialize(fila.getLocalizacao());
 			
-			if(fila.getFichaColeta() != null)
+			if(fila.getFichaColeta() != null) {
 				Hibernate.initialize(fila.getFichaColeta());
+				fila.setFichaColeta((FichaColeta) 
+						Hibernate.unproxy(fila.getFichaColeta()));
+				
+				List<RespostaFichaColeta> respostas = new ArrayList<RespostaFichaColeta>();
+				
+				fila.getFichaColeta().getRespostaFichaColetas().forEach(r->{
+					respostas.add((RespostaFichaColeta) Hibernate.unproxy(r));
+				});
+				
+				
+				respostas.forEach(r -> {
+					List<ItemRespostaFichaColeta> itens = new ArrayList<ItemRespostaFichaColeta>();
+					
+					r.getItens().forEach(i -> {
+						itens.add(inicializeItem(i));
+					});
+					
+					r.setItens(itens);
+				});
+				
+				fila.getFichaColeta().setRespostaFichaColetas(respostas);
+			}
 			
 			return fila;
 		};
+	}
+	
+	protected ItemRespostaFichaColeta inicializeItem(ItemRespostaFichaColeta item) {
+		item = (ItemRespostaFichaColeta) Hibernate.unproxy(item);
+		
+		if(item.getItem() != null)
+			item.setItem(inicializeItem(item.getItem()));
+		
+		return item;
 	}
 	
 	public FilaEsperaOcupacional getByIdLoadAll(Object id) throws Exception {

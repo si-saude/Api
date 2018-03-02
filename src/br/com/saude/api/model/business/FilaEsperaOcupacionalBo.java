@@ -75,7 +75,8 @@ public class FilaEsperaOcupacionalBo
 	}
 	
 	public PagedList<FilaEsperaOcupacional> getListAll(FilaEsperaOcupacionalFilter filter) throws  Exception {
-		return super.getList(filter,this.functionLoadAll);
+		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), 
+				this.functionLoadAll);
 	}
 	
 	private PagedList<FilaEsperaOcupacional> check(FilaEsperaOcupacional fila) throws Exception {
@@ -622,6 +623,9 @@ public class FilaEsperaOcupacionalBo
 								filaEspera.setStatus(StatusFilaEsperaOcupacional.getInstance().EM_ATENDIMENTO);
 								filaEspera.setTempoEspera(filaEspera.getTempoEspera() + calcularTempoAtualizacao(filaEspera));
 								filaEspera.setAtualizacao(tarefa.getAtualizacao());
+								//SETAR REFERENCIA DE FICHA COLETA EM RESPOSTAS FICHAS COLETAS
+								filaEspera.getFichaColeta().getRespostaFichaColetas().forEach(rF -> 
+									rF.setFicha(filaEspera.getFichaColeta()));
 								
 								//INSTANCIAR
 								Atendimento atendimento = new Atendimento();

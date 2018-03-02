@@ -34,7 +34,7 @@ public class FichaColetaBuilder extends GenericEntityBuilder<FichaColeta, FichaC
 		
 		cloneFichaColeta.setId(fichaColeta.getId());
 		cloneFichaColeta.setVersion(fichaColeta.getVersion());
-		if ( cloneFichaColeta.getRespostaFichaColetas() != null )
+		if ( fichaColeta.getRespostaFichaColetas() != null )
 			cloneFichaColeta.setRespostaFichaColetas(
 					(List<RespostaFichaColeta>) RespostaFichaColetaBuilder
 					.newInstance(fichaColeta.getRespostaFichaColetas()).getEntityList());

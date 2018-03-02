@@ -408,8 +408,13 @@ public class FilaAtendimentoOcupacionalBo
 				Atendimento atendimentoAux = atendimentos.getList().get(0);
 				atendimentoAux.getFilaEsperaOcupacional().setEmpregado(EmpregadoBo
 						.getInstance().getById(atendimentoAux.getFilaEsperaOcupacional().getEmpregado().getId()));
-				atendimentoAux.getFilaEsperaOcupacional().setFichaColeta(
-						atendimento.getFilaEsperaOcupacional().getFichaColeta());
+				
+				if(atendimento.getFilaEsperaOcupacional().getFichaColeta() != null
+						&& atendimento.getFilaEsperaOcupacional().getFichaColeta().getId() > 0) {
+					atendimentoAux.getFilaEsperaOcupacional().setFichaColeta(
+							atendimento.getFilaEsperaOcupacional().getFichaColeta());					
+				}
+				
 				return atendimentoAux;
 			}else
 				atendimento = new Atendimento();

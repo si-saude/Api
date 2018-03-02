@@ -23,12 +23,15 @@ import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Empregado;
+import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
+import br.com.saude.api.model.entity.po.ItemRespostaFichaColeta;
 import br.com.saude.api.model.entity.po.Localizacao;
 import br.com.saude.api.model.entity.po.Pessoa;
 import br.com.saude.api.model.entity.po.Profissional;
+import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
@@ -72,6 +75,31 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 			if(atendimento.getFilaEsperaOcupacional().getLocalizacao() != null)
 				atendimento.getFilaEsperaOcupacional().setLocalizacao(
 						(Localizacao) Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getLocalizacao()));
+			
+			if(atendimento.getFilaEsperaOcupacional().getFichaColeta() != null) {
+				Hibernate.initialize(atendimento.getFilaEsperaOcupacional().getFichaColeta());
+				atendimento.getFilaEsperaOcupacional().setFichaColeta((FichaColeta) 
+						Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getFichaColeta()));
+				
+				List<RespostaFichaColeta> respostas = new ArrayList<RespostaFichaColeta>();
+				
+				atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().forEach(r->{
+					respostas.add((RespostaFichaColeta) Hibernate.unproxy(r));
+				});
+				
+				
+				respostas.forEach(r -> {
+					List<ItemRespostaFichaColeta> itens = new ArrayList<ItemRespostaFichaColeta>();
+					
+					r.getItens().forEach(i -> {
+						itens.add(FilaEsperaOcupacionalDao.getInstance().inicializeItem(i));
+					});
+					
+					r.setItens(itens);
+				});
+				
+				atendimento.getFilaEsperaOcupacional().getFichaColeta().setRespostaFichaColetas(respostas);
+			}
 			
 			if(atendimento.getTriagens() != null)
 				Hibernate.initialize(atendimento.getTriagens());
