@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
@@ -276,6 +277,15 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		if(atendimento.getTriagens() != null) {
 			RiscoEmpregado risco = new RiscoEmpregado();
 			
+			long qtdResposta = atendimento.getTriagens().stream().filter(t->t.getIndice() >= 0).count();
+			
+			double r0 = 0.95 - atendimento.getTriagens().stream().filter(t->t.getIndice() >= 0)
+					.flatMapToInt(t-> IntStream.of(t.getIndice())).average().getAsDouble();
+			
+			double r01 = Math.log10(atendimento.getFilaAtendimentoOcupacional()
+				.getProfissional().getEquipe().getPrioridadeSast() + 1) /
+					(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe()
+								.getPrioridadeSast() + qtdResposta);
 		}
 		
 		return atendimento;
