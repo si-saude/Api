@@ -2,6 +2,7 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -41,7 +42,7 @@ public class FilaEsperaOcupacional {
 	@Size(max = 64, message="Tamanho máximo para Status da Fila: 64")
 	private String status;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private FichaColeta fichaColeta;
 	
 	private long tempoEspera;

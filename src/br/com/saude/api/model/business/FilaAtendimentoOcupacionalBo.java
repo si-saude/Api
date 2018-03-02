@@ -374,7 +374,7 @@ public class FilaAtendimentoOcupacionalBo
 	
 	public Atendimento atualizar(Atendimento atendimento) throws Exception {
 		
-		FilaAtendimentoOcupacional fila = getBuilder(atendimento.getFilaAtendimentoOcupacional())
+		FilaAtendimentoOcupacional fila = getBuilder(atendimento.getFilaAtendimentoOcupacional()).loadLocalizacao()
 				.getEntity();
 		
 		//VERIFICAR SE INFORMOU O PROFISSIONAL
