@@ -10,11 +10,13 @@ import br.com.saude.api.model.creation.builder.entity.AsoBuilder;
 import br.com.saude.api.model.creation.builder.example.AsoExampleBuilder;
 import br.com.saude.api.model.entity.filter.AsoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
+import br.com.saude.api.model.entity.filter.RequisitoAsoFilter;
 import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.AsoAlteracao;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.entity.po.Ghe;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.RequisitoAso;
 import br.com.saude.api.model.persistence.AsoDao;
@@ -66,27 +68,65 @@ public class AsoBo
 	}
 	
 	public List<RequisitoAso> getExamesConvocacao(Aso aso) throws Exception {
-		Atendimento atendimento = AtendimentoBo.getInstance().getById(aso.getAtendimento().getId());
+		Atendimento atendimento = AtendimentoBo.getInstance().getById(aso.getAtendimento().getId());	
 		EmpregadoConvocacaoFilter empConFilter = 
 				AtendimentoBo.getInstance().configureEmpregadoConvocacaoFilter(atendimento);
 		
 		//ALTERAR PARA LISTALL
 		PagedList<EmpregadoConvocacao> pagedList = 
 				EmpregadoConvocacaoBo.getInstance().getListLoadAll(empConFilter);
-		List<RequisitoAso> requisitos = new ArrayList<RequisitoAso>();
-		if(pagedList.getTotal() > 0) {
-			EmpregadoConvocacao eC = pagedList.getList().get(0);
+		
+		RequisitoAsoFilter reqFilter = new RequisitoAsoFilter();
+		reqFilter.setPageNumber(1);
+		reqFilter.setPageSize(Integer.MAX_VALUE);
+		
+		Empregado empregado = EmpregadoBo.getInstance().getById(
+				atendimento.getFilaEsperaOcupacional().getEmpregado().getId());
+		
+		List<RequisitoAso> requisitos = RequisitoAsoBo.getInstance().getList(reqFilter).getList();
+		
+		EmpregadoConvocacao eC = null;
+		
+		//ADD EXAMES
+		if(pagedList.getTotal() > 0)
+			eC = pagedList.getList().get(0);
+		
+		EmpregadoConvocacao eCc = eC;
+		//SUBSTITUIR AS VARIÁVEIS
+		requisitos.forEach(r -> {			
+			if(r.getConteudo().contains("[NOME]")) {
+				r.setConteudo(r.getConteudo().replace("[NOME]", ": "+empregado.getPessoa().getNome()));
+			}else if(r.getConteudo().contains("[CARGO]")) {
+				r.setConteudo(r.getConteudo().replace("[CARGO]", ": "+empregado.getCargo().getNome()));
+			}else if(r.getConteudo().contains("[GERENCIA]")) {
+				if(empregado.getGerencia() != null)
+					r.setConteudo(r.getConteudo().replace("[GERENCIA]", 
+							": "+empregado.getGerencia().getCodigoCompleto()));
+			}else if(r.getConteudo().contains("[TIPO_CONVOCACAO]")) {
+				if(eCc != null)
+					r.setConteudo(r.getConteudo().replace("[TIPO_CONVOCACAO]", 
+							": "+eCc.getConvocacao().getTipo()));
+			}else if(r.getConteudo().contains("[RISCOS_GHE]")) {
+				if(empregado.getGhe() != null) {
+					try {
+						Ghe ghe = GheBo.getInstance().getById(empregado.getGhe());
+						r.setConteudo(r.getConteudo().replace("[RISCOS_GHE]", 
+								": "+ghe.getDescricao()));					
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		if(eC != null)
 			eC.getEmpregadoConvocacaoExames().forEach(e->{
 				RequisitoAso requisito = new RequisitoAso();
 				requisito.setConteudo(e.getExame().getCodigo()+" - "+e.getExame().getDescricao());
 				requisitos.add(requisito);
 			});
-		}
 		
 		//GRUPOS DE MONITORAMENTO
-		Empregado empregado = EmpregadoBo.getInstance().getById(
-				atendimento.getFilaEsperaOcupacional().getEmpregado().getId());
-		
 		boolean pssicossocial = false;
 		boolean usoDeMascara = false;
 		

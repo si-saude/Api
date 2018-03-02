@@ -26,8 +26,9 @@ public class Equipe {
 	private String abreviacao;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	
 	private Profissional coordenador;
+	
+	private int prioridadeSast;
 	
 	@Version
 	private long version;
@@ -71,5 +72,12 @@ public class Equipe {
 	public void setVersion(long version) {
 		this.version = version;
 	}
-	
+
+	public int getPrioridadeSast() {
+		return prioridadeSast;
+	}
+
+	public void setPrioridadeSast(int prioridadeSast) {
+		this.prioridadeSast = prioridadeSast;
+	}
 }

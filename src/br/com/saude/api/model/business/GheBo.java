@@ -26,7 +26,9 @@ public class GheBo extends GenericBo<Ghe, GheFilter, GheDao, GheBuilder, GheExam
 
 	@Override
 	protected void initializeFunctions() {
-		
+		this.functionLoadAll = builder -> {
+			return builder.loadAll();
+		};
 	}
 	
 	@Override
@@ -38,5 +40,10 @@ public class GheBo extends GenericBo<Ghe, GheFilter, GheDao, GheBuilder, GheExam
 			ghe.setDataCriacao(new Date());
 		
 		return super.save(ghe);
+	}
+	
+	@Override
+	public Ghe getById(Object id) throws Exception {
+		return super.getById(id,this.functionLoadAll);
 	}
 }
