@@ -46,6 +46,7 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 		
 		cloneRiscoEmpregado.setId(riscoEmpregado.getId());
 		cloneRiscoEmpregado.setVersion(riscoEmpregado.getVersion());
+		cloneRiscoEmpregado.setValor(riscoEmpregado.getValor());
 		
 		if ( riscoEmpregado.getEquipe() != null )
 			cloneRiscoEmpregado.setEquipe(EquipeBuilder.newInstance(riscoEmpregado.getEquipe()).getEntity());
