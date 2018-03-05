@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Triagem {
@@ -27,6 +28,21 @@ public class Triagem {
 	
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private RiscoEmpregado riscoEmpregado;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Diagnostico diagnostico;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Intervencao intervencao;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Equipe equipeAbordagem;
+	
+	@Size(max = 16, message="Tamanho máximo para Sugestão de Prazo para Início: 16")
+	private String prazo;
+	
+	@Size(max = 2048, message="Tamanho máximo para Justificativa: 2048")
+	private String justificativa;
 	
 	@Version
 	private long version;
@@ -78,4 +94,44 @@ public class Triagem {
 	public void setVersion(long version) {
 		this.version = version;
 	}
+
+	public Diagnostico getDiagnostico() {
+		return diagnostico;
+	}
+
+	public void setDiagnostico(Diagnostico diagnostico) {
+		this.diagnostico = diagnostico;
+	}
+
+	public Intervencao getIntervencao() {
+		return intervencao;
+	}
+
+	public void setIntervencao(Intervencao intervencao) {
+		this.intervencao = intervencao;
+	}
+
+	public Equipe getEquipeAbordagem() {
+		return equipeAbordagem;
+	}
+
+	public void setEquipeAbordagem(Equipe equipeAbordagem) {
+		this.equipeAbordagem = equipeAbordagem;
+	}
+
+	public String getPrazo() {
+		return prazo;
+	}
+
+	public void setPrazo(String prazo) {
+		this.prazo = prazo;
+	}
+
+	public String getJustificativa() {
+		return justificativa;
+	}
+
+	public void setJustificativa(String justificativa) {
+		this.justificativa = justificativa;
+	}	
 }
