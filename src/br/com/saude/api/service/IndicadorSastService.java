@@ -15,7 +15,7 @@ import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.IndicadorSastBo;
-import br.com.saude.api.model.business.validate.InstalacaoValidator;
+import br.com.saude.api.model.business.validate.IndicadorSastValidator;
 import br.com.saude.api.model.entity.filter.IndicadorSastFilter;
 import br.com.saude.api.model.entity.po.IndicadorSast;
 import br.com.saude.api.util.RequestInterceptor;
@@ -69,7 +69,7 @@ implements GenericService<IndicadorSast,IndicadorSastFilter>{
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=InstalacaoValidator.class)
+	@CustomValidator(validatorClass=IndicadorSastValidator.class)
 	@Override
 	public Response save(IndicadorSast indicadorSast) {
 		try {

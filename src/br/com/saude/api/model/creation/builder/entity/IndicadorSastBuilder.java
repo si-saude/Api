@@ -59,6 +59,7 @@ public class IndicadorSastBuilder extends GenericEntityBuilder<IndicadorSast,Ind
 		cloneIndicadorSast.setNome(indicadorSast.getNome());
 		cloneIndicadorSast.setObrigatorio(indicadorSast.isObrigatorio());
 		cloneIndicadorSast.setInativo(indicadorSast.isInativo());
+		cloneIndicadorSast.setAusenteCalculoInterdisciplinar(indicadorSast.isAusenteCalculoInterdisciplinar());
 		cloneIndicadorSast.setVersion(indicadorSast.getVersion());
 		
 		return cloneIndicadorSast;

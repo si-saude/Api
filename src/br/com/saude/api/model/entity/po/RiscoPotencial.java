@@ -92,6 +92,10 @@ public class RiscoPotencial {
 			int qtd = 0;
 			for(RiscoEmpregado rE : this.riscoEmpregados) {
 				for(Triagem t : rE.getTriagens()) {
+					
+					if(t.getIndicadorSast().isAusenteCalculoInterdisciplinar())
+						continue;
+					
 					if(t.getIndicadorSast().getIndicadorAssociadoSasts() != null)
 						qtd += t.getIndicadorSast().getIndicadorAssociadoSasts().size();
 				}
@@ -105,6 +109,9 @@ public class RiscoPotencial {
 				
 				for(Triagem triagem : riscoEmpregado.getTriagens()) {
 					if(triagem.getIndice() < 0 || triagem.getIndice() >= 3)
+						continue;
+					
+					if(triagem.getIndicadorSast().isAusenteCalculoInterdisciplinar())
 						continue;
 					
 					if(triagem.getIndicadorSast().getIndicadorAssociadoSasts() != null) {
