@@ -23,6 +23,7 @@ import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.filter.FilaEsperaOcupacionalFilter;
+import br.com.saude.api.model.entity.filter.IndicadorSastFilter;
 import br.com.saude.api.model.entity.filter.LocalizacaoFilter;
 import br.com.saude.api.model.entity.filter.PerguntaFichaColetaFilter;
 import br.com.saude.api.model.entity.filter.PessoaFilter;
@@ -33,6 +34,7 @@ import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
+import br.com.saude.api.model.entity.po.IndicadorSast;
 import br.com.saude.api.model.entity.po.Localizacao;
 import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.RegraAtendimento;
@@ -41,6 +43,7 @@ import br.com.saude.api.model.entity.po.RegraAtendimentoLocalizacao;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Tarefa;
+import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.FilaEsperaOcupacionalDao;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
@@ -655,6 +658,13 @@ public class FilaEsperaOcupacionalBo
 								atendimento = AtendimentoBo.getInstance().addAtualizacao(atendimento);
 								fA.setAtualizacao(tarefa.getAtualizacao());
 								
+								//CRIAR A FICHA DE TRIAGEM
+								try {
+									atendimento = setTriagens(atendimento);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								
 								//ADD NA LISTA
 								atendimentos.getList().add(atendimento);
 								filaAtendimentos.getList().remove(fA);
@@ -671,6 +681,37 @@ public class FilaEsperaOcupacionalBo
 				
 		// 8 - RETORNAR A LISTA DE ATENDIMENTO
 		return  AtendimentoBo.getInstance().getBuilder(atendimentos.getList()).loadTarefa().getEntityList();
+	}
+	
+	private Atendimento setTriagens(Atendimento atendimento) throws Exception {
+		
+		// 1 - OBTER OS INDICADORES ATIVOS DA EQUIPE DO PROFISSIONAL
+		IndicadorSastFilter indicadorFilter = new IndicadorSastFilter();
+		indicadorFilter.setPageNumber(1);
+		indicadorFilter.setPageSize(Integer.MAX_VALUE);
+		indicadorFilter.setInativo(new BooleanFilter());
+		indicadorFilter.getInativo().setValue(2);
+		indicadorFilter.setEquipe(new EquipeFilter());
+		indicadorFilter.getEquipe().setId(atendimento.getFilaAtendimentoOcupacional()
+				.getProfissional().getEquipe().getId());
+		
+		PagedList<IndicadorSast> indicadores = IndicadorSastBo.getInstance().getList(indicadorFilter);
+		
+		if(indicadores.getTotal() > 0) {
+			
+			if(atendimento.getTriagens() == null)
+				atendimento.setTriagens(new ArrayList<Triagem>());
+			
+			// 2 - PARA CADA INDICADOR RETORNADO, CRIAR UMA TRIAGEM COM O INDICADOR ASSOCIADO
+			for(IndicadorSast indicador : indicadores.getList()) {
+				Triagem triagem = new Triagem();
+				triagem.setAtendimento(atendimento);
+				triagem.setIndicadorSast(indicador);
+				atendimento.getTriagens().add(triagem);
+			}
+		}
+		
+		return atendimento;
 	}
 	
 	private long calcularTempoAtualizacao(FilaEsperaOcupacional fila) {

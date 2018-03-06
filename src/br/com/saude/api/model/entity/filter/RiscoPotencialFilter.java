@@ -7,6 +7,8 @@ public class RiscoPotencialFilter extends GenericFilter {
 
 	private EmpregadoFilter empregado;
 	private DateFilter data;
+	private EquipeFilter equipeResponsavel;
+	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
 	}
@@ -18,5 +20,11 @@ public class RiscoPotencialFilter extends GenericFilter {
 	}
 	public void setData(DateFilter data) {
 		this.data = data;
+	}
+	public EquipeFilter getEquipeResponsavel() {
+		return equipeResponsavel;
+	}
+	public void setEquipeResponsavel(EquipeFilter equipeResponsavel) {
+		this.equipeResponsavel = equipeResponsavel;
 	}
 }

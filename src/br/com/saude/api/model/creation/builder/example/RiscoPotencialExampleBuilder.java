@@ -26,6 +26,14 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 		}
 	}
 	
+	private void addEquipeResponsavel() throws InstantiationException, IllegalAccessException {
+		if (this.filter.getEquipeResponsavel() != null) {
+			CriteriaExample criteriaExample = EquipeExampleBuilder
+					.newInstance(this.filter.getEquipeResponsavel()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("equipeResponsavel", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
 	private void addData() {
 		this.addData("data", this.filter.getData());
 	}
@@ -33,6 +41,7 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addEmpregado();
+		addEquipeResponsavel();
 		addData();
 	}
 

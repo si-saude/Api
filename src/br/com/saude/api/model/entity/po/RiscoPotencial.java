@@ -1,15 +1,20 @@
 package br.com.saude.api.model.entity.po;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.DoubleStream;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -33,6 +38,15 @@ public class RiscoPotencial {
 	
 	@OneToMany(mappedBy="riscoPotencial", fetch=FetchType.LAZY, orphanRemoval=true)
 	private List<RiscoEmpregado> riscoEmpregados;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Equipe equipeResponsavel;
+	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="riscopotencial_equipe", 
+	joinColumns = {@JoinColumn(name="riscopotencial_id")}, 
+	inverseJoinColumns = {@JoinColumn(name="equipe_id")})
+	private List<Equipe> equipes;
 	
 	@Transient
 	private List<RiscoEmpregado> riscosInterdiciplinares;
@@ -142,7 +156,13 @@ public class RiscoPotencial {
 				r = r * (0.05/qtd);
 				newRiscoEmpregado.setValor(newRiscoEmpregado.getValor() + r);
 				this.riscosInterdiciplinares.add(newRiscoEmpregado);
-			}		
+			}
+			
+			this.riscosInterdiciplinares.sort(new Comparator<RiscoEmpregado>(){
+				public int compare(RiscoEmpregado arg0, RiscoEmpregado arg1) {
+					return new Double(arg1.getValor()).compareTo(new Double(arg0.getValor()));
+				}
+			});
 		}
 		
 		return riscosInterdiciplinares;
@@ -159,5 +179,21 @@ public class RiscoPotencial {
 							.average().getAsDouble();
 		
 		return this.valor;
+	}
+
+	public Equipe getEquipeResponsavel() {
+		return equipeResponsavel;
+	}
+
+	public void setEquipeResponsavel(Equipe equipeResponsavel) {
+		this.equipeResponsavel = equipeResponsavel;
+	}
+
+	public List<Equipe> getEquipes() {
+		return equipes;
+	}
+
+	public void setEquipes(List<Equipe> equipes) {
+		this.equipes = equipes;
 	}
 }

@@ -13,6 +13,7 @@ import br.com.saude.api.model.entity.po.RiscoPotencial;
 public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, RiscoPotencialFilter> {
 
 	private Function<Map<String,RiscoPotencial>,RiscoPotencial> loadRiscoEmpregados;
+	private Function<Map<String,RiscoPotencial>,RiscoPotencial> loadEquipes;
 	
 	public static RiscoPotencialBuilder newInstance(RiscoPotencial risco) {
 		return new RiscoPotencialBuilder(risco);
@@ -41,10 +42,24 @@ public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, 
 			
 			return riscos.get("destino");
 		};
+		
+		this.loadEquipes = riscos -> {
+			
+			if(riscos.get("origem").getEquipes() != null)
+				riscos.get("destino").setEquipes(EquipeBuilder
+						.newInstance(riscos.get("origem").getEquipes())
+						.getEntityList());
+			
+			return riscos.get("destino");
+		};
 	}
 	
 	public RiscoPotencialBuilder loadRiscoEmpregados() {
 		return (RiscoPotencialBuilder) this.loadProperty(this.loadRiscoEmpregados);
+	}
+	
+	public RiscoPotencialBuilder loadEquipes() {
+		return (RiscoPotencialBuilder) this.loadProperty(this.loadEquipes);
 	}
 
 	@Override
@@ -57,6 +72,9 @@ public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, 
 		
 		if(newRisco.getEmpregado() != null && !(newRisco.getEmpregado() instanceof HibernateProxy))
 			risco.setEmpregado(EmpregadoBuilder.newInstance(risco.getEmpregado()).getEntity());
+		
+		if(newRisco.getEquipeResponsavel() != null && !(newRisco.getEquipeResponsavel() instanceof HibernateProxy))
+			risco.setEquipeResponsavel(EquipeBuilder.newInstance(risco.getEquipeResponsavel()).getEntity());
 		
 		return newRisco;
 	}
