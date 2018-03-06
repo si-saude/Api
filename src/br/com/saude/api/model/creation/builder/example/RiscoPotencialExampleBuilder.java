@@ -1,5 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
@@ -16,6 +17,11 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 	
 	private RiscoPotencialExampleBuilder(RiscoPotencialFilter filter) {
 		super(filter);
+	}
+	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
 	}
 	
 	private void addEmpregado() throws InstantiationException, IllegalAccessException {
@@ -48,6 +54,7 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
 		addEmpregado();
 		addEquipeResponsavel();
 		addData();

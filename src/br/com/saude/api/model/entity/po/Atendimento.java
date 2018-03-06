@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
@@ -38,6 +39,9 @@ public class Atendimento {
 	
 	@OneToMany(mappedBy="atendimento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Triagem> triagens;
+	
+	@Transient
+	private List<Triagem> triagensTodosAtendimentos;
 	
 	@Version
 	private long version;
@@ -96,5 +100,13 @@ public class Atendimento {
 
 	public void setAso(Aso aso) {
 		this.aso = aso;
+	}
+
+	public List<Triagem> getTriagensTodosAtendimentos() {
+		return triagensTodosAtendimentos;
+	}
+
+	public void setTriagensTodosAtendimentos(List<Triagem> triagensTodosAtendimentos) {
+		this.triagensTodosAtendimentos = triagensTodosAtendimentos;
 	}
 }

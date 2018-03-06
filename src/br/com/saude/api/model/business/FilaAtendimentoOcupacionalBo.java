@@ -20,7 +20,10 @@ import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.filter.LocalizacaoFilter;
 import br.com.saude.api.model.entity.filter.ProfissionalFilter;
+import br.com.saude.api.model.entity.filter.RiscoEmpregadoFilter;
+import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
+import br.com.saude.api.model.entity.filter.TriagemFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
@@ -429,6 +432,20 @@ public class FilaAtendimentoOcupacionalBo
 					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setEquipeResponsavel(
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().
 							getRiscosInterdiciplinares().get(0).getEquipe());
+					
+					//OBTER TODAS AS TRIAGENS
+					TriagemFilter triagemFilter = new TriagemFilter();
+					triagemFilter.setPageNumber(1);
+					triagemFilter.setPageSize(Integer.MAX_VALUE);
+					triagemFilter.setRiscoEmpregado(new RiscoEmpregadoFilter());
+					triagemFilter.getRiscoEmpregado().setRiscoPotencial(new RiscoPotencialFilter());
+					triagemFilter.getRiscoEmpregado().getRiscoPotencial().
+						setId(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId());
+					
+					PagedList<Triagem> triagens = TriagemBo.getInstance().getList(triagemFilter);
+					
+					if(triagens.getTotal() > 0)
+						atendimento.setTriagensTodosAtendimentos(triagens.getList());
 				}
 				
 				atendimentoAux.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().sort(new Comparator<RespostaFichaColeta>() {
@@ -439,13 +456,19 @@ public class FilaAtendimentoOcupacionalBo
 					}
 				});
 				
+				Comparator<Triagem> comparator = new Comparator<Triagem>() {
+					@Override
+					public int compare(Triagem arg0, Triagem arg1) {
+						return arg0.getIndicadorSast().getCodigo().compareTo(arg1.getIndicadorSast().getCodigo());
+					}
+				};
+				
 				if(atendimentoAux.getTriagens() != null) {
-					atendimentoAux.getTriagens().sort(new Comparator<Triagem>() {
-						@Override
-						public int compare(Triagem arg0, Triagem arg1) {
-							return arg0.getIndicadorSast().getCodigo().compareTo(arg1.getIndicadorSast().getCodigo());
-						}
-					});
+					atendimentoAux.getTriagens().sort(comparator);
+				}
+				
+				if(atendimentoAux.getTriagensTodosAtendimentos() != null) {
+					atendimentoAux.getTriagensTodosAtendimentos().sort(comparator);
 				}
 				
 				return atendimentoAux;
