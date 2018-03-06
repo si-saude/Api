@@ -364,6 +364,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		atendimento.getTarefa().setFim(now);
 		atendimento.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
 		
+		atendimento = gerarRisco(atendimento);
+		
 		return save(addAtualizacao(atendimento));
 	}
 	
