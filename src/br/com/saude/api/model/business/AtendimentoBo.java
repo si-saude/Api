@@ -100,6 +100,13 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 					.get());
 		
 		atendimento.getFilaAtendimentoOcupacional().setAtualizacao(Helper.getNow());
+		
+		if ( atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas() != null ) {
+			atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().forEach(r -> {
+				r.setFicha(atendimento.getFilaEsperaOcupacional().getFichaColeta());
+			});
+		}
+		
 		return atendimento;
 	}
 	
@@ -588,4 +595,5 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		return "Atendimento registrado com sucesso.";
 	}
+	
 }

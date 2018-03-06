@@ -26,6 +26,10 @@ public class PerguntaFichaColetaDao extends GenericDao<PerguntaFichaColeta> {
 		this.functionLoadAll = perguntaFichaColeta -> {
 			if(perguntaFichaColeta.getItens() != null)
 				Hibernate.initialize(perguntaFichaColeta.getItens());
+			
+			if(perguntaFichaColeta.getEquipes() != null)
+				Hibernate.initialize(perguntaFichaColeta.getEquipes());
+				
 			return perguntaFichaColeta;
 		};
 	}

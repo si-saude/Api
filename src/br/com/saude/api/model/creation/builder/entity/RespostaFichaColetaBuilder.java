@@ -41,7 +41,7 @@ public class RespostaFichaColetaBuilder extends GenericEntityBuilder<RespostaFic
 		
 		if ( respostaFichaColeta.getPergunta() != null )
 			cloneRespostaFichaColeta.setPergunta(PerguntaFichaColetaBuilder
-					.newInstance(respostaFichaColeta.getPergunta()).getEntity());
+					.newInstance(respostaFichaColeta.getPergunta()).loadItens().loadEquipes().getEntity());
 		
 		return cloneRespostaFichaColeta;
 	}

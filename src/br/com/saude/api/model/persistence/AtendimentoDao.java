@@ -27,12 +27,15 @@ import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
+import br.com.saude.api.model.entity.po.ItemPerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.ItemRespostaFichaColeta;
 import br.com.saude.api.model.entity.po.Localizacao;
+import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.Pessoa;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.Tarefa;
+import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.model.entity.po.Aso;
@@ -96,6 +99,20 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 					});
 					
 					r.setItens(itens);
+					
+					List<ItemPerguntaFichaColeta> itensPergunta = new ArrayList<ItemPerguntaFichaColeta>(); 
+					r.setPergunta((PerguntaFichaColeta) Hibernate.unproxy(r.getPergunta()));
+					r.getPergunta().getItens().forEach(i -> {
+						itensPergunta.add((ItemPerguntaFichaColeta) Hibernate.unproxy(i));
+					});
+					
+					List<Equipe> equipes = new ArrayList<Equipe>();
+					r.getPergunta().getEquipes().forEach(e -> {
+						equipes.add((Equipe) Hibernate.unproxy(e));
+					});
+					
+					r.getPergunta().setEquipes(equipes);
+					r.getPergunta().setItens(itensPergunta);
 				});
 				
 				atendimento.getFilaEsperaOcupacional().getFichaColeta().setRespostaFichaColetas(respostas);

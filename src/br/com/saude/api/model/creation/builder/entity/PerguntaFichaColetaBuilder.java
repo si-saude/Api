@@ -11,6 +11,7 @@ import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 public class PerguntaFichaColetaBuilder extends GenericEntityBuilder<PerguntaFichaColeta,PerguntaFichaColetaFilter> {
 	
 	private Function<Map<String,PerguntaFichaColeta>,PerguntaFichaColeta> loadItens;
+	private Function<Map<String,PerguntaFichaColeta>,PerguntaFichaColeta> loadEquipes;
 
 	public static PerguntaFichaColetaBuilder newInstance(PerguntaFichaColeta perguntaFichaColeta) {
 		return new PerguntaFichaColetaBuilder(perguntaFichaColeta);
@@ -38,6 +39,15 @@ public class PerguntaFichaColetaBuilder extends GenericEntityBuilder<PerguntaFic
 			}
 			return perguntas.get("destino");
 		};
+		
+		this.loadEquipes = perguntas -> {
+			if (perguntas.get("origem").getEquipes() != null) {
+				perguntas.get("destino").setEquipes(
+						EquipeBuilder.newInstance(
+								perguntas.get("origem").getEquipes()).getEntityList());
+			}
+			return perguntas.get("destino");
+		}; 
 	}
 
 	@Override
@@ -51,6 +61,7 @@ public class PerguntaFichaColetaBuilder extends GenericEntityBuilder<PerguntaFic
 		clonePerguntaFichaColeta.setInativo(perguntaFichaColeta.isInativo());
 		clonePerguntaFichaColeta.setDescricao(perguntaFichaColeta.getDescricao());
 		clonePerguntaFichaColeta.setTipo(perguntaFichaColeta.getTipo());
+		clonePerguntaFichaColeta.setOrdem(perguntaFichaColeta.getOrdem());
 		
 		return clonePerguntaFichaColeta;
 	}
@@ -63,5 +74,9 @@ public class PerguntaFichaColetaBuilder extends GenericEntityBuilder<PerguntaFic
 	
 	public PerguntaFichaColetaBuilder loadItens() {
 		return (PerguntaFichaColetaBuilder) this.loadProperty(this.loadItens);
+	}
+	
+	public PerguntaFichaColetaBuilder loadEquipes() {
+		return (PerguntaFichaColetaBuilder) this.loadProperty(this.loadEquipes);
 	}
 }

@@ -8,6 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -39,7 +42,15 @@ public class PerguntaFichaColeta {
 	@OneToMany(mappedBy="pergunta", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<ItemPerguntaFichaColeta> itens;
 	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="perguntafichacoleta_equipe", 
+	joinColumns = {@JoinColumn(name="perguntafichacoleta_id")}, 
+	inverseJoinColumns = {@JoinColumn(name="equipe_id")})
+	private List<Equipe> equipes;
+	
 	private boolean inativo;
+	
+	private int ordem;
 	
 	@Version
 	private long version;
@@ -107,4 +118,21 @@ public class PerguntaFichaColeta {
 	public void setItens(List<ItemPerguntaFichaColeta> itens) {
 		this.itens = itens;
 	}
+
+	public int getOrdem() {
+		return ordem;
+	}
+
+	public void setOrdem(int ordem) {
+		this.ordem = ordem;
+	}
+
+	public List<Equipe> getEquipes() {
+		return equipes;
+	}
+
+	public void setEquipes(List<Equipe> equipes) {
+		this.equipes = equipes;
+	}
+	
 }

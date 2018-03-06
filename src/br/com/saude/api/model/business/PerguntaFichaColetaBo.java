@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.lang.reflect.InvocationTargetException;
+
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.PerguntaFichaColetaBuilder;
@@ -26,7 +28,7 @@ PerguntaFichaColetaBuilder, PerguntaFichaColetaExampleBuilder>{
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadItens();
+			return builder.loadItens().loadEquipes();
 		};
 	}
 	
@@ -39,4 +41,14 @@ PerguntaFichaColetaBuilder, PerguntaFichaColetaExampleBuilder>{
 		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()),
 				this.functionLoadAll);
 	}
+
+	@Override
+	public PerguntaFichaColeta save(PerguntaFichaColeta perguntaFichaColeta) throws IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		
+		perguntaFichaColeta.getItens().forEach(p -> p.setPergunta(perguntaFichaColeta));
+		
+		return super.save(perguntaFichaColeta);
+	}
+	
 }

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.DateFilter;
@@ -49,6 +50,8 @@ public class FilaEsperaOcupacionalBo
 	extends GenericBo<FilaEsperaOcupacional, FilaEsperaOcupacionalFilter, 
 					FilaEsperaOcupacionalDao, FilaEsperaOcupacionalBuilder, 
 					FilaEsperaOcupacionalExampleBuilder> {
+	
+	private Function<FilaEsperaOcupacionalBuilder, FilaEsperaOcupacionalBuilder> functionLoadRefresh;
 
 	private static FilaEsperaOcupacionalBo instance;
 	
@@ -67,6 +70,11 @@ public class FilaEsperaOcupacionalBo
 		this.functionLoadAll = builder -> {
 			return builder.loadLocalizacao().loadFichaColeta();
 		};
+		
+		this.functionLoadRefresh = builder -> {
+			return builder.loadLocalizacao();
+		};
+		
 	}
 	
 	@Override
@@ -77,6 +85,11 @@ public class FilaEsperaOcupacionalBo
 	public PagedList<FilaEsperaOcupacional> getListAll(FilaEsperaOcupacionalFilter filter) throws  Exception {
 		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), 
 				this.functionLoadAll);
+	}
+	
+	public PagedList<FilaEsperaOcupacional> getListRefresh(FilaEsperaOcupacionalFilter filter) throws  Exception {
+		return super.getList(getDao().getListRefresh(getExampleBuilder(filter).example()), 
+				this.functionLoadRefresh);
 	}
 	
 	private PagedList<FilaEsperaOcupacional> check(FilaEsperaOcupacional fila) throws Exception {
@@ -121,7 +134,7 @@ public class FilaEsperaOcupacionalBo
 		filaFilter.getHorarioCheckin().setTypeFilter(TypeFilter.MAIOR_IGUAL);
 		filaFilter.getHorarioCheckin().setInicio(today);
 		
-		return getList(getDao().getListLoadAll(getExampleBuilder(filaFilter).example()), this.functionLoadAll);
+		return getList(getDao().getListRefresh(getExampleBuilder(filaFilter).example()), this.functionLoadRefresh);
 	}
 	
 	public String checkOut(FilaEsperaOcupacional fila) throws Exception {

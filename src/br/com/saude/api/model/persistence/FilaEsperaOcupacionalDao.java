@@ -2,6 +2,7 @@ package br.com.saude.api.model.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.hibernate.Hibernate;
 
@@ -11,10 +12,13 @@ import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
 import br.com.saude.api.model.entity.po.ItemRespostaFichaColeta;
+import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
+import br.com.saude.api.model.entity.po.ItemPerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 
 public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> {
 
+	private Function<FilaEsperaOcupacional,FilaEsperaOcupacional> functionLoadRefresh;
 	private static FilaEsperaOcupacionalDao instance;
 	
 	private FilaEsperaOcupacionalDao() {
@@ -29,6 +33,13 @@ public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> 
 
 	@Override
 	protected void initializeFunctions() {
+		this.functionLoadRefresh = fila -> {
+			if(fila.getLocalizacao() != null)
+				Hibernate.initialize(fila.getLocalizacao());
+			
+			return fila;
+		};
+		
 		this.functionLoadAll = fila -> {
 			if(fila.getLocalizacao() != null)
 				Hibernate.initialize(fila.getLocalizacao());
@@ -44,15 +55,20 @@ public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> 
 					respostas.add((RespostaFichaColeta) Hibernate.unproxy(r));
 				});
 				
-				
 				respostas.forEach(r -> {
 					List<ItemRespostaFichaColeta> itens = new ArrayList<ItemRespostaFichaColeta>();
 					
 					r.getItens().forEach(i -> {
 						itens.add(inicializeItem(i));
 					});
-					
 					r.setItens(itens);
+					
+					r.setPergunta((PerguntaFichaColeta) Hibernate.unproxy(r.getPergunta()));
+					List<ItemPerguntaFichaColeta> itensPergunta = new ArrayList<ItemPerguntaFichaColeta>();
+					r.getPergunta().getItens().forEach(ip -> {
+						itensPergunta.add((ItemPerguntaFichaColeta) Hibernate.unproxy(ip));						
+					});
+					r.getPergunta().setItens(itensPergunta);
 				});
 				
 				fila.getFichaColeta().setRespostaFichaColetas(respostas);
@@ -77,5 +93,9 @@ public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> 
 	
 	public PagedList<FilaEsperaOcupacional> getListLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder,this.functionLoadAll);
+	}
+	
+	public PagedList<FilaEsperaOcupacional> getListRefresh(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder,this.functionLoadRefresh);
 	}
 }

@@ -153,7 +153,6 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
-	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)

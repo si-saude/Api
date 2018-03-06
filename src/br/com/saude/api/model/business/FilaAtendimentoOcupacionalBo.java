@@ -3,6 +3,7 @@ package br.com.saude.api.model.business;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
@@ -23,6 +24,7 @@ import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
+import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.persistence.FilaAtendimentoOcupacionalDao;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
@@ -414,6 +416,14 @@ public class FilaAtendimentoOcupacionalBo
 					atendimentoAux.getFilaEsperaOcupacional().setFichaColeta(
 							atendimento.getFilaEsperaOcupacional().getFichaColeta());					
 				}
+				
+				atendimentoAux.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().sort(new Comparator<RespostaFichaColeta>() {
+					@Override
+					public int compare(RespostaFichaColeta arg0, RespostaFichaColeta arg1) {
+						return (arg0.getPergunta().getOrdem() + "-" + arg0.getPergunta().getCodigo()).compareTo(
+								arg1.getPergunta().getOrdem() + "-" + arg1.getPergunta().getCodigo());
+					}
+				});
 				
 				return atendimentoAux;
 			}else
