@@ -25,6 +25,7 @@ import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.FilaAtendimentoOcupacionalDao;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
@@ -437,6 +438,15 @@ public class FilaAtendimentoOcupacionalBo
 								arg1.getPergunta().getOrdem() + "-" + arg1.getPergunta().getCodigo());
 					}
 				});
+				
+				if(atendimentoAux.getTriagens() != null) {
+					atendimentoAux.getTriagens().sort(new Comparator<Triagem>() {
+						@Override
+						public int compare(Triagem arg0, Triagem arg1) {
+							return arg0.getIndicadorSast().getCodigo().compareTo(arg1.getIndicadorSast().getCodigo());
+						}
+					});
+				}
 				
 				return atendimentoAux;
 			}else
