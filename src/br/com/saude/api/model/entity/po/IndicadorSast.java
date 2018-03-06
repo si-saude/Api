@@ -40,6 +40,8 @@ public class IndicadorSast {
 	
 	private boolean obrigatorio;
 	
+	private boolean ausenteCalculoInterdisciplinar;
+	
 	private boolean inativo;
 	
 	@Size(max = 2, message="Tamanho máximo para Código: 2")
@@ -162,6 +164,14 @@ public class IndicadorSast {
 
 	public void setIndicadorAssociadoSasts(List<IndicadorAssociadoSast> indicadorAssociadoSasts) {
 		this.indicadorAssociadoSasts = indicadorAssociadoSasts;
+	}
+
+	public boolean isAusenteCalculoInterdisciplinar() {
+		return ausenteCalculoInterdisciplinar;
+	}
+
+	public void setAusenteCalculoInterdisciplinar(boolean ausenteCalculoInterdisciplinar) {
+		this.ausenteCalculoInterdisciplinar = ausenteCalculoInterdisciplinar;
 	}
 
 	public boolean isInativo() {

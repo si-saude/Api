@@ -15,6 +15,7 @@ import br.com.saude.api.model.entity.po.ItemRespostaFichaColeta;
 import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.ItemPerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RiscoPotencial;
 
 public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> {
 
@@ -44,8 +45,10 @@ public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> 
 			if(fila.getLocalizacao() != null)
 				Hibernate.initialize(fila.getLocalizacao());
 			
+			if(fila.getRiscoPotencial() != null)
+				fila.setRiscoPotencial((RiscoPotencial) Hibernate.unproxy(fila.getRiscoPotencial()));
+			
 			if(fila.getFichaColeta() != null) {
-				Hibernate.initialize(fila.getFichaColeta());
 				fila.setFichaColeta((FichaColeta) 
 						Hibernate.unproxy(fila.getFichaColeta()));
 				

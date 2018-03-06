@@ -20,6 +20,7 @@ import br.com.saude.api.util.constant.Funcionalidade;
 import br.com.saude.api.util.constant.GrupoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.Operador;
+import br.com.saude.api.util.constant.PrazoEmMeses;
 import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.Sexo;
 import br.com.saude.api.util.constant.StatusEmpregado;
@@ -181,5 +182,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStatusSimNao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(StatusSimNao.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/prazo-em-meses")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPrazoEmMeses(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(PrazoEmMeses.getInstance(),filter)).build();
 	}
 }

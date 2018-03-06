@@ -45,6 +45,9 @@ public class FilaEsperaOcupacional {
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private FichaColeta fichaColeta;
 	
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private RiscoPotencial riscoPotencial;
+	
 	private long tempoEspera;
 	
 	private Date saida;
@@ -138,5 +141,13 @@ public class FilaEsperaOcupacional {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public RiscoPotencial getRiscoPotencial() {
+		return riscoPotencial;
+	}
+
+	public void setRiscoPotencial(RiscoPotencial riscoPotencial) {
+		this.riscoPotencial = riscoPotencial;
 	}
 }

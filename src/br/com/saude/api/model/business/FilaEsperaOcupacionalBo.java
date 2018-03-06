@@ -39,6 +39,7 @@ import br.com.saude.api.model.entity.po.RegraAtendimento;
 import br.com.saude.api.model.entity.po.RegraAtendimentoEquipe;
 import br.com.saude.api.model.entity.po.RegraAtendimentoLocalizacao;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.persistence.FilaEsperaOcupacionalDao;
 import br.com.saude.api.util.constant.GrupoServico;
@@ -68,7 +69,7 @@ public class FilaEsperaOcupacionalBo
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadLocalizacao().loadFichaColeta();
+			return builder.loadLocalizacao().loadFichaColeta().loadRiscoPotencial();
 		};
 		
 		this.functionLoadRefresh = builder -> {
@@ -235,7 +236,13 @@ public class FilaEsperaOcupacionalBo
 			}
 		}
 		
-		// 7 - INSERIR NO BANCO
+		// 7 - GERAR O RISCO POTENCIAL
+		RiscoPotencial risco = new RiscoPotencial();
+		risco.setData(Helper.getToday());
+		risco.setEmpregado(fila.getEmpregado());
+		fila.setRiscoPotencial(risco);
+		
+		// 8 - INSERIR NO BANCO
 		getDao().save(fila);
 		
 		return "Empregado "+fila.getEmpregado().getPessoa().getNome()+" inserido na fila de espera. "+

@@ -13,6 +13,7 @@ public class FilaEsperaOcupacionalBuilder
 
 	private Function<Map<String,FilaEsperaOcupacional>,FilaEsperaOcupacional> loadLocalizacao;
 	private Function<Map<String,FilaEsperaOcupacional>,FilaEsperaOcupacional> loadFichaColeta;
+	private Function<Map<String,FilaEsperaOcupacional>,FilaEsperaOcupacional> loadRiscoPotencial;
 	
 	public static FilaEsperaOcupacionalBuilder newInstance(FilaEsperaOcupacional fila) {
 		return new FilaEsperaOcupacionalBuilder(fila);
@@ -45,6 +46,13 @@ public class FilaEsperaOcupacionalBuilder
 						.newInstance(filas.get("origem").getFichaColeta()).getEntity());
 			return filas.get("destino");
 		};
+		
+		this.loadRiscoPotencial = filas -> {
+			if(filas.get("origem").getRiscoPotencial() != null)
+				filas.get("destino").setRiscoPotencial(RiscoPotencialBuilder
+						.newInstance(filas.get("origem").getRiscoPotencial()).getEntity());
+			return filas.get("destino");
+		};
 	}
 
 	@Override
@@ -74,6 +82,10 @@ public class FilaEsperaOcupacionalBuilder
 	
 	public FilaEsperaOcupacionalBuilder loadFichaColeta() {
 		return (FilaEsperaOcupacionalBuilder) loadProperty(this.loadFichaColeta);
+	}
+	
+	public FilaEsperaOcupacionalBuilder loadRiscoPotencial() {
+		return (FilaEsperaOcupacionalBuilder) loadProperty(this.loadRiscoPotencial);
 	}
 
 	@Override

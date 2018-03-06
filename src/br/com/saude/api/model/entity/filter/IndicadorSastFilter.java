@@ -15,6 +15,7 @@ public class IndicadorSastFilter extends GenericFilter {
 	private String codigoExcludente;
 	private EquipeFilter equipe;
 	private BooleanFilter obrigatorio;
+	private BooleanFilter ausenteCalculoInterdisciplinar;
 	private BooleanFilter inativo;
 	
 	public String getNome() {
@@ -89,5 +90,10 @@ public class IndicadorSastFilter extends GenericFilter {
 	public void setInativo(BooleanFilter inativo) {
 		this.inativo = inativo;
 	}
-	
+	public BooleanFilter getAusenteCalculoInterdisciplinar() {
+		return ausenteCalculoInterdisciplinar;
+	}
+	public void setAusenteCalculoInterdisciplinar(BooleanFilter ausenteCalculoInterdisciplinar) {
+		this.ausenteCalculoInterdisciplinar = ausenteCalculoInterdisciplinar;
+	}
 }

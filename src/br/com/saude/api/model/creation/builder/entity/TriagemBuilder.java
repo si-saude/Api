@@ -35,9 +35,17 @@ public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> 
 		cloneTriagem.setId(triagem.getId());
 		cloneTriagem.setIndice(triagem.getIndice());
 		cloneTriagem.setVersion(triagem.getVersion());
+		cloneTriagem.setJustificativa(triagem.getJustificativa());
+		cloneTriagem.setPrazo(triagem.getPrazo());
 		
 		if ( cloneTriagem.getIndicadorSast() != null )
 			cloneTriagem.setIndicadorSast(new IndicadorSastBuilder(triagem.getIndicadorSast()).getEntity());
+		
+		if( cloneTriagem.getEquipeAbordagem() != null )
+			cloneTriagem.setEquipeAbordagem(EquipeBuilder.newInstance(triagem.getEquipeAbordagem()).getEntity());
+		
+		if( cloneTriagem.getIntervencao() != null )
+			cloneTriagem.setIntervencao(IntervencaoBuilder.newInstance(triagem.getIntervencao()).getEntity());
 		
 		return cloneTriagem;
 	}
