@@ -8,6 +8,9 @@ public class RiscoPotencialFilter extends GenericFilter {
 	private EmpregadoFilter empregado;
 	private DateFilter data;
 	private EquipeFilter equipeResponsavel;
+	private String condutaPercepcao;
+	private DateFilter inicioAgendamento;
+	private DateFilter fimAgendamento;
 	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
@@ -26,5 +29,23 @@ public class RiscoPotencialFilter extends GenericFilter {
 	}
 	public void setEquipeResponsavel(EquipeFilter equipeResponsavel) {
 		this.equipeResponsavel = equipeResponsavel;
+	}
+	public String getCondutaPercepcao() {
+		return condutaPercepcao;
+	}
+	public void setCondutaPercepcao(String condutaPercepcao) {
+		this.condutaPercepcao = condutaPercepcao;
+	}
+	public DateFilter getInicioAgendamento() {
+		return inicioAgendamento;
+	}
+	public void setInicioAgendamento(DateFilter inicioAgendamento) {
+		this.inicioAgendamento = inicioAgendamento;
+	}
+	public DateFilter getFimAgendamento() {
+		return fimAgendamento;
+	}
+	public void setFimAgendamento(DateFilter fimAgendamento) {
+		this.fimAgendamento = fimAgendamento;
 	}
 }

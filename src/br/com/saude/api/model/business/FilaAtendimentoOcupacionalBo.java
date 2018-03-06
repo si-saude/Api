@@ -417,6 +417,19 @@ public class FilaAtendimentoOcupacionalBo
 							atendimento.getFilaEsperaOcupacional().getFichaColeta());					
 				}
 				
+				//OBTER A EQUIPE RESPONSÁVEL
+				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null &&
+						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares() != null &&
+						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares().size() > 0 &&
+						(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel() == null || 
+						 atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel().getId() == 0) &&
+						fila.getProfissional().getEquipe().getAbreviacao() == "ACO") {
+					
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setEquipeResponsavel(
+						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().
+							getRiscosInterdiciplinares().get(0).getEquipe());
+				}
+				
 				atendimentoAux.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().sort(new Comparator<RespostaFichaColeta>() {
 					@Override
 					public int compare(RespostaFichaColeta arg0, RespostaFichaColeta arg1) {

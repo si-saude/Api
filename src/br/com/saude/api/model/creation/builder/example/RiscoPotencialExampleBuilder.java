@@ -37,12 +37,22 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 	private void addData() {
 		this.addData("data", this.filter.getData());
 	}
+	
+	private void addInicioAgendamento() {
+		this.addData("inicioAgendamento", this.filter.getInicioAgendamento());
+	}
+	
+	private void addFimAgendamento() {
+		this.addData("fimAgendamento", this.filter.getFimAgendamento());
+	}
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addEmpregado();
 		addEquipeResponsavel();
 		addData();
+		addInicioAgendamento();
+		addFimAgendamento();
 	}
 
 	@Override

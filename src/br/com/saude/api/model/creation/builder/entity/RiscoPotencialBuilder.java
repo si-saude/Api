@@ -68,6 +68,9 @@ public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, 
 		
 		newRisco.setId(risco.getId());
 		newRisco.setData(risco.getData());
+		newRisco.setCondutaPercepcao(risco.getCondutaPercepcao());
+		newRisco.setInicioAgendamento(risco.getInicioAgendamento());
+		newRisco.setFimAgendamento(risco.getFimAgendamento());
 		newRisco.setVersion(risco.getVersion());
 		
 		if(newRisco.getEmpregado() != null && !(newRisco.getEmpregado() instanceof HibernateProxy))

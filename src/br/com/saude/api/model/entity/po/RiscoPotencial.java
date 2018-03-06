@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.saude.api.model.creation.builder.entity.RiscoEmpregadoBuilder;
 
@@ -47,6 +48,13 @@ public class RiscoPotencial {
 	joinColumns = {@JoinColumn(name="riscopotencial_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="equipe_id")})
 	private List<Equipe> equipes;
+	
+	@Size(max = 2048, message="Tamanho máximo para Conduta/Percepção: 2048")
+	private String condutaPercepcao;
+	
+	private Date inicioAgendamento;
+	
+	private Date fimAgendamento;
 	
 	@Transient
 	private List<RiscoEmpregado> riscosInterdiciplinares;
@@ -195,5 +203,29 @@ public class RiscoPotencial {
 
 	public void setEquipes(List<Equipe> equipes) {
 		this.equipes = equipes;
+	}
+
+	public String getCondutaPercepcao() {
+		return condutaPercepcao;
+	}
+
+	public void setCondutaPercepcao(String condutaPercepcao) {
+		this.condutaPercepcao = condutaPercepcao;
+	}
+
+	public Date getInicioAgendamento() {
+		return inicioAgendamento;
+	}
+
+	public void setInicioAgendamento(Date inicioAgendamento) {
+		this.inicioAgendamento = inicioAgendamento;
+	}
+
+	public Date getFimAgendamento() {
+		return fimAgendamento;
+	}
+
+	public void setFimAgendamento(Date fimAgendamento) {
+		this.fimAgendamento = fimAgendamento;
 	}
 }
