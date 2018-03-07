@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.filter;
 
+import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
@@ -11,6 +12,7 @@ public class RiscoPotencialFilter extends GenericFilter {
 	private String condutaPercepcao;
 	private DateFilter inicioAgendamento;
 	private DateFilter fimAgendamento;
+	private BooleanFilter atual;
 	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
@@ -47,5 +49,11 @@ public class RiscoPotencialFilter extends GenericFilter {
 	}
 	public void setFimAgendamento(DateFilter fimAgendamento) {
 		this.fimAgendamento = fimAgendamento;
+	}
+	public BooleanFilter getAtual() {
+		return atual;
+	}
+	public void setAtual(BooleanFilter atual) {
+		this.atual = atual;
 	}
 }

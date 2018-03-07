@@ -1,6 +1,7 @@
 package br.com.saude.api.model.business;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.RiscoPotencialExampleBuilder;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
@@ -25,12 +26,16 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadRiscoEmpregados();
+			return builder.loadRiscoEmpregados().loadEquipes();
 		};
 	}
 	
 	@Override
 	public RiscoPotencial getById(Object id) throws Exception {
 		return super.getById(id,this.functionLoadAll);
+	}
+	
+	public PagedList<RiscoPotencial> getListLoadAll(RiscoPotencialFilter filter) throws Exception {
+		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), this.functionLoadAll);
 	}
 }
