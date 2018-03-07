@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
 import br.com.saude.api.model.entity.po.ItemRespostaFichaColeta;
@@ -72,6 +73,13 @@ public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> 
 						itensPergunta.add((ItemPerguntaFichaColeta) Hibernate.unproxy(ip));						
 					});
 					r.getPergunta().setItens(itensPergunta);
+					
+					List<Equipe> equipes = new ArrayList<Equipe>();
+					if ( r.getPergunta().getEquipes() != null ) 
+						r.getPergunta().getEquipes().forEach(e -> {
+							equipes.add((Equipe) Hibernate.unproxy(e));
+						});
+					r.getPergunta().setEquipes(equipes);
 				});
 				
 				fila.getFichaColeta().setRespostaFichaColetas(respostas);

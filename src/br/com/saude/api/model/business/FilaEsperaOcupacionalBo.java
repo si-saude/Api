@@ -649,6 +649,9 @@ public class FilaEsperaOcupacionalBo
 								//SETAR REFERENCIA DE FICHA COLETA EM RESPOSTAS FICHAS COLETAS
 								filaEspera.getFichaColeta().getRespostaFichaColetas().forEach(rF -> 
 									rF.setFicha(filaEspera.getFichaColeta()));
+								if ( filaEspera.getRiscoPotencial().getRiscoEmpregados() != null )
+									filaEspera.getRiscoPotencial().getRiscoEmpregados().forEach(r -> 
+										r.setRiscoPotencial(filaEspera.getRiscoPotencial()));
 								
 								//INSTANCIAR
 								Atendimento atendimento = new Atendimento();
