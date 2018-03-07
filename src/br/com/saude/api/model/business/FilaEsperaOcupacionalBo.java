@@ -27,6 +27,7 @@ import br.com.saude.api.model.entity.filter.IndicadorSastFilter;
 import br.com.saude.api.model.entity.filter.LocalizacaoFilter;
 import br.com.saude.api.model.entity.filter.PerguntaFichaColetaFilter;
 import br.com.saude.api.model.entity.filter.PessoaFilter;
+import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
@@ -243,9 +244,26 @@ public class FilaEsperaOcupacionalBo
 		RiscoPotencial risco = new RiscoPotencial();
 		risco.setData(Helper.getToday());
 		risco.setEmpregado(fila.getEmpregado());
+		risco.setAtual(true);
 		fila.setRiscoPotencial(risco);
 		
-		// 8 - INSERIR NO BANCO
+		// 8 - OBTER A LISTA DOS RISCOS DO EMPREGADO PARA SETAR COMO NÃO ATUAL
+		RiscoPotencialFilter riscoFilter = new RiscoPotencialFilter();
+		riscoFilter.setPageNumber(1);
+		riscoFilter.setPageSize(Integer.MAX_VALUE);
+		riscoFilter.setEmpregado(new EmpregadoFilter());
+		riscoFilter.getEmpregado().setId(fila.getEmpregado().getId());
+		riscoFilter.setAtual(new BooleanFilter());
+		riscoFilter.getAtual().setValue(1);
+		
+		PagedList<RiscoPotencial> riscos = RiscoPotencialBo.getInstance().getListLoadAll(riscoFilter);
+		
+		if(riscos.getTotal() > 0) {
+			riscos.getList().forEach(r->r.setAtual(false));
+			RiscoPotencialBo.getInstance().saveList(riscos.getList());
+		}
+		
+		// 9 - INSERIR NO BANCO
 		getDao().save(fila);
 		
 		return "Empregado "+fila.getEmpregado().getPessoa().getNome()+" inserido na fila de espera. "+

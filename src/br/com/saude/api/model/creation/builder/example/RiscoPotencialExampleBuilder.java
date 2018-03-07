@@ -48,6 +48,10 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 		this.addData("inicioAgendamento", this.filter.getInicioAgendamento());
 	}
 	
+	protected void addAtual() {
+		this.entity.setAtual(this.addBoolean("atual", this.filter.getAtual()));
+	}
+	
 	private void addFimAgendamento() {
 		this.addData("fimAgendamento", this.filter.getFimAgendamento());
 	}
@@ -60,6 +64,7 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 		addData();
 		addInicioAgendamento();
 		addFimAgendamento();
+		addAtual();
 	}
 
 	@Override

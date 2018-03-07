@@ -56,6 +56,8 @@ public class RiscoPotencial {
 	
 	private Date fimAgendamento;
 	
+	private boolean atual;
+	
 	@Transient
 	private List<RiscoEmpregado> riscosInterdiciplinares;
 	
@@ -228,4 +230,13 @@ public class RiscoPotencial {
 	public void setFimAgendamento(Date fimAgendamento) {
 		this.fimAgendamento = fimAgendamento;
 	}
+
+	public boolean isAtual() {
+		return atual;
+	}
+
+	public void setAtual(boolean atual) {
+		this.atual = atual;
+	}
+	
 }
