@@ -230,6 +230,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String RISCO_GHE_ALTERAR		 			= "RISCO-GHE_ALTERAR";
 	public static final String RISCO_GHE_REMOVER 					= "RISCO-GHE_REMOVER";
 	public static final String RISCO_GHE_DETALHE 					= "RISCO-GHE_DETALHE";
+	public static final String RISCO_POTENCIAL_LISTAR						= "RISCO-POTENCIAL_LISTAR";
+	public static final String RISCO_POTENCIAL_ADICIONAR 			    	= "RISCO-POTENCIAL_ADICIONAR";
+	public static final String RISCO_POTENCIAL_ALTERAR		 			= "RISCO-POTENCIAL_ALTERAR";
+	public static final String RISCO_POTENCIAL_REMOVER 					= "RISCO-POTENCIAL_REMOVER";
+	public static final String RISCO_POTENCIAL_DETALHE 					= "RISCO-POTENCIAL_DETALHE";
 	public static final String SERVICO_LISTAR						= "SERVICO_LISTAR";
 	public static final String SERVICO_ADICIONAR 			    	= "SERVICO_ADICIONAR";
 	public static final String SERVICO_ALTERAR		 			= "SERVICO_ALTERAR";

@@ -64,6 +64,9 @@ public class RiscoPotencial {
 	@Transient
 	private double valor;
 	
+	@Transient
+	private String statusRPSat;
+	
 	@Version
 	private long version;
 
@@ -238,5 +241,19 @@ public class RiscoPotencial {
 	public void setAtual(boolean atual) {
 		this.atual = atual;
 	}
+	
+
+	public String getStatusRPSat() {
+		if ( this.valor > 0 && this.valor <= 0.6 ) {
+			this.statusRPSat = "ACEITÁVEL";
+		} else if ( this.valor > 0.6 && this.valor <= 0.8 ) {
+			this.statusRPSat = "TOLERÁVEL";
+		} else if ( this.valor > 0.8 ) {
+			this.statusRPSat = "INACEITÁVEL";
+		}
+		
+		return statusRPSat;
+	}
+
 	
 }
