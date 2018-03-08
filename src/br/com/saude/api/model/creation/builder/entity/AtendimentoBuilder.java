@@ -86,6 +86,9 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 			if(!(atendimento.getFilaEsperaOcupacional().getFichaColeta() instanceof HibernateProxy))
 				filaEsperaBuilder = filaEsperaBuilder.loadFichaColeta();
 			
+			if(!(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() instanceof HibernateProxy))
+				filaEsperaBuilder = filaEsperaBuilder.loadRiscoPotencial();
+			
 			newAtendimento.setFilaEsperaOcupacional(filaEsperaBuilder.getEntity());
 		}
 		

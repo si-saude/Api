@@ -33,6 +33,8 @@ public class IndicadorSastExampleBuilder  extends GenericExampleBuilder<Indicado
 		addCodigo();
 		addCodigoExcludente();
 		addEquipe();
+		
+		this.entity.setCritico(0);
 	}
 
 	@Override

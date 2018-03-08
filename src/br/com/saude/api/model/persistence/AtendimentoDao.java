@@ -27,6 +27,7 @@ import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
+import br.com.saude.api.model.entity.po.IndicadorSast;
 import br.com.saude.api.model.entity.po.ItemPerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.ItemRespostaFichaColeta;
 import br.com.saude.api.model.entity.po.Localizacao;
@@ -34,6 +35,7 @@ import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.Pessoa;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
@@ -79,8 +81,12 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				atendimento.getFilaEsperaOcupacional().setLocalizacao(
 						(Localizacao) Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getLocalizacao()));
 			
+			if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null) {
+				atendimento.getFilaEsperaOcupacional().setRiscoPotencial(
+						(RiscoPotencial) Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getRiscoPotencial()));
+			}
+			
 			if(atendimento.getFilaEsperaOcupacional().getFichaColeta() != null) {
-				Hibernate.initialize(atendimento.getFilaEsperaOcupacional().getFichaColeta());
 				atendimento.getFilaEsperaOcupacional().setFichaColeta((FichaColeta) 
 						Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getFichaColeta()));
 				
@@ -118,8 +124,14 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				atendimento.getFilaEsperaOcupacional().getFichaColeta().setRespostaFichaColetas(respostas);
 			}
 			
-			if(atendimento.getTriagens() != null)
+			if(atendimento.getTriagens() != null) {
+				
 				Hibernate.initialize(atendimento.getTriagens());
+				
+				atendimento.getTriagens().forEach(t->{
+					t.setIndicadorSast((IndicadorSast) Hibernate.unproxy(t.getIndicadorSast()));
+				});
+			}
 			
 			return atendimento;
 		};

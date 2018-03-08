@@ -25,6 +25,7 @@ import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.filter.TriagemFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
+import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
@@ -421,7 +422,12 @@ public class FilaAtendimentoOcupacionalBo
 							atendimento.getFilaEsperaOcupacional().getFichaColeta());					
 				}
 				
-				//OBTER A EQUIPE RESPONSÁVEL
+				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null
+						&& atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId() > 0) {
+					atendimentoAux.getFilaEsperaOcupacional().setRiscoPotencial(
+							atendimento.getFilaEsperaOcupacional().getRiscoPotencial());
+				}
+				
 				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares().size() > 0 &&
@@ -429,23 +435,42 @@ public class FilaAtendimentoOcupacionalBo
 						 atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel().getId() == 0) &&
 						fila.getProfissional().getEquipe().getAbreviacao() == "ACO") {
 					
-					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setEquipeResponsavel(
-						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().
-							getRiscosInterdiciplinares().get(0).getEquipe());
+					//OBTER A EQUIPE RESPONSÁVEL
+					if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel() != null)
+						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setEquipeResponsavel(
+								atendimento.getFilaEsperaOcupacional().getRiscoPotencial().
+								getRiscosInterdiciplinares().get(0).getEquipe());
 					
-					//OBTER TODAS AS TRIAGENS
-					TriagemFilter triagemFilter = new TriagemFilter();
-					triagemFilter.setPageNumber(1);
-					triagemFilter.setPageSize(Integer.MAX_VALUE);
-					triagemFilter.setRiscoEmpregado(new RiscoEmpregadoFilter());
-					triagemFilter.getRiscoEmpregado().setRiscoPotencial(new RiscoPotencialFilter());
-					triagemFilter.getRiscoEmpregado().getRiscoPotencial().
+					
+					if(atendimento.getTriagens() == null || atendimento.getTriagens().size() == 0) {
+						//OBTER TODAS AS TRIAGENS
+						TriagemFilter triagemFilter = new TriagemFilter();
+						triagemFilter.setPageNumber(1);
+						triagemFilter.setPageSize(Integer.MAX_VALUE);
+						triagemFilter.setRiscoEmpregado(new RiscoEmpregadoFilter());
+						triagemFilter.getRiscoEmpregado().setRiscoPotencial(new RiscoPotencialFilter());
+						triagemFilter.getRiscoEmpregado().getRiscoPotencial().
 						setId(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId());
-					
-					PagedList<Triagem> triagens = TriagemBo.getInstance().getList(triagemFilter);
-					
-					if(triagens.getTotal() > 0)
-						atendimento.setTriagensTodosAtendimentos(triagens.getList());
+						
+						PagedList<Triagem> triagens = TriagemBo.getInstance().getList(triagemFilter);
+						
+						if(triagens.getTotal() > 0) {
+							atendimento.setTriagensTodosAtendimentos(triagens.getList());
+							
+							//OBTER DEMAIS EQUIPES
+							if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes() == null) {
+								atendimento.getFilaEsperaOcupacional().getRiscoPotencial()
+								.setEquipes(new ArrayList<Equipe>());
+								
+								for(Triagem t : triagens.getList()){
+									if(t.getIndice() > -1 && t.getIndice() < 3 && !atendimento.getFilaEsperaOcupacional()
+											.getRiscoPotencial().getEquipes().contains(t.getIndicadorSast().getEquipe()))
+										atendimento.getFilaEsperaOcupacional().getRiscoPotencial()
+										.getEquipes().add(t.getIndicadorSast().getEquipe());
+								}
+							}
+						}
+					}
 				}
 				
 				atendimentoAux.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().sort(new Comparator<RespostaFichaColeta>() {

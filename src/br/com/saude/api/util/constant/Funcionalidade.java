@@ -22,11 +22,6 @@ public class Funcionalidade extends GenericConstant {
 	public static final String AUDITORIA_RESULTADO_EXAME_ALTERAR		 			= "AUDITORIA-RESULTADO-EXAME_ALTERAR";
 	public static final String AUDITORIA_RESULTADO_EXAME_REMOVER 					= "AUDITORIA-RESULTADO-EXAME_REMOVER";
 	public static final String AUDITORIA_RESULTADO_EXAME_DETALHE 					= "AUDITORIA-RESULTADO-EXAME_DETALHE";
-	public static final String PERGUNTA_FICHA_COLETA_LISTAR						= "PERGUNTA-FICHA-COLETA_LISTAR";
-	public static final String PERGUNTA_FICHA_COLETA_ADICIONAR 			    	= "PERGUNTA-FICHA-COLETA_ADICIONAR";
-	public static final String PERGUNTA_FICHA_COLETA_ALTERAR		 			= "PERGUNTA-FICHA-COLETA_ALTERAR";
-	public static final String PERGUNTA_FICHA_COLETA_REMOVER 					= "PERGUNTA-FICHA-COLETA_REMOVER";
-	public static final String PERGUNTA_FICHA_COLETA_DETALHE 					= "PERGUNTA-FICHA-COLETA_DETALHE";
 	public static final String CONVOCACAO_LISTAR						= "CONVOCACAO_LISTAR";
 	public static final String CONVOCACAO_ADICIONAR 			    	= "CONVOCACAO_ADICIONAR";
 	public static final String CONVOCACAO_ALTERAR		 			= "CONVOCACAO_ALTERAR";
@@ -185,6 +180,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String LOCALIZACAO_ALTERAR		 			= "LOCALIZACAO_ALTERAR";
 	public static final String LOCALIZACAO_REMOVER 					= "LOCALIZACAO_REMOVER";
 	public static final String LOCALIZACAO_DETALHE 					= "LOCALIZACAO_DETALHE";
+	public static final String PERGUNTA_FICHA_COLETA_LISTAR						= "PERGUNTA-FICHA-COLETA_LISTAR";
+	public static final String PERGUNTA_FICHA_COLETA_ADICIONAR 			    	= "PERGUNTA-FICHA-COLETA_ADICIONAR";
+	public static final String PERGUNTA_FICHA_COLETA_ALTERAR		 			= "PERGUNTA-FICHA-COLETA_ALTERAR";
+	public static final String PERGUNTA_FICHA_COLETA_REMOVER 					= "PERGUNTA-FICHA-COLETA_REMOVER";
+	public static final String PERGUNTA_FICHA_COLETA_DETALHE 					= "PERGUNTA-FICHA-COLETA_DETALHE";
 	public static final String PERIODICIDADE_LISTAR						= "PERIODICIDADE_LISTAR";
 	public static final String PERIODICIDADE_ADICIONAR 			    	= "PERIODICIDADE_ADICIONAR";
 	public static final String PERIODICIDADE_ALTERAR		 			= "PERIODICIDADE_ALTERAR";

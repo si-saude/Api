@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.hibernate.proxy.HibernateProxy;
-
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
@@ -74,10 +72,10 @@ public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, 
 		newRisco.setAtual(risco.isAtual());
 		newRisco.setVersion(risco.getVersion());
 		
-		if(newRisco.getEmpregado() != null && !(newRisco.getEmpregado() instanceof HibernateProxy))
+		if(newRisco.getEmpregado() != null)
 			risco.setEmpregado(EmpregadoBuilder.newInstance(risco.getEmpregado()).getEntity());
 		
-		if(newRisco.getEquipeResponsavel() != null && !(newRisco.getEquipeResponsavel() instanceof HibernateProxy))
+		if(newRisco.getEquipeResponsavel() != null)
 			risco.setEquipeResponsavel(EquipeBuilder.newInstance(risco.getEquipeResponsavel()).getEntity());
 		
 		return newRisco;

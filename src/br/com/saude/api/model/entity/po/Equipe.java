@@ -32,6 +32,11 @@ public class Equipe {
 	
 	@Version
 	private long version;
+	
+	@Override
+	public boolean equals(Object equipe) {
+		return ((Equipe)equipe).id == this.id && this.id > 0;
+	}
 
 	public int getId() {
 		return id;
