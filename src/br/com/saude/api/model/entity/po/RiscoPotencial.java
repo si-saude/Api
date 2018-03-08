@@ -186,7 +186,7 @@ public class RiscoPotencial {
 		if(this.riscosInterdiciplinares == null)
 			this.getRiscosInterdiciplinares();
 		
-		if(this.riscosInterdiciplinares != null)
+		if(this.riscosInterdiciplinares != null && this.riscosInterdiciplinares.size() > 0)
 			this.valor = this.riscosInterdiciplinares.stream()
 							.flatMapToDouble(r-> DoubleStream.of(r.getValor()))
 							.average().getAsDouble();

@@ -488,12 +488,16 @@ public class FilaAtendimentoOcupacionalBo
 					}
 				};
 				
-				if(atendimentoAux.getTriagens() != null) {
-					atendimentoAux.getTriagens().sort(comparator);
-				}
-				
-				if(atendimentoAux.getTriagensTodosAtendimentos() != null) {
-					atendimentoAux.getTriagensTodosAtendimentos().sort(comparator);
+				if(atendimento.getTriagens() != null && atendimento.getTriagens().size() > 0)
+					atendimentoAux.setTriagens(atendimento.getTriagens());
+				else {
+					if(atendimentoAux.getTriagens() != null) {
+						atendimentoAux.getTriagens().sort(comparator);
+					}
+					
+					if(atendimentoAux.getTriagensTodosAtendimentos() != null) {
+						atendimentoAux.getTriagensTodosAtendimentos().sort(comparator);
+					}					
 				}
 				
 				return atendimentoAux;
