@@ -37,7 +37,7 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 	
 	private void addAbreviacao() {
 		if (this.filter.getAbreviacao()!=null) 
-			this.entity.setAbreviacao(Helper.filterLike(this.filter.getAbreviacao()));
+			this.entity.setAbreviacao(this.filter.getAbreviacao());
 	}
 	
 	private void addCoordenador() throws InstantiationException, IllegalAccessException {
@@ -52,13 +52,16 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addId();
 		addNome();
-		addId();
 		addAbreviacao();
 		addCoordenador();
 	}
 
 	@Override
-	protected void createExampleSelectList() {
+	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		addNeId();
+		addId();
+		addNome();
+		addAbreviacao();
+		addCoordenador();
 	}
 }

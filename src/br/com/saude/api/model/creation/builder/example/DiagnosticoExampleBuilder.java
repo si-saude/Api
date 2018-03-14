@@ -29,6 +29,10 @@ public class DiagnosticoExampleBuilder extends GenericExampleBuilder<Diagnostico
 
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		addCodigo();
+		addDescricao();
+		addEixo();
+		addInativo();
 	}
 	
 	private void addCodigo() {
