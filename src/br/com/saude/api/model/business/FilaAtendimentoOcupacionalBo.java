@@ -385,7 +385,7 @@ public class FilaAtendimentoOcupacionalBo
 				.getEntity();
 		
 		//VERIFICAR SE INFORMOU O PROFISSIONAL
-		if(fila.getProfissional() == null)
+		if(fila.getProfissional() == null || fila.getProfissional().getId() == 0)
 			throw new Exception("É necessário informar o Profissional para atualizar a Fila de Atendimento.");
 		
 		//VERIFICAR SE EXISTE FILA APENAS PELO PROFISSIONAL.
