@@ -47,6 +47,9 @@ public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> 
 		if( triagem.getIntervencao() != null )
 			cloneTriagem.setIntervencao(IntervencaoBuilder.newInstance(triagem.getIntervencao()).getEntity());
 		
+		if( triagem.getDiagnostico() != null)
+			cloneTriagem.setDiagnostico(DiagnosticoBuilder.newInstance(triagem.getDiagnostico()).getEntity());
+		
 		return cloneTriagem;
 	}
 

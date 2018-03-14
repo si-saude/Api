@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,8 +32,10 @@ import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Atividade;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
+import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.Triagem;
@@ -116,6 +119,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		a = getById(a.getId());
 		
+		FichaColeta fichaColeta = a.getFilaEsperaOcupacional().getFichaColeta();
+		
 		a.getFilaEsperaOcupacional()
 			.setFichaColeta(atendimentoAux.getFilaEsperaOcupacional().getFichaColeta());
 		a.getFilaEsperaOcupacional()
@@ -127,6 +132,13 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		a.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().forEach(r->{
 			if(r.getItens() != null)
 				r.getItens().forEach(i->i.setResposta(r));
+			
+			//ATUALIZAR A VERSÃO
+			Optional<RespostaFichaColeta> resposta = fichaColeta.getRespostaFichaColetas().stream()
+				.filter(rF -> rF.getId() == r.getId()).findFirst();
+			
+			if(resposta != null && resposta.isPresent())
+				r.setVersion(resposta.get().getVersion());
 		});
 		
 		if(a.getTriagens() != null)
