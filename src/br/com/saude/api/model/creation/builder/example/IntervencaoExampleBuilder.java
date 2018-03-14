@@ -27,7 +27,11 @@ public class IntervencaoExampleBuilder extends GenericExampleBuilder<Intervencao
 	}
 
 	@Override
-	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {}
+	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		addDescricao();
+		addEquipe();
+		addInativo();
+	}
 	
 	private void addDescricao() {
 		if(this.filter.getDescricao() != null)

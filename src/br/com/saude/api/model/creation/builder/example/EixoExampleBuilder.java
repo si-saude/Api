@@ -27,6 +27,8 @@ public class EixoExampleBuilder extends GenericExampleBuilder<Eixo,EixoFilter> {
 
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		addTitulo();
+		addEquipe();
 	}
 	
 	private void addTitulo() {
