@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.DateFilter;
@@ -665,8 +666,13 @@ public class FilaEsperaOcupacionalBo
 								filaEspera.setTempoEspera(filaEspera.getTempoEspera() + calcularTempoAtualizacao(filaEspera));
 								filaEspera.setAtualizacao(tarefa.getAtualizacao());
 								//SETAR REFERENCIA DE FICHA COLETA EM RESPOSTAS FICHAS COLETAS
-								filaEspera.getFichaColeta().getRespostaFichaColetas().forEach(rF -> 
-									rF.setFicha(filaEspera.getFichaColeta()));
+								filaEspera.getFichaColeta().getRespostaFichaColetas().forEach(rF -> {
+									rF.setFicha(filaEspera.getFichaColeta());
+									
+									if(rF.getItens() != null)
+										rF.getItens().forEach(iRF -> iRF.setResposta(rF));
+								});
+								
 								if ( filaEspera.getRiscoPotencial().getRiscoEmpregados() != null )
 									filaEspera.getRiscoPotencial().getRiscoEmpregados().forEach(r -> 
 										r.setRiscoPotencial(filaEspera.getRiscoPotencial()));
@@ -697,7 +703,8 @@ public class FilaEsperaOcupacionalBo
 			}	
 			
 			// 7 - SALVAR A LISTA DE ATENDIMENTO NO BANCO
-			AtendimentoBo.getInstance().saveList(atendimentos.getList());
+			AtendimentoBo.getInstance().saveList(
+					atendimentos.getList().stream().filter(a->a.getId() == 0).collect(Collectors.toList()));
 		}
 				
 		// 8 - RETORNAR A LISTA DE ATENDIMENTO

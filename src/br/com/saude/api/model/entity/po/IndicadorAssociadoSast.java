@@ -20,7 +20,7 @@ public class IndicadorAssociadoSast {
 	@NotNull(message="É necessário informar a Gerência de Empregado.")
 	private IndicadorSast indicadorSast;
 	
-	@Size(max = 2, message="Tamanho máximo para Código: 2")
+	@Size(max = 3, message="Tamanho máximo para Código: 3")
 	private String codigo;
 	
 	@Version

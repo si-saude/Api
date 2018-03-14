@@ -44,10 +44,10 @@ public class IndicadorSast {
 	
 	private boolean inativo;
 	
-	@Size(max = 2, message="Tamanho máximo para Código: 2")
+	@Size(max = 3, message="Tamanho máximo para Código: 3")
 	private String codigo;
 	
-	@Size(max = 2, message="Tamanho máximo para Código Excludente: 2")
+	@Size(max = 3, message="Tamanho máximo para Código Excludente: 3")
 	private String codigoExcludente;
 	
 	private int critico = -1;

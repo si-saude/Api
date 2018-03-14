@@ -32,7 +32,7 @@ public class RespostaFichaColeta {
 	@Size(max = 2048, message="Tamanho máximo para Conteúdo da Pergunta: 2048")
 	private String conteudo;
 	
-	@OneToMany(mappedBy="resposta", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy="resposta", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<ItemRespostaFichaColeta> itens;
 	
 	@Version

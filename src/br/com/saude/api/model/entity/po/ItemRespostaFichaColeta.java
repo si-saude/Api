@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ public class ItemRespostaFichaColeta {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private ItemRespostaFichaColeta item;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

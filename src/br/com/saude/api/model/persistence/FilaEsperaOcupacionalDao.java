@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
@@ -46,8 +47,10 @@ public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> 
 			if(fila.getLocalizacao() != null)
 				Hibernate.initialize(fila.getLocalizacao());
 			
-			if(fila.getRiscoPotencial() != null)
+			if(fila.getRiscoPotencial() != null) {
 				fila.setRiscoPotencial((RiscoPotencial) Hibernate.unproxy(fila.getRiscoPotencial()));
+				fila.getRiscoPotencial().setEmpregado((Empregado) Hibernate.unproxy(fila.getRiscoPotencial().getEmpregado()));
+			}
 			
 			if(fila.getFichaColeta() != null) {
 				fila.setFichaColeta((FichaColeta) 

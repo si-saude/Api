@@ -226,7 +226,7 @@ public class FilaAtendimentoOcupacionalBo
 				getList(filaFilter, this.functionLoadAll);
 		
 		if(filaAtendimentoOcupacionais.getTotal() > 0)
-			filaAtendimentoOcupacionais.getList().get(0);
+			return filaAtendimentoOcupacionais.getList().get(0);
 		
 		return fila;
 	}

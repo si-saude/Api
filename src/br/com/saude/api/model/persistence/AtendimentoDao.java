@@ -153,14 +153,16 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 		try {
 			Transaction transaction = session.beginTransaction();
 						
+			if(atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas() != null) {
+				FichaColeta ficha = atendimento.getFilaEsperaOcupacional().getFichaColeta();
+				atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas()
+					.forEach(r->r.setFicha(ficha));
+			}
+					
 			//SALVAR ATENDIMENTO E DELETAR
-			session.merge(atendimento);
+			atendimento = (Atendimento) session.merge(atendimento);
 			
-			StringBuilder queryBuilder = new StringBuilder("DELETE ");
-			queryBuilder.append(atendimento.getClass().getSimpleName());
-			queryBuilder.append(" WHERE id = :id");
-			
-			session.createQuery(queryBuilder.toString()).setParameter("id", atendimento.getId()).executeUpdate();
+			session.delete(atendimento);
 			
 			transaction.commit();
 		}catch(Exception ex) {
