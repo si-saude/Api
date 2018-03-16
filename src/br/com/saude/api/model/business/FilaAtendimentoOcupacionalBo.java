@@ -14,6 +14,7 @@ import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.FilaAtendimentoOcupacionalBuilder;
+import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.FilaAtendimentoOcupacionalExampleBuilder;
 import br.com.saude.api.model.creation.factory.entity.FilaAtendimentoOcupacionalAtualizacaoFactory;
 import br.com.saude.api.model.entity.filter.AtendimentoFilter;
@@ -29,6 +30,7 @@ import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.FilaAtendimentoOcupacionalDao;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
@@ -424,54 +426,58 @@ public class FilaAtendimentoOcupacionalBo
 				
 				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null
 						&& atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId() > 0) {
+					
+					if(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial() != null
+							&& atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId() > 0) {
+						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setVersion(
+								atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getVersion());
+					}
+					
 					atendimentoAux.getFilaEsperaOcupacional().setRiscoPotencial(
 							atendimento.getFilaEsperaOcupacional().getRiscoPotencial());
+				}
+				
+				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null
+						&& atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId() > 0) {
+					
+					RiscoPotencial r = RiscoPotencialBuilder
+						.newInstance(atendimento.getFilaEsperaOcupacional().getRiscoPotencial())
+						.loadEquipes().getEntity();
+					
+					atendimento.getFilaEsperaOcupacional().setRiscoPotencial(RiscoPotencialBo
+							.getInstance().getById(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId()));
+					
+					atendimentoAux.getFilaEsperaOcupacional().setRiscoPotencial(
+							atendimento.getFilaEsperaOcupacional().getRiscoPotencial());
+					
+					if(r.getEquipes() != null)
+						atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().setEquipes(r.getEquipes());
+					atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().setCondutaPercepcao(r.getCondutaPercepcao());
+					atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().setInicioAgendamento(r.getInicioAgendamento());
+					atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().setFimAgendamento(r.getFimAgendamento());
 				}
 				
 				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares().size() > 0 &&
-						(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel() == null || 
-						 atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel().getId() == 0) &&
-						fila.getProfissional().getEquipe().getAbreviacao() == "ACO") {
-					
-					//OBTER A EQUIPE RESPONSÁVEL
-					if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel() != null)
-						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setEquipeResponsavel(
-								atendimento.getFilaEsperaOcupacional().getRiscoPotencial().
-								getRiscosInterdiciplinares().get(0).getEquipe());
+						fila.getProfissional().getEquipe().getAbreviacao().equals("ACO")) {
 					
 					
-					if(atendimento.getTriagens() == null || atendimento.getTriagens().size() == 0) {
+					if((atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel() == null || 
+						 atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel().getId() == 0))
+						//OBTER A EQUIPE RESPONSÁVEL
+							atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().setEquipeResponsavel(
+									atendimento.getFilaEsperaOcupacional().getRiscoPotencial().
+									getRiscosInterdiciplinares().get(0).getEquipe());
+					
+					
+					if(atendimento.getTriagensTodosAtendimentos() == null || atendimento.getTriagensTodosAtendimentos().size() == 0) {
 						//OBTER TODAS AS TRIAGENS
-						TriagemFilter triagemFilter = new TriagemFilter();
-						triagemFilter.setPageNumber(1);
-						triagemFilter.setPageSize(Integer.MAX_VALUE);
-						triagemFilter.setRiscoEmpregado(new RiscoEmpregadoFilter());
-						triagemFilter.getRiscoEmpregado().setRiscoPotencial(new RiscoPotencialFilter());
-						triagemFilter.getRiscoEmpregado().getRiscoPotencial().
-						setId(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId());
-						
-						PagedList<Triagem> triagens = TriagemBo.getInstance().getList(triagemFilter);
-						
-						if(triagens.getTotal() > 0) {
-							atendimento.setTriagensTodosAtendimentos(triagens.getList());
-							
-							//OBTER DEMAIS EQUIPES
-							if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes() == null) {
-								atendimento.getFilaEsperaOcupacional().getRiscoPotencial()
-								.setEquipes(new ArrayList<Equipe>());
-								
-								for(Triagem t : triagens.getList()){
-									if(t.getIndice() > -1 && t.getIndice() < 3 && !atendimento.getFilaEsperaOcupacional()
-											.getRiscoPotencial().getEquipes().contains(t.getIndicadorSast().getEquipe()))
-										atendimento.getFilaEsperaOcupacional().getRiscoPotencial()
-										.getEquipes().add(t.getIndicadorSast().getEquipe());
-								}
-							}
-						}
-					}
-				}
+						atendimentoAux = obterTodasTriagens(atendimento, atendimentoAux);
+					}else
+						atendimentoAux.setTriagensTodosAtendimentos(atendimento.getTriagensTodosAtendimentos());
+				}else if(atendimentoAux.getTriagensTodosAtendimentos() == null )
+					atendimentoAux = obterTodasTriagens(atendimentoAux, atendimentoAux);
 				
 				atendimentoAux.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().sort(new Comparator<RespostaFichaColeta>() {
 					@Override
@@ -509,6 +515,38 @@ public class FilaAtendimentoOcupacionalBo
 			atendimento = new Atendimento();
 		
 		return atendimento;
+	}
+	
+	private Atendimento obterTodasTriagens(Atendimento atendimento, Atendimento atendimentoAux) throws Exception {
+		TriagemFilter triagemFilter = new TriagemFilter();
+		triagemFilter.setPageNumber(1);
+		triagemFilter.setPageSize(Integer.MAX_VALUE);
+		triagemFilter.setRiscoEmpregado(new RiscoEmpregadoFilter());
+		triagemFilter.getRiscoEmpregado().setRiscoPotencial(new RiscoPotencialFilter());
+		triagemFilter.getRiscoEmpregado().getRiscoPotencial().
+		setId(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId());
+		
+		PagedList<Triagem> triagens = TriagemBo.getInstance().getList(triagemFilter);
+		
+		if(triagens.getTotal() > 0) {
+			atendimentoAux.setTriagensTodosAtendimentos(triagens.getList());
+			
+			//OBTER DEMAIS EQUIPES
+			if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes() == null || 
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes().size() == 0 ) {
+				atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial()
+					.setEquipes(new ArrayList<Equipe>());
+				
+				for(Triagem t : triagens.getList()){
+					if(t.getIndice() > -1 && t.getIndice() < 3 && !atendimentoAux.getFilaEsperaOcupacional()
+							.getRiscoPotencial().getEquipes().contains(t.getIndicadorSast().getEquipe()))
+						atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial()
+							.getEquipes().add(t.getIndicadorSast().getEquipe());
+				}
+			}
+		}
+		
+		return atendimentoAux;
 	}
 	
 	protected long calcularTempoAtualizacao(FilaAtendimentoOcupacional fila) {

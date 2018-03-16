@@ -11,6 +11,7 @@ import br.com.saude.api.model.entity.po.RiscoPotencial;
 public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, RiscoPotencialFilter> {
 
 	private Function<Map<String,RiscoPotencial>,RiscoPotencial> loadRiscoEmpregados;
+	private Function<Map<String,RiscoPotencial>,RiscoPotencial> loadRiscoEmpregadosSimples;
 	private Function<Map<String,RiscoPotencial>,RiscoPotencial> loadEquipes;
 	
 	public static RiscoPotencialBuilder newInstance(RiscoPotencial risco) {
@@ -36,6 +37,17 @@ public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, 
 			if(riscos.get("origem").getRiscoEmpregados() != null)
 				riscos.get("destino").setRiscoEmpregados(RiscoEmpregadoBuilder
 						.newInstance(riscos.get("origem").getRiscoEmpregados())
+						.loadTriagensAll()
+						.getEntityList());
+			
+			return riscos.get("destino");
+		};
+		
+		this.loadRiscoEmpregadosSimples = riscos -> {
+			
+			if(riscos.get("origem").getRiscoEmpregados() != null)
+				riscos.get("destino").setRiscoEmpregados(RiscoEmpregadoBuilder
+						.newInstance(riscos.get("origem").getRiscoEmpregados())
 						.getEntityList());
 			
 			return riscos.get("destino");
@@ -54,6 +66,10 @@ public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, 
 	
 	public RiscoPotencialBuilder loadRiscoEmpregados() {
 		return (RiscoPotencialBuilder) this.loadProperty(this.loadRiscoEmpregados);
+	}
+	
+	public RiscoPotencialBuilder loadRiscoEmpregadosSimples() {
+		return (RiscoPotencialBuilder) this.loadProperty(this.loadRiscoEmpregadosSimples);
 	}
 	
 	public RiscoPotencialBuilder loadEquipes() {

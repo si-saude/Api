@@ -11,6 +11,8 @@ import br.com.saude.api.model.entity.po.RiscoEmpregado;
 public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,RiscoEmpregadoFilter> {
 
 	private Function<Map<String,RiscoEmpregado>,RiscoEmpregado> loadRiscoPotencial;
+	private Function<Map<String,RiscoEmpregado>,RiscoEmpregado> loadTriagens;
+	private Function<Map<String,RiscoEmpregado>,RiscoEmpregado> loadTriagensAll;
 	
 	public static RiscoEmpregadoBuilder newInstance(RiscoEmpregado riscoEmpregado) {
 		return new RiscoEmpregadoBuilder(riscoEmpregado);
@@ -38,6 +40,26 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 			
 			return riscos.get("destino");
 		};
+		
+		this.loadTriagens = riscos -> {
+			
+			if(riscos.get("origem").getTriagens() != null)
+				riscos.get("destino").setTriagens(TriagemBuilder
+						.newInstance(riscos.get("origem").getTriagens()).getEntityList());
+			
+			return riscos.get("destino");
+		}; 
+		
+		this.loadTriagensAll = riscos -> {
+			
+			if(riscos.get("origem").getTriagens() != null)
+				riscos.get("destino").setTriagens(TriagemBuilder
+						.newInstance(riscos.get("origem").getTriagens())
+						.loadIndicadorAssociadoSasts()
+						.getEntityList());
+			
+			return riscos.get("destino");
+		}; 
 	}
 
 	@Override
@@ -56,6 +78,14 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 	
 	public RiscoEmpregadoBuilder loadRiscoPotencial() {
 		return (RiscoEmpregadoBuilder) loadProperty(this.loadRiscoPotencial);
+	}
+	
+	public RiscoEmpregadoBuilder loadTriagens() {
+		return (RiscoEmpregadoBuilder) loadProperty(this.loadTriagens);
+	}
+	
+	public RiscoEmpregadoBuilder loadTriagensAll() {
+		return (RiscoEmpregadoBuilder) loadProperty(this.loadTriagensAll);
 	}
 
 	@Override

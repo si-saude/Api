@@ -112,12 +112,18 @@ public class RiscoPotencial {
 
 	public List<RiscoEmpregado> getRiscosInterdiciplinares() {
 		
-		if(this.riscoEmpregados != null) {
+		if(this.riscoEmpregados != null && this.riscosInterdiciplinares == null) {
 			
 			this.riscosInterdiciplinares = new ArrayList<RiscoEmpregado>();
 			
 			int qtd = 0;
 			for(RiscoEmpregado rE : this.riscoEmpregados) {
+				
+				if(rE.getTriagens() == null) {
+					this.riscosInterdiciplinares = null;
+					return this.riscosInterdiciplinares;
+				}
+				
 				for(Triagem t : rE.getTriagens()) {
 					
 					if(t.getIndicadorSast().isAusenteCalculoInterdisciplinar())

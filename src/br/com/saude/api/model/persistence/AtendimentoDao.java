@@ -41,6 +41,7 @@ import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.model.entity.po.Aso;
+import br.com.saude.api.model.entity.po.RiscoEmpregado;
 
 public class AtendimentoDao extends GenericDao<Atendimento> {
 
@@ -84,6 +85,22 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 			if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null) {
 				atendimento.getFilaEsperaOcupacional().setRiscoPotencial(
 						(RiscoPotencial) Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getRiscoPotencial()));
+								
+				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes() != null) {
+					List<Equipe> equipes = new ArrayList<Equipe>();
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes().forEach(e -> {
+						equipes.add((Equipe) Hibernate.unproxy(e));
+					});
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setEquipes(equipes);
+				}
+				
+				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados() != null) {
+					List<RiscoEmpregado> riscos = new ArrayList<RiscoEmpregado>();
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados().forEach(r->{
+						riscos.add((RiscoEmpregado) Hibernate.unproxy(r));
+					});
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setRiscoEmpregados(riscos);
+				}
 			}
 			
 			if(atendimento.getFilaEsperaOcupacional().getFichaColeta() != null) {

@@ -1,6 +1,8 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.TriagemFilter;
@@ -8,6 +10,9 @@ import br.com.saude.api.model.entity.po.Triagem;
 
 public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> {
 
+	private Function<Map<String,Triagem>,Triagem> loadIndicadorAssociadoSasts;
+	private Function<Map<String,Triagem>,Triagem> loadIndicadorEquipe;
+	
 	public static TriagemBuilder newInstance(Triagem triagem) {
 		return new TriagemBuilder(triagem);
 	}
@@ -26,6 +31,32 @@ public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> 
 
 	@Override
 	protected void initializeFunctions() {
+		this.loadIndicadorAssociadoSasts = triagens -> {
+			
+			if(triagens.get("origem").getIndicadorSast() != null &&
+					triagens.get("origem").getIndicadorSast().getIndicadorAssociadoSasts() != null ) {
+				
+				triagens.get("destino").getIndicadorSast().setIndicadorAssociadoSasts(
+						IndicadorAssociadoSastBuilder
+							.newInstance(triagens.get("origem").getIndicadorSast().getIndicadorAssociadoSasts())
+							.getEntityList());
+				
+			}
+			
+			return triagens.get("destino");
+		};
+		
+		this.loadIndicadorEquipe = triagens -> {
+			
+			if(triagens.get("origem").getIndicadorSast() != null &&
+					triagens.get("origem").getIndicadorSast().getEquipe() != null) {
+				
+				triagens.get("destino").getIndicadorSast().setEquipe(EquipeBuilder
+						.newInstance(triagens.get("origem").getIndicadorSast().getEquipe()).getEntity());
+			}
+			
+			return triagens.get("destino");
+		};
 	}
 
 	@Override
@@ -51,6 +82,14 @@ public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> 
 			cloneTriagem.setDiagnostico(DiagnosticoBuilder.newInstance(triagem.getDiagnostico()).getEntity());
 		
 		return cloneTriagem;
+	}
+	
+	public TriagemBuilder loadIndicadorAssociadoSasts() {
+		return (TriagemBuilder) this.loadProperty(this.loadIndicadorAssociadoSasts);
+	}
+	
+	public TriagemBuilder loadIndicadorEquipe() {
+		return (TriagemBuilder) this.loadProperty(this.loadIndicadorEquipe);
 	}
 
 	@Override

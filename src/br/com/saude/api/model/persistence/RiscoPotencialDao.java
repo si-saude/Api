@@ -11,6 +11,9 @@ import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.Equipe;
+import br.com.saude.api.model.entity.po.IndicadorSast;
+import br.com.saude.api.model.entity.po.IndicadorAssociadoSast;
+import br.com.saude.api.model.entity.po.Triagem;
 
 public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 
@@ -34,7 +37,34 @@ public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 				List<RiscoEmpregado> riscos = new ArrayList<RiscoEmpregado>();
 				
 				risco.getRiscoEmpregados().forEach(r->{
-					riscos.add((RiscoEmpregado) Hibernate.unproxy(r));
+					
+					r = (RiscoEmpregado) Hibernate.unproxy(r);
+					
+					if(r.getTriagens() != null) {
+						List<Triagem> t = new ArrayList<Triagem>();
+						r.getTriagens().forEach(tr -> {
+							tr = (Triagem) Hibernate.unproxy(tr);
+							
+							if(tr.getIndicadorSast() != null) {
+								tr.setIndicadorSast((IndicadorSast) Hibernate.unproxy(tr.getIndicadorSast()));
+								
+								if(tr.getIndicadorSast().getIndicadorAssociadoSasts() != null) {
+									List<IndicadorAssociadoSast> iS = new ArrayList<IndicadorAssociadoSast>();
+									
+									tr.getIndicadorSast().getIndicadorAssociadoSasts().forEach(iAS -> {
+										iS.add((IndicadorAssociadoSast) Hibernate.unproxy(iAS));
+									});
+									
+									tr.getIndicadorSast().setIndicadorAssociadoSasts(iS);
+								}
+							}
+							
+							t.add(tr);
+						});
+						r.setTriagens(t);
+					}
+					
+					riscos.add(r);
 				});
 				
 				risco.setRiscoEmpregados(riscos);

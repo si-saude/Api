@@ -23,6 +23,8 @@ public class TriagemExampleBuilder extends GenericExampleBuilder<Triagem, Triage
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addId();
 		addRiscoEmpregado();
+		
+		this.entity.setIndice(0);
 	}
 
 	@Override
