@@ -91,6 +91,15 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/quadro-atendimento")
+	public Response getListQuadroAtendimento(Atendimento atendimento) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return Response.ok(getBo().getQuadroAtendimento(atendimento)).build();
+	}
 
 	@RequestInterceptor
 	@Override

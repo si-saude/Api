@@ -73,6 +73,52 @@ public class FilaEsperaOcupacionalBo
 		return super.getList(filter,this.functionLoadAll);
 	}
 	
+	@SuppressWarnings("deprecation")
+	public List<Atendimento> getQuadroAtendimento(Atendimento atendimento) throws Exception{
+		
+		if(atendimento == null || atendimento.getTarefa() == null || atendimento.getTarefa().getInicio() == null)
+			throw new Exception("É necessário informar a Data.");
+		
+		if(atendimento.getFilaEsperaOcupacional() == null || atendimento.getFilaEsperaOcupacional()
+				.getLocalizacao() == null || atendimento.getFilaEsperaOcupacional().getLocalizacao().getId() == 0)
+			throw new Exception("É necessário informar a Localização.");
+		
+		Date inicio = atendimento.getTarefa().getInicio();
+		inicio.setHours(0);
+		inicio.setMinutes(0);
+		inicio.setSeconds(0);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(inicio);
+		calendar.add(Calendar.DATE, 1);
+		
+		AtendimentoFilter filter = new AtendimentoFilter();
+		filter.setPageNumber(1);
+		filter.setPageSize(Integer.MAX_VALUE);
+		filter.setTarefa(new TarefaFilter());
+		filter.getTarefa().setInicio(new DateFilter());
+		filter.getTarefa().getInicio().setInicio(inicio);
+		filter.getTarefa().getInicio().setFim(calendar.getTime());
+		filter.getTarefa().getInicio().setTypeFilter(TypeFilter.ENTRE);
+		filter.setFilaEsperaOcupacional(new FilaEsperaOcupacionalFilter());
+		filter.getFilaEsperaOcupacional().setLocalizacao(new LocalizacaoFilter());
+		filter.getFilaEsperaOcupacional().getLocalizacao().setId(
+				atendimento.getFilaEsperaOcupacional().getLocalizacao().getId() );
+		
+		PagedList<Atendimento> atendimentos = AtendimentoBo.getInstance().getListLoadAll(filter);
+		
+		atendimentos.getList().sort(new Comparator<Atendimento>() {
+			public int compare(Atendimento arg0, Atendimento arg1) {
+				return (arg0.getFilaEsperaOcupacional().getHorarioCheckin() + " - " +
+				arg0.getTarefa().getInicio().toString()).compareTo(
+						arg1.getFilaEsperaOcupacional().getHorarioCheckin() + " - " +
+						arg1.getTarefa().getInicio().toString());
+			}
+		});
+		
+		return atendimentos.getList();
+	}
+	
 	private PagedList<FilaEsperaOcupacional> check(FilaEsperaOcupacional fila) throws Exception {
 		// 1 - VERIFICAR SE A LOCALIZAÇÃO FOI INFORMADA
 		if(fila.getLocalizacao() == null)
