@@ -53,6 +53,19 @@ public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,Ris
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-all")
+	public Response getListAll(RiscoPotencialFilter filter) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {		
+		try {
+			return Response.ok(getBo().getListLoadAll(filter).getGenericPagedList()).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 
 	@Override
 	@POST

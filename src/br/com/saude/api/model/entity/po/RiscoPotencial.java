@@ -250,11 +250,13 @@ public class RiscoPotencial {
 	
 
 	public String getStatusRPSat() {
-		if ( this.valor > 0 && this.valor <= 0.6 ) {
+		this.getValor();
+		
+		if ( this.valor > 0 && this.valor < 0.6 ) {
 			this.statusRPSat = "ACEITÁVEL";
-		} else if ( this.valor > 0.6 && this.valor <= 0.8 ) {
+		} else if ( this.valor >= 0.6 && this.valor < 0.8 ) {
 			this.statusRPSat = "TOLERÁVEL";
-		} else if ( this.valor > 0.8 ) {
+		} else if ( this.valor >= 0.8 ) {
 			this.statusRPSat = "INACEITÁVEL";
 		}
 		
