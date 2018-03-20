@@ -100,6 +100,20 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return Response.ok(getBo().getQuadroAtendimento(atendimento)).build();
 	}
+	
+	@POST
+	@RequestInterceptor
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/declaracao-comparecimento")
+	public Response getDeclaracaoComparecimento(Atendimento atendimento) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		try {
+			return Response.ok(getBo().getDeclaracaoComparecimento(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 
 	@RequestInterceptor
 	@Override

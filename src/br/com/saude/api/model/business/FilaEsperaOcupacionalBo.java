@@ -1,20 +1,43 @@
 package br.com.saude.api.model.business;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.html.simpleparser.HTMLWorker;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.generic.StringReplacer;
 import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.FilaEsperaOcupacionalBuilder;
 import br.com.saude.api.model.creation.builder.example.FilaEsperaOcupacionalExampleBuilder;
+import br.com.saude.api.model.creation.builder.example.ProfissionalExampleBuilder;
 import br.com.saude.api.model.creation.builder.example.TarefaExampleBuilder;
 import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
@@ -23,6 +46,7 @@ import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.filter.FilaEsperaOcupacionalFilter;
 import br.com.saude.api.model.entity.filter.LocalizacaoFilter;
 import br.com.saude.api.model.entity.filter.PessoaFilter;
+import br.com.saude.api.model.entity.filter.ProfissionalFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
@@ -30,11 +54,13 @@ import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
 import br.com.saude.api.model.entity.po.Localizacao;
+import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.RegraAtendimento;
 import br.com.saude.api.model.entity.po.RegraAtendimentoEquipe;
 import br.com.saude.api.model.entity.po.RegraAtendimentoLocalizacao;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.persistence.FilaEsperaOcupacionalDao;
+import br.com.saude.api.model.persistence.ProfissionalDao;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
@@ -117,6 +143,201 @@ public class FilaEsperaOcupacionalBo
 		});
 		
 		return atendimentos.getList();
+	}
+	
+	@SuppressWarnings({ "deprecation", "resource" })
+	public String getDeclaracaoComparecimento(Atendimento atendimento) throws Exception{
+		
+		if(atendimento == null || atendimento.getTarefa() == null || atendimento.getTarefa().getInicio() == null)
+			throw new Exception("É necessário informar a Data.");
+		
+		if(atendimento.getFilaEsperaOcupacional() == null || atendimento.getFilaEsperaOcupacional().getEmpregado() == null 
+				|| atendimento.getFilaEsperaOcupacional().getEmpregado().getId() == 0)
+			throw new Exception("É necessário informar o Empregado.");
+		
+		Profissional profissional = this.getProfissional("EU5X");
+		
+		if(profissional == null)
+			throw new Exception("Profissional inexistente.");
+		
+		Empregado empregado = EmpregadoBo.getInstance().getById(profissional.getEmpregado().getId());
+		profissional.setEmpregado(empregado);
+		
+		Date inicio = atendimento.getTarefa().getInicio();
+		inicio.setHours(0);
+		inicio.setMinutes(0);
+		inicio.setSeconds(0);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(inicio);
+		calendar.add(Calendar.DATE, 1);
+		
+		AtendimentoFilter filter = new AtendimentoFilter();
+		filter.setPageNumber(1);
+		filter.setPageSize(Integer.MAX_VALUE);
+		filter.setTarefa(new TarefaFilter());
+		filter.getTarefa().setInicio(new DateFilter());
+		filter.getTarefa().getInicio().setInicio(inicio);
+		filter.getTarefa().getInicio().setFim(calendar.getTime());
+		filter.getTarefa().getInicio().setTypeFilter(TypeFilter.ENTRE);
+		filter.setFilaEsperaOcupacional(new FilaEsperaOcupacionalFilter());
+		filter.getFilaEsperaOcupacional().setEmpregado(new EmpregadoFilter());
+		filter.getFilaEsperaOcupacional().getEmpregado().setId(atendimento.
+				getFilaEsperaOcupacional().getEmpregado().getId());
+		
+		List<Atendimento> atendimentos = AtendimentoBo.getInstance().getListLoadAll(filter).getList();
+		
+		if (atendimentos == null || atendimentos.size() == 0 ) 
+			throw new Exception("Não existe atendimentos para o empregado nesta data.");
+		
+		atendimentos.sort(new Comparator<Atendimento>() {
+			public int compare(Atendimento arg0, Atendimento arg1) {
+				return (arg0.getTarefa().getInicio().toString()).
+						compareTo(arg1.getTarefa().getInicio().toString());
+			}
+		});
+		
+		//OBTER O HTML DO RELATÓRIO		
+		StringBuilder html = new StringBuilder();
+		String line;
+		
+		URI uriDoc = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+				.replace("/WEB-INF/classes", "")+"REPORT/DeclaracaoComparecimento.html");
+		
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(uriDoc.getPath()));
+		
+		while((line = bufferedReader.readLine()) != null) {
+			html.append(line);
+		}
+		
+		bufferedReader.close();
+		
+		//CONFIGURAR DIRETÓRIO DOS PDFs
+		URI pdfUri;
+		File pdf;
+		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+				+"declaracaoComparecimento/");
+		File file = new File(uri.getPath());
+		file.mkdirs();
+		
+		StringReplacer stringReplacer = new StringReplacer(html.toString());
+		stringReplacer = stringReplacer
+			.replace("nomeEmpregado", Objects.toString(atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getNome()))
+			.replace("matriculaEmpregado", Objects.toString(atendimento.getFilaEsperaOcupacional().getEmpregado().getMatricula()))
+			.replace("nomeProfissional", Objects.toString(profissional.getEmpregado().getPessoa().getNome()))
+			.replace("cargoProfissional", Objects.toString(profissional.getEmpregado().getCargo().getNome()))
+			.replace("ramalProfissional", Objects.toString(profissional.getEmpregado().getRamal()))
+			.replace("tipoServico", Objects.toString(atendimentos.get(0).getTarefa().getServico().getNome()));
+		
+		if ( profissional.getEmpregado().getPessoa().getTelefones() != null && profissional.getEmpregado().getPessoa().getTelefones().size() > 0 )
+			stringReplacer.replace("telefoneProfissional", Objects.toString(profissional.getEmpregado().getPessoa().getTelefones().get(0)));
+		else stringReplacer.replace("telefoneProfissional", "---");
+		
+		if ( profissional.getEmpregado().getPessoa().getEmail() != null )
+			stringReplacer.replace("emailProfissional", Objects.toString(profissional.getEmpregado().getPessoa().getEmail()));
+		else stringReplacer.replace("emailProfissional", "---");
+		
+		URI assinatura = null;
+		
+		try {
+			 assinatura = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() 
+					+ "empregado/assinatura/" + profissional.getEmpregado().getId() + ".png");
+		} catch (Exception e) {
+			assinatura = null;
+		}
+				
+		URI logoUri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+				.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
+		URI np2 = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+				.replace("/WEB-INF/classes", "")+"IMAGE/np-2.png");
+		
+		stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath())
+				.replace("np2", np2.getPath());
+		if ( assinatura != null )
+			stringReplacer = stringReplacer.replace("assinatura", assinatura.getPath());
+		
+		String tarefas = null, data, inic, fim, duracao = "";
+		int duracaoTotal = 0;
+		int i = 1;
+		
+		for(Atendimento a : atendimentos) {
+			Locale brasil = new Locale("pt", "BR");
+			SimpleDateFormat sdfData = new SimpleDateFormat("EEE, dd/MM/yyyy", brasil);
+			SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
+			
+			data = sdfData.format(a.getTarefa().getInicio());
+			inic = sdfTime.format(a.getTarefa().getInicio());
+			fim = sdfTime.format(a.getTarefa().getFim());
+			int diff = (int) (-1*(a.getTarefa().getInicio().getTime() - a.getTarefa().getFim().getTime())/60000);
+			duracaoTotal += diff;
+			int countHours = 0;
+			int countMins = 0;
+			
+			if ( diff > 60 ) {
+				countHours = (int) (diff / 60);
+				countMins = (int) (diff % 60);
+				duracao = countHours + ":" + countMins;
+			} else duracao = String.valueOf("0:"+diff);
+			
+			tarefas += "<tr><td  width=\"40%\" style='font-size:10px;'>" + i + " - " + a.getTarefa().getEquipe().getNome() + "</td>"+
+							"<td width=\"30%\" align=\"center\">"+data+"</td>"+
+							"<td width=\"10%\" align=\"center\">"+inic+"</td>"+
+							"<td width=\"10%\" align=\"center\">"+fim+"</td>"+
+							"<td width=\"10%\" align=\"center\">"+duracao+"</td></tr>";
+			i++;
+		}
+		SimpleDateFormat sdfData = new SimpleDateFormat("d MMMMM yyyy");
+
+		int duracaoHoras = 0;
+		int duracaoMinutos = 0;
+		
+		if ( duracaoTotal > 60 ) {
+			duracaoHoras = (duracaoTotal / 60);
+			duracaoMinutos = (duracaoTotal % 60);
+		} else {
+			duracaoHoras = 0;
+			duracaoMinutos = (int) duracaoTotal;
+		}
+		 
+		String dataAtual = sdfData.format(new Date());
+		stringReplacer = stringReplacer.replace("tarefas", tarefas)
+				.replace("duracaoHoras", String.valueOf(duracaoHoras))
+				.replace("duracaoMinutos", String.valueOf(duracaoMinutos))
+				.replace("data", dataAtual);
+		
+		pdfUri = new URI(uri.getPath()+"/"+Objects.toString(
+				atendimento.getFilaEsperaOcupacional().getEmpregado().getMatricula().trim())+".pdf");
+		
+		pdf = new File(pdfUri.getPath());
+		OutputStream stream = new FileOutputStream(pdf);
+		Document doc = new Document();
+		PdfWriter.getInstance(doc, stream);
+		doc.open();
+		
+		HTMLWorker htmlWorker = new HTMLWorker(doc);
+		htmlWorker.parse(new StringReader(stringReplacer.result()));
+		
+		doc.close();
+		stream.close();
+		
+		byte[] pdfArray = new byte[(int) pdf.length()];
+		new FileInputStream(pdf).read(pdfArray);
+		return Base64.getEncoder().encodeToString(pdfArray);
+	}
+	
+	private Profissional getProfissional(String chave) throws Exception {
+		ProfissionalFilter profissionalFilter = new ProfissionalFilter();
+		profissionalFilter.setEmpregado(new EmpregadoFilter());
+		profissionalFilter.getEmpregado().setChave(chave);
+		profissionalFilter.setPageSize(1);
+		profissionalFilter.setPageNumber(1);
+		
+		List<Profissional> profissionais = (List<Profissional>) ProfissionalDao.getInstance().getList(
+				ProfissionalExampleBuilder.newInstance(profissionalFilter).example()).getList();
+		
+		if ( profissionais != null && profissionais.size() > 0 ) return profissionais.get(0);
+		
+		return null;
 	}
 	
 	private PagedList<FilaEsperaOcupacional> check(FilaEsperaOcupacional fila) throws Exception {

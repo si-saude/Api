@@ -18,6 +18,7 @@ public class Funcionalidade extends GenericConstant {
 	
 	public static final String AGENDA												= "AGENDA";
 	public static final String QUADRO_ATENDIMENTO									= "QUADRO-ATENDIMENTO";
+	public static final String DECLARACAO_COMPARECIMENTO							= "DECLARACAO-COMPARECIMENTO";
 	public static final String AUDITORIA_RESULTADO_EXAME_LISTAR						= "AUDITORIA-RESULTADO-EXAME_LISTAR";
 	public static final String AUDITORIA_RESULTADO_EXAME_ADICIONAR 			    	= "AUDITORIA-RESULTADO-EXAME_ADICIONAR";
 	public static final String AUDITORIA_RESULTADO_EXAME_ALTERAR		 			= "AUDITORIA-RESULTADO-EXAME_ALTERAR";
