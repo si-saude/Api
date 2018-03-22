@@ -3,27 +3,21 @@ package br.com.saude.api.model.business;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.URI;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.html.simpleparser.HTMLWorker;
@@ -37,7 +31,6 @@ import br.com.saude.api.generic.StringReplacer;
 import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.FilaEsperaOcupacionalBuilder;
 import br.com.saude.api.model.creation.builder.example.FilaEsperaOcupacionalExampleBuilder;
-import br.com.saude.api.model.creation.builder.example.ProfissionalExampleBuilder;
 import br.com.saude.api.model.creation.builder.example.TarefaExampleBuilder;
 import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
@@ -60,12 +53,12 @@ import br.com.saude.api.model.entity.po.RegraAtendimentoEquipe;
 import br.com.saude.api.model.entity.po.RegraAtendimentoLocalizacao;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.persistence.FilaEsperaOcupacionalDao;
-import br.com.saude.api.model.persistence.ProfissionalDao;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
 
+@SuppressWarnings("deprecation")
 public class FilaEsperaOcupacionalBo 
 	extends GenericBo<FilaEsperaOcupacional, FilaEsperaOcupacionalFilter, 
 					FilaEsperaOcupacionalDao, FilaEsperaOcupacionalBuilder, 
@@ -99,7 +92,6 @@ public class FilaEsperaOcupacionalBo
 		return super.getList(filter,this.functionLoadAll);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public List<Atendimento> getQuadroAtendimento(Atendimento atendimento) throws Exception{
 		
 		if(atendimento == null || atendimento.getTarefa() == null || atendimento.getTarefa().getInicio() == null)
@@ -145,7 +137,7 @@ public class FilaEsperaOcupacionalBo
 		return atendimentos.getList();
 	}
 	
-	@SuppressWarnings({ "deprecation", "resource" })
+	@SuppressWarnings({ "resource" })
 	public String getDeclaracaoComparecimento(Atendimento atendimento) throws Exception{
 		
 		if(atendimento == null || atendimento.getTarefa() == null || atendimento.getTarefa().getInicio() == null)
@@ -256,54 +248,13 @@ public class FilaEsperaOcupacionalBo
 		if ( assinatura != null )
 			stringReplacer = stringReplacer.replace("assinatura", assinatura.getPath());
 		
-		String tarefas = null, data, inic, fim, duracao = "";
-		int duracaoTotal = 0;
-		int i = 1;
-		
-		for(Atendimento a : atendimentos) {
-			Locale brasil = new Locale("pt", "BR");
-			SimpleDateFormat sdfData = new SimpleDateFormat("EEE, dd/MM/yyyy", brasil);
-			SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
-			
-			data = sdfData.format(a.getTarefa().getInicio());
-			inic = sdfTime.format(a.getTarefa().getInicio());
-			fim = sdfTime.format(a.getTarefa().getFim());
-			int diff = (int) (-1*(a.getTarefa().getInicio().getTime() - a.getTarefa().getFim().getTime())/60000);
-			duracaoTotal += diff;
-			int countHours = 0;
-			int countMins = 0;
-			
-			if ( diff > 60 ) {
-				countHours = (int) (diff / 60);
-				countMins = (int) (diff % 60);
-				duracao = countHours + ":" + countMins;
-			} else duracao = String.valueOf("0:"+diff);
-			
-			tarefas += "<tr><td  width=\"40%\" style='font-size:10px;'>" + i + " - " + a.getTarefa().getEquipe().getNome() + "</td>"+
-							"<td width=\"30%\" align=\"center\">"+data+"</td>"+
-							"<td width=\"10%\" align=\"center\">"+inic+"</td>"+
-							"<td width=\"10%\" align=\"center\">"+fim+"</td>"+
-							"<td width=\"10%\" align=\"center\">"+duracao+"</td></tr>";
-			i++;
-		}
 		SimpleDateFormat sdfData = new SimpleDateFormat("d MMMMM yyyy");
-
-		int duracaoHoras = 0;
-		int duracaoMinutos = 0;
-		
-		if ( duracaoTotal > 60 ) {
-			duracaoHoras = (duracaoTotal / 60);
-			duracaoMinutos = (duracaoTotal % 60);
-		} else {
-			duracaoHoras = 0;
-			duracaoMinutos = (int) duracaoTotal;
-		}
 		 
 		String dataAtual = sdfData.format(new Date());
-		stringReplacer = stringReplacer.replace("tarefas", tarefas)
-				.replace("duracaoHoras", String.valueOf(duracaoHoras))
-				.replace("duracaoMinutos", String.valueOf(duracaoMinutos))
-				.replace("data", dataAtual);
+		stringReplacer = stringReplacer.replace("data", dataAtual)
+				.replace("horarioCheckin", atendimentos.get(atendimentos.size()-1).getFilaEsperaOcupacional().getHorarioCheckin().toLocaleString())
+				.replace("fim", atendimentos.get(atendimentos.size()-1).getTarefa().getFim().toLocaleString());
+		
 		
 		pdfUri = new URI(uri.getPath()+"/"+Objects.toString(
 				atendimento.getFilaEsperaOcupacional().getEmpregado().getMatricula().trim())+".pdf");
@@ -332,10 +283,9 @@ public class FilaEsperaOcupacionalBo
 		profissionalFilter.setPageSize(1);
 		profissionalFilter.setPageNumber(1);
 		
-		List<Profissional> profissionais = (List<Profissional>) ProfissionalDao.getInstance().getList(
-				ProfissionalExampleBuilder.newInstance(profissionalFilter).example()).getList();
+		PagedList<Profissional> profissionais = ProfissionalBo.getInstance().getList(profissionalFilter);
 		
-		if ( profissionais != null && profissionais.size() > 0 ) return profissionais.get(0);
+		if ( profissionais.getTotal() > 0 ) return profissionais.getList().get(0);
 		
 		return null;
 	}
@@ -467,7 +417,6 @@ public class FilaEsperaOcupacionalBo
 				"Favor aguardar chamada.";
 	}
 	
-	@SuppressWarnings("deprecation")
 	protected Tarefa checkPendecia(Empregado empregado) throws Exception {
 		
 		//VERIFICAR SE EXISTE TAREFA ABERTA ANTERIOR AO DIA ATUAL
