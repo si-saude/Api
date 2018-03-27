@@ -91,6 +91,15 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-all")
+	public Response getListAll(FilaEsperaOcupacionalFilter filter) throws Exception {
+		return Response.ok(getBo().getListAll(filter).getGenericPagedList()).build();
+	}
 
 	@RequestInterceptor
 	@Override

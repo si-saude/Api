@@ -23,6 +23,7 @@ public class RiscoEmpregadoExampleBuilder extends GenericExampleBuilder<RiscoEmp
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addId();
 		addRiscoPotencial();
+		addProfissional();
 	}
 
 	@Override
@@ -40,6 +41,14 @@ public class RiscoEmpregadoExampleBuilder extends GenericExampleBuilder<RiscoEmp
 			CriteriaExample criteriaExample = RiscoPotencialExampleBuilder
 					.newInstance(this.filter.getRiscoPotencial()).getCriteriaExample();
 			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("riscoPotencial", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addProfissional() throws InstantiationException, IllegalAccessException {
+		if (this.filter.getProfissional() != null) {
+			CriteriaExample criteriaExample = ProfissionalExampleBuilder
+					.newInstance(this.filter.getProfissional()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("profissional", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
 }

@@ -60,6 +60,7 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 			
 			return riscos.get("destino");
 		}; 
+		
 	}
 
 	@Override
@@ -72,6 +73,10 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 		
 		if ( riscoEmpregado.getEquipe() != null )
 			cloneRiscoEmpregado.setEquipe(EquipeBuilder.newInstance(riscoEmpregado.getEquipe()).getEntity());
+		
+		if ( riscoEmpregado.getProfissional() != null )
+			cloneRiscoEmpregado.setProfissional(
+					ProfissionalBuilder.newInstance(riscoEmpregado.getProfissional()).getEntity());
 		
 		return cloneRiscoEmpregado;
 	}
@@ -87,7 +92,7 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 	public RiscoEmpregadoBuilder loadTriagensAll() {
 		return (RiscoEmpregadoBuilder) loadProperty(this.loadTriagensAll);
 	}
-
+	
 	@Override
 	public RiscoEmpregado cloneFromFilter(RiscoEmpregadoFilter filter) {
 		return null;

@@ -23,6 +23,7 @@ public class TriagemExampleBuilder extends GenericExampleBuilder<Triagem, Triage
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addId();
 		addRiscoEmpregado();
+		addEquipeAbordagem();
 		
 		this.entity.setIndice(0);
 	}
@@ -42,6 +43,14 @@ public class TriagemExampleBuilder extends GenericExampleBuilder<Triagem, Triage
 			CriteriaExample criteriaExample = RiscoEmpregadoExampleBuilder
 					.newInstance(this.filter.getRiscoEmpregado()).getCriteriaExample();
 			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("riscoEmpregado", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addEquipeAbordagem() throws InstantiationException, IllegalAccessException {
+		if (this.filter.getEquipeAbordagem() != null) {
+			CriteriaExample criteriaExample = EquipeExampleBuilder
+					.newInstance(this.filter.getEquipeAbordagem()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("equipeAbordagem", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
 }

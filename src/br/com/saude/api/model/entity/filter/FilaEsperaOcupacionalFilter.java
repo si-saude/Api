@@ -13,6 +13,8 @@ public class FilaEsperaOcupacionalFilter extends GenericFilter {
 	private String status;
 	private long tempoEspera;
 	private DateFilter saida;
+	private RiscoPotencialFilter riscoPotencial;
+	
 	public ServicoFilter getServico() {
 		return servico;
 	}
@@ -61,4 +63,11 @@ public class FilaEsperaOcupacionalFilter extends GenericFilter {
 	public void setSaida(DateFilter saida) {
 		this.saida = saida;
 	}
+	public RiscoPotencialFilter getRiscoPotencial() {
+		return riscoPotencial;
+	}
+	public void setRiscoPotencial(RiscoPotencialFilter riscoPotencial) {
+		this.riscoPotencial = riscoPotencial;
+	}
+	
 }

@@ -2,6 +2,7 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,8 +26,12 @@ public class RiscoEmpregado {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Equipe equipe;
 	
-	@OneToMany(mappedBy="riscoEmpregado", fetch=FetchType.LAZY, orphanRemoval=true)
+	@OneToMany(mappedBy="riscoEmpregado", fetch=FetchType.LAZY, orphanRemoval=true,
+			cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private List<Triagem> triagens;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Profissional profissional;
 	
 	@Version
 	private long version;
@@ -69,6 +74,14 @@ public class RiscoEmpregado {
 
 	public void setTriagens(List<Triagem> triagens) {
 		this.triagens = triagens;
+	}
+	
+	public Profissional getProfissional() {
+		return profissional;
+	}
+
+	public void setProfissional(Profissional profissional) {
+		this.profissional = profissional;
 	}
 
 	public long getVersion() {
