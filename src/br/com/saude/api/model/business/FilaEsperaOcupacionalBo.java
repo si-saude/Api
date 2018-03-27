@@ -50,6 +50,7 @@ import br.com.saude.api.model.persistence.FilaEsperaOcupacionalDao;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
+import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusTarefa;
 
 public class FilaEsperaOcupacionalBo 
@@ -246,6 +247,7 @@ public class FilaEsperaOcupacionalBo
 		risco.setData(Helper.getToday());
 		risco.setEmpregado(fila.getEmpregado());
 		risco.setAtual(true);
+		risco.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
 		fila.setRiscoPotencial(risco);
 		
 		// 8 - OBTER A LISTA DOS RISCOS DO EMPREGADO PARA SETAR COMO NÃO ATUAL

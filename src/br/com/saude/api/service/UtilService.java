@@ -23,10 +23,15 @@ import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.PrazoEmMeses;
 import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.Sexo;
+import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusEmpregado;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
+import br.com.saude.api.util.constant.StatusRiscoEmpregado;
+import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusSimNao;
 import br.com.saude.api.util.constant.StatusTarefa;
+import br.com.saude.api.util.constant.TipoAcao;
+import br.com.saude.api.util.constant.TipoContato;
 import br.com.saude.api.util.constant.TipoConvocacao;
 import br.com.saude.api.util.constant.TipoCriterio;
 import br.com.saude.api.util.constant.TipoPerguntaFichaColeta;
@@ -175,6 +180,41 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getTipoPerguntaFichaColeta(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(TipoPerguntaFichaColeta.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/tipo-acao")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTipoAcao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TipoAcao.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/status-acao")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStatusAcao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(StatusAcao.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/status-risco-potencial")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStatusRiscoPotencial(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(StatusRiscoPotencial.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/status-risco-empregado")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStatusRiscoEmpregado(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(StatusRiscoEmpregado.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/tipo-contato")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTipoContato(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TipoContato.getInstance(),filter)).build();
 	}
 	
 	@GET

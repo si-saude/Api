@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
+import javax.validation.constraints.Size;
 
 @Entity
 public class RiscoEmpregado {
@@ -32,6 +34,11 @@ public class RiscoEmpregado {
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Profissional profissional;
+	
+	private Date data;
+	
+	@Size(max = 32, message="Tamanho máximo para Status do Risco Potencial: 32")
+	private String status;
 	
 	@Version
 	private long version;
@@ -90,6 +97,22 @@ public class RiscoEmpregado {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }

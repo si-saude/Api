@@ -538,10 +538,11 @@ public class FilaAtendimentoOcupacionalBo
 					.setEquipes(new ArrayList<Equipe>());
 				
 				for(Triagem t : triagens.getList()){
-					if(t.getIndice() > -1 && t.getIndice() < 3 && !atendimentoAux.getFilaEsperaOcupacional()
-							.getRiscoPotencial().getEquipes().contains(t.getIndicadorSast().getEquipe()))
+					if(t.getEquipeAbordagem() != null && t.getEquipeAbordagem().getId() > 0 &&
+							t.getIndice() > -1 && t.getIndice() < 3 && !atendimentoAux.getFilaEsperaOcupacional()
+							.getRiscoPotencial().getEquipes().contains(t.getEquipeAbordagem()))
 						atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial()
-							.getEquipes().add(t.getIndicadorSast().getEquipe());
+							.getEquipes().add(t.getEquipeAbordagem());
 				}
 			}
 		}

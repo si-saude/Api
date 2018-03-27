@@ -44,6 +44,7 @@ import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusAso;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
+import br.com.saude.api.util.constant.StatusRiscoEmpregado;
 import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.util.constant.TipoConvocacao;
 
@@ -371,6 +372,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 			risco.setEquipe(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe());
 			risco.setTriagens(atendimento.getTriagens());
 			risco.setValor(r1);
+			risco.setData(Helper.getToday());
+			risco.setStatus(StatusRiscoEmpregado.getInstance().REALIZADO);
 			
 			atendimento.getTriagens().forEach(t->t.setRiscoEmpregado(risco));
 		}

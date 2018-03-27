@@ -58,6 +58,9 @@ public class RiscoPotencial {
 	
 	private boolean atual;
 	
+	@Size(max = 32, message="Tamanho máximo para Status do Risco Potencial: 32")
+	private String status;
+	
 	@Transient
 	private List<RiscoEmpregado> riscosInterdiciplinares;
 	
@@ -263,5 +266,11 @@ public class RiscoPotencial {
 		return statusRPSat;
 	}
 
-	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

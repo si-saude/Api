@@ -6,6 +6,7 @@ import org.javatuples.Triplet;
 
 import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 
@@ -55,6 +56,11 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 	private void addFimAgendamento() {
 		this.addData("fimAgendamento", this.filter.getFimAgendamento());
 	}
+	
+	private void addStatus() {
+		if(this.filter.getStatus()!= null)
+			this.entity.setStatus(Helper.filterLike(this.filter.getStatus()));
+	}
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
@@ -65,6 +71,7 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 		addInicioAgendamento();
 		addFimAgendamento();
 		addAtual();
+		addStatus();
 	}
 
 	@Override

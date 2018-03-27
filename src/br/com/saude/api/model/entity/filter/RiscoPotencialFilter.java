@@ -13,6 +13,7 @@ public class RiscoPotencialFilter extends GenericFilter {
 	private DateFilter inicioAgendamento;
 	private DateFilter fimAgendamento;
 	private BooleanFilter atual;
+	private String status;
 	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
@@ -56,4 +57,11 @@ public class RiscoPotencialFilter extends GenericFilter {
 	public void setAtual(BooleanFilter atual) {
 		this.atual = atual;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 }
