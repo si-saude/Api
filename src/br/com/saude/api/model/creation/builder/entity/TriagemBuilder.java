@@ -12,6 +12,7 @@ public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> 
 
 	private Function<Map<String,Triagem>,Triagem> loadIndicadorAssociadoSasts;
 	private Function<Map<String,Triagem>,Triagem> loadIndicadorEquipe;
+	private Function<Map<String,Triagem>,Triagem> loadAcoes;
 	
 	public static TriagemBuilder newInstance(Triagem triagem) {
 		return new TriagemBuilder(triagem);
@@ -57,6 +58,15 @@ public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> 
 			
 			return triagens.get("destino");
 		};
+		
+		this.loadAcoes = triagens -> {
+			
+			if(triagens.get("origem").getAcoes() != null)
+				triagens.get("destino").setAcoes(AcaoBuilder
+						.newInstance(triagens.get("origem").getAcoes()).getEntityList());
+			
+			return triagens.get("destino");
+		};
 	}
 
 	@Override
@@ -90,6 +100,10 @@ public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> 
 	
 	public TriagemBuilder loadIndicadorEquipe() {
 		return (TriagemBuilder) this.loadProperty(this.loadIndicadorEquipe);
+	}
+	
+	public TriagemBuilder loadAcoes() {
+		return (TriagemBuilder) this.loadProperty(this.loadAcoes);
 	}
 
 	@Override
