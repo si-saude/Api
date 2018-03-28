@@ -79,12 +79,4 @@ implements GenericService<RiscoEmpregado, RiscoEmpregadoFilter>{
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
 	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/get-atendimento")
-	public Response getAtendimento(RiscoEmpregadoFilter filter) throws Exception {
-		return Response.ok(getBo().getAtendimento(filter).getGenericPagedList()).build();
-	}
-	
 }

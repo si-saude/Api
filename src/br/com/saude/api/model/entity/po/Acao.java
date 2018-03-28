@@ -1,7 +1,5 @@
 package br.com.saude.api.model.entity.po;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,8 +27,6 @@ public class Acao {
 	
 	@Size(max = 2048, message="Tamanho máximo para Status da Ação: 2048")
 	private String detalhe;
-	
-	private Date data;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Tarefa tarefa;
@@ -79,14 +75,6 @@ public class Acao {
 
 	public void setDetalhe(String detalhe) {
 		this.detalhe = detalhe;
-	}
-
-	public Date getData() {
-		return data;
-	}
-
-	public void setData(Date data) {
-		this.data = data;
 	}
 
 	public Tarefa getTarefa() {

@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.lang.reflect.InvocationTargetException;
+
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
@@ -38,4 +40,28 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	public PagedList<RiscoPotencial> getListLoadAll(RiscoPotencialFilter filter) throws Exception {
 		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), this.functionLoadAll);
 	}
+
+	@Override
+	public RiscoPotencial save(RiscoPotencial riscoPotencial) throws IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		
+		if ( riscoPotencial.getRiscoEmpregados() != null && riscoPotencial.getRiscoEmpregados().size() > 0 ) {
+			riscoPotencial.getRiscoEmpregados().forEach(rE -> { 
+				rE.setRiscoPotencial(riscoPotencial);
+				
+				if ( rE.getTriagens() != null && rE.getTriagens().size() > 0 ) {
+					rE.getTriagens().forEach(t -> { 
+						t.setRiscoEmpregado(rE);
+						if ( t.getAcoes() != null && t.getAcoes().size() > 0 )
+							t.getAcoes().forEach(a -> a.setTriagem(t));
+					});
+				}
+
+			});
+			
+		}
+		
+		return super.save(riscoPotencial);
+	}
+	
 }

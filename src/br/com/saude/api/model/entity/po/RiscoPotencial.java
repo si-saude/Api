@@ -37,7 +37,7 @@ public class RiscoPotencial {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Empregado empregado;
 	
-	@OneToMany(mappedBy="riscoPotencial", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="riscoPotencial", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<RiscoEmpregado> riscoEmpregados;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
