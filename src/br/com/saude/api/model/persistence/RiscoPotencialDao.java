@@ -14,6 +14,8 @@ import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.IndicadorSast;
 import br.com.saude.api.model.entity.po.IndicadorAssociadoSast;
 import br.com.saude.api.model.entity.po.Triagem;
+import br.com.saude.api.model.entity.po.Acao;
+import br.com.saude.api.model.entity.po.Acompanhamento;
 
 public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 
@@ -57,6 +59,18 @@ public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 									
 									tr.getIndicadorSast().setIndicadorAssociadoSasts(iS);
 								}
+							}
+							
+							if ( tr.getAcoes() != null ) {
+								List<Acao> acs = new ArrayList<Acao>();
+								tr.getAcoes().forEach(a -> {
+									acs.add((Acao) Hibernate.unproxy(a));
+									if ( a.getAcompanhamentos() != null ) {
+										List<Acompanhamento> acomps = new ArrayList<Acompanhamento>();
+										a.getAcompanhamentos().forEach(acomp -> acomps.add((Acompanhamento) Hibernate.unproxy(acomps)));
+									}
+										
+								});
 							}
 							
 							t.add(tr);

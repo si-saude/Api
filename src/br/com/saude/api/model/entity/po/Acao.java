@@ -1,11 +1,15 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
@@ -33,6 +37,9 @@ public class Acao {
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Triagem triagem;
+	
+	@OneToMany(mappedBy="acao", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private List<Acompanhamento> acompanhamentos; 
 	
 	@Version
 	private long version;
@@ -91,6 +98,14 @@ public class Acao {
 
 	public void setTriagem(Triagem triagem) {
 		this.triagem = triagem;
+	}
+	
+	public List<Acompanhamento> getAcompanhamentos() {
+		return acompanhamentos;
+	}
+
+	public void setAcompanhamentos(List<Acompanhamento> acompanhamentos) {
+		this.acompanhamentos = acompanhamentos;
 	}
 
 	public long getVersion() {
