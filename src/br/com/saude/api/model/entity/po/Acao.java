@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class Acao {
 	@Size(max = 2048, message="Tamanho máximo para Status da Ação: 2048")
 	private String detalhe;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL )
 	private Tarefa tarefa;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
