@@ -70,8 +70,8 @@ public abstract class GenericDao<T> {
 			Transaction transaction = session.beginTransaction();
 			
 			for (T t : entities) {
-				if(this.functionBeforeSave != null)
-					t = this.functionBeforeSave.apply(new Pair<T,Session>(t,session));
+//				if(this.functionBeforeSave != null)
+//					t = this.functionBeforeSave.apply(new Pair<T,Session>(t,session));
 				
 				Field id = getId(t.getClass());
 				id.setAccessible(true);

@@ -208,8 +208,12 @@ public class EmpregadoBo
 				for (int r = 0; r < rows; r++) {
 					if (r == 0)
 						continue;
-					
+										
 					int aux = r;
+					
+					if(sheet.getRow(aux).getCell(0) == null)
+						continue;
+						
 					if ( empregados.stream().filter(e->
 						e.getMatricula() == sheet.getRow(aux).getCell(0).getStringCellValue()
 					).count() == 0 ) {
@@ -232,6 +236,10 @@ public class EmpregadoBo
 						continue;
 					
 					int aux = r;
+					
+					if(sheet.getRow(aux).getCell(0) == null)
+						continue;
+					
 					try {
 						empregado = empregados.stream().filter(e -> e.getMatricula() == sheet.getRow(aux)
 								.getCell(0).getStringCellValue() ).findFirst().get();
@@ -246,9 +254,14 @@ public class EmpregadoBo
 						grupoMonitoramento = null;
 					}
 					
-					if ( empregado != null && grupoMonitoramento != null )
+					if ( empregado != null && grupoMonitoramento != null ) {
+						GrupoMonitoramento gAux = grupoMonitoramento;
+						if(empregado.getGrupoMonitoramentos() != null && empregado.getGrupoMonitoramentos()
+								.stream().filter(g->g.getId() == gAux.getId()).count() > 0)
+							continue;
+						
 						empregado.getGrupoMonitoramentos().add(grupoMonitoramento);
-					
+					}					
 				}
 			} else if (workbook instanceof XSSFWorkbook) {
 				XSSFSheet sheet = (XSSFSheet) workbook.getSheetAt(0);
@@ -294,9 +307,14 @@ public class EmpregadoBo
 						grupoMonitoramento = null;
 					}
 					
-					if ( empregado != null && grupoMonitoramento != null )
+					if ( empregado != null && grupoMonitoramento != null ) {
+						GrupoMonitoramento gAux = grupoMonitoramento;
+						if(empregado.getGrupoMonitoramentos() != null && empregado.getGrupoMonitoramentos()
+								.stream().filter(g->g.getId() == gAux.getId()).count() > 0)
+							continue;
+						
 						empregado.getGrupoMonitoramentos().add(grupoMonitoramento);
-					
+					}
 				}
 			}
 			try {
