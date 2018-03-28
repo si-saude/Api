@@ -1,7 +1,5 @@
 package br.com.saude.api.model.business;
 
-import java.lang.reflect.InvocationTargetException;
-
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
@@ -9,6 +7,7 @@ import br.com.saude.api.model.creation.builder.example.RiscoPotencialExampleBuil
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
+import br.com.saude.api.util.constant.StatusRiscoPotencial;
 
 public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFilter, 
 	RiscoPotencialDao, RiscoPotencialBuilder, RiscoPotencialExampleBuilder> {
@@ -42,8 +41,7 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	}
 
 	@Override
-	public RiscoPotencial save(RiscoPotencial riscoPotencial) throws IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+	public RiscoPotencial save(RiscoPotencial riscoPotencial) throws Exception {
 		
 		if ( riscoPotencial.getRiscoEmpregados() != null && riscoPotencial.getRiscoEmpregados().size() > 0 ) {
 			riscoPotencial.getRiscoEmpregados().forEach(rE -> { 
@@ -70,4 +68,8 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		return super.save(riscoPotencial);
 	}
 	
+	public RiscoPotencial validar(RiscoPotencial riscoPotencial) throws Exception {
+		riscoPotencial.setStatus(StatusRiscoPotencial.getInstance().VALIDADO);
+		return save(riscoPotencial);
+	}
 }

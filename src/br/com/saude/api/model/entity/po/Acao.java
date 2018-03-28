@@ -32,7 +32,7 @@ public class Acao {
 	@Size(max = 2048, message="Tamanho máximo para Status da Ação: 2048")
 	private String detalhe;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL )
 	private Tarefa tarefa;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
