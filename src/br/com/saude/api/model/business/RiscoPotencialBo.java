@@ -55,8 +55,14 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 				if ( rE.getTriagens() != null && rE.getTriagens().size() > 0 ) {
 					rE.getTriagens().forEach(t -> { 
 						t.setRiscoEmpregado(rE);
-						if ( t.getAcoes() != null && t.getAcoes().size() > 0 )
-							t.getAcoes().forEach(a -> a.setTriagem(t));
+						if ( t.getAcoes() != null && t.getAcoes().size() > 0 ) {
+							t.getAcoes().forEach(a -> { 
+								a.setTriagem(t);
+								if ( a.getAcompanhamentos() != null && a.getAcompanhamentos().size() > 0 ) {
+									a.getAcompanhamentos().forEach( ac -> ac.setAcao(a));
+								}
+							});
+						}
 					});
 				}
 
