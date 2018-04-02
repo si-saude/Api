@@ -1,13 +1,18 @@
 package br.com.saude.api.model.business;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.RiscoPotencialExampleBuilder;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
+import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
+import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
+import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
+import br.com.saude.api.util.constant.StatusTarefa;
 
 public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFilter, 
 	RiscoPotencialDao, RiscoPotencialBuilder, RiscoPotencialExampleBuilder> {
@@ -64,6 +69,39 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	
 	public RiscoPotencial validar(RiscoPotencial riscoPotencial) throws Exception {
 		riscoPotencial.setStatus(StatusRiscoPotencial.getInstance().VALIDADO);
+		return save(riscoPotencial);
+	}
+	
+	public RiscoPotencial saveAcoes(RiscoPotencial riscoPotencial) throws Exception {
+		
+		if(riscoPotencial.getRiscoEmpregados() != null) {
+			
+			ServicoFilter filter = new ServicoFilter();
+			filter.setPageNumber(1);
+			filter.setPageSize(1);
+			filter.setCodigo("0001");
+			filter.setGrupo(GrupoServico.ATENDIMENTO_PROGRAMA_SAUDE);
+			
+			Servico servico =  ServicoBo.getInstance().getList(filter).getList().get(0);
+			
+			riscoPotencial.getRiscoEmpregados().forEach(r -> {
+				if(r.getTriagens() != null)
+					r.getTriagens().forEach(t -> {
+						if(t.getAcoes() != null)
+							t.getAcoes().forEach(a->{
+								if(a.getTarefa().getId() == 0) {
+									a.getTarefa().setInicio(Helper.getNow());
+									a.getTarefa().setAtualizacao(a.getTarefa().getInicio());
+									a.getTarefa().setCliente(riscoPotencial.getEmpregado());
+									a.getTarefa().setEquipe(t.getEquipeAbordagem());
+									a.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
+									a.getTarefa().setServico(servico);
+								}
+							});
+					});
+			});			
+		}
+		
 		return save(riscoPotencial);
 	}
 }
