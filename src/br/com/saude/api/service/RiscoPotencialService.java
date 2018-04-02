@@ -45,6 +45,7 @@ public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,Ris
 	}
 	
 	@POST
+	@Path("validar")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@CustomValidator(validatorClass=RiscoPotencialValidator.class)
