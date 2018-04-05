@@ -1,22 +1,22 @@
 package br.com.saude.api.model.entity.dto;
 
 import java.util.Date;
-import java.util.List;
 
 public class PanoramaDto {
 
 	private String gerencia;
 	private String matricula;
 	private String nome;
-	private Date dataConvocacao;
+	private String mesConvocacao;
 	private String base;
 	private Date dataAsoAnoAnterior;
 	private Date dataAsoAnoAtual;
 	private Date dataRealizacaoPreClinico;
 	private String situacaoAso;
-	private String prazoAso;
-	private List<String> pendencias;
+	private String asoNoPrazo;
+	private String pendencias;
 	private String gerenciaPrimeiraLinha;
+	private String statusPreClinico;
 	
 	public String getGerencia() {
 		return gerencia;
@@ -35,12 +35,6 @@ public class PanoramaDto {
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-	public Date getDataConvocacao() {
-		return dataConvocacao;
-	}
-	public void setDataConvocacao(Date dataConvocacao) {
-		this.dataConvocacao = dataConvocacao;
 	}
 	public String getBase() {
 		return base;
@@ -72,22 +66,34 @@ public class PanoramaDto {
 	public void setSituacaoAso(String situacaoAso) {
 		this.situacaoAso = situacaoAso;
 	}
-	public String getPrazoAso() {
-		return prazoAso;
-	}
-	public void setPrazoAso(String prazoAso) {
-		this.prazoAso = prazoAso;
-	}
-	public List<String> getPendencias() {
-		return pendencias;
-	}
-	public void setPendencias(List<String> pendencias) {
-		this.pendencias = pendencias;
-	}
 	public String getGerenciaPrimeiraLinha() {
 		return gerenciaPrimeiraLinha;
 	}
 	public void setGerenciaPrimeiraLinha(String gerenciaPrimeiraLinha) {
 		this.gerenciaPrimeiraLinha = gerenciaPrimeiraLinha;
+	}
+	public String getMesConvocacao() {
+		return mesConvocacao;
+	}
+	public void setMesConvocacao(String mesConvocacao) {
+		this.mesConvocacao = mesConvocacao;
+	}
+	public String getAsoNoPrazo() {
+		return asoNoPrazo;
+	}
+	public void setAsoNoPrazo(String asoNoPrazo) {
+		this.asoNoPrazo = asoNoPrazo;
+	}
+	public String getPendencias() {
+		return pendencias;
+	}
+	public void setPendencias(String pendencias) {
+		this.pendencias = pendencias;
+	}
+	public String getStatusPreClinico() {
+		return statusPreClinico;
+	}
+	public void setStatusPreClinico(String statusPreClinico) {
+		this.statusPreClinico = statusPreClinico;
 	}
 }
