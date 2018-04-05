@@ -9,9 +9,9 @@ import br.com.saude.api.generic.GenericFilter;
 import br.com.saude.api.model.entity.po.Acao;
 
 public class AcaoBuilder extends GenericEntityBuilder<Acao, GenericFilter> {
-
-	private Function<Map<String,Acao>,Acao> loadTarefa;
 	
+	private Function<Map<String,Acao>,Acao> loadAcompanhamentos;
+
 	public static AcaoBuilder newInstance(Acao acao) {
 		return new AcaoBuilder(acao);
 	}
@@ -30,15 +30,16 @@ public class AcaoBuilder extends GenericEntityBuilder<Acao, GenericFilter> {
 
 	@Override
 	protected void initializeFunctions() {
-	
-		this.loadTarefa = tarefas -> {
+		this.loadAcompanhamentos = acoes -> {
 			
-			if(tarefas.get("origem").getTarefa() != null)
-				tarefas.get("destino").setTarefa(TarefaBuilder
-						.newInstance(tarefas.get("origem").getTarefa())
-						.getEntity());
+			if(acoes.get("origem").getAcompanhamentos() != null) {
+				acoes.get("destino").setAcompanhamentos(
+						AcompanhamentoBuilder
+							.newInstance(acoes.get("origem").getAcompanhamentos())
+							.getEntityList());
+			}
 			
-			return tarefas.get("destino");
+			return acoes.get("destino");
 		};
 	}
 
@@ -53,15 +54,18 @@ public class AcaoBuilder extends GenericEntityBuilder<Acao, GenericFilter> {
 		newAcao.setTipoContato(acao.getTipoContato());
 		newAcao.setVersion(acao.getVersion());
 		
+		if ( acao.getTarefa() != null )
+			newAcao.setTarefa(TarefaBuilder.newInstance(acao.getTarefa()).getEntity());
+		
 		return newAcao;
 	}
 	
-	public AcaoBuilder loadTarefa() {
-		return (AcaoBuilder) this.loadProperty(this.loadTarefa);
-	}
-
 	@Override
 	public Acao cloneFromFilter(GenericFilter filter) {
 		return null;
+	}
+	
+	public AcaoBuilder loadAcompanhamentos() {
+		return (AcaoBuilder) this.loadProperty(this.loadAcompanhamentos);
 	}
 }

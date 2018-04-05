@@ -111,6 +111,13 @@ public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,Ris
 	public Response get(@QueryParam("id") String id) throws Exception {
 		return super.getGeneric(new Integer(id));
 	}
+	
+	@Path("/get-acoes")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAcoes(@QueryParam("id") String id) throws Exception {
+		return Response.ok(getBo().getByIdLoadAcoes(new Integer(id))).build();
+	}
 
 	@Override
 	@POST

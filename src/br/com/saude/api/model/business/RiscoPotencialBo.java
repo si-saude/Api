@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.util.function.Function;
+
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
@@ -16,6 +18,8 @@ import br.com.saude.api.util.constant.StatusTarefa;
 
 public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFilter, 
 	RiscoPotencialDao, RiscoPotencialBuilder, RiscoPotencialExampleBuilder> {
+
+	private Function<RiscoPotencialBuilder,RiscoPotencialBuilder> functionLoadAcoes;
 
 	private static RiscoPotencialBo instance;
 	
@@ -34,6 +38,10 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		this.functionLoadAll = builder -> {
 			return builder.loadRiscoEmpregados().loadEquipes();
 		};
+		
+		this.functionLoadAcoes = builder -> {
+			return builder.loadRiscoEmpregados().loadEquipes().loadAcoes();
+		};
 	}
 	
 	@Override
@@ -41,8 +49,12 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		return super.getById(id,this.functionLoadAll);
 	}
 	
+	public RiscoPotencial getByIdLoadAcoes(Object id) throws Exception {
+		return getByEntity(getDao().getByIdLoadAcoes(id), this.functionLoadAcoes);
+	}
+	
 	public PagedList<RiscoPotencial> getListLoadAll(RiscoPotencialFilter filter) throws Exception {
-		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), this.functionLoadAll);
+		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), this.functionLoadAcoes);
 	}
 
 	@Override

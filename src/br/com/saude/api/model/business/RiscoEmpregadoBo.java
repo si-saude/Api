@@ -30,6 +30,10 @@ public class RiscoEmpregadoBo extends
 		this.functionLoad = builder -> {
 			return builder.loadRiscoPotencial().loadTriagens();
 		};
+		
+		this.functionLoadAll = builder -> {
+			return builder.loadRiscoPotencial().loadTriagensAll();
+		};
 	}
 
 	@Override
@@ -44,6 +48,10 @@ public class RiscoEmpregadoBo extends
 	@Override
 	public RiscoEmpregado getById(Object id) throws Exception {
 		return super.getById(id, this.functionLoad);
+	}
+	
+	public RiscoEmpregado getByIdAll(Object id) throws Exception {
+		return super.getById(id, this.functionLoadAll);
 	}
 
 	@Override

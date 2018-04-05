@@ -74,10 +74,11 @@ public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> 
 		
 		
 		this.loadAcoes = triagens -> {
-			
 			if(triagens.get("origem").getAcoes() != null)
 				triagens.get("destino").setAcoes(AcaoBuilder
-						.newInstance(triagens.get("origem").getAcoes()).getEntityList());
+						.newInstance(triagens.get("origem").getAcoes())
+						.loadAcompanhamentos()
+						.getEntityList());
 			
 			return triagens.get("destino");
 		};

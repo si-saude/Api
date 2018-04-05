@@ -22,6 +22,7 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.saude.api.model.business.RiscoEmpregadoBo;
 import br.com.saude.api.model.creation.builder.entity.RiscoEmpregadoBuilder;
 
 @Entity
@@ -113,7 +114,7 @@ public class RiscoPotencial {
 		this.version = version;
 	}
 
-	public List<RiscoEmpregado> getRiscosInterdiciplinares() {
+	public List<RiscoEmpregado> getRiscosInterdiciplinares() throws Exception {
 		
 		if(this.riscoEmpregados != null && this.riscosInterdiciplinares == null) {
 			
@@ -138,6 +139,8 @@ public class RiscoPotencial {
 			}
 			
 			for(RiscoEmpregado riscoEmpregado : this.riscoEmpregados) {
+				
+				riscoEmpregado = RiscoEmpregadoBo.getInstance().getByIdAll(riscoEmpregado.getId());
 				
 				RiscoEmpregado newRiscoEmpregado = RiscoEmpregadoBuilder
 						.newInstance(riscoEmpregado).getEntity();
@@ -175,7 +178,10 @@ public class RiscoPotencial {
 					}
 				}
 				
-				r = r * (0.05/qtd);
+				if (qtd > 0)
+					r = r * (0.05/qtd);
+				else r = 0;
+				
 				newRiscoEmpregado.setValor(newRiscoEmpregado.getValor() + r);
 				this.riscosInterdiciplinares.add(newRiscoEmpregado);
 			}
@@ -190,7 +196,7 @@ public class RiscoPotencial {
 		return riscosInterdiciplinares;
 	}
 
-	public double getValor() {
+	public double getValor() throws Exception {
 		
 		if(this.riscosInterdiciplinares == null)
 			this.getRiscosInterdiciplinares();
@@ -252,7 +258,7 @@ public class RiscoPotencial {
 	}
 	
 
-	public String getStatusRPSat() {
+	public String getStatusRPSat() throws Exception {
 		this.getValor();
 		
 		if ( this.valor > 0 && this.valor < 0.6 ) {

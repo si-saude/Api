@@ -38,7 +38,7 @@ public class Acao {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Triagem triagem;
 	
-	@OneToMany(mappedBy="acao", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="acao", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Acompanhamento> acompanhamentos; 
 	
 	@Version

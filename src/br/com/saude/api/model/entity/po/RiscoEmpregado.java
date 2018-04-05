@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
@@ -39,6 +40,9 @@ public class RiscoEmpregado {
 	
 	@Size(max = 32, message="Tamanho máximo para Status do Risco Potencial: 32")
 	private String status;
+	
+	@Transient
+	private String statusRPSat;
 	
 	@Version
 	private long version;
@@ -113,6 +117,19 @@ public class RiscoEmpregado {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public String getStatusRPSat() {
+		
+		if ( this.valor > 0 && this.valor < 0.6 ) {
+			this.statusRPSat = "ACEITÁVEL";
+		} else if ( this.valor >= 0.6 && this.valor < 0.8 ) {
+			this.statusRPSat = "TOLERÁVEL";
+		} else if ( this.valor >= 0.8 ) {
+			this.statusRPSat = "INACEITÁVEL";
+		}
+		
+		return statusRPSat;
 	}
 	
 }

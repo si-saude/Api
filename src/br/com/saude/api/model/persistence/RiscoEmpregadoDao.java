@@ -10,6 +10,7 @@ import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.Triagem;
+import br.com.saude.api.model.entity.po.IndicadorAssociadoSast;
 
 public class RiscoEmpregadoDao extends GenericDao<RiscoEmpregado> {
 
@@ -46,6 +47,13 @@ public class RiscoEmpregadoDao extends GenericDao<RiscoEmpregado> {
 		if (riscoEmpregado.getTriagens() != null) {
 			List<Triagem> triagens = new ArrayList<Triagem>();
 			riscoEmpregado.getTriagens().forEach(t -> {
+				if ( t.getIndicadorSast().getIndicadorAssociadoSasts() != null ) {
+					List<IndicadorAssociadoSast> iass = new ArrayList<IndicadorAssociadoSast>();
+					t.getIndicadorSast().getIndicadorAssociadoSasts().forEach(ias -> {
+						iass.add((IndicadorAssociadoSast) Hibernate.unproxy(ias));
+					});
+					t.getIndicadorSast().setIndicadorAssociadoSasts(iass);
+				}
 				triagens.add((Triagem) Hibernate.unproxy(t));
 			});
 			riscoEmpregado.setTriagens(triagens);

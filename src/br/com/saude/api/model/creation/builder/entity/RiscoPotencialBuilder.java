@@ -13,6 +13,7 @@ public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, 
 	private Function<Map<String,RiscoPotencial>,RiscoPotencial> loadRiscoEmpregados;
 	private Function<Map<String,RiscoPotencial>,RiscoPotencial> loadRiscoEmpregadosSimples;
 	private Function<Map<String,RiscoPotencial>,RiscoPotencial> loadEquipes;
+	private Function<Map<String,RiscoPotencial>,RiscoPotencial> loadAcoes;
 	
 	public static RiscoPotencialBuilder newInstance(RiscoPotencial risco) {
 		return new RiscoPotencialBuilder(risco);
@@ -62,6 +63,17 @@ public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, 
 			
 			return riscos.get("destino");
 		};
+		
+		this.loadAcoes = riscos -> {
+			if(riscos.get("origem").getRiscoEmpregados() != null)
+				riscos.get("destino").setRiscoEmpregados(RiscoEmpregadoBuilder
+						.newInstance(riscos.get("origem").getRiscoEmpregados())
+						.loadAcoes()
+						.getEntityList());
+			
+			return riscos.get("destino");
+		};
+		
 	}
 	
 	public RiscoPotencialBuilder loadRiscoEmpregados() {
@@ -74,6 +86,10 @@ public class RiscoPotencialBuilder extends GenericEntityBuilder<RiscoPotencial, 
 	
 	public RiscoPotencialBuilder loadEquipes() {
 		return (RiscoPotencialBuilder) this.loadProperty(this.loadEquipes);
+	}
+	
+	public RiscoPotencialBuilder loadAcoes() {
+		return (RiscoPotencialBuilder) this.loadProperty(this.loadAcoes);
 	}
 
 	@Override
