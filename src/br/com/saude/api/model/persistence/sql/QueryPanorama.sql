@@ -1,4 +1,4 @@
-select gerencia,matricula,nome,mes_convocacao,base,aso_anterior,realizacao_pre_clinico,aso_atual,situacao_aso,
+select id,gerencia,matricula,nome,mes_convocacao,base,aso_anterior,realizacao_pre_clinico,aso_atual,situacao_aso,
 	CASE situacao_aso
 	WHEN 'PERIÓDICO REALIZADO'
 	THEN CASE WHEN date_trunc('day', aso_atual) <= date_trunc('day', aso_anterior_validade)

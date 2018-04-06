@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class PanoramaDto {
 
+	private int id;
 	private String gerencia;
 	private String matricula;
 	private String nome;
@@ -18,6 +19,13 @@ public class PanoramaDto {
 	private String gerenciaPrimeiraLinha;
 	private String statusPreClinico;
 	
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getGerencia() {
 		return gerencia;
 	}
