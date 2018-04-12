@@ -28,6 +28,8 @@ public class RegraAtendimentoEquipe {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Equipe equipe;
 	
+	private boolean acolhimento;
+	
 	@OneToMany(mappedBy="regraAtendimentoEquipe", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<RegraAtendimentoEquipeRequisito> regraAtendimentoEquipeRequisitos;
 	
@@ -74,4 +76,13 @@ public class RegraAtendimentoEquipe {
 	public void setVersion(long version) {
 		this.version = version;
 	}
+
+	public boolean isAcolhimento() {
+		return acolhimento;
+	}
+
+	public void setAcolhimento(boolean acolhimento) {
+		this.acolhimento = acolhimento;
+	}
+	
 }
