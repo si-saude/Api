@@ -44,6 +44,8 @@ public class RiscoEmpregado {
 	@Transient
 	private String statusRPSat;
 	
+	private boolean ativo;
+	
 	@Version
 	private long version;
 
@@ -109,6 +111,14 @@ public class RiscoEmpregado {
 
 	public void setData(Date data) {
 		this.data = data;
+	}
+	
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
 	}
 
 	public String getStatus() {

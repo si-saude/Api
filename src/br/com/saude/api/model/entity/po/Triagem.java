@@ -47,7 +47,7 @@ public class Triagem {
 	@Size(max = 2048, message="Tamanho máximo para Justificativa: 2048")
 	private String justificativa;
 	
-	@OneToMany(mappedBy="triagem", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy="triagem", fetch=FetchType.LAZY, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private List<Acao> acoes;
 	
 	@Version

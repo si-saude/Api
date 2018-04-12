@@ -6,6 +6,15 @@ public class TriagemFilter extends GenericFilter {
 
 	private RiscoEmpregadoFilter riscoEmpregado;
 	private EquipeFilter equipeAbordagem;
+	private IndicadorSastFilter indicadorSast;
+
+	public IndicadorSastFilter getIndicadorSast() {
+		return indicadorSast;
+	}
+
+	public void setIndicadorSast(IndicadorSastFilter indicadorSast) {
+		this.indicadorSast = indicadorSast;
+	}
 
 	public EquipeFilter getEquipeAbordagem() {
 		return equipeAbordagem;

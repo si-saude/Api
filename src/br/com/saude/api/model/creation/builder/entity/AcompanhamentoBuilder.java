@@ -3,10 +3,10 @@ package br.com.saude.api.model.creation.builder.entity;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
-import br.com.saude.api.generic.GenericFilter;
+import br.com.saude.api.model.entity.filter.AcompanhamentoFilter;
 import br.com.saude.api.model.entity.po.Acompanhamento;
 
-public class AcompanhamentoBuilder extends GenericEntityBuilder<Acompanhamento, GenericFilter> {
+public class AcompanhamentoBuilder extends GenericEntityBuilder<Acompanhamento, AcompanhamentoFilter> {
 
 	public static AcompanhamentoBuilder newInstance(Acompanhamento acompanhamento) {
 		return new AcompanhamentoBuilder(acompanhamento);
@@ -41,7 +41,7 @@ public class AcompanhamentoBuilder extends GenericEntityBuilder<Acompanhamento, 
 	}
 
 	@Override
-	public Acompanhamento cloneFromFilter(GenericFilter filter) {
+	public Acompanhamento cloneFromFilter(AcompanhamentoFilter filter) {
 		return null;
 	}
 }

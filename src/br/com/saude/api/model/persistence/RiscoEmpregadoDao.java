@@ -10,7 +10,11 @@ import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.Triagem;
+import br.com.saude.api.model.entity.po.Atendimento;
+import br.com.saude.api.model.entity.po.Diagnostico;
+import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.IndicadorAssociadoSast;
+import br.com.saude.api.model.entity.po.Intervencao;
 
 public class RiscoEmpregadoDao extends GenericDao<RiscoEmpregado> {
 
@@ -33,7 +37,12 @@ public class RiscoEmpregadoDao extends GenericDao<RiscoEmpregado> {
 			riscoEmpregado = loadTriagens(riscoEmpregado);
 			return riscoEmpregado;
 		};
-
+		
+		this.functionLoadAll = riscoEmpregado -> {
+			riscoEmpregado = loadRiscoPotencial(riscoEmpregado);
+			riscoEmpregado = loadTriagensAll(riscoEmpregado);
+			return riscoEmpregado;
+		};
 	}
 	
 	private RiscoEmpregado loadRiscoPotencial(RiscoEmpregado riscoEmpregado) {
@@ -62,6 +71,38 @@ public class RiscoEmpregadoDao extends GenericDao<RiscoEmpregado> {
 		return riscoEmpregado;
 	}
 	
+	private RiscoEmpregado loadTriagensAll(RiscoEmpregado riscoEmpregado) {
+		if (riscoEmpregado.getTriagens() != null) {
+			List<Triagem> triagens = new ArrayList<Triagem>();
+			riscoEmpregado.getTriagens().forEach(t -> {
+				if ( t.getIndicadorSast().getIndicadorAssociadoSasts() != null ) {
+					List<IndicadorAssociadoSast> iass = new ArrayList<IndicadorAssociadoSast>();
+					t.getIndicadorSast().getIndicadorAssociadoSasts().forEach(ias -> {
+						iass.add((IndicadorAssociadoSast) Hibernate.unproxy(ias));
+					});
+					t.getIndicadorSast().setIndicadorAssociadoSasts(iass);
+				}
+				
+				if(t.getAtendimento() != null)
+					t.setAtendimento((Atendimento) Hibernate.unproxy(t.getAtendimento()));
+				
+				if(t.getDiagnostico() != null)
+					t.setDiagnostico((Diagnostico) Hibernate.unproxy(t.getDiagnostico()));
+				
+				if(t.getEquipeAbordagem() != null)
+					t.setEquipeAbordagem((Equipe) Hibernate.unproxy(t.getEquipeAbordagem()));
+				
+				if(t.getIntervencao() != null)
+					t.setIntervencao((Intervencao) Hibernate.unproxy(t.getIntervencao()));
+				
+				triagens.add((Triagem) Hibernate.unproxy(t));
+			});
+			riscoEmpregado.setTriagens(triagens);
+		}
+		
+		return riscoEmpregado;
+	}
+	
 	@Override
 	public PagedList<RiscoEmpregado> getList(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder, this.functionLoad);
@@ -72,4 +113,7 @@ public class RiscoEmpregadoDao extends GenericDao<RiscoEmpregado> {
 		return super.getById(id, this.functionLoad);
 	}
 	
+	public RiscoEmpregado getByIdLoadAll(Object id) throws Exception {
+		return super.getById(id, this.functionLoadAll);
+	}
 }

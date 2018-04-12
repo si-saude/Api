@@ -23,8 +23,8 @@ public class NotificacaoDao extends GenericDao<Notificacao>{
 	protected void initializeFunctions() {
 		this.functionLoadAll = notificacao -> {
 			
-			if(notificacao.getUsuario() != null)
-				Hibernate.initialize(notificacao.getUsuario());
+			if(notificacao.getEquipe() != null)
+				Hibernate.initialize(notificacao.getEquipe());
 			
 			return notificacao;
 		};

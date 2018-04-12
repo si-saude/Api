@@ -53,6 +53,15 @@ implements GenericService<RiscoEmpregado, RiscoEmpregadoFilter>{
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-to-copy")
+	public Response getListToCopy(RiscoEmpregadoFilter filter) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return Response.ok(getBo().getListToCopy(filter).getGenericPagedList()).build();
+	}
 
 	@Override
 	@POST

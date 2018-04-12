@@ -24,6 +24,7 @@ public class TriagemExampleBuilder extends GenericExampleBuilder<Triagem, Triage
 		addId();
 		addRiscoEmpregado();
 		addEquipeAbordagem();
+		addIndicadorSast();
 		
 		this.entity.setIndice(0);
 	}
@@ -51,6 +52,14 @@ public class TriagemExampleBuilder extends GenericExampleBuilder<Triagem, Triage
 			CriteriaExample criteriaExample = EquipeExampleBuilder
 					.newInstance(this.filter.getEquipeAbordagem()).getCriteriaExample();
 			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("equipeAbordagem", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addIndicadorSast() throws InstantiationException, IllegalAccessException {
+		if (this.filter.getIndicadorSast() != null) {
+			CriteriaExample criteriaExample = IndicadorSastExampleBuilder
+					.newInstance(this.filter.getIndicadorSast()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("indicadorSast", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
 }

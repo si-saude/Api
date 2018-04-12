@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.hibernate.proxy.HibernateProxy;
+
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.TriagemFilter;
+import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Triagem;
 
 public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> {
@@ -105,6 +108,11 @@ public class TriagemBuilder extends GenericEntityBuilder<Triagem,TriagemFilter> 
 		
 		if( triagem.getDiagnostico() != null)
 			cloneTriagem.setDiagnostico(DiagnosticoBuilder.newInstance(triagem.getDiagnostico()).getEntity());
+		
+		if( triagem.getAtendimento() != null && !(triagem.getAtendimento() instanceof HibernateProxy)) {
+			cloneTriagem.setAtendimento(new Atendimento());
+			cloneTriagem.getAtendimento().setId(triagem.getAtendimento().getId());
+		}
 		
 		return cloneTriagem;
 	}

@@ -1,5 +1,8 @@
 package br.com.saude.api.model.business;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericBo;
@@ -9,8 +12,10 @@ import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.RiscoPotencialExampleBuilder;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
+import br.com.saude.api.model.entity.po.Notificacao;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Servico;
+import br.com.saude.api.model.entity.po.Acompanhamento;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
@@ -54,14 +59,40 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	}
 	
 	public PagedList<RiscoPotencial> getListLoadAll(RiscoPotencialFilter filter) throws Exception {
-		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), this.functionLoadAcoes);
+		PagedList<RiscoPotencial> riscos = super.getList(getDao().
+				getListLoadAll(getExampleBuilder(filter).example()), this.functionLoadAcoes);
+		if ( riscos.getTotal() > 0 )
+			riscos.getList().sort(new Comparator<RiscoPotencial>() {
+				@Override
+				public int compare(RiscoPotencial o1, RiscoPotencial o2) {
+					try {
+						return new Double(o2.getValor()).compareTo(new Double(o1.getValor()));
+					} catch (Exception e) {
+						e.printStackTrace();
+						return 0;
+					}
+				}
+			});
+		
+		return riscos;
 	}
 
 	@Override
 	public RiscoPotencial save(RiscoPotencial riscoPotencial) throws Exception {
 		
 		if ( riscoPotencial.getRiscoEmpregados() != null && riscoPotencial.getRiscoEmpregados().size() > 0 ) {
-			riscoPotencial.getRiscoEmpregados().forEach(rE -> { 
+			riscoPotencial.getRiscoEmpregados().forEach(rE -> {
+				if ( rE.getId() == 0 ) {
+					riscoPotencial.getRiscoEmpregados().stream().
+						filter(r -> {
+							if ( r.getEquipe().getId() == rE.getEquipe().getId() &&
+									r.isAtivo() )
+								return true;
+							return false;
+							}).findFirst().get().setAtivo(false);
+					rE.setAtivo(true);
+				}
+				
 				rE.setRiscoPotencial(riscoPotencial);
 				
 				if ( rE.getTriagens() != null && rE.getTriagens().size() > 0 ) {
@@ -114,6 +145,71 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 									a.getTarefa().setEquipe(t.getEquipeAbordagem());
 									a.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
 									a.getTarefa().setServico(servico);
+								}
+							});
+					});
+			});			
+		}
+		
+		RiscoPotencial risco = save(riscoPotencial);
+		
+		if(riscoPotencial.getAcoesDelete() != null) {
+			riscoPotencial.getAcoesDelete().forEach(a -> {
+				try {
+					AcaoBo.getInstance().delete(a.getId());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+		}
+		
+		return risco;
+	}
+	
+	public RiscoPotencial saveAcompanhamentos(RiscoPotencial riscoPotencial) throws Exception {
+		Map<Integer, Boolean> flagAcoes = new HashMap<Integer, Boolean>();
+		
+		if(riscoPotencial.getRiscoEmpregados() != null) {
+			riscoPotencial.getRiscoEmpregados().forEach(r -> {
+				if(r.getTriagens() != null)
+					r.getTriagens().forEach(t -> {
+						if(t.getAcoes() != null)
+							t.getAcoes().forEach(a->{
+								if ( a.getAcompanhamentos() != null ) {
+									a.getAcompanhamentos().forEach(ac -> {
+										Acompanhamento acomp = null;
+										
+										if ( ac.getId() > 0 )
+											try {
+												acomp = AcompanhamentoBo.getInstance().getById(ac.getId());
+											} catch (Exception e1) {
+												e1.printStackTrace();
+											}
+										
+										if ( ( ac.getId() == 0 ) || !ac.getDescricao().equals(acomp.getDescricao()) ) {
+											if ( flagAcoes.containsKey(a.getId()) && flagAcoes.get(a.getId()) ) return;
+											
+											flagAcoes.put(a.getId(), true);
+											
+											Notificacao notificacao = new Notificacao();
+											if ( a.getDetalhe().length() < 151 )
+												notificacao.setDescricao("Houve mudança nos acompanhamentos da seguinte ação: " 
+														+ a.getDetalhe());
+											else notificacao.setDescricao("Houve mudança nos acompanhamentos da seguinte ação: " 
+													+ a.getDetalhe().charAt(147) + "...");
+											
+											if ( riscoPotencial.getProfissional().getEquipe().getId() == 
+													riscoPotencial.getEquipeResponsavel().getId() )
+												notificacao.setEquipe( r.getEquipe() );
+											else notificacao.setEquipe( riscoPotencial.getEquipeResponsavel() );
+											
+											try {
+												NotificacaoBo.getInstance().save(notificacao);
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+										} 
+									});
 								}
 							});
 					});

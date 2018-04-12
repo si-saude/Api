@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 import javax.persistence.CascadeType;
@@ -71,6 +72,12 @@ public class RiscoPotencial {
 	@Transient
 	private String statusRPSat;
 	
+	@Transient
+	private Profissional profissional;
+	
+	@Transient
+	private List<Acao> acoesDelete;
+	
 	@Version
 	private long version;
 
@@ -120,8 +127,11 @@ public class RiscoPotencial {
 			
 			this.riscosInterdiciplinares = new ArrayList<RiscoEmpregado>();
 			
+			List<RiscoEmpregado> riscosAtivos = this.riscoEmpregados.stream().filter(r->
+					r.isAtivo()).collect(Collectors.toList());
+			
 			int qtd = 0;
-			for(RiscoEmpregado rE : this.riscoEmpregados) {
+			for(RiscoEmpregado rE : riscosAtivos) {
 				
 				if(rE.getTriagens() == null) {
 					this.riscosInterdiciplinares = null;
@@ -138,7 +148,7 @@ public class RiscoPotencial {
 				}
 			}
 			
-			for(RiscoEmpregado riscoEmpregado : this.riscoEmpregados) {
+			for(RiscoEmpregado riscoEmpregado : riscosAtivos) {
 				
 				riscoEmpregado = RiscoEmpregadoBo.getInstance().getByIdAll(riscoEmpregado.getId());
 				
@@ -160,7 +170,7 @@ public class RiscoPotencial {
 							//OBTER A TRIAGEM CUJO CÓDIGO DO INDICADOR SEJA IGUAL AO CÓDIGO ASSOCIADO
 							Triagem associada = null;
 							
-							for(RiscoEmpregado rE : this.riscoEmpregados) {
+							for(RiscoEmpregado rE : riscosAtivos) {
 								for(Triagem t : rE.getTriagens()) {
 									if(t.getIndicadorSast().getCodigo().equals(indicadorAssociado.getCodigo())) {
 										associada = t;									
@@ -279,4 +289,21 @@ public class RiscoPotencial {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	public Profissional getProfissional() {
+		return profissional;
+	}
+	
+	public void setProfissional(Profissional profissional) {
+		this.profissional = profissional;
+	}
+
+	public List<Acao> getAcoesDelete() {
+		return acoesDelete;
+	}
+
+	public void setAcoesDelete(List<Acao> acoesDelete) {
+		this.acoesDelete = acoesDelete;
+	}
+	
 }

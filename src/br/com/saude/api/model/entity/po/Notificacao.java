@@ -17,9 +17,9 @@ public class Notificacao {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar o Usuário da Notificação.")
+	@NotNull(message="É necessário informar a Equipe da Notificação.")
 	@ManyToOne(fetch=FetchType.LAZY)
-	private Usuario usuario;
+	private Equipe equipe;
 	
 	@NotNull(message="É necessário informar a Descrição da Notificação.")
 	@Size(max = 1024, message="Tamanho máximo para Descrição: 1024")
@@ -36,12 +36,12 @@ public class Notificacao {
 		this.id = id;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	public Equipe getEquipe() {
+		return equipe;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setEquipe(Equipe equipe) {
+		this.equipe = equipe;
 	}
 
 	public String getDescricao() {
