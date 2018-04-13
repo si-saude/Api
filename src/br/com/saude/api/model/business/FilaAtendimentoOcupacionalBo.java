@@ -457,6 +457,12 @@ public class FilaAtendimentoOcupacionalBo
 					atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().setFimAgendamento(r.getFimAgendamento());
 				}
 				
+				if(atendimento.getId() == 0) {
+					atendimento.getFilaEsperaOcupacional().setRiscoPotencial(
+							RiscoPotencialBo.getInstance()
+								.getById(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId()));
+				}
+				
 				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares().size() > 0 &&
@@ -476,8 +482,8 @@ public class FilaAtendimentoOcupacionalBo
 						atendimentoAux = obterTodasTriagens(atendimento, atendimentoAux);
 					}else
 						atendimentoAux.setTriagensTodosAtendimentos(atendimento.getTriagensTodosAtendimentos());
-				}else if(atendimentoAux.getTriagensTodosAtendimentos() == null )
-					atendimentoAux = obterTodasTriagens(atendimentoAux, atendimentoAux);
+				}/*else if(atendimentoAux.getTriagensTodosAtendimentos() == null )
+					atendimentoAux = obterTodasTriagens(atendimentoAux, atendimentoAux);*/
 				
 				atendimentoAux.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().sort(new Comparator<RespostaFichaColeta>() {
 					@Override
@@ -538,11 +544,9 @@ public class FilaAtendimentoOcupacionalBo
 					.setEquipes(new ArrayList<Equipe>());
 				
 				for(Triagem t : triagens.getList()){
-					if(t.getEquipeAbordagem() != null && t.getEquipeAbordagem().getId() > 0 &&
-							t.getIndice() > -1 && t.getIndice() < 3 && !atendimentoAux.getFilaEsperaOcupacional()
-							.getRiscoPotencial().getEquipes().contains(t.getEquipeAbordagem()))
-						atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial()
-							.getEquipes().add(t.getEquipeAbordagem());
+					if(t.getEquipeAbordagem() != null && t.getEquipeAbordagem().getId() > 0 && 
+							!atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes().contains(t.getEquipeAbordagem()))
+						atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes().add(t.getEquipeAbordagem());
 				}
 			}
 		}

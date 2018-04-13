@@ -27,6 +27,8 @@ public class RiscoEmpregadoExampleBuilder extends GenericExampleBuilder<RiscoEmp
 		addProfissional();
 		addData();
 		addStatus();
+		addAtivo();
+		addEquipe();
 	}
 
 	@Override
@@ -59,8 +61,20 @@ public class RiscoEmpregadoExampleBuilder extends GenericExampleBuilder<RiscoEmp
 		}
 	}
 	
+	private void addEquipe() throws InstantiationException, IllegalAccessException {
+		if (this.filter.getEquipe() != null) {
+			CriteriaExample criteriaExample = EquipeExampleBuilder
+					.newInstance(this.filter.getEquipe()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("equipe", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
 	private void addStatus() {
 		if(this.filter.getStatus()!= null)
 			this.entity.setStatus(Helper.filterLike(this.filter.getStatus()));
+	}
+	
+	protected void addAtivo() {
+		this.entity.setAtivo(this.addBoolean("ativo", this.filter.getAtivo()));
 	}
 }

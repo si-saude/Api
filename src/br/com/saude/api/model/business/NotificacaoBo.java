@@ -25,7 +25,7 @@ NotificacaoBuilder, NotificacaoExampleBuilder> {
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadUsuario();
+			return builder.loadEquipe();
 		};
 	}
 	

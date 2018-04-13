@@ -142,6 +142,18 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				r.setVersion(resposta.get().getVersion());
 		});
 		
+		List<RiscoEmpregado> riscos = a.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados(); 
+		
+		if(riscos != null)
+			for(int i = 0; i < riscos.size(); i++) {
+				riscos.set(i, RiscoEmpregadoBo.getInstance().getByIdAll(riscos.get(i).getId()));
+				riscos.get(i).setRiscoPotencial(a.getFilaEsperaOcupacional().getRiscoPotencial());
+				
+				if(riscos.get(i).getTriagens() != null)
+					for(Triagem t : riscos.get(i).getTriagens())
+						t.setRiscoEmpregado(riscos.get(i));
+			}
+		
 		if(a.getTriagens() != null)
 			a.getTriagens().forEach(t->{
 				if(t.getDiagnostico() != null && t.getDiagnostico().getId() == 0)
@@ -371,6 +383,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 			risco.setProfissional(atendimento.getFilaAtendimentoOcupacional().getProfissional());
 			risco.setEquipe(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe());
 			risco.setTriagens(atendimento.getTriagens());
+			risco.setAtivo(true);
 			risco.setValor(r1);
 			risco.setData(Helper.getToday());
 			risco.setStatus(StatusRiscoEmpregado.getInstance().REALIZADO);

@@ -141,7 +141,7 @@ public class FilaEsperaOcupacionalBo
 		filaFilter.getHorarioCheckin().setTypeFilter(TypeFilter.MAIOR_IGUAL);
 		filaFilter.getHorarioCheckin().setInicio(today);
 		
-		return getList(getDao().getListRefresh(getExampleBuilder(filaFilter).example()), this.functionLoadRefresh);
+		return getList(getDao().getListLoadAll(getExampleBuilder(filaFilter).example()), this.functionLoadAll);
 	}
 	
 	public String checkOut(FilaEsperaOcupacional fila) throws Exception {
@@ -171,6 +171,14 @@ public class FilaEsperaOcupacionalBo
 			if(fila.getStatus().equals(StatusFilaEsperaOcupacional.getInstance().ALMOCO) ||
 					fila.getStatus().equals(StatusFilaEsperaOcupacional.getInstance().AUSENTE)) {
 				fila.setStatus(StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
+				
+				FichaColeta f = fila.getFichaColeta();
+				fila.getFichaColeta().getRespostaFichaColetas().forEach(r->{
+					r.setFicha(f);
+					r.getItens().forEach(i->{
+						i.setResposta(r);
+					});
+				});
 				
 				getDao().save(fila);
 				

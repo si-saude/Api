@@ -10,7 +10,7 @@ import br.com.saude.api.model.entity.po.Notificacao;
 
 public class NotificacaoBuilder extends GenericEntityBuilder<Notificacao, NotificacaoFilter> {
 
-	private Function<Map<String,Notificacao>,Notificacao> loadUsuario;
+	private Function<Map<String,Notificacao>,Notificacao> loadEquipe;
 	
 	private NotificacaoBuilder(List<Notificacao> notificacoes) {
 		super(notificacoes);
@@ -30,19 +30,19 @@ public class NotificacaoBuilder extends GenericEntityBuilder<Notificacao, Notifi
 
 	@Override
 	protected void initializeFunctions() {
-		this.loadUsuario = notificacoes -> {
+		this.loadEquipe = notificacoes -> {
 			
-			if(notificacoes.get("origem").getUsuario() != null )
-				notificacoes.get("destino").setUsuario(UsuarioBuilder
-						.newInstance(notificacoes.get("origem").getUsuario())
+			if(notificacoes.get("origem").getEquipe() != null )
+				notificacoes.get("destino").setEquipe(EquipeBuilder
+						.newInstance(notificacoes.get("origem").getEquipe())
 						.getEntity());
 			
 			return notificacoes.get("destino");
 		};
 	}
 	
-	public NotificacaoBuilder loadUsuario() {
-		return (NotificacaoBuilder) this.loadProperty(this.loadUsuario);
+	public NotificacaoBuilder loadEquipe() {
+		return (NotificacaoBuilder) this.loadProperty(this.loadEquipe);
 	}
 
 	@Override

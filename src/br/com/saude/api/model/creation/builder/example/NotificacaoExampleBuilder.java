@@ -24,7 +24,7 @@ public class NotificacaoExampleBuilder extends GenericExampleBuilder<Notificacao
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addId();
 		addDescricao();
-		addUsuario();
+		addEquipe();
 	}
 
 	@Override
@@ -42,11 +42,11 @@ public class NotificacaoExampleBuilder extends GenericExampleBuilder<Notificacao
 			this.entity.setDescricao(Helper.filterLike(this.filter.getDescricao()));
 	}
 	
-	private void addUsuario() throws InstantiationException, IllegalAccessException {
-		if(this.filter.getUsuario()!=null) {
-			CriteriaExample criteriaExample = UsuarioExampleBuilder
-					.newInstance(this.filter.getUsuario()).getCriteriaExample();
-			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("usuario", criteriaExample, JoinType.INNER_JOIN));
+	private void addEquipe() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getEquipe()!=null) {
+			CriteriaExample criteriaExample = EquipeExampleBuilder
+					.newInstance(this.filter.getEquipe()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("equipe", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
 }

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -36,6 +37,7 @@ public class Acao {
 	private Tarefa tarefa;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
+	@NotNull(message="É necessário informar a Triagem da Ação.")
 	private Triagem triagem;
 	
 	@OneToMany(mappedBy="acao", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)

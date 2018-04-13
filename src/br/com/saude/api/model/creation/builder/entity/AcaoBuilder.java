@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
-import br.com.saude.api.generic.GenericFilter;
+import br.com.saude.api.model.entity.filter.AcaoFilter;
 import br.com.saude.api.model.entity.po.Acao;
 
-public class AcaoBuilder extends GenericEntityBuilder<Acao, GenericFilter> {
+public class AcaoBuilder extends GenericEntityBuilder<Acao, AcaoFilter> {
 	
 	private Function<Map<String,Acao>,Acao> loadAcompanhamentos;
 
@@ -24,7 +24,7 @@ public class AcaoBuilder extends GenericEntityBuilder<Acao, GenericFilter> {
 		super(acao);
 	}
 	
-	private AcaoBuilder(List<Acao> acoes) {
+	protected AcaoBuilder(List<Acao> acoes) {
 		super(acoes);
 	}
 
@@ -60,12 +60,12 @@ public class AcaoBuilder extends GenericEntityBuilder<Acao, GenericFilter> {
 		return newAcao;
 	}
 	
-	@Override
-	public Acao cloneFromFilter(GenericFilter filter) {
-		return null;
-	}
-	
 	public AcaoBuilder loadAcompanhamentos() {
 		return (AcaoBuilder) this.loadProperty(this.loadAcompanhamentos);
+	}
+
+	@Override
+	public Acao cloneFromFilter(AcaoFilter filter) {
+		return null;
 	}
 }
