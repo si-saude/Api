@@ -65,6 +65,17 @@ public class RiscoEmpregadoBo extends
 				}).count() > 0;
 			}).count() > 0;
 	}
+	
+	private boolean existeReavaliacao(long riscoPotencialId, long equipeId) throws Exception {
+		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getById(riscoPotencialId);
+		return riscoPotencial.getRiscoEmpregados().stream().filter(r->{
+					return r.getEquipe().getId() == equipeId && 
+						r.getTriagens().stream().filter(t->{
+							return t.getAcoes().stream().filter(a->a.getStatus()
+									.equals(StatusAcao.getInstance().REAVALIADA)).count() > 0;
+				}).count() > 0;
+			}).count() > 0;
+	}
 
 	public PagedList<RiscoEmpregado> getListToCopy(RiscoEmpregadoFilter filter)
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
@@ -118,6 +129,10 @@ public class RiscoEmpregadoBo extends
 		
 		if(!bloquerReavaliacao(riscoEmpregado.getRiscoPotencial().getId(), riscoEmpregado.getEquipe().getId())) {
 			riscoPotencial.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
+		}
+		
+		if(existeReavaliacao(riscoEmpregado.getRiscoPotencial().getId(), riscoEmpregado.getEquipe().getId())) {
+			throw new Exception("Não é possível prosseguir pois esta ação já foi reavaliada.");
 		}
 		
 		//ALTERAR O STATUS DAS AÇÕES DAS TRIAGENS 
