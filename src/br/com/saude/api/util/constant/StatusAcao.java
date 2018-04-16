@@ -19,4 +19,5 @@ public class StatusAcao extends GenericConstant {
 	public final String ABERTA 					= "ABERTA";
 	public final String EXECUCAO 				= "EXECUÇÃO";
 	public final String ENCERRADA 				= "ENCERRADA";
+	public final String REAVALIADA 				= "REAVALIADA";
 }

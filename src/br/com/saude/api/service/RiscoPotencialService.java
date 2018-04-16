@@ -62,6 +62,20 @@ public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,Ris
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@CustomValidator(validatorClass=RiscoPotencialValidator.class)
+	@Path("/criar-plano")
+	public Response criarPlano(RiscoPotencial riscoPotencial) {
+		try {
+			RiscoPotencialBo.getInstance().criarPlano(riscoPotencial);
+			return Response.ok("Plano criado com sucesso.").build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=RiscoPotencialValidator.class)
 	@Path("/save-acoes")
 	public Response saveAcoes(RiscoPotencial riscoPotencial) {
 		try {

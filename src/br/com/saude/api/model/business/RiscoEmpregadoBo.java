@@ -14,9 +14,12 @@ import br.com.saude.api.model.creation.builder.example.RiscoEmpregadoExampleBuil
 import br.com.saude.api.model.entity.filter.RiscoEmpregadoFilter;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
+import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.RiscoEmpregadoDao;
+import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusRiscoEmpregado;
+import br.com.saude.api.util.constant.StatusRiscoPotencial;
 
 public class RiscoEmpregadoBo extends 
 	GenericBo<RiscoEmpregado, RiscoEmpregadoFilter, RiscoEmpregadoDao, RiscoEmpregadoBuilder, RiscoEmpregadoExampleBuilder> {
@@ -50,10 +53,27 @@ public class RiscoEmpregadoBo extends
 			NoSuchMethodException, SecurityException, Exception {
 		return super.getList(filter, this.functionLoad);
 	}
+	
+	private boolean bloquerReavaliacao(long riscoPotencialId, long equipeId) throws Exception {
+		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getById(riscoPotencialId);
+		return riscoPotencial.getEquipeResponsavel().getId() == equipeId &&
+				riscoPotencial.getRiscoEmpregados().stream().filter(r->{
+					return r.getEquipe().getId() != equipeId && 
+						r.getTriagens().stream().filter(t->{
+							return t.getAcoes().stream().filter(a->a.getStatus()
+									.equals(StatusAcao.getInstance().ENCERRADA)).count() > 0;
+				}).count() > 0;
+			}).count() > 0;
+	}
 
 	public PagedList<RiscoEmpregado> getListToCopy(RiscoEmpregadoFilter filter)
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, Exception {
+		
+		//VERIFICAR SE O RISCO POTENCIAL DEVE SER FINALIZADO
+		if(bloquerReavaliacao(filter.getRiscoPotencial().getId(), filter.getEquipe().getId())) {
+			throw new Exception("Não é possível finalizar a sistematização, pois as demais ações não foram reavaliadas.");
+		}
 		
 		filter.setProfissional(null);
 		
@@ -72,7 +92,7 @@ public class RiscoEmpregadoBo extends
 		risco.setData(Helper.getNow());
 		risco.setAtivo(false);
 		risco.setTriagens(triagens);
-		risco.setStatus(StatusRiscoEmpregado.getInstance().REALIZADO);
+		risco.setStatus(StatusRiscoEmpregado.getInstance().REAVALIADO);
 		risco.setId(0);
 		risco.setValor(0);
 		
@@ -92,6 +112,28 @@ public class RiscoEmpregadoBo extends
 	@Override
 	public RiscoEmpregado save(RiscoEmpregado riscoEmpregado) throws Exception {
 		riscoEmpregado = gerarRisco(riscoEmpregado);
+		
+		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getById(riscoEmpregado
+				.getRiscoPotencial().getId());
+		
+		if(!bloquerReavaliacao(riscoEmpregado.getRiscoPotencial().getId(), riscoEmpregado.getEquipe().getId())) {
+			riscoPotencial.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
+		}
+		
+		//ALTERAR O STATUS DAS AÇÕES DAS TRIAGENS 
+		RiscoEmpregado aux = riscoEmpregado;
+		riscoPotencial.getRiscoEmpregados().stream().filter(r->r.getEquipe().getId() == aux
+				.getEquipe().getId()).forEach(r->{
+					r.getTriagens().forEach(t->{
+						t.getAcoes().forEach(a->{
+							a.setStatus(StatusAcao.getInstance().REAVALIADA);
+						});
+					});
+				});
+		
+		riscoPotencial.getRiscoEmpregados().add(riscoEmpregado);
+		riscoEmpregado.setRiscoPotencial(riscoPotencial);
+		RiscoPotencialBo.getInstance().save(riscoPotencial);
 		
 		return super.save(riscoEmpregado);
 	}

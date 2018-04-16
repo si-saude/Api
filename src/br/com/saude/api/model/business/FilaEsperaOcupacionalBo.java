@@ -597,7 +597,7 @@ public class FilaEsperaOcupacionalBo
 									
 									//SE FOR ACOLHIMENTO, NÃO LEVAR EM CONSIDERAÇÃO OS ATENDIMENTOS
 									//CUJA TAREFA ESTEJA EM EXECUÇÃO
-									if(rE.getEquipe().getAbreviacao().equals("ACO") && listAtendimento.stream()
+									if(rE.isAcolhimento() && listAtendimento.stream()
 											.filter(a->a.getTarefa().getStatus().equals(
 													StatusTarefa.getInstance().EXECUCAO))
 											.count() > 0 ) {

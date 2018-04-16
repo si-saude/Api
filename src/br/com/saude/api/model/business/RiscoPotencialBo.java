@@ -18,6 +18,7 @@ import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.entity.po.Acompanhamento;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
 import br.com.saude.api.util.constant.GrupoServico;
+import br.com.saude.api.util.constant.StatusRiscoEmpregado;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusTarefa;
 
@@ -75,6 +76,18 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 			});
 		
 		return riscos;
+	}
+	
+	public RiscoPotencial criarPlano(RiscoPotencial riscoPotencial) throws Exception {
+		
+		riscoPotencial.setStatus(StatusRiscoPotencial.getInstance().PLANEJAMENTO);
+		
+		if(riscoPotencial.getRiscoEmpregados() != null)
+			riscoPotencial.getRiscoEmpregados().forEach(r->{
+				r.setStatus(StatusRiscoEmpregado.getInstance().VALIDADO);
+			});
+		
+		return this.save(riscoPotencial);
 	}
 
 	@Override
