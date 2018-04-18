@@ -44,6 +44,20 @@ implements GenericService<RiscoEmpregado, RiscoEmpregadoFilter>{
 		}
 	}
 	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=RiscoEmpregadoValidator.class)
+	@Path("/save-reavaliacao")
+	public Response saveReavaliacao(RiscoEmpregado riscoEmpregado) {
+		try {
+			RiscoEmpregadoBo.getInstance().saveReavaliacao(riscoEmpregado);
+			return Response.ok("Salvo com sucesso.").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

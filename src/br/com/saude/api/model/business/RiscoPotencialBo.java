@@ -56,7 +56,8 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	}
 	
 	public RiscoPotencial getByIdLoadAcoes(Object id) throws Exception {
-		return getByEntity(getDao().getByIdLoadAcoes(id), this.functionLoadAcoes);
+		RiscoPotencial r = getByEntity(getDao().getByIdLoadAcoes(id), this.functionLoadAcoes); 
+		return r;
 	}
 	
 	public PagedList<RiscoPotencial> getListLoadAll(RiscoPotencialFilter filter) throws Exception {
@@ -84,10 +85,37 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		
 		if(riscoPotencial.getRiscoEmpregados() != null)
 			riscoPotencial.getRiscoEmpregados().forEach(r->{
-				r.setStatus(StatusRiscoEmpregado.getInstance().VALIDADO);
+				if(r.isAtivo())
+					r.setStatus(StatusRiscoEmpregado.getInstance().VALIDADO);
 			});
 		
 		return this.save(riscoPotencial);
+	}
+	
+	public RiscoPotencial simpleSave(RiscoPotencial riscoPotencial) throws Exception {
+		if ( riscoPotencial.getRiscoEmpregados() != null && riscoPotencial.getRiscoEmpregados().size() > 0 ) {
+			riscoPotencial.getRiscoEmpregados().forEach(rE -> {
+				rE.setRiscoPotencial(riscoPotencial);
+				
+				if ( rE.getTriagens() != null && rE.getTriagens().size() > 0 ) {
+					rE.getTriagens().forEach(t -> { 
+						t.setRiscoEmpregado(rE);
+						if ( t.getAcoes() != null && t.getAcoes().size() > 0 ) {
+							t.getAcoes().forEach(a -> { 
+								a.setTriagem(t);
+								if ( a.getAcompanhamentos() != null && a.getAcompanhamentos().size() > 0 ) {
+									a.getAcompanhamentos().forEach( ac -> ac.setAcao(a));
+								}
+							});
+						}
+					});
+				}
+
+			});
+			
+		}
+		
+		return super.save(riscoPotencial);
 	}
 
 	@Override
@@ -127,6 +155,44 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		}
 		
 		return super.save(riscoPotencial);
+	}
+	
+	public RiscoPotencial saveReavaliacao(RiscoPotencial riscoPotencial) throws Exception {
+		
+		if ( riscoPotencial.getRiscoEmpregados() != null && riscoPotencial.getRiscoEmpregados().size() > 0 ) {
+			riscoPotencial.getRiscoEmpregados().forEach(rE -> {
+				if ( rE.getId() == 0 ) {
+					riscoPotencial.getRiscoEmpregados().stream().
+						filter(r -> {
+							if ( r.getEquipe().getId() == rE.getEquipe().getId() &&
+									r.isAtivo() )
+								return false;
+							return true;
+							}).findFirst().get().setAtivo(false);
+					rE.setAtivo(true);
+				}
+				
+				rE.setRiscoPotencial(riscoPotencial);
+				
+				if ( rE.getTriagens() != null && rE.getTriagens().size() > 0 ) {
+					rE.getTriagens().forEach(t -> { 
+						t.setRiscoEmpregado(rE);
+						if ( t.getAcoes() != null && t.getAcoes().size() > 0 ) {
+							t.getAcoes().forEach(a -> { 
+								a.setTriagem(t);
+								if ( a.getAcompanhamentos() != null && a.getAcompanhamentos().size() > 0 ) {
+									a.getAcompanhamentos().forEach( ac -> ac.setAcao(a));
+								}
+							});
+						}
+					});
+				}
+
+			});
+			
+		}
+		
+		return riscoPotencial;
 	}
 	
 	public RiscoPotencial validar(RiscoPotencial riscoPotencial) throws Exception {

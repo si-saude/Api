@@ -270,7 +270,17 @@ public class FilaEsperaOcupacionalBo
 		PagedList<RiscoPotencial> riscos = RiscoPotencialBo.getInstance().getListLoadAll(riscoFilter);
 		
 		if(riscos.getTotal() > 0) {
-			riscos.getList().forEach(r->r.setAtual(false));
+			riscos.getList().forEach(r-> {
+				r.setAtual(false);
+				r.getRiscoEmpregados().forEach(rE -> {
+					rE.getTriagens().forEach(t -> {
+						t.getAcoes().forEach(a -> {
+							a.setTriagem(t);
+							a.getAcompanhamentos().forEach(ac -> ac.setAcao(a));
+						});
+					});
+				});
+			});
 			RiscoPotencialBo.getInstance().saveList(riscos.getList());
 		}
 		

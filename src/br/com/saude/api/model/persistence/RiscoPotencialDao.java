@@ -117,6 +117,10 @@ public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 							if(tr.getIndicadorSast() != null) {
 								tr.setIndicadorSast((IndicadorSast) Hibernate.unproxy(tr.getIndicadorSast()));
 								
+								if(tr.getIndicadorSast().getEquipe() != null)
+									tr.getIndicadorSast().setEquipe(
+											(Equipe) Hibernate.unproxy(tr.getIndicadorSast().getEquipe()));
+								
 								if(tr.getIndicadorSast().getIndicadorAssociadoSasts() != null) {
 									List<IndicadorAssociadoSast> iS = new ArrayList<IndicadorAssociadoSast>();
 									

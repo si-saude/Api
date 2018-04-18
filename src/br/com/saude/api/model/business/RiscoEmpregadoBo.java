@@ -55,11 +55,13 @@ public class RiscoEmpregadoBo extends
 	}
 	
 	private boolean bloquerReavaliacao(long riscoPotencialId, long equipeId) throws Exception {
-		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getById(riscoPotencialId);
+		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getByIdLoadAcoes(new Integer((int) riscoPotencialId));
 		return riscoPotencial.getEquipeResponsavel().getId() == equipeId &&
 				riscoPotencial.getRiscoEmpregados().stream().filter(r->{
 					return r.getEquipe().getId() != equipeId && 
 						r.getTriagens().stream().filter(t->{
+							if(t.getAcoes() == null)
+								return false;
 							return t.getAcoes().stream().filter(a->a.getStatus()
 									.equals(StatusAcao.getInstance().ENCERRADA)).count() > 0;
 				}).count() > 0;
@@ -67,13 +69,14 @@ public class RiscoEmpregadoBo extends
 	}
 	
 	private boolean existeReavaliacao(long riscoPotencialId, long equipeId) throws Exception {
-		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getById(riscoPotencialId);
-		return riscoPotencial.getRiscoEmpregados().stream().filter(r->{
-					return r.getEquipe().getId() == equipeId && 
-						r.getTriagens().stream().filter(t->{
-							return t.getAcoes().stream().filter(a->a.getStatus()
-									.equals(StatusAcao.getInstance().REAVALIADA)).count() > 0;
-				}).count() > 0;
+		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getByIdLoadAcoes(new Integer((int) riscoPotencialId));
+		return riscoPotencial.getRiscoEmpregados().stream().filter(r -> {
+			return r.getEquipe().getId() == equipeId &&
+					r.getTriagens().stream().filter(t -> {
+						if ( t.getAcoes() == null || t.getAcoes().size() == 0 ) return false;
+						return t.getAcoes().stream().filter(a -> a.getStatus()
+								.equals(StatusAcao.getInstance().REAVALIADA)).count() > 0;
+					}).count() > 0;
 			}).count() > 0;
 	}
 
@@ -120,14 +123,14 @@ public class RiscoEmpregadoBo extends
 		return super.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
 
-	@Override
-	public RiscoEmpregado save(RiscoEmpregado riscoEmpregado) throws Exception {
+	public RiscoEmpregado saveReavaliacao(RiscoEmpregado riscoEmpregado) throws Exception {
 		riscoEmpregado = gerarRisco(riscoEmpregado);
 		
-		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getById(riscoEmpregado
+		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getByIdLoadAcoes(riscoEmpregado
 				.getRiscoPotencial().getId());
 		
-		if(!bloquerReavaliacao(riscoEmpregado.getRiscoPotencial().getId(), riscoEmpregado.getEquipe().getId())) {
+		if((!bloquerReavaliacao(riscoEmpregado.getRiscoPotencial().getId(), riscoEmpregado.getEquipe().getId())) &&
+				riscoPotencial.getEquipeResponsavel().getId() == riscoEmpregado.getEquipe().getId() ) {
 			riscoPotencial.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
 		}
 		
@@ -140,6 +143,7 @@ public class RiscoEmpregadoBo extends
 		riscoPotencial.getRiscoEmpregados().stream().filter(r->r.getEquipe().getId() == aux
 				.getEquipe().getId()).forEach(r->{
 					r.getTriagens().forEach(t->{
+						if ( t.getAcoes() == null || t.getAcoes().size() == 0 ) return;
 						t.getAcoes().forEach(a->{
 							a.setStatus(StatusAcao.getInstance().REAVALIADA);
 						});
@@ -148,9 +152,9 @@ public class RiscoEmpregadoBo extends
 		
 		riscoPotencial.getRiscoEmpregados().add(riscoEmpregado);
 		riscoEmpregado.setRiscoPotencial(riscoPotencial);
-		RiscoPotencialBo.getInstance().save(riscoPotencial);
+		RiscoPotencialBo.getInstance().simpleSave(riscoPotencial);
 		
-		return super.save(riscoEmpregado);
+		return riscoEmpregado;
 	}
 	
 	private RiscoEmpregado gerarRisco(RiscoEmpregado riscoEmpregado) {
