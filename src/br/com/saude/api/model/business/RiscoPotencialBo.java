@@ -18,6 +18,7 @@ import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.entity.po.Acompanhamento;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
 import br.com.saude.api.util.constant.GrupoServico;
+import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusRiscoEmpregado;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusTarefa;
@@ -97,6 +98,20 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		//DEFINIR EQUIPE RESPONSÁVEL
 		riscoAux.setRiscosInterdiciplinares(null);
 		riscoAux.setEquipeResponsavel(riscoAux.getRiscosInterdiciplinares().get(0).getEquipe());
+		
+		//ALTERAR O STATUS DAS AÇÕES
+		riscoAux.getRiscoEmpregados().forEach(r->{
+			if(r.isAtivo() && r.getTriagens() != null) {
+				r.getTriagens().forEach(t-> {
+					if(t.getAcoes() != null) {
+						t.getAcoes().forEach(a->{
+							if(a.getStatus().equals(StatusAcao.getInstance().REAVALIADA))
+								a.setStatus(StatusAcao.getInstance().VALIDADA);
+						});
+					}
+				});
+			}
+		});
 		
 		return simpleSave(riscoAux);
 	}
