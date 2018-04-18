@@ -305,5 +305,8 @@ public class RiscoPotencial {
 	public void setAcoesDelete(List<Acao> acoesDelete) {
 		this.acoesDelete = acoesDelete;
 	}
-	
+
+	public void setRiscosInterdiciplinares(List<RiscoEmpregado> riscosInterdiciplinares) {
+		this.riscosInterdiciplinares = riscosInterdiciplinares;
+	}
 }

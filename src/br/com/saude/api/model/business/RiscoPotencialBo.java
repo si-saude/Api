@@ -81,15 +81,24 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	
 	public RiscoPotencial criarPlano(RiscoPotencial riscoPotencial) throws Exception {
 		
-		riscoPotencial.setStatus(StatusRiscoPotencial.getInstance().PLANEJAMENTO);
+		RiscoPotencial riscoAux = getByIdLoadAcoes(riscoPotencial.getId());
 		
-		if(riscoPotencial.getRiscoEmpregados() != null)
-			riscoPotencial.getRiscoEmpregados().forEach(r->{
-				if(r.isAtivo())
-					r.setStatus(StatusRiscoEmpregado.getInstance().VALIDADO);
+		riscoAux.setStatus(StatusRiscoPotencial.getInstance().PLANEJAMENTO);
+		
+		if(riscoPotencial.getRiscoEmpregados() != null && riscoAux.getRiscoEmpregados() != null)
+			riscoAux.getRiscoEmpregados().forEach(r->{
+				r.setStatus(StatusRiscoEmpregado.getInstance().VALIDADO);
+				r.setAtivo(riscoPotencial.getRiscoEmpregados().stream().filter(rE->rE.getId() == r.getId())
+					.findFirst().get().isAtivo());
 			});
+		else
+			throw new Exception("Não é possível prosseguir, pois não há Riscos Empregado.");
 		
-		return this.save(riscoPotencial);
+		//DEFINIR EQUIPE RESPONSÁVEL
+		riscoAux.setRiscosInterdiciplinares(null);
+		riscoAux.setEquipeResponsavel(riscoAux.getRiscosInterdiciplinares().get(0).getEquipe());
+		
+		return simpleSave(riscoAux);
 	}
 	
 	public RiscoPotencial simpleSave(RiscoPotencial riscoPotencial) throws Exception {
