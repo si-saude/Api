@@ -122,6 +122,15 @@ public class RiscoEmpregadoBo extends
 	public RiscoEmpregado getByIdAll(Object id) throws Exception {
 		return super.getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
+	
+	@Override
+	public RiscoEmpregado save(RiscoEmpregado riscoEmpregado) throws IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		
+		riscoEmpregado.getTriagens().forEach(t -> t.setRiscoEmpregado(riscoEmpregado));
+		
+		return super.save(riscoEmpregado);
+	}
 
 	public RiscoEmpregado saveReavaliacao(RiscoEmpregado riscoEmpregado) throws Exception {
 		riscoEmpregado = gerarRisco(riscoEmpregado);
