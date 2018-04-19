@@ -56,28 +56,39 @@ public class RiscoEmpregadoBo extends
 	
 	private boolean bloquerReavaliacao(long riscoPotencialId, long equipeId) throws Exception {
 		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getByIdLoadAcoes(new Integer((int) riscoPotencialId));
-		return riscoPotencial.getEquipeResponsavel().getId() == equipeId && 
-				riscoPotencial.getRiscoEmpregados().stream().filter(r->{
+		
+		if(riscoPotencial.getEquipeResponsavel().getId() == equipeId) {
+			if( riscoPotencial.getRiscoEmpregados().stream().filter(r->{
 					return r.getEquipe().getId() != equipeId && r.isAtivo() &&
-						r.getTriagens().stream().filter(t->{
-							if(t.getAcoes() == null)
-								return false;
-							return t.getAcoes().stream().filter(a->a.getStatus()
-									.equals(StatusAcao.getInstance().ENCERRADA)).count() > 0;
-				}).count() > 0;
-			}).count() > 0;
+							r.getTriagens().stream().filter(t->{
+								if(t.getPrazo() != null && (t.getAcoes() == null || t.getAcoes().size() == 0))
+									return true;
+								return t.getAcoes().stream().filter(a->a.getStatus()
+										.equals(StatusAcao.getInstance().ENCERRADA)).count() > 0;
+							}).count() > 0;
+					}).count() == 0)
+				return false;
+			else
+				throw new Exception("Não é possível prosseguir pois as demais reavaliações não foram realizadas.");
+		}
+		
+		return false;
 	}
 	
 	private boolean existeReavaliacao(long riscoPotencialId, long equipeId) throws Exception {
 		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance().getByIdLoadAcoes(new Integer((int) riscoPotencialId));
-		return riscoPotencial.getRiscoEmpregados().stream().filter(r -> {
-			return r.getEquipe().getId() == equipeId && r.isAtivo() &&
-					r.getTriagens().stream().filter(t -> {
-						if ( t.getAcoes() == null || t.getAcoes().size() == 0 ) return false;
-						return t.getAcoes().stream().filter(a -> a.getStatus()
-								.equals(StatusAcao.getInstance().REAVALIADA)).count() > 0;
-					}).count() > 0;
-			}).count() > 0;
+		for(RiscoEmpregado r : riscoPotencial.getRiscoEmpregados()){
+			if(r.getEquipe().getId() == equipeId && r.isAtivo()) {
+				for(Triagem t : r.getTriagens()) {
+					if (t.getPrazo() != null && (t.getAcoes() == null || t.getAcoes().size() == 0))
+						throw new Exception("Não é possível reavaliar pois não há ações.");
+					else if (t.getAcoes().stream().filter(a -> a.getStatus()
+								.equals(StatusAcao.getInstance().REAVALIADA)).count() > 0)
+						return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public PagedList<RiscoEmpregado> getListToCopy(RiscoEmpregadoFilter filter)
