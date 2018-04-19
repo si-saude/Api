@@ -14,6 +14,7 @@ public class RiscoPotencialFilter extends GenericFilter {
 	private DateFilter fimAgendamento;
 	private BooleanFilter atual;
 	private String status;
+	private String abreviacaoEquipeAcolhimento;
 	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
@@ -63,5 +64,10 @@ public class RiscoPotencialFilter extends GenericFilter {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+	public String getAbreviacaoEquipeAcolhimento() {
+		return abreviacaoEquipeAcolhimento;
+	}
+	public void setAbreviacaoEquipeAcolhimento(String abreviacaoEquipeAcolhimento) {
+		this.abreviacaoEquipeAcolhimento = abreviacaoEquipeAcolhimento;
+	}
 }

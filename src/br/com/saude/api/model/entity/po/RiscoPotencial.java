@@ -63,6 +63,9 @@ public class RiscoPotencial {
 	@Size(max = 32, message="Tamanho máximo para Status do Risco Potencial: 32")
 	private String status;
 	
+	@Size(max = 4, message="Tamanho máximo para Abreviação: 4")
+	private String abreviacaoEquipeAcolhimento;
+	
 	@Transient
 	private List<RiscoEmpregado> riscosInterdiciplinares;
 	
@@ -308,5 +311,13 @@ public class RiscoPotencial {
 
 	public void setRiscosInterdiciplinares(List<RiscoEmpregado> riscosInterdiciplinares) {
 		this.riscosInterdiciplinares = riscosInterdiciplinares;
+	}
+
+	public String getAbreviacaoEquipeAcolhimento() {
+		return abreviacaoEquipeAcolhimento;
+	}
+
+	public void setAbreviacaoEquipeAcolhimento(String abreviacaoEquipeAcolhimento) {
+		this.abreviacaoEquipeAcolhimento = abreviacaoEquipeAcolhimento;
 	}
 }

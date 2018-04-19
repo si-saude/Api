@@ -61,6 +61,12 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 		if(this.filter.getStatus()!= null)
 			this.entity.setStatus(Helper.filterLike(this.filter.getStatus()));
 	}
+	
+	private void addAbreviacaoEquipeAcolhimento() {
+		if(this.filter.getAbreviacaoEquipeAcolhimento()!= null)
+			this.entity.setAbreviacaoEquipeAcolhimento(
+					Helper.filterLike(this.filter.getAbreviacaoEquipeAcolhimento()));
+	}
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
@@ -72,6 +78,7 @@ public class RiscoPotencialExampleBuilder extends GenericExampleBuilder<RiscoPot
 		addFimAgendamento();
 		addAtual();
 		addStatus();
+		addAbreviacaoEquipeAcolhimento();
 	}
 
 	@Override

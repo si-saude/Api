@@ -196,7 +196,7 @@ public class FilaEsperaOcupacionalBo
 		if(tarefa == null) {
 			TarefaFilter tarefaFilter = new TarefaFilter();
 			tarefaFilter.setPageNumber(1);
-			tarefaFilter.setPageSize(1);
+			tarefaFilter.setPageSize(Integer.MAX_VALUE);
 			tarefaFilter.setCliente(new EmpregadoFilter());
 			tarefaFilter.getCliente().setMatricula(fila.getEmpregado().getMatricula());
 			tarefaFilter.setServico(new ServicoFilter());
@@ -217,7 +217,17 @@ public class FilaEsperaOcupacionalBo
 			if(tarefas.getTotal() == 0)
 				throw new Exception("Não há agendamento para este Empregado.");
 			
-			tarefa = tarefas.getList().get(0);
+			//OBTER A EQUIPE DE ACOLHIMENTO
+			if(tarefas.getList().stream().filter(t->t.getEquipe().getAbreviacao().equals("ACO"))
+					.count() > 0)
+				tarefa = tarefas.getList().stream()
+					.filter(t->t.getEquipe().getAbreviacao().equals("ACO")).findFirst().get();
+			else if(tarefas.getList().stream().filter(t->t.getEquipe().getAbreviacao().equals("ENF"))
+					.count() > 0)
+				tarefa = tarefas.getList().stream()
+					.filter(t->t.getEquipe().getAbreviacao().equals("ENF")).findFirst().get();
+			else
+				tarefa = tarefas.getList().get(0);
 		}
 		
 		// 5 - INSTANCIAR FILA
@@ -256,6 +266,7 @@ public class FilaEsperaOcupacionalBo
 		risco.setEmpregado(fila.getEmpregado());
 		risco.setAtual(true);
 		risco.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
+		risco.setAbreviacaoEquipeAcolhimento(tarefa.getEquipe().getAbreviacao());
 		fila.setRiscoPotencial(risco);
 		
 		// 8 - OBTER A LISTA DOS RISCOS DO EMPREGADO PARA SETAR COMO NÃO ATUAL
