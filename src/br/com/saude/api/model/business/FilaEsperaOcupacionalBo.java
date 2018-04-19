@@ -237,62 +237,65 @@ public class FilaEsperaOcupacionalBo
 		fila.setStatus(StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 		fila.setServico(tarefa.getServico());
 		
-		// 6 - CRIAR A FICHA DE COLETA, COM AS RESPOSTAS PARA AS PERGUNTAS ATIVAS
-		PerguntaFichaColetaFilter perguntaFilter = new PerguntaFichaColetaFilter();
-		perguntaFilter.setPageNumber(1);
-		perguntaFilter.setPageSize(Integer.MAX_VALUE);
-		perguntaFilter.setInativo(new BooleanFilter());
-		perguntaFilter.getInativo().setValue(2);
-		
-		PagedList<PerguntaFichaColeta> perguntas = 
-				PerguntaFichaColetaBo.getInstance().getListLoadAll(perguntaFilter);
-		
-		if(perguntas.getTotal() > 0) {
-			fila.setFichaColeta(new FichaColeta());
-			fila.getFichaColeta().setRespostaFichaColetas(new ArrayList<RespostaFichaColeta>());
+		if(tarefa.getEquipe().getAbreviacao().equals("ACO") ||
+				tarefa.getEquipe().getAbreviacao().equals("ENF")) {
+			// 6 - CRIAR A FICHA DE COLETA, COM AS RESPOSTAS PARA AS PERGUNTAS ATIVAS
+			PerguntaFichaColetaFilter perguntaFilter = new PerguntaFichaColetaFilter();
+			perguntaFilter.setPageNumber(1);
+			perguntaFilter.setPageSize(Integer.MAX_VALUE);
+			perguntaFilter.setInativo(new BooleanFilter());
+			perguntaFilter.getInativo().setValue(2);
 			
-			//PARA CADA PERGUNTA, CRIAR UMA RESPOSTA
-			for(PerguntaFichaColeta pergunta : perguntas.getList()) {
-				RespostaFichaColeta resposta = new RespostaFichaColeta();
-				resposta.setPergunta(pergunta);
-				resposta.setFicha(fila.getFichaColeta());
-				fila.getFichaColeta().getRespostaFichaColetas().add(resposta);
+			PagedList<PerguntaFichaColeta> perguntas = 
+					PerguntaFichaColetaBo.getInstance().getListLoadAll(perguntaFilter);
+			
+			if(perguntas.getTotal() > 0) {
+				fila.setFichaColeta(new FichaColeta());
+				fila.getFichaColeta().setRespostaFichaColetas(new ArrayList<RespostaFichaColeta>());
+				
+				//PARA CADA PERGUNTA, CRIAR UMA RESPOSTA
+				for(PerguntaFichaColeta pergunta : perguntas.getList()) {
+					RespostaFichaColeta resposta = new RespostaFichaColeta();
+					resposta.setPergunta(pergunta);
+					resposta.setFicha(fila.getFichaColeta());
+					fila.getFichaColeta().getRespostaFichaColetas().add(resposta);
+				}
 			}
-		}
-		
-		// 7 - GERAR O RISCO POTENCIAL
-		RiscoPotencial risco = new RiscoPotencial();
-		risco.setData(Helper.getToday());
-		risco.setEmpregado(fila.getEmpregado());
-		risco.setAtual(true);
-		risco.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
-		risco.setAbreviacaoEquipeAcolhimento(tarefa.getEquipe().getAbreviacao());
-		fila.setRiscoPotencial(risco);
-		
-		// 8 - OBTER A LISTA DOS RISCOS DO EMPREGADO PARA SETAR COMO NÃO ATUAL
-		RiscoPotencialFilter riscoFilter = new RiscoPotencialFilter();
-		riscoFilter.setPageNumber(1);
-		riscoFilter.setPageSize(Integer.MAX_VALUE);
-		riscoFilter.setEmpregado(new EmpregadoFilter());
-		riscoFilter.getEmpregado().setId(fila.getEmpregado().getId());
-		riscoFilter.setAtual(new BooleanFilter());
-		riscoFilter.getAtual().setValue(1);
-		
-		PagedList<RiscoPotencial> riscos = RiscoPotencialBo.getInstance().getListLoadAll(riscoFilter);
-		
-		if(riscos.getTotal() > 0) {
-			riscos.getList().forEach(r-> {
-				r.setAtual(false);
-				r.getRiscoEmpregados().forEach(rE -> {
-					rE.getTriagens().forEach(t -> {
-						t.getAcoes().forEach(a -> {
-							a.setTriagem(t);
-							a.getAcompanhamentos().forEach(ac -> ac.setAcao(a));
+			
+			// 7 - GERAR O RISCO POTENCIAL
+			RiscoPotencial risco = new RiscoPotencial();
+			risco.setData(Helper.getToday());
+			risco.setEmpregado(fila.getEmpregado());
+			risco.setAtual(true);
+			risco.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
+			risco.setAbreviacaoEquipeAcolhimento(tarefa.getEquipe().getAbreviacao());
+			fila.setRiscoPotencial(risco);
+			
+			// 8 - OBTER A LISTA DOS RISCOS DO EMPREGADO PARA SETAR COMO NÃO ATUAL
+			RiscoPotencialFilter riscoFilter = new RiscoPotencialFilter();
+			riscoFilter.setPageNumber(1);
+			riscoFilter.setPageSize(Integer.MAX_VALUE);
+			riscoFilter.setEmpregado(new EmpregadoFilter());
+			riscoFilter.getEmpregado().setId(fila.getEmpregado().getId());
+			riscoFilter.setAtual(new BooleanFilter());
+			riscoFilter.getAtual().setValue(1);
+			
+			PagedList<RiscoPotencial> riscos = RiscoPotencialBo.getInstance().getListLoadAll(riscoFilter);
+			
+			if(riscos.getTotal() > 0) {
+				riscos.getList().forEach(r-> {
+					r.setAtual(false);
+					r.getRiscoEmpregados().forEach(rE -> {
+						rE.getTriagens().forEach(t -> {
+							t.getAcoes().forEach(a -> {
+								a.setTriagem(t);
+								a.getAcompanhamentos().forEach(ac -> ac.setAcao(a));
+							});
 						});
 					});
 				});
-			});
-			RiscoPotencialBo.getInstance().saveList(riscos.getList());
+				RiscoPotencialBo.getInstance().saveList(riscos.getList());
+			}
 		}
 		
 		// 9 - INSERIR NO BANCO
