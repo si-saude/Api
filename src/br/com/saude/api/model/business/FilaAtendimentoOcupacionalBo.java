@@ -457,7 +457,7 @@ public class FilaAtendimentoOcupacionalBo
 					atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().setFimAgendamento(r.getFimAgendamento());
 				}
 				
-				if(atendimento.getId() == 0) {
+				if(atendimento.getId() == 0 && atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial() != null) {
 					atendimento.getFilaEsperaOcupacional().setRiscoPotencial(
 							RiscoPotencialBo.getInstance()
 								.getById(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId()));
@@ -466,7 +466,8 @@ public class FilaAtendimentoOcupacionalBo
 				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares().size() > 0 &&
-						fila.getProfissional().getEquipe().getAbreviacao().equals("ACO")) {
+						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getAbreviacaoEquipeAcolhimento().equals(
+								fila.getProfissional().getEquipe().getAbreviacao())) {
 					
 					
 					if((atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel() == null || 
@@ -485,13 +486,14 @@ public class FilaAtendimentoOcupacionalBo
 				}/*else if(atendimentoAux.getTriagensTodosAtendimentos() == null )
 					atendimentoAux = obterTodasTriagens(atendimentoAux, atendimentoAux);*/
 				
-				atendimentoAux.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().sort(new Comparator<RespostaFichaColeta>() {
-					@Override
-					public int compare(RespostaFichaColeta arg0, RespostaFichaColeta arg1) {
-						return (arg0.getPergunta().getOrdem() + "-" + arg0.getPergunta().getCodigo()).compareTo(
-								arg1.getPergunta().getOrdem() + "-" + arg1.getPergunta().getCodigo());
-					}
-				});
+				if(atendimentoAux.getFilaEsperaOcupacional().getFichaColeta() != null)
+					atendimentoAux.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().sort(new Comparator<RespostaFichaColeta>() {
+						@Override
+						public int compare(RespostaFichaColeta arg0, RespostaFichaColeta arg1) {
+							return (arg0.getPergunta().getOrdem() + "-" + arg0.getPergunta().getCodigo()).compareTo(
+									arg1.getPergunta().getOrdem() + "-" + arg1.getPergunta().getCodigo());
+						}
+					});
 				
 				Comparator<Triagem> comparator = new Comparator<Triagem>() {
 					@Override

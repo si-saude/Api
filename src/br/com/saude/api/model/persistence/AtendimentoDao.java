@@ -170,7 +170,8 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 		try {
 			Transaction transaction = session.beginTransaction();
 						
-			if(atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas() != null) {
+			if(atendimento.getFilaEsperaOcupacional().getFichaColeta() != null &&
+					atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas() != null) {
 				FichaColeta ficha = atendimento.getFilaEsperaOcupacional().getFichaColeta();
 				atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas()
 					.forEach(r->r.setFicha(ficha));
