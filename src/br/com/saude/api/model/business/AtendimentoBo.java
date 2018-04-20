@@ -122,56 +122,67 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		FichaColeta fichaColeta = a.getFilaEsperaOcupacional().getFichaColeta();
 		
-		a.getFilaEsperaOcupacional()
-			.setFichaColeta(atendimentoAux.getFilaEsperaOcupacional().getFichaColeta());
-		a.getFilaEsperaOcupacional()
-			.setRiscoPotencial(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial());
-		a.setTriagens(atendimentoAux.getTriagens());
-		
-		Atendimento atendimento = a;
-		
-		a.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().forEach(r->{
-			if(r.getItens() != null)
-				r.getItens().forEach(i->i.setResposta(r));
+		if(fichaColeta != null) {
+			a.getFilaEsperaOcupacional()
+				.setFichaColeta(atendimentoAux.getFilaEsperaOcupacional().getFichaColeta());
+			a.getFilaEsperaOcupacional()
+				.setRiscoPotencial(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial());
+			a.setTriagens(atendimentoAux.getTriagens());
 			
-			//ATUALIZAR A VERSÃO
-			Optional<RespostaFichaColeta> resposta = fichaColeta.getRespostaFichaColetas().stream()
-				.filter(rF -> rF.getId() == r.getId()).findFirst();
+			Atendimento atendimento = a;
 			
-			if(resposta != null && resposta.isPresent())
-				r.setVersion(resposta.get().getVersion());
-		});
-		
-		List<RiscoEmpregado> riscos = a.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados(); 
-		
-		if(riscos != null)
-			for(int i = 0; i < riscos.size(); i++) {
-				riscos.set(i, RiscoEmpregadoBo.getInstance().getByIdAll(riscos.get(i).getId()));
-				riscos.get(i).setRiscoPotencial(a.getFilaEsperaOcupacional().getRiscoPotencial());
+			a.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().forEach(r->{
+				if(r.getItens() != null)
+					r.getItens().forEach(i->i.setResposta(r));
 				
-				if(riscos.get(i).getTriagens() != null)
-					for(Triagem t : riscos.get(i).getTriagens())
-						t.setRiscoEmpregado(riscos.get(i));
-			}
-		
-		if(a.getTriagens() != null)
-			a.getTriagens().forEach(t->{
-				if(t.getDiagnostico() != null && t.getDiagnostico().getId() == 0)
-					t.setDiagnostico(null);
+				//ATUALIZAR A VERSÃO
+				Optional<RespostaFichaColeta> resposta = fichaColeta.getRespostaFichaColetas().stream()
+						.filter(rF -> rF.getId() == r.getId()).findFirst();
 				
-				if(t.getEquipeAbordagem() != null && t.getEquipeAbordagem().getId() == 0)
-					t.setEquipeAbordagem(null);
-				
-				if(t.getIntervencao() != null && t.getIntervencao().getId() == 0)
-					t.setIntervencao(null);
-				
-				if(t.getRiscoEmpregado() != null && t.getRiscoEmpregado().getId() == 0)
-					t.setRiscoEmpregado(null);
-				
-				t.setAtendimento(atendimento);
+				if(resposta != null && resposta.isPresent())
+					r.setVersion(resposta.get().getVersion());
 			});
+			
+			List<RiscoEmpregado> riscos = a.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados(); 
+			
+			if(riscos != null)
+				for(int i = 0; i < riscos.size(); i++) {
+					riscos.set(i, RiscoEmpregadoBo.getInstance().getByIdAll(riscos.get(i).getId()));
+					riscos.get(i).setRiscoPotencial(a.getFilaEsperaOcupacional().getRiscoPotencial());
+					
+					if(riscos.get(i).getTriagens() != null)
+						for(Triagem t : riscos.get(i).getTriagens())
+							t.setRiscoEmpregado(riscos.get(i));
+				}
+			
+			if(a.getTriagens() != null)
+				a.getTriagens().forEach(t->{
+					if(t.getDiagnostico() != null && t.getDiagnostico().getId() == 0)
+						t.setDiagnostico(null);
+					
+					if(t.getEquipeAbordagem() != null && t.getEquipeAbordagem().getId() == 0)
+						t.setEquipeAbordagem(null);
+					
+					if(t.getIntervencao() != null && t.getIntervencao().getId() == 0)
+						t.setIntervencao(null);
+					
+					if(t.getRiscoEmpregado() != null && t.getRiscoEmpregado().getId() == 0)
+						t.setRiscoEmpregado(null);
+					
+					t.setAtendimento(atendimento);
+				});
+			
+			return a;
+		}else { 
+			if(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial() != null &&
+					atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId() == 0)
+				atendimentoAux.getFilaEsperaOcupacional().setRiscoPotencial(null);
+			
+			if(atendimentoAux.getAso() != null && atendimentoAux.getAso().getId() == 0)
+				atendimentoAux.setAso(null);
+		}
 		
-		return a;
+		return atendimentoAux;
 	}
 	
 	public Atendimento iniciar(Atendimento atendimento) throws Exception {
