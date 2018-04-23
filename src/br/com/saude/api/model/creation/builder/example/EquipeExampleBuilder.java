@@ -59,7 +59,6 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		addNeId();
-		addId();
 		addNome();
 		addAbreviacao();
 		addCoordenador();
