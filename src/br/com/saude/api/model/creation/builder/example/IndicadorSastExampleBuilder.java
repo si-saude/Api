@@ -86,7 +86,7 @@ public class IndicadorSastExampleBuilder  extends GenericExampleBuilder<Indicado
 	
 	private void addCodigo() {
 		if(this.filter.getCodigo()!= null)
-			this.entity.setCodigo(Helper.filterLike(this.filter.getCodigo()));
+			this.entity.setCodigo(this.filter.getCodigo());
 	}
 	
 	private void addCodigoExcludente() {
