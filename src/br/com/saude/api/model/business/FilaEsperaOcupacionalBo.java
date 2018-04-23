@@ -296,6 +296,9 @@ public class FilaEsperaOcupacionalBo
 				});
 				RiscoPotencialBo.getInstance().saveList(riscos.getList());
 			}
+		}else {
+			if(fila.getRiscoPotencial() != null && fila.getRiscoPotencial().getId() == 0)
+				fila.setRiscoPotencial(null);
 		}
 		
 		// 9 - INSERIR NO BANCO
@@ -699,15 +702,18 @@ public class FilaEsperaOcupacionalBo
 								filaEspera.setStatus(StatusFilaEsperaOcupacional.getInstance().EM_ATENDIMENTO);
 								filaEspera.setTempoEspera(filaEspera.getTempoEspera() + calcularTempoAtualizacao(filaEspera));
 								filaEspera.setAtualizacao(tarefa.getAtualizacao());
-								//SETAR REFERENCIA DE FICHA COLETA EM RESPOSTAS FICHAS COLETAS
-								filaEspera.getFichaColeta().getRespostaFichaColetas().forEach(rF -> {
-									rF.setFicha(filaEspera.getFichaColeta());
-									
-									if(rF.getItens() != null)
-										rF.getItens().forEach(iRF -> iRF.setResposta(rF));
-								});
 								
-								if ( filaEspera.getRiscoPotencial().getRiscoEmpregados() != null )
+								//SETAR REFERENCIA DE FICHA COLETA EM RESPOSTAS FICHAS COLETAS
+								if(filaEspera.getFichaColeta() != null)
+									filaEspera.getFichaColeta().getRespostaFichaColetas().forEach(rF -> {
+										rF.setFicha(filaEspera.getFichaColeta());
+										
+										if(rF.getItens() != null)
+											rF.getItens().forEach(iRF -> iRF.setResposta(rF));
+									});
+								
+								if ( filaEspera.getRiscoPotencial() != null && 
+										filaEspera.getRiscoPotencial().getRiscoEmpregados() != null )
 									filaEspera.getRiscoPotencial().getRiscoEmpregados().forEach(r -> 
 										r.setRiscoPotencial(filaEspera.getRiscoPotencial()));
 								
@@ -720,11 +726,12 @@ public class FilaEsperaOcupacionalBo
 								fA.setAtualizacao(tarefa.getAtualizacao());
 								
 								//CRIAR A FICHA DE TRIAGEM
-								try {
-									atendimento = setTriagens(atendimento);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
+								if(filaEspera.getRiscoPotencial() != null)
+									try {
+										atendimento = setTriagens(atendimento);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
 								
 								//ADD NA LISTA
 								atendimentos.getList().add(atendimento);
