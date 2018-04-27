@@ -21,6 +21,9 @@ public class Base {
 	@Column(unique=true)
 	private String nome;
 	
+	@Size(max = 2, message="Tamanho máximo para UF da Base: 2")
+	private String uf;
+	
 	@Version
 	private long version;
 
@@ -48,4 +51,12 @@ public class Base {
 		this.version = version;
 	}
 
+	public String getUf() {
+		return uf;
+	}
+
+	public void setUf(String uf) {
+		this.uf = uf;
+	}
+	
 }
