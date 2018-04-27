@@ -180,6 +180,8 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 		newEmpregado.setVinculo(empregado.getVinculo());
 		newEmpregado.setStatus(empregado.getStatus());
 		newEmpregado.setVersion(empregado.getVersion());
+		newEmpregado.setPis(empregado.getPis());
+		newEmpregado.setDataAdmissao(empregado.getDataAdmissao());
 		
 		if(empregado.getPessoa() != null)
 			newEmpregado.setPessoa(new PessoaBuilder(empregado.getPessoa()).getEntity());

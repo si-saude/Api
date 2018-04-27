@@ -60,6 +60,15 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 			this.entity.setStatus(Helper.filterLike(this.filter.getStatus()));
 	}
 	
+	private void addPis() {
+		if(this.filter.getPis()!= null)
+			this.entity.setPis(Helper.filterLike(this.filter.getPis()));
+	}
+	
+	private void addDataAdmissao() {
+		this.addData("dataAdmissao", this.filter.getDataAdmissao());
+	}
+	
 	private void addPessoa() throws InstantiationException, IllegalAccessException {
 		if(this.filter.getPessoa()!=null) {
 			CriteriaExample criteriaExample = PessoaExampleBuilder
@@ -146,6 +155,8 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 		addGhe();
 		addGhee();
 		addRegime();
+		addPis();
+		addDataAdmissao();
 	}
 	
 	@Override
@@ -164,6 +175,8 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 		addGhe();
 		addGhee();
 		addRegime();
+		addPis();
+		addDataAdmissao();
 	}
 
 	@Override

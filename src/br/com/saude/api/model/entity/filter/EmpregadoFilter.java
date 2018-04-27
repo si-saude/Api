@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.filter;
 
+import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class EmpregadoFilter extends GenericFilter {
@@ -10,6 +11,8 @@ public class EmpregadoFilter extends GenericFilter {
 	private String vinculo;
 	private String ramal;
 	private String status;
+	private String pis;
+	private DateFilter dataAdmissao;
 	private PessoaFilter pessoa;
 	private CargoFilter cargo;
 	private FuncaoFilter funcao;
@@ -108,6 +111,18 @@ public class EmpregadoFilter extends GenericFilter {
 	}
 	public void setGhee(GheeFilter ghee) {
 		this.ghee = ghee;
+	}
+	public String getPis() {
+		return pis;
+	}
+	public void setPis(String pis) {
+		this.pis = pis;
+	}
+	public DateFilter getDataAdmissao() {
+		return dataAdmissao;
+	}
+	public void setDataAdmissao(DateFilter dataAdmissao) {
+		this.dataAdmissao = dataAdmissao;
 	}
 	
 }

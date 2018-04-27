@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,11 @@ public class Empregado {
 	
 	@Size(max = 128, message="Tamanho máximo para Escolaridade de Empregado: 128")
 	private String escolaridade;
+	
+	@Size(max = 20, message="Tamanho máximo para PIS de Empregado: 20")
+	private String pis;
+	
+	private Date dataAdmissao;
 	
 	@Size(max = 32, message="Tamanho máximo para Vínculo de Empregado: 32")
 	@NotNull(message="É necessário informar o Vínculo de Empregado.")
@@ -267,6 +273,19 @@ public class Empregado {
 	@Override
 	public boolean equals(Object empregado) {
 		return ((Empregado)empregado).id == this.id && this.id > 0;
+	}
+	
+	public String getPis() {
+		return pis;
+	}
+	public void setPis(String pis) {
+		this.pis = pis;
+	}
+	public Date getDataAdmissao() {
+		return dataAdmissao;
+	}
+	public void setDataAdmissao(Date dataAdmissao) {
+		this.dataAdmissao = dataAdmissao;
 	}
 
 }
