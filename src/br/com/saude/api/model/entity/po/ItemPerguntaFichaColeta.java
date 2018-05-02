@@ -19,6 +19,8 @@ public class ItemPerguntaFichaColeta {
 	@NotNull(message="É necessário informar o Label da Pergunta.")
 	private String label;
 	
+	private String path; 
+	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private PerguntaFichaColeta pergunta;
 	
@@ -56,4 +58,13 @@ public class ItemPerguntaFichaColeta {
 	public void setPergunta(PerguntaFichaColeta pergunta) {
 		this.pergunta = pergunta;
 	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
 }

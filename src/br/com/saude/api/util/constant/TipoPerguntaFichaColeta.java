@@ -20,4 +20,5 @@ public class TipoPerguntaFichaColeta extends GenericConstant {
 	public static final String INTEIRO 				= "INTEIRO";
 	public static final String TEXTO 				= "TEXTO";
 	public static final String SIM_OU_NAO 			= "SIM OU NÃO";
+	public static final String ENUM 			= "ENUM";
 }

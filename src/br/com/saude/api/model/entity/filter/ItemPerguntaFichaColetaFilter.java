@@ -4,6 +4,7 @@ import br.com.saude.api.generic.GenericFilter;
 
 public class ItemPerguntaFichaColetaFilter extends GenericFilter {
 	private String label;
+	private String path;
 
 	public String getLabel() {
 		return label;
@@ -13,4 +14,12 @@ public class ItemPerguntaFichaColetaFilter extends GenericFilter {
 		this.label = label;
 	}
 
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
 }

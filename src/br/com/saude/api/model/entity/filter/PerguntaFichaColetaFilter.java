@@ -7,6 +7,7 @@ public class PerguntaFichaColetaFilter extends GenericFilter {
 	private String grupo;
 	private String tipo;
 	private String codigo;
+	private String path;
 	private BooleanFilter inativo;
 	
 	public String getGrupo() {
@@ -33,4 +34,11 @@ public class PerguntaFichaColetaFilter extends GenericFilter {
 	public void setInativo(BooleanFilter inativo) {
 		this.inativo = inativo;
 	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
 }

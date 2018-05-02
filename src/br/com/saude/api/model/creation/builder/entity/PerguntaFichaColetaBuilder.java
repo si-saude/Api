@@ -62,6 +62,7 @@ public class PerguntaFichaColetaBuilder extends GenericEntityBuilder<PerguntaFic
 		clonePerguntaFichaColeta.setDescricao(perguntaFichaColeta.getDescricao());
 		clonePerguntaFichaColeta.setTipo(perguntaFichaColeta.getTipo());
 		clonePerguntaFichaColeta.setOrdem(perguntaFichaColeta.getOrdem());
+		clonePerguntaFichaColeta.setPath(perguntaFichaColeta.getPath());
 		
 		return clonePerguntaFichaColeta;
 	}

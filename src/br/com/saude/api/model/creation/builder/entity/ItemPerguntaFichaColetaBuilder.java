@@ -38,6 +38,7 @@ public class ItemPerguntaFichaColetaBuilder
 		cloneItemPerguntaFichaColeta.setId(itemPerguntaFichaColeta.getId());
 		cloneItemPerguntaFichaColeta.setVersion(itemPerguntaFichaColeta.getVersion());
 		cloneItemPerguntaFichaColeta.setLabel(itemPerguntaFichaColeta.getLabel());
+		cloneItemPerguntaFichaColeta.setPath(itemPerguntaFichaColeta.getPath());
 		
 		if ( cloneItemPerguntaFichaColeta.getPergunta() != null )
 			cloneItemPerguntaFichaColeta.setPergunta(

@@ -12,16 +12,24 @@ import javax.ws.rs.core.Response;
 
 import br.com.saude.api.generic.GenericConstant;
 import br.com.saude.api.util.RequestInterceptor;
+import br.com.saude.api.util.constant.Abrangencia;
 import br.com.saude.api.util.constant.AcaoResultadoExame;
+import br.com.saude.api.util.constant.AptidaoCardiorrespiratoria;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.Escolaridade;
 import br.com.saude.api.util.constant.EstadoCivil;
+import br.com.saude.api.util.constant.EstagioContemplacao;
+import br.com.saude.api.util.constant.Flexibilidade;
+import br.com.saude.api.util.constant.ForcaAbdominal;
+import br.com.saude.api.util.constant.ForcaPreensaoManual;
 import br.com.saude.api.util.constant.Funcionalidade;
 import br.com.saude.api.util.constant.GrupoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.GrupoServico;
+import br.com.saude.api.util.constant.NivelAtividadeFisica;
 import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.PrazoEmMeses;
 import br.com.saude.api.util.constant.Requisito;
+import br.com.saude.api.util.constant.SensacaoDor;
 import br.com.saude.api.util.constant.Sexo;
 import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusEmpregado;
@@ -55,6 +63,62 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFuncionalidade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(Funcionalidade.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/nivel-atividade-fisica")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getNivelAtividadeFisica(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(NivelAtividadeFisica.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/estagio-contemplacao")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getEstagioContemplacao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(EstagioContemplacao.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/sensacao-dor")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSensacaoDor(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(SensacaoDor.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/aptidao-cardiorrespiratoria")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAptidaoCardiorrespiratoria(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(AptidaoCardiorrespiratoria.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/forca-abdominal")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getForcaAbdominal(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(ForcaAbdominal.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/flexibilidade")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFlexibilidade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Flexibilidade.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/forca-prenssao-manual")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getForcaPrenssaoManual(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(ForcaPreensaoManual.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/abrangencia")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAbrangencia(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Abrangencia.getInstance(),filter)).build();
 	}
 	
 	@GET

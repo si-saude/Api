@@ -34,6 +34,8 @@ public class PerguntaFichaColeta {
 	@NotNull(message="É necessário informar o Código da Pergunta.")
 	@Size(max = 4, message="Tamanho máximo para Código da Pergunta: 4")
 	private String codigo;
+
+	private String path;
 	
 	@NotNull(message="É necessário informar o Descrição da Pergunta.")
 	@Size(max = 1024, message="Tamanho máximo para Descrição da Pergunta: 1024")
@@ -133,6 +135,14 @@ public class PerguntaFichaColeta {
 
 	public void setEquipes(List<Equipe> equipes) {
 		this.equipes = equipes;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 }

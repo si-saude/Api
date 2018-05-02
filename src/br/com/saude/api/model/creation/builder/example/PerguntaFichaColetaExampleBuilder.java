@@ -20,6 +20,7 @@ public class PerguntaFichaColetaExampleBuilder extends GenericExampleBuilder<Per
 		addCodigo();
 		addGrupo();
 		addInativo();
+		addPath();
 	}
 
 	@Override
@@ -29,6 +30,11 @@ public class PerguntaFichaColetaExampleBuilder extends GenericExampleBuilder<Per
 	private void addCodigo() {
 		if(this.filter.getCodigo()!= null)
 			this.entity.setCodigo(Helper.filterLike(this.filter.getCodigo()));
+	}
+	
+	private void addPath() {
+		if(this.filter.getPath()!= null)
+			this.entity.setPath(Helper.filterLike(this.filter.getPath()));
 	}
 	
 	private void addGrupo() {
