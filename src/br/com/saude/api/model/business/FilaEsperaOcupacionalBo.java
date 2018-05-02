@@ -192,6 +192,7 @@ public class FilaEsperaOcupacionalBo
 		// 4 - VERIFICAR SE EXISTE AGENDAMENTO (TAREFA) PARA ESTE EMPREGADO (CLIENTE),
 		// CUJO GRUPO DO SERVIÇO SEJA ATENDIMENTO OCUPACIONAL, E STATUS DIFERENTE DE
 		// CONCLUÍDO E CANCELADO, E A DATA DA TAREFA ESTÁ ENTRE O DIA ATUAL E O SEGUINTE
+		RiscoPotencial risco = null;
 		Tarefa tarefa = checkPendecia(fila.getEmpregado()); 
 		if(tarefa == null) {
 			TarefaFilter tarefaFilter = new TarefaFilter();
@@ -228,6 +229,19 @@ public class FilaEsperaOcupacionalBo
 					.filter(t->t.getEquipe().getAbreviacao().equals("ENF")).findFirst().get();
 			else
 				tarefa = tarefas.getList().get(0);
+		}else {
+			//OBTER O RISCO ATIVO DO EMPREGADO
+			RiscoPotencialFilter riscoFilter = new RiscoPotencialFilter();
+			riscoFilter.setPageNumber(1);
+			riscoFilter.setPageSize(1);
+			riscoFilter.setAtual(new BooleanFilter());
+			riscoFilter.getAtual().setValue(1);
+			riscoFilter.setEmpregado(new EmpregadoFilter());
+			riscoFilter.getEmpregado().setMatricula(fila.getEmpregado().getMatricula());
+			
+			PagedList<RiscoPotencial> riscos = RiscoPotencialBo.getInstance().getListLoadAll(riscoFilter);
+			if(riscos.getTotal() > 0)
+				risco = riscos.getList().get(0);
 		}
 		
 		// 5 - INSTANCIAR FILA
@@ -263,12 +277,14 @@ public class FilaEsperaOcupacionalBo
 			}
 			
 			// 7 - GERAR O RISCO POTENCIAL
-			RiscoPotencial risco = new RiscoPotencial();
-			risco.setData(Helper.getToday());
-			risco.setEmpregado(fila.getEmpregado());
-			risco.setAtual(true);
-			risco.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
-			risco.setAbreviacaoEquipeAcolhimento(tarefa.getEquipe().getAbreviacao());
+			if(risco == null) {
+				risco = new RiscoPotencial();
+				risco.setData(Helper.getToday());
+				risco.setEmpregado(fila.getEmpregado());
+				risco.setAtual(true);
+				risco.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
+				risco.setAbreviacaoEquipeAcolhimento(tarefa.getEquipe().getAbreviacao());
+			}
 			fila.setRiscoPotencial(risco);
 			
 			// 8 - OBTER A LISTA DOS RISCOS DO EMPREGADO PARA SETAR COMO NÃO ATUAL
