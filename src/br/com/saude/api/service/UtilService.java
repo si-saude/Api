@@ -37,6 +37,7 @@ import br.com.saude.api.util.constant.TipoCriterio;
 import br.com.saude.api.util.constant.TipoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.TipoPessoa;
 import br.com.saude.api.util.constant.TipoResultadoExame;
+import br.com.saude.api.util.constant.UF;
 import br.com.saude.api.util.constant.VinculoEmpregado;
 
 @Path("generic")
@@ -229,5 +230,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPrazoEmMeses(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(PrazoEmMeses.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/uf")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUf(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(UF.getInstance(),filter)).build();
 	}
 }

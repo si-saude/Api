@@ -35,6 +35,7 @@ public class BaseBuilder extends GenericEntityBuilder<Base, BaseFilter> {
 		
 		newBase.setId(base.getId());
 		newBase.setNome(base.getNome());
+		newBase.setUf(base.getUf());
 		newBase.setVersion(base.getVersion());
 		
 		return newBase;
