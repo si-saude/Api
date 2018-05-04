@@ -30,6 +30,7 @@ public class FilaEsperaOcupacionalExampleBuilder
 		addEmpregado();
 		addLocalizacao();
 		addServico();
+		addRiscoPotencial();
 	}
 
 	@Override
@@ -80,6 +81,14 @@ public class FilaEsperaOcupacionalExampleBuilder
 			CriteriaExample criteriaExample = ServicoExampleBuilder
 					.newInstance(this.filter.getServico()).getCriteriaExample();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("servico", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addRiscoPotencial() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getRiscoPotencial()!=null) {
+			CriteriaExample criteriaExample = RiscoPotencialExampleBuilder
+					.newInstance(this.filter.getRiscoPotencial()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("riscoPotencial", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
 }

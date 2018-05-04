@@ -1,0 +1,71 @@
+package br.com.saude.api.model.creation.builder.example;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
+import org.javatuples.Triplet;
+
+import br.com.saude.api.generic.CriteriaExample;
+import br.com.saude.api.generic.GenericExampleBuilder;
+import br.com.saude.api.model.entity.filter.TriagemFilter;
+import br.com.saude.api.model.entity.po.Triagem;
+
+public class TriagemExampleBuilder extends GenericExampleBuilder<Triagem, TriagemFilter> {
+
+	public static TriagemExampleBuilder newInstance(TriagemFilter filter) {
+		return new TriagemExampleBuilder(filter);
+	}
+	
+	private TriagemExampleBuilder(TriagemFilter filter) {
+		super(filter);
+	}
+
+	@Override
+	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
+		addRiscoEmpregado();
+		addEquipeAbordagem();
+		addIndicadorSast();
+		
+		
+		this.entity.setIndice(0);
+	}
+
+	@Override
+	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		
+	}
+	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
+	}
+
+	private void addRiscoEmpregado() throws InstantiationException, IllegalAccessException {
+		if (this.filter.getRiscoEmpregado() != null) {
+			CriteriaExample criteriaExample = RiscoEmpregadoExampleBuilder
+					.newInstance(this.filter.getRiscoEmpregado()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("riscoEmpregado", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addEquipeAbordagem() throws InstantiationException, IllegalAccessException {
+		if (this.filter.getEquipeAbordagem() != null) {
+			CriteriaExample criteriaExample = EquipeExampleBuilder
+					.newInstance(this.filter.getEquipeAbordagem()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("equipeAbordagem", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addIndicadorSast() throws InstantiationException, IllegalAccessException {
+		if (this.filter.getIndicadorSast() != null) {
+			CriteriaExample criteriaExample = IndicadorSastExampleBuilder
+					.newInstance(this.filter.getIndicadorSast()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("indicadorSast", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	protected void addIgnorarAcoes() {
+		this.entity.setIgnorarAcoes(this.addBoolean("ignorarAcoes", this.filter.isIgnorarAcoes()));
+	}
+	
+}

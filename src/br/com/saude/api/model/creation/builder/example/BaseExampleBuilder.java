@@ -18,6 +18,7 @@ public class BaseExampleBuilder extends GenericExampleBuilder<Base, BaseFilter> 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addNome();
+		addUf();
 	}
 
 	@Override
@@ -28,6 +29,11 @@ public class BaseExampleBuilder extends GenericExampleBuilder<Base, BaseFilter> 
 	private void addNome() {
 		if(this.filter.getNome() != null)
 			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
+	}
+	
+	private void addUf() {
+		if(this.filter.getUf() != null)
+			this.entity.setUf(Helper.filterLike(this.filter.getUf()));
 	}
 
 }

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
@@ -17,6 +20,7 @@ import br.com.saude.api.model.creation.builder.entity.AtendimentoBuilder;
 import br.com.saude.api.model.creation.builder.entity.TarefaBuilder;
 import br.com.saude.api.model.creation.builder.example.AtendimentoExampleBuilder;
 import br.com.saude.api.model.creation.builder.example.TarefaExampleBuilder;
+import br.com.saude.api.model.creation.factory.entity.AtendimentoFactory;
 import br.com.saude.api.model.creation.factory.entity.FilaAtendimentoOcupacionalAtualizacaoFactory;
 import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
@@ -28,14 +32,19 @@ import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Atividade;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
+import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.Tarefa;
+import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.AtendimentoDao;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusAso;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
+import br.com.saude.api.util.constant.StatusRiscoEmpregado;
 import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.util.constant.TipoConvocacao;
 
@@ -57,7 +66,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadTarefa();
+			return builder.loadTarefa().loadTriagens();
 		};
 	}
 	
@@ -95,23 +104,105 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 					.get());
 		
 		atendimento.getFilaAtendimentoOcupacional().setAtualizacao(Helper.getNow());
+		
+		if ( atendimento.getFilaEsperaOcupacional().getFichaColeta() != null &&
+				atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas() != null ) {
+			atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().forEach(r -> {
+				r.setFicha(atendimento.getFilaEsperaOcupacional().getFichaColeta());
+			});
+		}
+		
 		return atendimento;
+	}
+	
+	public Atendimento merge(Atendimento a) throws Exception {
+		
+		Atendimento atendimentoAux = a;
+		
+		a = getById(a.getId());
+		
+		FichaColeta fichaColeta = a.getFilaEsperaOcupacional().getFichaColeta();
+		
+		if(fichaColeta != null) {
+			a.getFilaEsperaOcupacional()
+				.setFichaColeta(atendimentoAux.getFilaEsperaOcupacional().getFichaColeta());
+			a.getFilaEsperaOcupacional()
+				.setRiscoPotencial(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial());
+			a.setTriagens(atendimentoAux.getTriagens());
+			
+			Atendimento atendimento = a;
+			
+			a.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().forEach(r->{
+				if(r.getItens() != null)
+					r.getItens().forEach(i->i.setResposta(r));
+				
+				//ATUALIZAR A VERSÃO
+				Optional<RespostaFichaColeta> resposta = fichaColeta.getRespostaFichaColetas().stream()
+						.filter(rF -> rF.getId() == r.getId()).findFirst();
+				
+				if(resposta != null && resposta.isPresent())
+					r.setVersion(resposta.get().getVersion());
+			});
+			
+			List<RiscoEmpregado> riscos = a.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados(); 
+			
+			if(riscos != null)
+				for(int i = 0; i < riscos.size(); i++) {
+					riscos.set(i, RiscoEmpregadoBo.getInstance().getByIdAll(riscos.get(i).getId()));
+					riscos.get(i).setRiscoPotencial(a.getFilaEsperaOcupacional().getRiscoPotencial());
+					
+					if(riscos.get(i).getTriagens() != null)
+						for(Triagem t : riscos.get(i).getTriagens())
+							t.setRiscoEmpregado(riscos.get(i));
+				}
+			
+			if(a.getTriagens() != null)
+				a.getTriagens().forEach(t->{
+					if(t.getDiagnostico() != null && t.getDiagnostico().getId() == 0)
+						t.setDiagnostico(null);
+					
+					if(t.getEquipeAbordagem() != null && t.getEquipeAbordagem().getId() == 0)
+						t.setEquipeAbordagem(null);
+					
+					if(t.getIntervencao() != null && t.getIntervencao().getId() == 0)
+						t.setIntervencao(null);
+					
+					if(t.getRiscoEmpregado() != null && t.getRiscoEmpregado().getId() == 0)
+						t.setRiscoEmpregado(null);
+					
+					t.setAtendimento(atendimento);
+				});
+			
+			return a;
+		}else { 
+			if(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial() != null &&
+					atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId() == 0)
+				atendimentoAux.getFilaEsperaOcupacional().setRiscoPotencial(null);
+			
+			if(atendimentoAux.getAso() != null && atendimentoAux.getAso().getId() == 0)
+				atendimentoAux.setAso(null);
+		}
+		
+		return atendimentoAux;
 	}
 	
 	public Atendimento iniciar(Atendimento atendimento) throws Exception {
 		
-		atendimento = getById(atendimento.getId());
+		atendimento = merge(atendimento);
 		
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
 		
-		return save(addAtualizacao(atendimento), this.functionLoadAll);
+		atendimento = save(addAtualizacao(atendimento), this.functionLoadAll);
+		atendimento = getById(atendimento.getId());
+		
+		return atendimento;
 	}
 	
 	@SuppressWarnings("deprecation")
 	public Atendimento registrarAusencia(Atendimento atendimento) throws Exception {
 		
-		atendimento = getById(atendimento.getId());
+		atendimento = merge(atendimento);
 		
 		FilaAtendimentoOcupacional fila = FilaAtendimentoOcupacionalBo.getInstance()
 				.getBuilder(atendimento.getFilaAtendimentoOcupacional())
@@ -145,13 +236,14 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		getDao().devolverPraFila(atendimento);
 		
-		return FilaAtendimentoOcupacionalBo.getInstance().atualizar(fila);
+		return FilaAtendimentoOcupacionalBo.getInstance().atualizar(AtendimentoFactory
+				.newInstance().filaAtendimento(fila).get());
 	}
 	
 	@SuppressWarnings("deprecation")
 	public Atendimento devolverPraFila(Atendimento atendimento) throws Exception {
 		
-		atendimento = getById(atendimento.getId());
+		atendimento = merge(atendimento);
 		
 		FilaAtendimentoOcupacional fila = FilaAtendimentoOcupacionalBo.getInstance()
 				.getBuilder(atendimento.getFilaAtendimentoOcupacional())
@@ -185,12 +277,13 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		getDao().devolverPraFila(atendimento);
 		
-		return FilaAtendimentoOcupacionalBo.getInstance().atualizar(fila);
+		return FilaAtendimentoOcupacionalBo.getInstance().atualizar(AtendimentoFactory
+				.newInstance().filaAtendimento(fila).get());
 	}
 	
 	public Atendimento liberar(Atendimento atendimento) throws Exception {
 		
-		atendimento = getById(atendimento.getId());
+		atendimento = merge(atendimento);
 		
 		if(!atendimento.getFilaAtendimentoOcupacional().getStatus()
 				.equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO))
@@ -210,13 +303,15 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().LANCAMENTO_DE_INFORMACOES);
 		
-		return save(addAtualizacao(atendimento));
+		atendimento = save(addAtualizacao(atendimento), this.functionLoadAll);
+		atendimento = getById(atendimento.getId());
+		
+		return atendimento;
 	}
 	
 	public Atendimento finalizar(Atendimento atendimento) throws Exception {
 		
-		atendimento = getById(atendimento.getId());
-		
+		atendimento = merge(atendimento);
 		
 		if(!(atendimento.getFilaAtendimentoOcupacional().getStatus()
 				.equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO)) &&
@@ -262,12 +357,58 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		atendimento.getTarefa().setFim(now);
 		atendimento.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
 		
+		atendimento = gerarRisco(atendimento);
+		
 		return save(addAtualizacao(atendimento));
+	}
+	
+	private Atendimento gerarRisco(Atendimento atendimento) {
+		
+		if(atendimento.getTriagens() != null && atendimento.getTriagens().size() > 0) {			
+			List<Triagem> triagens = atendimento.getTriagens().stream().filter(t->t.getIndice() >= 0)
+					.collect(Collectors.toList());
+			
+			//CARREGAR OS INDICADORES
+			triagens.forEach(t->{
+				try {
+					t.setIndicadorSast(
+							IndicadorSastBo.getInstance().getById(t.getIndicadorSast().getId()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+			
+			double r0 = 0.95 - (triagens.stream().flatMapToInt(t-> IntStream.of(t.getIndice())).average().getAsDouble()/4.3);
+			
+			double r01 = (Math.log10(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe().getPrioridadeSast() + 1) /
+						 	(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe().getPrioridadeSast() + 5)) / 
+					(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe()
+								.getPrioridadeSast() + triagens.size());
+			
+			double r1 = r0 + r01;
+			
+			if (triagens.stream().filter(t->t.getIndice() <= t.getIndicadorSast().getCritico()).count() > 0)
+				r1 = 0.95;
+			
+			RiscoEmpregado risco = new RiscoEmpregado();
+			risco.setRiscoPotencial(atendimento.getFilaEsperaOcupacional().getRiscoPotencial());
+			risco.setProfissional(atendimento.getFilaAtendimentoOcupacional().getProfissional());
+			risco.setEquipe(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe());
+			risco.setTriagens(atendimento.getTriagens());
+			risco.setAtivo(true);
+			risco.setValor(r1);
+			risco.setData(Helper.getToday());
+			risco.setStatus(StatusRiscoEmpregado.getInstance().REALIZADO);
+			
+			atendimento.getTriagens().forEach(t->t.setRiscoEmpregado(risco));
+		}
+		
+		return atendimento;
 	}
 	
 	public Atendimento finalizarPausar(Atendimento atendimento) throws Exception {
 		
-		atendimento = getById(atendimento.getId());
+		atendimento = merge(atendimento);
 		
 		if(!(atendimento.getFilaAtendimentoOcupacional().getStatus()
 				.equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO)) &&
@@ -312,6 +453,8 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		atendimento.getTarefa().setFim(now);
 		atendimento.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
+		
+		atendimento = gerarRisco(atendimento);
 		
 		return save(addAtualizacao(atendimento));
 	}
@@ -537,4 +680,5 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		return "Atendimento registrado com sucesso.";
 	}
+	
 }

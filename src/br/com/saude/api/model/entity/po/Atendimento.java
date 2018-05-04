@@ -1,5 +1,7 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,7 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
@@ -18,20 +22,26 @@ public class Atendimento {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@NotNull(message="É necessário informar a Fila de Atendimento.")
 	private FilaAtendimentoOcupacional filaAtendimentoOcupacional;
 	
-	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@NotNull(message="É necessário informar a Fila de Espera.")
 	private FilaEsperaOcupacional filaEsperaOcupacional;
 	
 	@NotNull(message="É necessário informar a Tarefa.")
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.LAZY, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private Tarefa tarefa;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private Aso aso;
+	
+	@OneToMany(mappedBy="atendimento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<Triagem> triagens;
+	
+	@Transient
+	private List<Triagem> triagensTodosAtendimentos;
 	
 	@Version
 	private long version;
@@ -67,6 +77,14 @@ public class Atendimento {
 	public void setTarefa(Tarefa tarefa) {
 		this.tarefa = tarefa;
 	}
+	
+	public List<Triagem> getTriagens() {
+		return triagens;
+	}
+
+	public void setTriagens(List<Triagem> triagens) {
+		this.triagens = triagens;
+	}
 
 	public long getVersion() {
 		return version;
@@ -82,5 +100,13 @@ public class Atendimento {
 
 	public void setAso(Aso aso) {
 		this.aso = aso;
+	}
+
+	public List<Triagem> getTriagensTodosAtendimentos() {
+		return triagensTodosAtendimentos;
+	}
+
+	public void setTriagensTodosAtendimentos(List<Triagem> triagensTodosAtendimentos) {
+		this.triagensTodosAtendimentos = triagensTodosAtendimentos;
 	}
 }

@@ -50,6 +50,7 @@ public class RegraAtendimentoEquipeBuilder
 		RegraAtendimentoEquipe newRegraAtendimentoEquipe = new RegraAtendimentoEquipe();
 		
 		newRegraAtendimentoEquipe.setId(regraAtendimentoEquipe.getId());
+		newRegraAtendimentoEquipe.setAcolhimento(regraAtendimentoEquipe.isAcolhimento());
 		newRegraAtendimentoEquipe.setVersion(regraAtendimentoEquipe.getVersion());
 		
 		if(regraAtendimentoEquipe.getEquipe() != null)

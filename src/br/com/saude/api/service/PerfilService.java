@@ -25,7 +25,6 @@ import br.com.saude.api.util.RequestInterceptor;
 public class PerfilService extends GenericServiceImpl<Perfil,PerfilFilter,PerfilBo>
 							implements GenericService<Perfil,PerfilFilter>{
 
-
 	@Override
 	protected PerfilBo getBo() {
 		return PerfilBo.getInstance();

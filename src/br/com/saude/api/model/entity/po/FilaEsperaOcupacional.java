@@ -2,6 +2,7 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -40,6 +41,12 @@ public class FilaEsperaOcupacional {
 	@NotNull(message="É necessário informar o Status da Fila.")
 	@Size(max = 64, message="Tamanho máximo para Status da Fila: 64")
 	private String status;
+	
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private FichaColeta fichaColeta;
+	
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private RiscoPotencial riscoPotencial;
 	
 	private long tempoEspera;
 	
@@ -120,11 +127,27 @@ public class FilaEsperaOcupacional {
 		this.tempoEspera = tempoEspera;
 	}
 
+	public FichaColeta getFichaColeta() {
+		return fichaColeta;
+	}
+
+	public void setFichaColeta(FichaColeta fichaColeta) {
+		this.fichaColeta = fichaColeta;
+	}
+
 	public long getVersion() {
 		return version;
 	}
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public RiscoPotencial getRiscoPotencial() {
+		return riscoPotencial;
+	}
+
+	public void setRiscoPotencial(RiscoPotencial riscoPotencial) {
+		this.riscoPotencial = riscoPotencial;
 	}
 }

@@ -153,7 +153,6 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
-	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -184,9 +183,9 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/atualizar")
-	public Response atualizar(FilaAtendimentoOcupacional fila) {
+	public Response atualizar(Atendimento atendimento) {
 		try {
-			return Response.ok(FilaAtendimentoOcupacionalBo.getInstance().atualizar(fila)).build();
+			return Response.ok(FilaAtendimentoOcupacionalBo.getInstance().atualizar(atendimento)).build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}

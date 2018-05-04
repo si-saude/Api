@@ -18,11 +18,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.html.simpleparser.HTMLWorker;
 import com.itextpdf.text.pdf.PdfWriter;
-
+import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
@@ -37,25 +39,35 @@ import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.filter.FilaEsperaOcupacionalFilter;
+import br.com.saude.api.model.entity.filter.IndicadorSastFilter;
 import br.com.saude.api.model.entity.filter.LocalizacaoFilter;
+import br.com.saude.api.model.entity.filter.PerguntaFichaColetaFilter;
 import br.com.saude.api.model.entity.filter.PessoaFilter;
 import br.com.saude.api.model.entity.filter.ProfissionalFilter;
+import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Empregado;
+import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
+import br.com.saude.api.model.entity.po.IndicadorSast;
 import br.com.saude.api.model.entity.po.Localizacao;
+import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.RegraAtendimento;
 import br.com.saude.api.model.entity.po.RegraAtendimentoEquipe;
 import br.com.saude.api.model.entity.po.RegraAtendimentoLocalizacao;
+import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Tarefa;
+import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.FilaEsperaOcupacionalDao;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
+import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusTarefa;
 
 @SuppressWarnings("deprecation")
@@ -63,6 +75,8 @@ public class FilaEsperaOcupacionalBo
 	extends GenericBo<FilaEsperaOcupacional, FilaEsperaOcupacionalFilter, 
 					FilaEsperaOcupacionalDao, FilaEsperaOcupacionalBuilder, 
 					FilaEsperaOcupacionalExampleBuilder> {
+	
+	private Function<FilaEsperaOcupacionalBuilder, FilaEsperaOcupacionalBuilder> functionLoadRefresh;
 
 	private static FilaEsperaOcupacionalBo instance;
 	
@@ -79,6 +93,10 @@ public class FilaEsperaOcupacionalBo
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
+			return builder.loadLocalizacao().loadFichaColeta().loadRiscoPotencial();
+		};
+		
+		this.functionLoadRefresh = builder -> {
 			return builder.loadLocalizacao();
 		};
 	}
@@ -89,7 +107,13 @@ public class FilaEsperaOcupacionalBo
 	}
 	
 	public PagedList<FilaEsperaOcupacional> getListAll(FilaEsperaOcupacionalFilter filter) throws  Exception {
-		return super.getList(filter,this.functionLoadAll);
+		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), 
+				this.functionLoadAll);
+	}
+	
+	public PagedList<FilaEsperaOcupacional> getListRefresh(FilaEsperaOcupacionalFilter filter) throws  Exception {
+		return super.getList(getDao().getListRefresh(getExampleBuilder(filter).example()), 
+				this.functionLoadRefresh);
 	}
 	
 	public List<Atendimento> getQuadroAtendimento(Atendimento atendimento) throws Exception{
@@ -363,6 +387,14 @@ public class FilaEsperaOcupacionalBo
 					fila.getStatus().equals(StatusFilaEsperaOcupacional.getInstance().AUSENTE)) {
 				fila.setStatus(StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 				
+				FichaColeta f = fila.getFichaColeta();
+				fila.getFichaColeta().getRespostaFichaColetas().forEach(r->{
+					r.setFicha(f);
+					r.getItens().forEach(i->{
+						i.setResposta(r);
+					});
+				});
+				
 				getDao().save(fila);
 				
 				return "Empregado "+fila.getEmpregado().getPessoa().getNome()+" inserido na fila de espera. "+
@@ -375,11 +407,12 @@ public class FilaEsperaOcupacionalBo
 		// 4 - VERIFICAR SE EXISTE AGENDAMENTO (TAREFA) PARA ESTE EMPREGADO (CLIENTE),
 		// CUJO GRUPO DO SERVIÇO SEJA ATENDIMENTO OCUPACIONAL, E STATUS DIFERENTE DE
 		// CONCLUÍDO E CANCELADO, E A DATA DA TAREFA ESTÁ ENTRE O DIA ATUAL E O SEGUINTE
+		RiscoPotencial risco = null;
 		Tarefa tarefa = checkPendecia(fila.getEmpregado()); 
 		if(tarefa == null) {
 			TarefaFilter tarefaFilter = new TarefaFilter();
 			tarefaFilter.setPageNumber(1);
-			tarefaFilter.setPageSize(1);
+			tarefaFilter.setPageSize(Integer.MAX_VALUE);
 			tarefaFilter.setCliente(new EmpregadoFilter());
 			tarefaFilter.getCliente().setMatricula(fila.getEmpregado().getMatricula());
 			tarefaFilter.setServico(new ServicoFilter());
@@ -400,7 +433,30 @@ public class FilaEsperaOcupacionalBo
 			if(tarefas.getTotal() == 0)
 				throw new Exception("Não há agendamento para este Empregado.");
 			
-			tarefa = tarefas.getList().get(0);
+			//OBTER A EQUIPE DE ACOLHIMENTO
+			if(tarefas.getList().stream().filter(t->t.getEquipe().getAbreviacao().equals("ACO"))
+					.count() > 0)
+				tarefa = tarefas.getList().stream()
+					.filter(t->t.getEquipe().getAbreviacao().equals("ACO")).findFirst().get();
+			else if(tarefas.getList().stream().filter(t->t.getEquipe().getAbreviacao().equals("ENF"))
+					.count() > 0)
+				tarefa = tarefas.getList().stream()
+					.filter(t->t.getEquipe().getAbreviacao().equals("ENF")).findFirst().get();
+			else
+				tarefa = tarefas.getList().get(0);
+		}else {
+			//OBTER O RISCO ATIVO DO EMPREGADO
+			RiscoPotencialFilter riscoFilter = new RiscoPotencialFilter();
+			riscoFilter.setPageNumber(1);
+			riscoFilter.setPageSize(1);
+			riscoFilter.setAtual(new BooleanFilter());
+			riscoFilter.getAtual().setValue(1);
+			riscoFilter.setEmpregado(new EmpregadoFilter());
+			riscoFilter.getEmpregado().setMatricula(fila.getEmpregado().getMatricula());
+			
+			PagedList<RiscoPotencial> riscos = RiscoPotencialBo.getInstance().getListLoadAll(riscoFilter);
+			if(riscos.getTotal() > 0)
+				risco = riscos.getList().get(0);
 		}
 		
 		// 5 - INSTANCIAR FILA
@@ -410,7 +466,73 @@ public class FilaEsperaOcupacionalBo
 		fila.setStatus(StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 		fila.setServico(tarefa.getServico());
 		
-		// 6 - INSERIR NO BANCO
+		if(tarefa.getEquipe().getAbreviacao().equals("ACO") ||
+				tarefa.getEquipe().getAbreviacao().equals("ENF")) {
+			// 6 - CRIAR A FICHA DE COLETA, COM AS RESPOSTAS PARA AS PERGUNTAS ATIVAS
+			PerguntaFichaColetaFilter perguntaFilter = new PerguntaFichaColetaFilter();
+			perguntaFilter.setPageNumber(1);
+			perguntaFilter.setPageSize(Integer.MAX_VALUE);
+			perguntaFilter.setInativo(new BooleanFilter());
+			perguntaFilter.getInativo().setValue(2);
+			
+			PagedList<PerguntaFichaColeta> perguntas = 
+					PerguntaFichaColetaBo.getInstance().getListLoadAll(perguntaFilter);
+			
+			if(perguntas.getTotal() > 0) {
+				fila.setFichaColeta(new FichaColeta());
+				fila.getFichaColeta().setRespostaFichaColetas(new ArrayList<RespostaFichaColeta>());
+				
+				//PARA CADA PERGUNTA, CRIAR UMA RESPOSTA
+				for(PerguntaFichaColeta pergunta : perguntas.getList()) {
+					RespostaFichaColeta resposta = new RespostaFichaColeta();
+					resposta.setPergunta(pergunta);
+					resposta.setFicha(fila.getFichaColeta());
+					fila.getFichaColeta().getRespostaFichaColetas().add(resposta);
+				}
+			}
+			
+			// 7 - GERAR O RISCO POTENCIAL
+			if(risco == null) {
+				risco = new RiscoPotencial();
+				risco.setData(Helper.getToday());
+				risco.setEmpregado(fila.getEmpregado());
+				risco.setAtual(true);
+				risco.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
+				risco.setAbreviacaoEquipeAcolhimento(tarefa.getEquipe().getAbreviacao());
+			}
+			fila.setRiscoPotencial(risco);
+			
+			// 8 - OBTER A LISTA DOS RISCOS DO EMPREGADO PARA SETAR COMO NÃO ATUAL
+			RiscoPotencialFilter riscoFilter = new RiscoPotencialFilter();
+			riscoFilter.setPageNumber(1);
+			riscoFilter.setPageSize(Integer.MAX_VALUE);
+			riscoFilter.setEmpregado(new EmpregadoFilter());
+			riscoFilter.getEmpregado().setId(fila.getEmpregado().getId());
+			riscoFilter.setAtual(new BooleanFilter());
+			riscoFilter.getAtual().setValue(1);
+			
+			PagedList<RiscoPotencial> riscos = RiscoPotencialBo.getInstance().getListLoadAll(riscoFilter);
+			
+			if(riscos.getTotal() > 0) {
+				riscos.getList().forEach(r-> {
+					r.setAtual(false);
+					r.getRiscoEmpregados().forEach(rE -> {
+						rE.getTriagens().forEach(t -> {
+							t.getAcoes().forEach(a -> {
+								a.setTriagem(t);
+								a.getAcompanhamentos().forEach(ac -> ac.setAcao(a));
+							});
+						});
+					});
+				});
+				RiscoPotencialBo.getInstance().saveList(riscos.getList());
+			}
+		}else {
+			if(fila.getRiscoPotencial() != null && fila.getRiscoPotencial().getId() == 0)
+				fila.setRiscoPotencial(null);
+		}
+		
+		// 9 - INSERIR NO BANCO
 		getDao().save(fila);
 		
 		return "Empregado "+fila.getEmpregado().getPessoa().getNome()+" inserido na fila de espera. "+
@@ -732,7 +854,7 @@ public class FilaEsperaOcupacionalBo
 									
 									//SE FOR ACOLHIMENTO, NÃO LEVAR EM CONSIDERAÇÃO OS ATENDIMENTOS
 									//CUJA TAREFA ESTEJA EM EXECUÇÃO
-									if(rE.getEquipe().getAbreviacao().equals("ACO") && listAtendimento.stream()
+									if(rE.isAcolhimento() && listAtendimento.stream()
 											.filter(a->a.getTarefa().getStatus().equals(
 													StatusTarefa.getInstance().EXECUCAO))
 											.count() > 0 ) {
@@ -811,6 +933,20 @@ public class FilaEsperaOcupacionalBo
 								filaEspera.setTempoEspera(filaEspera.getTempoEspera() + calcularTempoAtualizacao(filaEspera));
 								filaEspera.setAtualizacao(tarefa.getAtualizacao());
 								
+								//SETAR REFERENCIA DE FICHA COLETA EM RESPOSTAS FICHAS COLETAS
+								if(filaEspera.getFichaColeta() != null)
+									filaEspera.getFichaColeta().getRespostaFichaColetas().forEach(rF -> {
+										rF.setFicha(filaEspera.getFichaColeta());
+										
+										if(rF.getItens() != null)
+											rF.getItens().forEach(iRF -> iRF.setResposta(rF));
+									});
+								
+								if ( filaEspera.getRiscoPotencial() != null && 
+										filaEspera.getRiscoPotencial().getRiscoEmpregados() != null )
+									filaEspera.getRiscoPotencial().getRiscoEmpregados().forEach(r -> 
+										r.setRiscoPotencial(filaEspera.getRiscoPotencial()));
+								
 								//INSTANCIAR
 								Atendimento atendimento = new Atendimento();
 								atendimento.setFilaAtendimentoOcupacional(fA);
@@ -818,6 +954,14 @@ public class FilaEsperaOcupacionalBo
 								atendimento.setTarefa(tarefa);
 								atendimento = AtendimentoBo.getInstance().addAtualizacao(atendimento);
 								fA.setAtualizacao(tarefa.getAtualizacao());
+								
+								//CRIAR A FICHA DE TRIAGEM
+								if(filaEspera.getRiscoPotencial() != null)
+									try {
+										atendimento = setTriagens(atendimento);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
 								
 								//ADD NA LISTA
 								atendimentos.getList().add(atendimento);
@@ -830,11 +974,43 @@ public class FilaEsperaOcupacionalBo
 			}	
 			
 			// 7 - SALVAR A LISTA DE ATENDIMENTO NO BANCO
-			AtendimentoBo.getInstance().saveList(atendimentos.getList());
+			AtendimentoBo.getInstance().saveList(
+					atendimentos.getList().stream().filter(a->a.getId() == 0).collect(Collectors.toList()));
 		}
 				
 		// 8 - RETORNAR A LISTA DE ATENDIMENTO
 		return  AtendimentoBo.getInstance().getBuilder(atendimentos.getList()).loadTarefa().getEntityList();
+	}
+	
+	private Atendimento setTriagens(Atendimento atendimento) throws Exception {
+		
+		// 1 - OBTER OS INDICADORES ATIVOS DA EQUIPE DO PROFISSIONAL
+		IndicadorSastFilter indicadorFilter = new IndicadorSastFilter();
+		indicadorFilter.setPageNumber(1);
+		indicadorFilter.setPageSize(Integer.MAX_VALUE);
+		indicadorFilter.setInativo(new BooleanFilter());
+		indicadorFilter.getInativo().setValue(2);
+		indicadorFilter.setEquipe(new EquipeFilter());
+		indicadorFilter.getEquipe().setId(atendimento.getFilaAtendimentoOcupacional()
+				.getProfissional().getEquipe().getId());
+		
+		PagedList<IndicadorSast> indicadores = IndicadorSastBo.getInstance().getList(indicadorFilter);
+		
+		if(indicadores.getTotal() > 0) {
+			
+			if(atendimento.getTriagens() == null)
+				atendimento.setTriagens(new ArrayList<Triagem>());
+			
+			// 2 - PARA CADA INDICADOR RETORNADO, CRIAR UMA TRIAGEM COM O INDICADOR ASSOCIADO
+			for(IndicadorSast indicador : indicadores.getList()) {
+				Triagem triagem = new Triagem();
+				triagem.setAtendimento(atendimento);
+				triagem.setIndicadorSast(indicador);
+				atendimento.getTriagens().add(triagem);
+			}
+		}
+		
+		return atendimento;
 	}
 	
 	private long calcularTempoAtualizacao(FilaEsperaOcupacional fila) {

@@ -23,16 +23,25 @@ import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Empregado;
+import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.FilaEsperaOcupacional;
+import br.com.saude.api.model.entity.po.IndicadorSast;
+import br.com.saude.api.model.entity.po.ItemPerguntaFichaColeta;
+import br.com.saude.api.model.entity.po.ItemRespostaFichaColeta;
 import br.com.saude.api.model.entity.po.Localizacao;
+import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.Pessoa;
 import br.com.saude.api.model.entity.po.Profissional;
+import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Tarefa;
+import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.model.entity.po.Aso;
+import br.com.saude.api.model.entity.po.RiscoEmpregado;
 
 public class AtendimentoDao extends GenericDao<Atendimento> {
 
@@ -73,6 +82,74 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				atendimento.getFilaEsperaOcupacional().setLocalizacao(
 						(Localizacao) Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getLocalizacao()));
 			
+			if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null) {
+				atendimento.getFilaEsperaOcupacional().setRiscoPotencial(
+						(RiscoPotencial) Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getRiscoPotencial()));
+								
+				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes() != null) {
+					List<Equipe> equipes = new ArrayList<Equipe>();
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipes().forEach(e -> {
+						equipes.add((Equipe) Hibernate.unproxy(e));
+					});
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setEquipes(equipes);
+				}
+				
+				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados() != null) {
+					List<RiscoEmpregado> riscos = new ArrayList<RiscoEmpregado>();
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados().forEach(r->{
+						riscos.add((RiscoEmpregado) Hibernate.unproxy(r));
+					});
+					atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setRiscoEmpregados(riscos);
+				}
+			}
+			
+			if(atendimento.getFilaEsperaOcupacional().getFichaColeta() != null) {
+				atendimento.getFilaEsperaOcupacional().setFichaColeta((FichaColeta) 
+						Hibernate.unproxy(atendimento.getFilaEsperaOcupacional().getFichaColeta()));
+				
+				List<RespostaFichaColeta> respostas = new ArrayList<RespostaFichaColeta>();
+				
+				atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().forEach(r->{
+					respostas.add((RespostaFichaColeta) Hibernate.unproxy(r));
+				});
+				
+				
+				respostas.forEach(r -> {
+					List<ItemRespostaFichaColeta> itens = new ArrayList<ItemRespostaFichaColeta>();
+					
+					r.getItens().forEach(i -> {
+						itens.add(FilaEsperaOcupacionalDao.getInstance().inicializeItem(i));
+					});
+					
+					r.setItens(itens);
+					
+					List<ItemPerguntaFichaColeta> itensPergunta = new ArrayList<ItemPerguntaFichaColeta>(); 
+					r.setPergunta((PerguntaFichaColeta) Hibernate.unproxy(r.getPergunta()));
+					r.getPergunta().getItens().forEach(i -> {
+						itensPergunta.add((ItemPerguntaFichaColeta) Hibernate.unproxy(i));
+					});
+					
+					List<Equipe> equipes = new ArrayList<Equipe>();
+					r.getPergunta().getEquipes().forEach(e -> {
+						equipes.add((Equipe) Hibernate.unproxy(e));
+					});
+					
+					r.getPergunta().setEquipes(equipes);
+					r.getPergunta().setItens(itensPergunta);
+				});
+				
+				atendimento.getFilaEsperaOcupacional().getFichaColeta().setRespostaFichaColetas(respostas);
+			}
+			
+			if(atendimento.getTriagens() != null) {
+				
+				Hibernate.initialize(atendimento.getTriagens());
+				
+				atendimento.getTriagens().forEach(t->{
+					t.setIndicadorSast((IndicadorSast) Hibernate.unproxy(t.getIndicadorSast()));
+				});
+			}
+			
 			return atendimento;
 		};
 		
@@ -93,14 +170,17 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 		try {
 			Transaction transaction = session.beginTransaction();
 						
+			if(atendimento.getFilaEsperaOcupacional().getFichaColeta() != null &&
+					atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas() != null) {
+				FichaColeta ficha = atendimento.getFilaEsperaOcupacional().getFichaColeta();
+				atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas()
+					.forEach(r->r.setFicha(ficha));
+			}
+					
 			//SALVAR ATENDIMENTO E DELETAR
-			session.merge(atendimento);
+			atendimento = (Atendimento) session.merge(atendimento);
 			
-			StringBuilder queryBuilder = new StringBuilder("DELETE ");
-			queryBuilder.append(atendimento.getClass().getSimpleName());
-			queryBuilder.append(" WHERE id = :id");
-			
-			session.createQuery(queryBuilder.toString()).setParameter("id", atendimento.getId()).executeUpdate();
+			session.delete(atendimento);
 			
 			transaction.commit();
 		}catch(Exception ex) {

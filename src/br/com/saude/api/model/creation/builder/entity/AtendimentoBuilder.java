@@ -13,6 +13,7 @@ import br.com.saude.api.model.entity.po.Atendimento;
 public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, AtendimentoFilter> {
 
 	private Function<Map<String,Atendimento>,Atendimento> loadTarefa;
+	private Function<Map<String,Atendimento>,Atendimento> loadTriagens;
 	private Function<Map<String,Atendimento>,Atendimento> loadAso;
 	
 	public static AtendimentoBuilder newInstance(Atendimento atendimento) {
@@ -48,6 +49,14 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 						.getEntity());
 			return atendimentos.get("destino");
 		};
+		
+		this.loadTriagens = atendimentos -> {
+			if (atendimentos.get("origem").getTriagens() != null)
+				atendimentos.get("destino").setTriagens(TriagemBuilder
+						.newInstance(atendimentos.get("origem").getTriagens())
+						.getEntityList());
+			return atendimentos.get("destino");
+		};
 	}
 
 	@Override
@@ -74,6 +83,12 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 			if(!(atendimento.getFilaEsperaOcupacional().getLocalizacao() instanceof HibernateProxy))
 				filaEsperaBuilder = filaEsperaBuilder.loadLocalizacao();
 			
+			if(!(atendimento.getFilaEsperaOcupacional().getFichaColeta() instanceof HibernateProxy))
+				filaEsperaBuilder = filaEsperaBuilder.loadFichaColeta();
+			
+			if(!(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() instanceof HibernateProxy))
+				filaEsperaBuilder = filaEsperaBuilder.loadRiscoPotencialEquipes();
+			
 			newAtendimento.setFilaEsperaOcupacional(filaEsperaBuilder.getEntity());
 		}
 		
@@ -86,6 +101,10 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	
 	public AtendimentoBuilder loadAso() {
 		return (AtendimentoBuilder) this.loadProperty(this.loadAso);
+	}
+	
+	public AtendimentoBuilder loadTriagens() {
+		return (AtendimentoBuilder) this.loadProperty(this.loadTriagens);
 	}
 
 	@Override

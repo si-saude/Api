@@ -114,6 +114,15 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-all")
+	public Response getListAll(FilaEsperaOcupacionalFilter filter) throws Exception {
+		return Response.ok(getBo().getListAll(filter).getGenericPagedList()).build();
+	}
 
 	@RequestInterceptor
 	@Override
