@@ -95,9 +95,11 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		else
 			throw new Exception("Não é possível prosseguir, pois não há Riscos Empregado.");
 		
+		RiscoPotencial rp = getById(riscoPotencial.getId());
+		
 		//DEFINIR EQUIPE RESPONSÁVEL
 		riscoAux.setRiscosInterdiciplinares(null);
-		riscoAux.setEquipeResponsavel(riscoAux.getRiscosInterdiciplinares().get(0).getEquipe());
+		riscoAux.setEquipeResponsavel(rp.getRiscosInterdiciplinares().get(0).getEquipe());
 		
 		//ALTERAR O STATUS DAS AÇÕES
 		riscoAux.getRiscoEmpregados().forEach(r->{

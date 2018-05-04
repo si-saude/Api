@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.filter;
 
+import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class TriagemFilter extends GenericFilter {
@@ -7,6 +8,7 @@ public class TriagemFilter extends GenericFilter {
 	private RiscoEmpregadoFilter riscoEmpregado;
 	private EquipeFilter equipeAbordagem;
 	private IndicadorSastFilter indicadorSast;
+	private BooleanFilter ignorarAcoes;
 
 	public IndicadorSastFilter getIndicadorSast() {
 		return indicadorSast;
@@ -31,4 +33,13 @@ public class TriagemFilter extends GenericFilter {
 	public void setRiscoEmpregado(RiscoEmpregadoFilter riscoEmpregado) {
 		this.riscoEmpregado = riscoEmpregado;
 	}
+
+	public BooleanFilter isIgnorarAcoes() {
+		return ignorarAcoes;
+	}
+
+	public void setIgnorarAcoes(BooleanFilter ignorarAcoes) {
+		this.ignorarAcoes = ignorarAcoes;
+	}
+	
 }

@@ -74,7 +74,11 @@ implements GenericService<RiscoEmpregado, RiscoEmpregadoFilter>{
 	@Path("/list-to-copy")
 	public Response getListToCopy(RiscoEmpregadoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		return Response.ok(getBo().getListToCopy(filter).getGenericPagedList()).build();
+		try {
+			return Response.ok(getBo().getListToCopy(filter).getGenericPagedList()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 	}
 
 	@Override

@@ -26,6 +26,7 @@ public class TriagemExampleBuilder extends GenericExampleBuilder<Triagem, Triage
 		addEquipeAbordagem();
 		addIndicadorSast();
 		
+		
 		this.entity.setIndice(0);
 	}
 
@@ -62,4 +63,9 @@ public class TriagemExampleBuilder extends GenericExampleBuilder<Triagem, Triage
 			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("indicadorSast", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
+	
+	protected void addIgnorarAcoes() {
+		this.entity.setIgnorarAcoes(this.addBoolean("ignorarAcoes", this.filter.isIgnorarAcoes()));
+	}
+	
 }

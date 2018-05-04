@@ -61,10 +61,12 @@ public class RiscoEmpregadoBo extends
 			if( riscoPotencial.getRiscoEmpregados().stream().filter(r->{
 					return r.getEquipe().getId() != equipeId && r.isAtivo() &&
 							r.getTriagens().stream().filter(t->{
-								if(t.getPrazo() != null && (t.getAcoes() == null || t.getAcoes().size() == 0))
+								if(t.getEquipeAbordagem() != null && 
+										(t.getAcoes() == null || t.getAcoes().size() == 0) && 
+										!t.isIgnorarAcoes())
 									return true;
-								return t.getAcoes().stream().filter(a->a.getStatus()
-										.equals(StatusAcao.getInstance().ENCERRADA)).count() > 0;
+								return t.getAcoes().stream().filter(a->!a.getStatus()
+										.equals(StatusAcao.getInstance().REAVALIADA)).count() > 0;
 							}).count() > 0;
 					}).count() == 0)
 				return false;
@@ -80,8 +82,9 @@ public class RiscoEmpregadoBo extends
 		for(RiscoEmpregado r : riscoPotencial.getRiscoEmpregados()){
 			if(r.getEquipe().getId() == equipeId && r.isAtivo()) {
 				for(Triagem t : r.getTriagens()) {
-					if (t.getPrazo() != null && (t.getAcoes() == null || t.getAcoes().size() == 0))
-						throw new Exception("Não é possível reavaliar pois não há ações.");
+					if (t.getEquipeAbordagem() != null && (t.getAcoes() == null || t.getAcoes().size() == 0) && !t.isIgnorarAcoes())
+						throw new Exception("Não é possível reavaliar. Verifique se existem "
+								+ "indicadores com outra equipe de abordagem sem ação e não ignorada.");
 					else if (t.getAcoes().stream().filter(a -> a.getStatus()
 								.equals(StatusAcao.getInstance().REAVALIADA)).count() > 0)
 						return true;
