@@ -15,19 +15,24 @@ import br.com.saude.api.util.RequestInterceptor;
 import br.com.saude.api.util.constant.Abrangencia;
 import br.com.saude.api.util.constant.AcaoResultadoExame;
 import br.com.saude.api.util.constant.AptidaoCardiorrespiratoria;
+import br.com.saude.api.util.constant.AptidaoFisicaBrigadista;
 import br.com.saude.api.util.constant.Conformidade;
+import br.com.saude.api.util.constant.DoresCorporaisIntensidade;
 import br.com.saude.api.util.constant.Escolaridade;
 import br.com.saude.api.util.constant.EstadoCivil;
 import br.com.saude.api.util.constant.EstagioContemplacao;
+import br.com.saude.api.util.constant.ExposicaoRiscosAmbientaisCategoria;
 import br.com.saude.api.util.constant.Flexibilidade;
 import br.com.saude.api.util.constant.ForcaAbdominal;
 import br.com.saude.api.util.constant.ForcaPreensaoManual;
+import br.com.saude.api.util.constant.FumaClassificacao;
 import br.com.saude.api.util.constant.Funcionalidade;
 import br.com.saude.api.util.constant.GrupoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.NivelAtividadeFisica;
 import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.PrazoEmMeses;
+import br.com.saude.api.util.constant.RefereQualidadeAguaQualidade;
 import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.SensacaoDor;
 import br.com.saude.api.util.constant.Sexo;
@@ -38,6 +43,8 @@ import br.com.saude.api.util.constant.StatusRiscoEmpregado;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusSimNao;
 import br.com.saude.api.util.constant.StatusTarefa;
+import br.com.saude.api.util.constant.TempoAnos;
+import br.com.saude.api.util.constant.TempoMeses;
 import br.com.saude.api.util.constant.TipoAcao;
 import br.com.saude.api.util.constant.TipoContato;
 import br.com.saude.api.util.constant.TipoConvocacao;
@@ -105,6 +112,55 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFlexibilidade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(Flexibilidade.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/exposicao-riscos-ambientais")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getExposicaoRiscosAmbientaisCategoria(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(ExposicaoRiscosAmbientaisCategoria.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/refere-qualidade-agua")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRefereQualidadeAguaQualidade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(RefereQualidadeAguaQualidade.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/tempo-meses")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTempoMeses(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TempoMeses.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/dores-corporais")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDoresCorporaisIntensidade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(DoresCorporaisIntensidade.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/fuma-classificacao")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFumaClassificacao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(FumaClassificacao.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/tempo-anos")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTempoAnos(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TempoAnos.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/aptidao-fisica-brigadista")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAptidaoFisicaBrigadista(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(AptidaoFisicaBrigadista.getInstance(),filter)).build();
 	}
 	
 	@GET
