@@ -472,6 +472,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		return Date.from(LocalDateTime.ofInstant(Helper.getToday().toInstant(), ZoneId.systemDefault())
 				.plusMonths(meses)
+				.minusDays(1)
 				.atZone(ZoneId.systemDefault())
 				.toInstant());
 	}

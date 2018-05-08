@@ -115,6 +115,7 @@ public class FilaAtendimentoOcupacionalBo
 						.status(f.getStatus())
 						.tempo(calcularTempoAtualizacao(f))
 						.get());
+				f.getAtualizacoes().forEach(a->a.setFila(f));
 				f.setAtualizacao(now);
 			});
 			

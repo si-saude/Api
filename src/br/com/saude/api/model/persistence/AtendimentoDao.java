@@ -70,6 +70,15 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				atendimento.getFilaAtendimentoOcupacional().setLocalizacao(
 						(Localizacao) Hibernate.unproxy(atendimento.getFilaAtendimentoOcupacional().getLocalizacao()));
 			
+			if(atendimento.getFilaAtendimentoOcupacional().getProfissional() != null) {
+				atendimento.getFilaAtendimentoOcupacional().setProfissional((Profissional) Hibernate.unproxy(
+						atendimento.getFilaAtendimentoOcupacional().getProfissional()));
+				
+				if(atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe() != null)
+					atendimento.getFilaAtendimentoOcupacional().getProfissional().setEquipe((Equipe) Hibernate.unproxy(
+							atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe()));
+			}
+			
 			if(atendimento.getFilaAtendimentoOcupacional().getAtualizacoes() != null) {
 				List<FilaAtendimentoOcupacionalAtualizacao> list = new ArrayList<FilaAtendimentoOcupacionalAtualizacao>();
 				atendimento.getFilaAtendimentoOcupacional().getAtualizacoes().forEach(a -> {

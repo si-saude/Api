@@ -649,7 +649,7 @@ public class FilaEsperaOcupacionalBo
 		if(fila.getTotal() > 0) {
 			fila.getList().sort(new Comparator<FilaEsperaOcupacional>() {
 				public int compare(FilaEsperaOcupacional arg0, FilaEsperaOcupacional arg1) {
-					return arg0.getHorarioCheckin().compareTo(arg1.getHorarioCheckin());
+					return arg0.getAtualizacao().compareTo(arg1.getAtualizacao());
 				}
 			});
 			
@@ -972,6 +972,17 @@ public class FilaEsperaOcupacionalBo
 					}
 				});
 			}	
+			
+			if(atendimentos.getList() != null) {
+				atendimentos.getList().forEach(a->{
+					if( a.getFilaAtendimentoOcupacional() != null && a.getFilaAtendimentoOcupacional()
+							.getAtualizacoes() != null) {
+						a.getFilaAtendimentoOcupacional().getAtualizacoes().forEach(aa->{
+							aa.setFila(a.getFilaAtendimentoOcupacional());
+						});
+					}
+				});
+			}
 			
 			// 7 - SALVAR A LISTA DE ATENDIMENTO NO BANCO
 			AtendimentoBo.getInstance().saveList(

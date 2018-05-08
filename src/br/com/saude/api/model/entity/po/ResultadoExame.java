@@ -33,7 +33,7 @@ public class ResultadoExame {
 	@OneToMany(mappedBy="resultadoExame", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<ItemResultadoExame> itemResultadoExames;
 	
-	@NotNull(message="É necessário informar a Data do Resultado.")
+//	@NotNull(message="É necessário informar a Data do Resultado.")
 	private Date data;
 	
 	private Date dataRecebimento;
