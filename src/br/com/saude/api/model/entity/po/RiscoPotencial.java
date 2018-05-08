@@ -214,10 +214,39 @@ public class RiscoPotencial {
 		if(this.riscosInterdiciplinares == null)
 			this.getRiscosInterdiciplinares();
 		
-		if(this.riscosInterdiciplinares != null && this.riscosInterdiciplinares.size() > 0)
-			this.valor = this.riscosInterdiciplinares.stream()
+		if(this.riscosInterdiciplinares != null && this.riscosInterdiciplinares.size() > 0) {
+			
+			List<RiscoEmpregado> riscos = new ArrayList<RiscoEmpregado>();
+			int idade = this.empregado.getPessoa().getIdade();
+			int indice = -1;
+			
+			if(idade >= 60)
+				indice = 0;
+			else if(idade >= 50)
+				indice = 1;
+			else if(idade >= 40)
+				indice = 2;
+			else if(idade >= 30)
+				indice = 3;
+			else if(idade >= 1)
+				indice = 4;
+			
+			if(indice >= 0) {
+				double r0 = 0.95 - (new Double(indice)/4.3);
+				double r01 = (Math.log10(6 + 1) /(6 + 5)) / (6 + 1);
+				double r1 = r0 + r01;
+				
+				RiscoEmpregado risco = new RiscoEmpregado();
+				risco.setValor(r1);
+				riscos.add(risco);
+			}
+			
+			riscos.addAll(this.riscosInterdiciplinares);
+			
+			this.valor = riscos.stream()
 							.flatMapToDouble(r-> DoubleStream.of(r.getValor()))
 							.average().getAsDouble();
+		}
 		
 		return this.valor;
 	}
