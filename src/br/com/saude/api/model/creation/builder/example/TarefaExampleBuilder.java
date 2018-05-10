@@ -37,6 +37,15 @@ public class TarefaExampleBuilder extends GenericExampleBuilder<Tarefa, TarefaFi
 		return super.getCriteriaExample(this.functionStatusNaoConcluidoCancelado);
 	}
 	
+	public GenericExampleBuilder<Tarefa, TarefaFilter> exampleStatusExecucaoOuConcluido() throws InstantiationException, IllegalAccessException {
+		if(this.filter!=null) {
+			initialize();
+			createExampleStatusExecucaoOuConcluido();
+			this.criterions.add(getExample());
+		}
+		return this;
+	}
+	
 	public GenericExampleBuilder<Tarefa, TarefaFilter> exampleStatusNaoConcluidoCancelado() throws InstantiationException, IllegalAccessException {
 		if(this.filter!=null) {
 			initialize();
@@ -53,6 +62,17 @@ public class TarefaExampleBuilder extends GenericExampleBuilder<Tarefa, TarefaFi
 			this.criterions.add(getExample());
 		}
 		return this;
+	}
+	
+	protected void createExampleStatusExecucaoOuConcluido() throws InstantiationException, IllegalAccessException {
+		addInicio();
+		addFim();
+		addAtualizacao();
+		addCliente();
+		addEquipe();
+		addResponsavel();
+		addServico();
+		addStatusExecucaoOuConcluido();
 	}
 	
 	protected void createExampleStatusNaoConcluidoCancelado() throws InstantiationException, IllegalAccessException {
@@ -113,6 +133,11 @@ public class TarefaExampleBuilder extends GenericExampleBuilder<Tarefa, TarefaFi
 				this.entity.setStatus(StatusTarefa.getInstance().EXECUCAO);
 			else this.entity.setStatus(this.filter.getStatus());
 		}	
+	}
+	
+	private void addStatusExecucaoOuConcluido() {
+		this.criterions.add(Restrictions.or(Restrictions.eq("status", StatusTarefa.getInstance().EXECUCAO), 
+				Restrictions.eq("status", StatusTarefa.getInstance().CONCLUIDA)));
 	}
 	
 	private void addStatusNaoConcluido() {
