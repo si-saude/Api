@@ -1,5 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
@@ -21,6 +22,7 @@ public class IntervencaoExampleBuilder extends GenericExampleBuilder<Intervencao
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
 		addDescricao();
 		addEquipe();
 		addInativo();
@@ -28,6 +30,7 @@ public class IntervencaoExampleBuilder extends GenericExampleBuilder<Intervencao
 
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		addId();
 		addDescricao();
 		addEquipe();
 		addInativo();
@@ -48,6 +51,11 @@ public class IntervencaoExampleBuilder extends GenericExampleBuilder<Intervencao
 	
 	protected void addInativo() {
 		this.entity.setInativo(this.addBoolean("inativo", this.filter.getInativo()));
+	}
+	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
 	}
 	
 }

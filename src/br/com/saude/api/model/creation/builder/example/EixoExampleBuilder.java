@@ -1,5 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
@@ -21,12 +22,14 @@ public class EixoExampleBuilder extends GenericExampleBuilder<Eixo,EixoFilter> {
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
 		addTitulo();
 		addEquipe();
 	}
 
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		addId();
 		addTitulo();
 		addEquipe();
 	}
@@ -42,6 +45,11 @@ public class EixoExampleBuilder extends GenericExampleBuilder<Eixo,EixoFilter> {
 					.newInstance(this.filter.getEquipe()).getCriteriaExample();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("equipe", criteriaExample, JoinType.INNER_JOIN));
 		}
+	}
+	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
 	}
 
 }
