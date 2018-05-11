@@ -3,6 +3,7 @@ package br.com.saude.api.model.business;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -404,18 +405,47 @@ public class FilaAtendimentoOcupacionalBo
 		if(fila.getId() > 0) {
 			//VERIFICAR SE HÁ ALGUM ATENDIMENTO PARA ESTE PROFISSIONAL,
 			//CUJA TAREFA DIFERENTE NÃO CONCLUÍDA NEM CANCELADA
+			Calendar calendarAux = Calendar.getInstance();
+			calendarAux.setTime(Helper.getToday());
+			calendarAux.add(Calendar.DATE, 1);
+			
 			AtendimentoFilter atendimentoFilter = new AtendimentoFilter();
 			atendimentoFilter.setPageNumber(1);
 			atendimentoFilter.setPageSize(1);
 			atendimentoFilter.setFilaAtendimentoOcupacional(new FilaAtendimentoOcupacionalFilter());
 			atendimentoFilter.getFilaAtendimentoOcupacional().setId(fila.getId());
 			atendimentoFilter.setTarefa(new TarefaFilter());
+			atendimentoFilter.getTarefa().setInicio(new DateFilter());
+			atendimentoFilter.getTarefa().getInicio().setTypeFilter(TypeFilter.ENTRE);
+			atendimentoFilter.getTarefa().getInicio().setInicio(Helper.getToday());
+			atendimentoFilter.getTarefa().getInicio().setFim(calendarAux.getTime());
 			
 			PagedList<Atendimento> atendimentos = AtendimentoBo.getInstance()
 					.getListLoadAllTarefaStatusNaoConcluidoCancelado(atendimentoFilter);
 			
 			if(atendimentos.getTotal() > 0) {
 				Atendimento atendimentoAux = atendimentos.getList().get(0);
+				
+				//SE ESTIVER FINALIZANDO UM ATENDIMENTO PARA INICIAR OUTRO
+				if(atendimento != null && atendimento.getId() > 0 && 
+						atendimento.getFilaEsperaOcupacional() != null &&
+						atendimento.getFilaEsperaOcupacional().getId() > 0 &&
+						((atendimento.getFilaEsperaOcupacional().getEmpregado() != null &&
+						atendimento.getFilaEsperaOcupacional().getEmpregado().getId() > 0 && 
+						atendimento.getFilaEsperaOcupacional().getEmpregado().getId() != 
+						atendimentoAux.getFilaEsperaOcupacional().getEmpregado().getId()) ||
+							(atendimento.getFilaEsperaOcupacional().getFichaColeta() != null &&
+								atendimento.getFilaEsperaOcupacional().getFichaColeta().getId() > 0 &&
+								atendimento.getFilaEsperaOcupacional().getFichaColeta().getId() != 
+								atendimentoAux.getFilaEsperaOcupacional().getFichaColeta().getId()) ||
+							(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null &&
+							atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId() > 0 &&
+							atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId() != 
+							atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId()))) {
+					
+					return atendimentoAux;
+				}
+				
 				atendimentoAux.getFilaEsperaOcupacional().setEmpregado(EmpregadoBo
 						.getInstance().getById(atendimentoAux.getFilaEsperaOcupacional().getEmpregado().getId()));
 				
