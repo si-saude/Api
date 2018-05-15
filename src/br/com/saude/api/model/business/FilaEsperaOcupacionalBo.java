@@ -60,6 +60,7 @@ import br.com.saude.api.model.entity.po.RegraAtendimento;
 import br.com.saude.api.model.entity.po.RegraAtendimentoEquipe;
 import br.com.saude.api.model.entity.po.RegraAtendimentoLocalizacao;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.Triagem;
@@ -69,6 +70,7 @@ import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusTarefa;
+import br.com.saude.api.util.constant.UF;
 
 @SuppressWarnings("deprecation")
 public class FilaEsperaOcupacionalBo 
@@ -366,6 +368,15 @@ public class FilaEsperaOcupacionalBo
 		if(filaEsperaOcupacionais.getTotal() > 0) {
 			fila = filaEsperaOcupacionais.getList().get(0);
 			fila.setStatus(StatusFilaEsperaOcupacional.getInstance().ALMOCO);
+			
+			FichaColeta f = fila.getFichaColeta();
+			fila.getFichaColeta().getRespostaFichaColetas().forEach(r->{
+				r.setFicha(f);
+				r.getItens().forEach(i->{
+					i.setResposta(r);
+				});
+			});
+			
 			getDao().save(fila);
 		}else
 			throw new Exception("Não foi encontrado o Check-in do Empregado.");
@@ -537,6 +548,79 @@ public class FilaEsperaOcupacionalBo
 		
 		return "Empregado "+fila.getEmpregado().getPessoa().getNome()+" inserido na fila de espera. "+
 				"Favor aguardar chamada.";
+	}
+	
+	public void criarFichaColetaTriagem(List<FilaEsperaOcupacional> ids) throws Exception {
+		for(int id : ids.stream().map(FilaEsperaOcupacional::getId)
+						.collect(Collectors.toList())) {
+			FilaEsperaOcupacional fila = getById(new Integer(id));
+			Empregado empregado = EmpregadoBo.getInstance().getById(fila.getEmpregado().getId());
+			
+			PerguntaFichaColetaFilter perguntaFilter = new PerguntaFichaColetaFilter();
+			perguntaFilter.setPageNumber(1);
+			perguntaFilter.setPageSize(Integer.MAX_VALUE);
+			perguntaFilter.setInativo(new BooleanFilter());
+			perguntaFilter.getInativo().setValue(2);
+			
+			PagedList<PerguntaFichaColeta> perguntas = 
+					PerguntaFichaColetaBo.getInstance().getListLoadAll(perguntaFilter);
+			
+			if(perguntas.getTotal() > 0) {
+				fila.setFichaColeta(new FichaColeta());
+				fila.getFichaColeta().setRespostaFichaColetas(new ArrayList<RespostaFichaColeta>());
+				
+				//PARA CADA PERGUNTA, CRIAR UMA RESPOSTA
+				for(PerguntaFichaColeta pergunta : perguntas.getList()) {
+					RespostaFichaColeta resposta = new RespostaFichaColeta();
+					resposta.setPergunta(pergunta);
+					resposta.setFicha(fila.getFichaColeta());
+					fila.getFichaColeta().getRespostaFichaColetas().add(resposta);
+				}
+			}
+			
+			fila.setRiscoPotencial(new RiscoPotencial());
+			fila.getRiscoPotencial().setData(fila.getHorarioCheckin());
+			fila.getRiscoPotencial().setEmpregado(fila.getEmpregado());
+			fila.getRiscoPotencial().setAtual(true);
+			fila.getRiscoPotencial().setStatus(StatusRiscoPotencial.getInstance().PLANEJAMENTO);
+			fila.getRiscoPotencial().setRiscoEmpregados(new ArrayList<RiscoEmpregado>());
+			
+			if(empregado.getBase().getUf().equals(UF.getInstance().ES))
+				fila.getRiscoPotencial().setAbreviacaoEquipeAcolhimento("ENF");
+			else
+				fila.getRiscoPotencial().setAbreviacaoEquipeAcolhimento("ACO");
+			
+			//OBTER OS ATENDIMENTOS ASSOCIADOS À FILA
+			AtendimentoFilter aF = new AtendimentoFilter();
+			aF.setPageNumber(1);
+			aF.setPageSize(Integer.MAX_VALUE);
+			aF.setFilaEsperaOcupacional(new FilaEsperaOcupacionalFilter());
+			aF.getFilaEsperaOcupacional().setId(fila.getId());
+			
+			PagedList<Atendimento> atendimentos = AtendimentoBo.getInstance().getListLoadAll(aF);
+			
+			if(atendimentos.getTotal() > 0) {
+				for(Atendimento atendimento:atendimentos.getList()) {
+					atendimento = setTriagens(atendimento);
+					atendimento = AtendimentoBo.getInstance().gerarRisco(atendimento);
+					
+					if(atendimento.getTriagens() != null && atendimento.getTriagens().size() > 0) {
+						fila.getRiscoPotencial().getRiscoEmpregados()
+							.add(atendimento.getTriagens().get(0).getRiscoEmpregado());
+							
+						atendimento.getTriagens().forEach(t->{
+							t.getRiscoEmpregado().setData(fila.getHorarioCheckin());
+							t.getRiscoEmpregado().setRiscoPotencial(fila.getRiscoPotencial());
+						});
+					}
+					
+					atendimento.setFilaEsperaOcupacional(fila);
+				}
+				
+				AtendimentoBo.getInstance().saveList(atendimentos.getList());
+			}
+			
+		}
 	}
 	
 	protected Tarefa checkPendecia(Empregado empregado) throws Exception {
