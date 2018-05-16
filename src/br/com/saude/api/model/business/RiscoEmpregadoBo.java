@@ -141,7 +141,7 @@ public class RiscoEmpregadoBo extends
 	public RiscoEmpregado save(RiscoEmpregado riscoEmpregado) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		
-		riscoEmpregado.getTriagens().forEach(t -> t.setRiscoEmpregado(riscoEmpregado));
+		riscoEmpregado = gerarRisco(riscoEmpregado);
 		
 		return super.save(riscoEmpregado);
 	}
