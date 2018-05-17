@@ -15,7 +15,11 @@ public class Funcionalidade extends GenericConstant {
 			instance = new Funcionalidade();
 		return instance;
 	}
-	
+	public static final String FONTE_GERADORA_LISTAR						= "FONTE-GERADORA_LISTAR";
+	public static final String FONTE_GERADORA_ADICIONAR 			    	= "FONTE-GERADORA_ADICIONAR";
+	public static final String FONTE_GERADORA_ALTERAR		 			= "FONTE-GERADORA_ALTERAR";
+	public static final String FONTE_GERADORA_REMOVER 					= "FONTE-GERADORA_REMOVER";
+	public static final String FONTE_GERADORA_DETALHE 					= "FONTE-GERADORA_DETALHE";
 	public static final String REPORT_EMPREGADOS_POR_GRUPO							= "REPORT-EMPREGADOS-POR-GRUPO";
 	public static final String AGENDA												= "AGENDA";
 	public static final String REPORT_PANORAMA										= "REPORT-PANORAMA";
