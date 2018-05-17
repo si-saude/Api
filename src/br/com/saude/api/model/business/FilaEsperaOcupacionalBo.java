@@ -602,9 +602,12 @@ public class FilaEsperaOcupacionalBo
 			if(atendimentos.getTotal() > 0) {
 				for(Atendimento atendimento:atendimentos.getList()) {
 					atendimento = setTriagens(atendimento);
-					
+					Atendimento aAux = atendimento;
 					if(atendimento.getTriagens() != null && atendimento.getTriagens().size() > 0) {
-						atendimento.getTriagens().forEach(t->t.setIndice(0));
+						atendimento.getTriagens().forEach(t->{
+							t.setIndice(0);
+							t.setAtendimento(aAux);
+						});
 						atendimento = AtendimentoBo.getInstance().gerarRisco(atendimento);
 					
 						fila.getRiscoPotencial().getRiscoEmpregados()
@@ -1065,7 +1068,7 @@ public class FilaEsperaOcupacionalBo
 								fA.setAtualizacao(tarefa.getAtualizacao());
 								
 								//CRIAR A FICHA DE TRIAGEM
-								if(filaEspera.getRiscoPotencial() != null)
+								if(!rE.isAcolhimento() && filaEspera.getRiscoPotencial() != null)
 									try {
 										atendimento = setTriagens(atendimento);
 									} catch (Exception e) {
