@@ -40,6 +40,7 @@ import br.com.saude.api.util.constant.Sexo;
 import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusEmpregado;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
+import br.com.saude.api.util.constant.StatusRPSat;
 import br.com.saude.api.util.constant.StatusRiscoEmpregado;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusSimNao;
@@ -365,5 +366,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUf(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(UF.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/status-rpsat")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStatusRPSat(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(StatusRPSat.getInstance(),filter)).build();
 	}
 }
