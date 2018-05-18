@@ -42,41 +42,31 @@ public class FonteGeradoraBo extends GenericBo<FonteGeradora, FonteGeradoraFilte
 
 	public void importFile(File arquivo) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		try {
-			ArrayList<FonteGeradora> fonteGeradoras = new ArrayList<FonteGeradora>();
-			Workbook workbook = WorkbookFactory.create(arquivo);
-			if ( workbook instanceof HSSFWorkbook ) {
-				HSSFSheet sheet = (HSSFSheet) workbook.getSheetAt(0);
-				int rows = sheet.getPhysicalNumberOfRows();
-				for (int r = 0; r < rows; r++) {
-					if (r == 0) continue;
-					FonteGeradora fonteGeradora = new FonteGeradora();
-					fonteGeradora.setId((int)sheet.getRow(r).getCell(0).getNumericCellValue());
-					fonteGeradora.setDescricao(sheet.getRow(r).getCell(1).getStringCellValue());
-					fonteGeradoras.add(fonteGeradora);
-				}
-			} else if ( workbook instanceof XSSFWorkbook ) {
-				XSSFSheet sheet = (XSSFSheet) workbook.getSheetAt(0);
-				int rows = sheet.getPhysicalNumberOfRows();
-				for (int r = 0; r < rows; r++) {
-					if (r == 0) continue;
-					FonteGeradora fonteGeradora = new FonteGeradora();
-					fonteGeradora.setId((int)sheet.getRow(r).getCell(0).getNumericCellValue());
-					fonteGeradora.setDescricao(sheet.getRow(r).getCell(1).getStringCellValue());
-					fonteGeradoras.add(fonteGeradora);
-				}
+
+		ArrayList<FonteGeradora> fonteGeradoras = new ArrayList<FonteGeradora>();
+		Workbook workbook = WorkbookFactory.create(arquivo);
+		if ( workbook instanceof HSSFWorkbook ) {
+			HSSFSheet sheet = (HSSFSheet) workbook.getSheetAt(0);
+			int rows = sheet.getPhysicalNumberOfRows();
+			for (int r = 0; r < rows; r++) {
+				if (r == 0) continue;
+				FonteGeradora fonteGeradora = new FonteGeradora();
+				fonteGeradora.setDescricao(sheet.getRow(r).getCell(0).getStringCellValue());
+				fonteGeradoras.add(fonteGeradora);
 			}
-			try {
-				FonteGeradoraValidator bV = new FonteGeradoraValidator();
-				bV.validate(fonteGeradoras);
-				this.saveList(fonteGeradoras);
-			} catch (Exception e) {
-				e.printStackTrace();
+		} else if ( workbook instanceof XSSFWorkbook ) {
+			XSSFSheet sheet = (XSSFSheet) workbook.getSheetAt(0);
+			int rows = sheet.getPhysicalNumberOfRows();
+			for (int r = 0; r < rows; r++) {
+				if (r == 0) continue;
+				FonteGeradora fonteGeradora = new FonteGeradora();
+				fonteGeradora.setDescricao(sheet.getRow(r).getCell(0).getStringCellValue());
+				fonteGeradoras.add(fonteGeradora);
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+
+		FonteGeradoraValidator bV = new FonteGeradoraValidator();
+		bV.validate(fonteGeradoras);
+		this.saveList(fonteGeradoras);
 	}
 }

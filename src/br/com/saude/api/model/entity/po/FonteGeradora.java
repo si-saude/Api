@@ -9,6 +9,7 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+
 @Entity
 public class FonteGeradora {
 
@@ -16,7 +17,7 @@ public class FonteGeradora {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar Nome da Fonte Geradora.")
+	@NotNull(message="É necessário informar Descrição da Fonte Geradora.")
 	@Column(unique=true)
 	private String descricao;	
 	
