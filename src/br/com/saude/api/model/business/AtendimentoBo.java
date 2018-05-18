@@ -362,7 +362,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		return save(addAtualizacao(atendimento));
 	}
 	
-	private Atendimento gerarRisco(Atendimento atendimento) {
+	protected Atendimento gerarRisco(Atendimento atendimento) {
 		
 		if(atendimento.getTriagens() != null && atendimento.getTriagens().size() > 0) {			
 			List<Triagem> triagens = atendimento.getTriagens().stream().filter(t->t.getIndice() >= 0)

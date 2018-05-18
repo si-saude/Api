@@ -141,9 +141,21 @@ public class RiscoEmpregadoBo extends
 	public RiscoEmpregado save(RiscoEmpregado riscoEmpregado) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		
-		riscoEmpregado.getTriagens().forEach(t -> t.setRiscoEmpregado(riscoEmpregado));
+		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance()
+				.getById(riscoEmpregado.getRiscoPotencial().getId());
 		
-		return super.save(riscoEmpregado);
+		riscoEmpregado = gerarRisco(riscoEmpregado);
+		
+		riscoPotencial.getRiscoEmpregados().set(
+				riscoPotencial.getRiscoEmpregados().indexOf(riscoEmpregado),riscoEmpregado);
+		
+		riscoPotencial.setRiscosInterdiciplinares(null);
+		riscoPotencial.setEquipeResponsavel(riscoPotencial.getRiscosInterdiciplinares().get(0)
+				.getEquipe());
+		
+		RiscoPotencialBo.getInstance().save(riscoPotencial);
+		
+		return riscoEmpregado;
 	}
 
 	public RiscoEmpregado saveReavaliacao(RiscoEmpregado riscoEmpregado) throws Exception {

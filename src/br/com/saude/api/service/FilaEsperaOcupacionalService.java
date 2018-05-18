@@ -1,6 +1,7 @@
 package br.com.saude.api.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -39,6 +40,19 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 	public Response save(FilaEsperaOcupacional filaEsperaOcupacional) {
 		try {
 			getBo().save(filaEsperaOcupacional);
+			return Response.ok("Salvo com sucesso.").build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path("/criar-ficha-coleta-triagem")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response criarFichaColetaTriagem(List<FilaEsperaOcupacional> ids) {
+		try {
+			getBo().criarFichaColetaTriagem(ids);
 			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
