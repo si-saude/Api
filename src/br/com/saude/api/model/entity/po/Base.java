@@ -21,6 +21,7 @@ public class Base {
 	@Column(unique=true)
 	private String nome;
 	
+	@NotNull(message="É necessário informar UF da Base.")
 	@Size(max = 2, message="Tamanho máximo para UF da Base: 2")
 	private String uf;
 	

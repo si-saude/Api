@@ -11,14 +11,14 @@ import javax.validation.constraints.Size;
 
 
 @Entity
-public class FonteGeradora {
+public class PossivelDanoSaude {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar Descrição da Fonte Geradora.")
-	@Size(max = 512, message="Tamanho máximo para Descrição da Fonte Geradora: 512")
+	@NotNull(message="É necessário informar a Descrição do Possível Dano à Saúde.")
+	@Size(max = 512, message="Tamanho máximo para Descrição do Possível Dano à Saúde: 512")
 	@Column(unique=true)
 	private String descricao;	
 	
@@ -32,14 +32,13 @@ public class FonteGeradora {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 	public String getDescricao() {
 		return descricao;
 	}
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}
+	}	
 
 	public long getVersion() {
 		return version;
@@ -47,6 +46,5 @@ public class FonteGeradora {
 
 	public void setVersion(long version) {
 		this.version = version;
-	}
-	
+	}	
 }

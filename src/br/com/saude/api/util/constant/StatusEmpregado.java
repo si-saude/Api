@@ -22,5 +22,6 @@ public class StatusEmpregado extends GenericConstant  {
 	public final String DESLIGADO			= "DESLIGADO";
 	public final String FALECIDO			= "FALECIDO";
 	public final String TRANSFERIDO			= "TRANSFERIDO";
-	public final String SUSPENSO			= "SUSPENSO";
+	public final String SINDICALISTA	    = "SINDICALISTA";
+	public final String SUSPENSO			= "SUSPENSO";	
 }

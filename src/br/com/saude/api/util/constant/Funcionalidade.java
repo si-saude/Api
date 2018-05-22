@@ -15,6 +15,21 @@ public class Funcionalidade extends GenericConstant {
 			instance = new Funcionalidade();
 		return instance;
 	}
+	public static final String AGENTE_RISCO_LISTAR						= "AGENTE-RISCO_LISTAR";
+	public static final String AGENTE_RISCO_ADICIONAR 			    	= "AGENTE-RISCO_ADICIONAR";
+	public static final String AGENTE_RISCO_ALTERAR		 			= "AGENTE-RISCO_ALTERAR";
+	public static final String AGENTE_RISCO_REMOVER 					= "AGENTE-RISCO_REMOVER";
+	public static final String AGENTE_RISCO_DETALHE 					= "AGENTE-RISCO_DETALHE";
+	public static final String POSSIVEL_DANO_SAUDE_LISTAR						= "POSSIVEL-DANO-SAUDE_LISTAR";
+	public static final String POSSIVEL_DANO_SAUDE_ADICIONAR 			    	= "POSSIVEL-DANO-SAUDE_ADICIONAR";
+	public static final String POSSIVEL_DANO_SAUDE_ALTERAR		 			= "POSSIVEL-DANO-SAUDE_ALTERAR";
+	public static final String POSSIVEL_DANO_SAUDE_REMOVER 					= "POSSIVEL-DANO-SAUDE_REMOVER";
+	public static final String POSSIVEL_DANO_SAUDE_DETALHE 					= "POSSIVEL-DANO-SAUDE_DETALHE";
+	public static final String CATEGORIA_RISCO_LISTAR						= "CATEGORIA-RISCO_LISTAR";
+	public static final String CATEGORIA_RISCO_ADICIONAR 			    	= "CATEGORIA-RISCO_ADICIONAR";
+	public static final String CATEGORIA_RISCO_ALTERAR		 			= "CATEGORIA-RISCO_ALTERAR";
+	public static final String CATEGORIA_RISCO_REMOVER 					= "CATEGORIA-RISCO_REMOVER";
+	public static final String CATEGORIA_RISCO_DETALHE 					= "CATEGORIA-RISCO_DETALHE";
 	public static final String FONTE_GERADORA_LISTAR						= "FONTE-GERADORA_LISTAR";
 	public static final String FONTE_GERADORA_ADICIONAR 			    	= "FONTE-GERADORA_ADICIONAR";
 	public static final String FONTE_GERADORA_ALTERAR		 			= "FONTE-GERADORA_ALTERAR";

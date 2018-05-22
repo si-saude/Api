@@ -9,18 +9,21 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-
 @Entity
-public class FonteGeradora {
+public class AgenteRisco {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar Descrição da Fonte Geradora.")
-	@Size(max = 512, message="Tamanho máximo para Descrição da Fonte Geradora: 512")
+	@NotNull(message="É necessário informar Descrição do Agente de Risco.")
+	@Size(max = 512, message="Tamanho máximo para Descrição do Agente de Risco: 512")
 	@Column(unique=true)
-	private String descricao;	
+	private String descricao;
+	
+	@NotNull(message="É necessário informar a Categoria do Agente de Risco.")
+	@Size(max = 32, message="Tamanho máximo para Categoria do Agente de Risco: 32")
+	private String categoriaAgenteRisco;
 	
 	@Version
 	private long version;
@@ -47,6 +50,14 @@ public class FonteGeradora {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public String getCategoriaAgenteRisco() {
+		return categoriaAgenteRisco;
+	}
+
+	public void setCategoriaAgenteRisco(String categoriaAgenteRisco) {
+		this.categoriaAgenteRisco = categoriaAgenteRisco;
 	}
 	
 }

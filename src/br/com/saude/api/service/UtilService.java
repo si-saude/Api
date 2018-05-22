@@ -17,6 +17,7 @@ import br.com.saude.api.util.constant.AcaoResultadoExame;
 import br.com.saude.api.util.constant.AptidaoCardiorrespiratoria;
 import br.com.saude.api.util.constant.AptidaoFisicaBrigadista;
 import br.com.saude.api.util.constant.AutoavaliacaoHabitosAlimentares;
+import br.com.saude.api.util.constant.CategoriaAgenteRisco;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.DoresCorporaisIntensidade;
 import br.com.saude.api.util.constant.Escolaridade;
@@ -30,6 +31,8 @@ import br.com.saude.api.util.constant.FumaClassificacao;
 import br.com.saude.api.util.constant.Funcionalidade;
 import br.com.saude.api.util.constant.GrupoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.GrupoServico;
+import br.com.saude.api.util.constant.MedidaControle;
+import br.com.saude.api.util.constant.MeioPropagacao;
 import br.com.saude.api.util.constant.NivelAtividadeFisica;
 import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.PrazoEmMeses;
@@ -365,5 +368,26 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUf(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(UF.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/categoria-agente-risco")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCategoriaAgenteRisco(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(CategoriaAgenteRisco.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/medida-controle")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMedidaControle(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(MedidaControle.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/meio-propagacao")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMeioPropagacao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(MeioPropagacao.getInstance(),filter)).build();
 	}
 }
