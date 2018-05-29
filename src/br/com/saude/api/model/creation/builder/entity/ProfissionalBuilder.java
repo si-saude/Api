@@ -81,7 +81,7 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		
 		this.loadEquipe = profissionais -> {
 			if(profissionais.get("origem").getEquipe()!= null) {
-				profissionais.get("destino").setEquipe(EquipeBuilder.newInstance(profissionais.get("origem").getEquipe()).getEntity());
+				profissionais.get("destino").setEquipe(EquipeBuilder.newInstance(profissionais.get("origem").getEquipe()).loadCoordenador().getEntity());
 			}
 			return profissionais.get("destino");
 		};

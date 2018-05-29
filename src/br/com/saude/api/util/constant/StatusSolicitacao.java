@@ -18,9 +18,9 @@ public class StatusSolicitacao extends GenericConstant {
 	
 	public final String ABERTO 							= "ABERTO";
 	public final String PLANEJADO						= "PLANEJADO";
-	public final String EXECUCAO						= "EXECU«√O";
-	public final String CONCLUIDO						= "CONCLUÕDO";
+	public final String EXECUCAO						= "EXECU√á√ÉO";
+	public final String CONCLUIDO						= "CONCLU√çDO";
 	public final String CANCELADO						= "CANCELADO";
-	public final String AGUARDANDO_INFORMACAO			= "AGUARDANDO INFORMA«√O";
+	public final String AGUARDANDO_INFORMACAO			= "AGUARDANDO INFORMA√á√ÉO";
 
 }

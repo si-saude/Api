@@ -5,11 +5,9 @@ import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
 import br.com.saude.api.generic.CriteriaExample;
-import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.SolicitacaoCentralIntegraFilter;
-import br.com.saude.api.model.entity.filter.TipoSolicitacaoFilter;
 import br.com.saude.api.model.entity.po.SolicitacaoCentralIntegra;
 
 public class SolicitacaoCentralIntegraExampleBuilder extends GenericExampleBuilder<SolicitacaoCentralIntegra, SolicitacaoCentralIntegraFilter> {
@@ -29,6 +27,7 @@ public class SolicitacaoCentralIntegraExampleBuilder extends GenericExampleBuild
 		addStatus();
 		addAbertura();
 		addPrazo();
+		addTarefa();
 	}
 
 	@Override
@@ -60,6 +59,14 @@ public class SolicitacaoCentralIntegraExampleBuilder extends GenericExampleBuild
 	
 	private void addPrazo() {
 		this.addData("prazo", this.filter.getPrazo());
+	}
+	
+	private void addTarefa() throws InstantiationException, IllegalAccessException {
+		if (this.filter.getTarefa() != null) {
+			CriteriaExample criteriaExample = TarefaExampleBuilder
+					.newInstance(this.filter.getTarefa()).getCriteriaExample();
+			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("tarefa", criteriaExample, JoinType.INNER_JOIN));
+		}
 	}
 	
 }

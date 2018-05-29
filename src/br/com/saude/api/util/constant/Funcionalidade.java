@@ -16,6 +16,7 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String KANBAN												= "KANBAN";
 	public static final String REPORT_SOLICITACAO_CENTRAL_INTEGRA					= "REPORT-SOLICITACAO-CENTRAL-INTEGRA";
 	public static final String NOTIFICACAO											= "NOTIFICACAO";
 	public static final String REPORT_EMPREGADOS_POR_GRUPO							= "REPORT-EMPREGADOS-POR-GRUPO";

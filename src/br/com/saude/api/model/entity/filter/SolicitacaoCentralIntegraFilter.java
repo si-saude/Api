@@ -8,6 +8,7 @@ public class SolicitacaoCentralIntegraFilter extends GenericFilter {
 	private String status;
 	private DateFilter abertura;
 	private DateFilter prazo;
+	private TarefaFilter tarefa;
 	
 	public TipoSolicitacaoFilter getTipoSolicitacao() {
 		return tipoSolicitacao;
@@ -32,6 +33,12 @@ public class SolicitacaoCentralIntegraFilter extends GenericFilter {
 	}
 	public void setPrazo(DateFilter prazo) {
 		this.prazo = prazo;
+	}
+	public TarefaFilter getTarefa() {
+		return tarefa;
+	}
+	public void setTarefa(TarefaFilter tarefa) {
+		this.tarefa = tarefa;
 	}
 	
 }
