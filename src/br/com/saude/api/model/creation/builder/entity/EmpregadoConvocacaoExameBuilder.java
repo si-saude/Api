@@ -37,6 +37,7 @@ public class EmpregadoConvocacaoExameBuilder
 		newEmpregadoConvocacaoExame.setId(empregadoConvocacaoExame.getId());
 		newEmpregadoConvocacaoExame.setVersion(empregadoConvocacaoExame.getVersion());
 		newEmpregadoConvocacaoExame.setConforme(empregadoConvocacaoExame.isConforme());
+		newEmpregadoConvocacaoExame.setRecebimento(empregadoConvocacaoExame.getRecebimento());
 		
 		if(empregadoConvocacaoExame.getExame() != null)
 			newEmpregadoConvocacaoExame.setExame(ExameBuilder

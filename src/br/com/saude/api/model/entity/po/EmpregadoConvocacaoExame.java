@@ -1,5 +1,7 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +29,8 @@ public class EmpregadoConvocacaoExame {
 	private Exame exame;
 	
 	private boolean conforme;
+	
+	private Date recebimento;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
 	private RelatorioMedico relatorioMedico;
@@ -86,5 +90,13 @@ public class EmpregadoConvocacaoExame {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public Date getRecebimento() {
+		return recebimento;
+	}
+
+	public void setRecebimento(Date recebimento) {
+		this.recebimento = recebimento;
 	}
 }
