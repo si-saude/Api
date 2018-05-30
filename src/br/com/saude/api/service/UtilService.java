@@ -16,6 +16,7 @@ import br.com.saude.api.util.constant.Abrangencia;
 import br.com.saude.api.util.constant.AcaoResultadoExame;
 import br.com.saude.api.util.constant.AptidaoCardiorrespiratoria;
 import br.com.saude.api.util.constant.AptidaoFisicaBrigadista;
+import br.com.saude.api.util.constant.AtividadeFornecedor;
 import br.com.saude.api.util.constant.AutoavaliacaoHabitosAlimentares;
 import br.com.saude.api.util.constant.CategoriaAgenteRisco;
 import br.com.saude.api.util.constant.Conformidade;
@@ -389,5 +390,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getMeioPropagacao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(MeioPropagacao.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/atividade-fornecedor")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAtividadeFornecedor(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(AtividadeFornecedor.getInstance(),filter)).build();
 	}
 }

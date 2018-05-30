@@ -39,6 +39,11 @@ public class FornecedorExampleBuilder extends GenericExampleBuilder<Fornecedor,F
 		if(this.filter.getTipoPessoa() != null && !this.filter.getTipoPessoa().equals(""))
 			this.entity.setTipoPessoa(this.filter.getTipoPessoa());
 	}
+	
+	private void addAtividadeFornecedor() {
+		if(this.filter.getAtividadeFornecedor() != null && !this.filter.getAtividadeFornecedor().equals(""))
+			this.entity.setAtividadeFornecedor(this.filter.getAtividadeFornecedor());
+	}
 
 
 	@Override
@@ -48,6 +53,7 @@ public class FornecedorExampleBuilder extends GenericExampleBuilder<Fornecedor,F
 		addEmail();
 		addRazaoSocial();
 		addTipoPessoa();
+		addAtividadeFornecedor();
 	}
 
 	@Override
