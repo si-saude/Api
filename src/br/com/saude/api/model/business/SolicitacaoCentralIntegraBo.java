@@ -90,14 +90,14 @@ public class SolicitacaoCentralIntegraBo
 	@SuppressWarnings("resource")
 	private SolicitacaoCentralIntegra loadFiles(SolicitacaoCentralIntegra solicitacao) throws URISyntaxException {
 
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "solicitacao/anexo/"
+		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "solicitacaoCentralIntegra/anexo/"
 				+ solicitacao.getId() + ".zip");
 
-		File imgPath = new File(uri.getPath());
+		File anexoPath = new File(uri.getPath());
 
 		try {
-			FileInputStream fileInputStreamReader = new FileInputStream(imgPath);
-			byte[] anexoArray = new byte[(int) imgPath.length()];
+			FileInputStream fileInputStreamReader = new FileInputStream(anexoPath);
+			byte[] anexoArray = new byte[(int) anexoPath.length()];
 			fileInputStreamReader.read(anexoArray);
 			solicitacao.setAnexoBase64(Base64.getEncoder().encodeToString(anexoArray));
 		} catch (IOException e) {

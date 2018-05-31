@@ -6,7 +6,6 @@ import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.SolicitacaoCentralIntegraFilter;
-import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.SolicitacaoCentralIntegra;;
 
 public class SolicitacaoCentralIntegraBuilder extends GenericEntityBuilder<SolicitacaoCentralIntegra, SolicitacaoCentralIntegraFilter> {

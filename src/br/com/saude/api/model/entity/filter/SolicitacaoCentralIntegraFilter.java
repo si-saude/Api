@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.filter;
 
+import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
@@ -9,6 +10,7 @@ public class SolicitacaoCentralIntegraFilter extends GenericFilter {
 	private DateFilter abertura;
 	private DateFilter prazo;
 	private TarefaFilter tarefa;
+	private BooleanFilter concluido;
 	
 	public TipoSolicitacaoFilter getTipoSolicitacao() {
 		return tipoSolicitacao;
@@ -39,6 +41,12 @@ public class SolicitacaoCentralIntegraFilter extends GenericFilter {
 	}
 	public void setTarefa(TarefaFilter tarefa) {
 		this.tarefa = tarefa;
+	}
+	public BooleanFilter getConcluido() {
+		return concluido;
+	}
+	public void setConcluido(BooleanFilter concluido) {
+		this.concluido = concluido;
 	}
 	
 }

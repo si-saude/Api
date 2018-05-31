@@ -28,6 +28,7 @@ public class SolicitacaoCentralIntegraExampleBuilder extends GenericExampleBuild
 		addAbertura();
 		addPrazo();
 		addTarefa();
+		addConcluido();
 	}
 
 	@Override
@@ -67,6 +68,10 @@ public class SolicitacaoCentralIntegraExampleBuilder extends GenericExampleBuild
 					.newInstance(this.filter.getTarefa()).getCriteriaExample();
 			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("tarefa", criteriaExample, JoinType.INNER_JOIN));
 		}
+	}
+	
+	protected void addConcluido() {
+		this.entity.setConcluido(this.addBoolean("concluido", this.filter.getConcluido()));
 	}
 	
 }
