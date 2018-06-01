@@ -16,6 +16,8 @@ public class ForcaAbdominal extends GenericConstant {
 		return instance;
 	}
 	
+	public final String NAO_AVALIADO 				= "NÃO AVALIADO";
+	public final String PENDENTE 				= "PENDENTE";
 	public final String FRACO 				= "FRACO";
 	public final String REGULAR		= "REGULAR";
 	public final String MEDIO		= "MÉDIO";
