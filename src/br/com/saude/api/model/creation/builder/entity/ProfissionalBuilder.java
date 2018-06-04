@@ -14,6 +14,7 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 	private Function<Map<String,Profissional>,Profissional> loadProfissionalConselho;
 	private Function<Map<String,Profissional>,Profissional> loadCurriculo;
 	private Function<Map<String,Profissional>,Profissional> loadEquipe;
+	private Function<Map<String,Profissional>,Profissional> loadEquipeCoordenador; 
 	private Function<Map<String,Profissional>,Profissional> loadLocalizacao;
 	private Function<Map<String,Profissional>,Profissional> loadServicos;
 	
@@ -81,6 +82,13 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		
 		this.loadEquipe = profissionais -> {
 			if(profissionais.get("origem").getEquipe()!= null) {
+				profissionais.get("destino").setEquipe(EquipeBuilder.newInstance(profissionais.get("origem").getEquipe()).getEntity());
+			}
+			return profissionais.get("destino");
+		};
+		
+		this.loadEquipeCoordenador = profissionais -> {
+			if(profissionais.get("origem").getEquipe()!= null) {
 				profissionais.get("destino").setEquipe(EquipeBuilder.newInstance(profissionais.get("origem").getEquipe()).loadCoordenador().getEntity());
 			}
 			return profissionais.get("destino");
@@ -116,6 +124,10 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 	
 	public ProfissionalBuilder loadEquipe() {
 		return (ProfissionalBuilder) this.loadProperty(this.loadEquipe);
+	}
+	
+	public ProfissionalBuilder loadEquipeCoordenador() {
+		return (ProfissionalBuilder) this.loadProperty(this.loadEquipeCoordenador);
 	}
 	
 	public ProfissionalBuilder loadLocalizacao() {

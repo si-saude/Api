@@ -51,7 +51,7 @@ public class EquipeBo extends GenericBo<Equipe, EquipeFilter, EquipeDao, EquipeB
 	
 	@Override
 	public PagedList<Equipe> getList(EquipeFilter filter) throws Exception {
-		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoadAll);
+		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
 	}
 
 	public void importFile(File arquivo) throws IllegalAccessException, IllegalArgumentException,
