@@ -79,6 +79,19 @@ public class SolicitacaoCentralIntegraService extends GenericServiceImpl<Solicit
 		return super.getSelectListGeneric(filter);
 	}
 
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-anexo")
+	public Response getAnexo(int id) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		try {
+			return Response.ok(getBo().getAnexo(id)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
 	@RequestInterceptor
 	@Override
 	@GET

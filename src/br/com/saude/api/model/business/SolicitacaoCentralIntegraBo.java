@@ -3,6 +3,7 @@ package br.com.saude.api.model.business;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,6 +86,26 @@ public class SolicitacaoCentralIntegraBo
 		SolicitacaoCentralIntegra newSolicitacao = super.save(solicitacao);
 		saveFiles(solicitacao, newSolicitacao);
 		return newSolicitacao;
+	}
+	
+	@SuppressWarnings("resource")
+	public String getAnexo(int id) throws Exception {
+		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "solicitacaoCentralIntegra/anexo/"
+				+ id + ".zip");
+		
+		File anexoPath = new File(uri.getPath());
+
+		byte[] zipArray = new byte[(int) anexoPath.length()];
+		
+		try {
+			new FileInputStream(anexoPath).read(zipArray);
+		} catch (FileNotFoundException e) {
+			throw new Exception("Arquivo não encontrado para essa solicitação.");
+		} catch (IOException e) {
+			throw new Exception("Erro no servidor. Por favor, contacte o administrador do sistema.");
+		}
+		
+		return Base64.getEncoder().encodeToString(zipArray);
 	}
 
 	@SuppressWarnings("resource")
