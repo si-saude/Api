@@ -15,6 +15,8 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.saude.api.generic.Helper;
+
 @Entity
 public class SolicitacaoCentralIntegra {
 	@Id
@@ -56,6 +58,9 @@ public class SolicitacaoCentralIntegra {
 	
 	@Transient
 	private String anexoBase64;
+	
+	@Transient
+	private boolean atrasado;
 	
 	@Version
 	private long version;
@@ -170,6 +175,17 @@ public class SolicitacaoCentralIntegra {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+	
+	public boolean isAtrasado( ) {
+		if ( this.prazo != null && this.prazo.before( Helper.getToday() ) )
+			atrasado = true;
+		else atrasado = false;
+		return atrasado;
+	}
+	
+	public void setAtrasado( boolean atrasado ) {
+		this.atrasado = atrasado;
 	}
 
 }

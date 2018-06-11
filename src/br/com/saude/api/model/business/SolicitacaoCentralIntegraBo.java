@@ -68,9 +68,9 @@ public class SolicitacaoCentralIntegraBo
 
 	@Override
 	public SolicitacaoCentralIntegra save(SolicitacaoCentralIntegra solicitacao) throws Exception {
-		SolicitacaoCentralIntegra newSolicitacao = super.save(solicitacao);
-		saveFiles(solicitacao, newSolicitacao);
-		return newSolicitacao;
+		solicitacao = super.save(solicitacao);
+		saveFiles(solicitacao);
+		return solicitacao;
 	}
 	
 	public SolicitacaoCentralIntegra registrarSolicitacao(SolicitacaoCentralIntegra solicitacao) throws Exception {
@@ -83,9 +83,9 @@ public class SolicitacaoCentralIntegraBo
 		solicitacao.getTarefa().setEquipe(EquipeBo.getInstance().getList(equipeFilter).getList().get(0));
 		solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
 		
-		SolicitacaoCentralIntegra newSolicitacao = super.save(solicitacao);
-		saveFiles(solicitacao, newSolicitacao);
-		return newSolicitacao;
+		solicitacao = super.save(solicitacao);
+		saveFiles(solicitacao);
+		return solicitacao;
 	}
 	
 	@SuppressWarnings("resource")
@@ -129,11 +129,11 @@ public class SolicitacaoCentralIntegraBo
 	}
 
 	@SuppressWarnings("unlikely-arg-type")
-	private void saveFiles(SolicitacaoCentralIntegra solicitacao, SolicitacaoCentralIntegra newSolicitacao) throws URISyntaxException, IOException {
+	private void saveFiles(SolicitacaoCentralIntegra solicitacao) throws URISyntaxException, IOException {
 		if (solicitacao.getAnexo() != null) {
 			
 			URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-					+ "solicitacaoCentralIntegra/anexo/" + newSolicitacao.getId() + ".zip");
+					+ "solicitacaoCentralIntegra/anexo/" + solicitacao.getId() + ".zip");
 			File file = new File(uri.getPath());
 			file.getParentFile().mkdirs();
 			

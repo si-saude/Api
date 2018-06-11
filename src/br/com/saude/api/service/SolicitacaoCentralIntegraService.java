@@ -37,8 +37,8 @@ public class SolicitacaoCentralIntegraService extends GenericServiceImpl<Solicit
 	@Override
 	public Response save(SolicitacaoCentralIntegra solicitacao) {
 		try {
-			SolicitacaoCentralIntegraBo.getInstance().save(solicitacao);
-			return Response.ok("Salvo com sucesso.").build();
+			SolicitacaoCentralIntegra sCI = SolicitacaoCentralIntegraBo.getInstance().save(solicitacao);
+			return Response.ok(sCI).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
