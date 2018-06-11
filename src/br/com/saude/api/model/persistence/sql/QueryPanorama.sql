@@ -4,11 +4,11 @@ select id,gerencia,matricula,nome,mes_convocacao,base,aso_anterior,realizacao_pr
 	THEN CASE WHEN date_trunc('day', aso_atual) <= date_trunc('day', aso_anterior_validade)
 		  THEN 'DENTRO DO PRAZO' ELSE 'FORA DO PRAZO' END
 	ELSE '' END as aso_no_prazo,
-	pendencias, primeira_linha,
-	CASE 
-	WHEN realizacao_pre_clinico IS NOT NULL THEN 'REALIZADO'
-	WHEN auditado = 't' THEN 'PENDENTE'
-	ELSE '' END as status_pre_clinico
+	pendencias,	
+	primeira_linha,
+	CASE WHEN exames_pendentes IS NULL THEN 'REALIZADO'
+	ELSE 'PENDENTE' END as status_pre_clinico,
+	exames_pendentes
 
 from
 	(select *,
@@ -66,6 +66,12 @@ from
 			inner join tarefa ta on t.cliente_id = ta.cliente_id
 			inner join equipe eq on ta.equipe_id = eq.id
 			where a.aso_id = a1.id and ta.status = 'ABERTA' and date_trunc('day', t.inicio) = date_trunc('day', ta.inicio) ) as pendencias,
+			
+			(select string_agg(ex.descricao, ' - ')
+			from empregadoconvocacaoexame x
+			inner join exame ex on x.exame_id = ex.id
+			where x.empregadoconvocacao_id = ec.id
+			  and x.realizacao is not null) as exames_pendentes,
 			
 			COALESCE(g1.codigo||'/'||g2.codigo,g2.codigo||'/'||g3.codigo,g3.codigo||'/'||g4.codigo) as primeira_linha,
 			ec.auditado

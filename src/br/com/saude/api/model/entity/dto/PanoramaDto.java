@@ -18,6 +18,7 @@ public class PanoramaDto {
 	private String pendencias;
 	private String gerenciaPrimeiraLinha;
 	private String statusPreClinico;
+	private String examesPendentes;
 	
 	
 	public int getId() {
@@ -104,4 +105,11 @@ public class PanoramaDto {
 	public void setStatusPreClinico(String statusPreClinico) {
 		this.statusPreClinico = statusPreClinico;
 	}
+	public String getExamesPendentes() {
+		return examesPendentes;
+	}
+	public void setExamesPendentes(String examesPendentes) {
+		this.examesPendentes = examesPendentes;
+	}
+	
 }

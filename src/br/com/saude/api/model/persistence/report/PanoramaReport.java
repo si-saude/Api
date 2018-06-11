@@ -76,6 +76,9 @@ public class PanoramaReport {
 				panorama.setGerenciaPrimeiraLinha((String)row[12]);
 				panorama.setStatusPreClinico((String)row[13]);
 				
+				if(row[14] != null)
+					panorama.setExamesPendentes((String)row[14]);
+				
 				panoramas.add(panorama);
 			}
 		}catch (Exception ex) {

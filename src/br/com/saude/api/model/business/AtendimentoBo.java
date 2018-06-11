@@ -546,8 +546,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 						
 					//DEMISSIONAL
 					case "0002":
-						
-						break;
+						return TipoConvocacao.DEMISSIONAL;
 						
 					//PERIÓDICO
 					case "0003":

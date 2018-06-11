@@ -30,7 +30,7 @@ public class EmpregadoConvocacaoExame {
 	
 	private boolean conforme;
 	
-	private Date recebimento;
+	private Date realizacao;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
 	private RelatorioMedico relatorioMedico;
@@ -92,11 +92,16 @@ public class EmpregadoConvocacaoExame {
 		this.version = version;
 	}
 
-	public Date getRecebimento() {
-		return recebimento;
+	public Date getRealizacao() {
+		return realizacao;
 	}
 
-	public void setRecebimento(Date recebimento) {
-		this.recebimento = recebimento;
+	public void setRealizacao(Date realizacao) {
+		this.realizacao = realizacao;
+	}
+	
+	@Override
+	public boolean equals(Object e) {
+		return ((EmpregadoConvocacaoExame)e).id == this.id && this.id > 0;
 	}
 }
