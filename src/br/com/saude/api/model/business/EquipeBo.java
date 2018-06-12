@@ -14,6 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.business.validate.EquipeValidator;
 import br.com.saude.api.model.creation.builder.entity.EquipeBuilder;
 import br.com.saude.api.model.creation.builder.example.EquipeExampleBuilder;
@@ -48,6 +49,11 @@ public class EquipeBo extends GenericBo<Equipe, EquipeFilter, EquipeDao, EquipeB
 		return equipe;
 	}
 	
+	@Override
+	public PagedList<Equipe> getList(EquipeFilter filter) throws Exception {
+		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
+	}
+
 	public void importFile(File arquivo) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		try {

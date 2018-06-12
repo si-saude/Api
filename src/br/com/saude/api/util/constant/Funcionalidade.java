@@ -16,6 +16,8 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String KANBAN												= "KANBAN";
+	public static final String REPORT_SOLICITACAO_CENTRAL_INTEGRA					= "REPORT-SOLICITACAO-CENTRAL-INTEGRA";
 	public static final String NOTIFICACAO											= "NOTIFICACAO";
 	public static final String REPORT_EMPREGADOS_POR_GRUPO							= "REPORT-EMPREGADOS-POR-GRUPO";
 	public static final String AGENDA												= "AGENDA";
@@ -255,4 +257,9 @@ public class Funcionalidade extends GenericConstant {
 	public static final String VACINA_ALTERAR		 			= "VACINA_ALTERAR";
 	public static final String VACINA_REMOVER 					= "VACINA_REMOVER";
 	public static final String VACINA_DETALHE 					= "VACINA_DETALHE";
+	public static final String TIPO_SOLICITACAO_ADICIONAR 			    			= "TIPO-SOLICITACAO_ADICIONAR";
+	public static final String TIPO_SOLICITACAO_ALTERAR		 						= "TIPO-SOLICITACAO_ALTERAR";
+	public static final String TIPO_SOLICITACAO_REMOVER 							= "TIPO-SOLICITACAO_REMOVER";
+	public static final String TIPO_SOLICITACAO_DETALHE 							= "TIPO-SOLICITACAO_DETALHE";
+	public static final String TIPO_SOLICITACAO_LISTAR								= "TIPO-SOLICITACAO_LISTAR";
 }

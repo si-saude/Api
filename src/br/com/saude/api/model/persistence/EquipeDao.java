@@ -42,4 +42,5 @@ public class EquipeDao extends GenericDao<Equipe> {
 	public PagedList<Equipe> getListFunctionLoad(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
 		return getList(exampleBuilder,this.functionLoad);
 	}
+	
 }
