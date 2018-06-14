@@ -1,6 +1,5 @@
 package br.com.saude.api.service;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.ws.rs.Consumes;

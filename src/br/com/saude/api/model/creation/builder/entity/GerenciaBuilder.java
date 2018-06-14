@@ -65,6 +65,7 @@ public class GerenciaBuilder extends GenericEntityBuilder<Gerencia,GerenciaFilte
 		newGerencia.setCodigo(gerencia.getCodigo());
 		newGerencia.setVersion(gerencia.getVersion());
 		newGerencia.setDescricao(gerencia.getDescricao());
+		newGerencia.setAusentePeriodico(gerencia.isAusentePeriodico());
 		
 		if(gerencia.getGerencia() != null)
 			newGerencia.setGerencia(new GerenciaBuilder(gerencia.getGerencia()).getEntity());

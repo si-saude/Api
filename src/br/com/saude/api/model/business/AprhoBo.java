@@ -23,7 +23,14 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 
 	@Override
 	protected void initializeFunctions() {
-
+		
+		this.functionLoadAll = builder -> {
+			return builder.loadAprhoItens();
+		};
 	}
 	
+	@Override
+	public Aprho getById(Object id) throws Exception { 
+		return getByEntity(getDao().getById(id), this.functionLoadAll);
+	}
 }

@@ -1,13 +1,18 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.AprhoFilter;
 import br.com.saude.api.model.entity.po.Aprho;
 
+
 public class AprhoBuilder extends GenericEntityBuilder<Aprho, AprhoFilter> {
 
+	private Function<Map<String,Aprho>,Aprho> loadAprhoItens;
+	
 	public static AprhoBuilder newInstance(Aprho aprho) {
 		return new AprhoBuilder(aprho);
 	}
@@ -24,10 +29,6 @@ public class AprhoBuilder extends GenericEntityBuilder<Aprho, AprhoFilter> {
 		super(aprho);
 	}
 
-	@Override
-	protected void initializeFunctions() {
-		
-	}
 
 	@Override
 	protected Aprho clone(Aprho aprho) {
@@ -35,15 +36,26 @@ public class AprhoBuilder extends GenericEntityBuilder<Aprho, AprhoFilter> {
 		
 		newAprho.setId(aprho.getId());
 		newAprho.setEmpresa(aprho.getEmpresa());
-		newAprho.setData(aprho.getData());
-		newAprho.setVersion(aprho.getVersion());
-		
+		newAprho.setVersion(aprho.getVersion());	
+		newAprho.setData(aprho.getData());	
 		if(aprho.getGhe() != null)
-			newAprho.setGhe(GheBuilder.newInstance(aprho.getGhe()).getEntity());
-		
+			newAprho.setGhe(new GheBuilder(aprho.getGhe()).getEntity());
 		return newAprho;
 	}
-
+	@Override
+	protected void initializeFunctions() {
+		this.loadAprhoItens = aprhos ->{
+			if(aprhos.get("origem").getAprhoItens() != null) {
+				aprhos.get("destino").setAprhoItens(AprhoItemBuilder.newInstance(aprhos.get("origem").getAprhoItens()).getEntityList());
+			}
+			return aprhos.get("destino");
+		};	
+	}
+	
+	public AprhoBuilder loadAprhoItens() {
+		return (AprhoBuilder) this.loadProperty(this.loadAprhoItens);
+	}
+	
 	@Override
 	public Aprho cloneFromFilter(AprhoFilter filter) {
 		return null;

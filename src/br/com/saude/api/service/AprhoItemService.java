@@ -14,31 +14,30 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.GheBo;
-import br.com.saude.api.model.business.validate.GheValidator;
-import br.com.saude.api.model.entity.filter.GheFilter;
-import br.com.saude.api.model.entity.po.Ghe;
+import br.com.saude.api.model.business.AprhoItemBo;
+import br.com.saude.api.model.business.validate.AprhoItemValidator;
+import br.com.saude.api.model.entity.filter.AprhoItemFilter;
+import br.com.saude.api.model.entity.po.AprhoItem;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("ghe")
+@Path("aprho-item")
 @RequestInterceptor
-public class GheService 
-				extends GenericServiceImpl<Ghe, GheFilter, GheBo>
-				implements GenericService<Ghe, GheFilter> {
+public class AprhoItemService extends GenericServiceImpl<AprhoItem, AprhoItemFilter, AprhoItemBo>
+							implements GenericService<AprhoItem, AprhoItemFilter>{
 
 	@Override
-	protected GheBo getBo() {
-		return GheBo.getInstance();
+	protected AprhoItemBo getBo() {
+		return AprhoItemBo.getInstance();
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=GheValidator.class)
+	@CustomValidator(validatorClass=AprhoItemValidator.class)
 	@Override
-	public Response save(Ghe ghe) {
+	public Response save(AprhoItem aprhoItem) {
 		try {
-			GheBo.getInstance().save(ghe);
+			AprhoItemBo.getInstance().save(aprhoItem);
 			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -50,22 +49,9 @@ public class GheService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(GheFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(AprhoItemFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
-	}
-	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/list-ativo")
-	public Response getListAtivos(GheFilter filter) {
-
-			try {
-				return Response.ok(GheBo.getInstance().getListGheAtivos(filter).getList()).build();
-			}catch (Exception e) {
-				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
-			}
 	}
 
 	@Override
@@ -73,7 +59,7 @@ public class GheService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(GheFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(AprhoItemFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}

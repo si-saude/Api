@@ -1,5 +1,9 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import java.util.function.Function;
+
+import org.hibernate.criterion.Restrictions;
+
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.GheFilter;
@@ -7,12 +11,23 @@ import br.com.saude.api.model.entity.po.Ghe;
 
 public class GheExampleBuilder extends GenericExampleBuilder<Ghe, GheFilter>{
 
+	private Function<GheExampleBuilder,GheExampleBuilder> functionAtivo;
+	
 	public static GheExampleBuilder newInstance(GheFilter filter) {
 		return new GheExampleBuilder(filter);
 	}
 	
 	private GheExampleBuilder(GheFilter filter) {
 		super(filter);
+		
+		this.functionAtivo = exampleBuilder -> {
+			try {
+				exampleBuilder.createExampleAtivos();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			return exampleBuilder;
+		};
 	}
 
 	@Override
@@ -26,12 +41,27 @@ public class GheExampleBuilder extends GenericExampleBuilder<Ghe, GheFilter>{
 		addDuracaoJornada();
 		addNome();
 	}
+	
+	protected void createExampleAtivos() throws InstantiationException, IllegalAccessException {
+		addCodigo();
+		addDataCriacao();
+		addDescricao();
+		addDescricaoAmbiente();
+		addDescricaoTarefas();
+		addDuracaoJornada();
+		addNome();
+		addAtivo();
+	}
 
 	@Override
 	protected void createExampleSelectList() {
 		
 	}
 	
+	private void addAtivo() {
+		this.criterions.add(Restrictions.isNull("dataDesativacao"));
+	}
+		
 	private void addDataCriacao() {
 		this.addData("dataCriacao", this.filter.getDataCriacao());
 	}
@@ -68,6 +98,15 @@ public class GheExampleBuilder extends GenericExampleBuilder<Ghe, GheFilter>{
 	private void addDuracaoJornada() {
 		if(this.filter.getDuracaoJornada() > 0)
 			this.entity.setDuracaoJornada(this.filter.getDuracaoJornada());
+	}
+	
+	public GenericExampleBuilder<Ghe, GheFilter> exampleAtivo() throws InstantiationException, IllegalAccessException {
+		if(this.filter!=null) {
+			initialize();
+			createExampleAtivos();
+			this.criterions.add(getExample());
+		}
+		return this;
 	}
 
 }
