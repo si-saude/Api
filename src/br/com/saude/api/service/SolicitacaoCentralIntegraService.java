@@ -1,6 +1,8 @@
 package br.com.saude.api.service;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,19 +12,23 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import br.com.saude.api.generic.CustomValidator;
+import br.com.saude.api.generic.GenericReportService;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.SolicitacaoCentralIntegraBo;
 import br.com.saude.api.model.business.validate.SolicitacaoCentralIntegraValidator;
+import br.com.saude.api.model.entity.dto.SolicitacaoCentralIntegraDto;
 import br.com.saude.api.model.entity.filter.SolicitacaoCentralIntegraFilter;
 import br.com.saude.api.model.entity.po.SolicitacaoCentralIntegra;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("solicitacao-central-integra")
 public class SolicitacaoCentralIntegraService extends GenericServiceImpl<SolicitacaoCentralIntegra, SolicitacaoCentralIntegraFilter, SolicitacaoCentralIntegraBo>
-		implements GenericService<SolicitacaoCentralIntegra, SolicitacaoCentralIntegraFilter> {
+		implements GenericReportService<SolicitacaoCentralIntegraDto, SolicitacaoCentralIntegraBo>, GenericService<SolicitacaoCentralIntegra, SolicitacaoCentralIntegraFilter> 
+{
 
 	@Override
 	protected SolicitacaoCentralIntegraBo getBo() {
@@ -107,6 +113,26 @@ public class SolicitacaoCentralIntegraService extends GenericServiceImpl<Solicit
 	@Path("/delete")
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/get-solicitacoes-central-integra")
+	public Response getSolicitacoesCentralIntegra(@QueryParam("cpf") String cpf) throws IOException {
+		return Response.ok(SolicitacaoCentralIntegraBo.getInstance().getSolicitacoesCentralIntegra(cpf)).build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-file")
+	public Response getFile(List<SolicitacaoCentralIntegraDto> entities) throws IOException {
+		try {
+			return Response.ok( this.exportXLSXFile(entities) ).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 }

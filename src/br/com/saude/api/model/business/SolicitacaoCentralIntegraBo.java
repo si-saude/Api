@@ -13,19 +13,24 @@ import java.util.Base64;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.SolicitacaoCentralIntegraBuilder;
 import br.com.saude.api.model.creation.builder.example.SolicitacaoCentralIntegraExampleBuilder;
+import br.com.saude.api.model.entity.dto.SolicitacaoCentralIntegraDto;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.filter.SolicitacaoCentralIntegraFilter;
 import br.com.saude.api.model.entity.po.SolicitacaoCentralIntegra;
 import br.com.saude.api.model.persistence.SolicitacaoCentralIntegraDao;
+import br.com.saude.api.model.persistence.report.SolicitacaoCentralIntegraReport;
 import br.com.saude.api.util.constant.StatusSolicitacao;
 import br.com.saude.api.util.constant.StatusTarefa;
 
 public class SolicitacaoCentralIntegraBo
-		extends GenericBo<SolicitacaoCentralIntegra, SolicitacaoCentralIntegraFilter, SolicitacaoCentralIntegraDao, SolicitacaoCentralIntegraBuilder, SolicitacaoCentralIntegraExampleBuilder> {
+		extends GenericBo<SolicitacaoCentralIntegra, SolicitacaoCentralIntegraFilter, SolicitacaoCentralIntegraDao, SolicitacaoCentralIntegraBuilder, SolicitacaoCentralIntegraExampleBuilder> 
+		implements GenericReportBo<SolicitacaoCentralIntegraDto>
+{
 
 	private static SolicitacaoCentralIntegraBo instance;
 
@@ -73,6 +78,10 @@ public class SolicitacaoCentralIntegraBo
 		return solicitacao;
 	}
 	
+	public List<SolicitacaoCentralIntegraDto> getSolicitacoesCentralIntegra(String cpf) throws IOException{
+		return SolicitacaoCentralIntegraReport.getInstance().getSolicitacaoCentralIntegra(cpf);
+	}
+	
 	public SolicitacaoCentralIntegra registrarSolicitacao(SolicitacaoCentralIntegra solicitacao) throws Exception {
 		solicitacao.setAbertura(Helper.getNow());
 		solicitacao.setStatus(StatusSolicitacao.getInstance().ABERTO);
@@ -100,7 +109,7 @@ public class SolicitacaoCentralIntegraBo
 		try {
 			new FileInputStream(anexoPath).read(zipArray);
 		} catch (FileNotFoundException e) {
-			throw new Exception("Arquivo n√£o encontrado para essa solicita√ß√£o.");
+			throw new Exception("Arquivo n„o encontrado para essa solicitaÁ„o.");
 		} catch (IOException e) {
 			throw new Exception("Erro no servidor. Por favor, contacte o administrador do sistema.");
 		}
