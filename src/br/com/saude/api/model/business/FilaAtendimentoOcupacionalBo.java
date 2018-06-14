@@ -139,6 +139,7 @@ public class FilaAtendimentoOcupacionalBo
 		// 4 - VERIFICAR SE JÁ ESTÁ NA FILA COM STATUS DIFERENTE DE ENCERRADO
 		Date today = Helper.getToday();
 		
+		//OBTER A LISTA DO DIA, INDEPENDENTE DE QUALQUER COISA, E VETIFICAR STATUS ANTES DE PROSSEGUIR
 		FilaAtendimentoOcupacionalFilter filaFilter = new FilaAtendimentoOcupacionalFilter();
 		filaFilter.setPageNumber(1);
 		filaFilter.setPageSize(1);

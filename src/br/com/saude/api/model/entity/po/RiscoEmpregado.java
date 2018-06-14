@@ -142,4 +142,9 @@ public class RiscoEmpregado {
 		return statusRPSat;
 	}
 	
+	@Override
+	public boolean equals(Object riscoEmpregado) {
+		return ((RiscoEmpregado)riscoEmpregado).id == this.id && this.id > 0;
+	}
+	
 }

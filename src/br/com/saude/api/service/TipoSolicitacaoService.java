@@ -1,6 +1,5 @@
 package br.com.saude.api.service;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.ws.rs.Consumes;
@@ -15,30 +14,31 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.EmpregadoConvocacaoBo;
-import br.com.saude.api.model.business.validate.EmpregadoConvocacaoValidator;
-import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
-import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.business.TipoSolicitacaoBo;
+import br.com.saude.api.model.business.validate.TipoSolicitacaoValidator;
+import br.com.saude.api.model.entity.filter.TipoSolicitacaoFilter;
+import br.com.saude.api.model.entity.po.TipoSolicitacao;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("empregado-convocacao")
+@Path("tipo-solicitacao")
 @RequestInterceptor
-public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConvocacao, EmpregadoConvocacaoFilter, EmpregadoConvocacaoBo>
-							implements GenericService<EmpregadoConvocacao, EmpregadoConvocacaoFilter>{
+public class TipoSolicitacaoService
+	extends GenericServiceImpl<TipoSolicitacao, TipoSolicitacaoFilter, TipoSolicitacaoBo> 
+implements GenericService<TipoSolicitacao, TipoSolicitacaoFilter>{
 
 	@Override
-	protected EmpregadoConvocacaoBo getBo() {
-		return EmpregadoConvocacaoBo.getInstance();
+	protected TipoSolicitacaoBo getBo() {
+		return TipoSolicitacaoBo.getInstance();
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=EmpregadoConvocacaoValidator.class)
+	@CustomValidator(validatorClass=TipoSolicitacaoValidator.class)
 	@Override
-	public Response save(EmpregadoConvocacao empregadoConvocacao) {
+	public Response save(TipoSolicitacao tipoSolicitacao) {
 		try {
-			EmpregadoConvocacaoBo.getInstance().save(empregadoConvocacao);
+			TipoSolicitacaoBo.getInstance().save(tipoSolicitacao);
 			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -50,7 +50,7 @@ public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConv
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(EmpregadoConvocacaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(TipoSolicitacaoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -60,7 +60,7 @@ public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConv
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(EmpregadoConvocacaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(TipoSolicitacaoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
@@ -78,19 +78,5 @@ public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConv
 	@Path("/delete")
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
-	}
-	
-	@POST
-	@Path("/import")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response importFile(File arquivo) {
-		try {
-			getBo().importFile(arquivo);
-			return Response.ok("Salvo com sucesso.").build();
-		} catch (Exception e) {
-			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
-		}
-		
 	}
 }

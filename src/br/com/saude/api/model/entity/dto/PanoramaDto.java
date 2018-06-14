@@ -1,7 +1,5 @@
 package br.com.saude.api.model.entity.dto;
 
-import java.util.Date;
-
 public class PanoramaDto {
 
 	private int id;
@@ -10,14 +8,15 @@ public class PanoramaDto {
 	private String nome;
 	private String mesConvocacao;
 	private String base;
-	private Date dataAsoAnoAnterior;
-	private Date dataAsoAnoAtual;
-	private Date dataRealizacaoPreClinico;
+	private String dataAsoAnoAnterior;
+	private String dataAsoAnoAtual;
+	private String dataRealizacaoPreClinico;
 	private String situacaoAso;
 	private String asoNoPrazo;
 	private String pendencias;
 	private String gerenciaPrimeiraLinha;
 	private String statusPreClinico;
+	private String examesPendentes;
 	
 	
 	public int getId() {
@@ -50,22 +49,22 @@ public class PanoramaDto {
 	public void setBase(String base) {
 		this.base = base;
 	}
-	public Date getDataAsoAnoAnterior() {
+	public String getDataAsoAnoAnterior() {
 		return dataAsoAnoAnterior;
 	}
-	public void setDataAsoAnoAnterior(Date dataAsoAnoAnterior) {
+	public void setDataAsoAnoAnterior(String dataAsoAnoAnterior) {
 		this.dataAsoAnoAnterior = dataAsoAnoAnterior;
 	}
-	public Date getDataAsoAnoAtual() {
+	public String getDataAsoAnoAtual() {
 		return dataAsoAnoAtual;
 	}
-	public void setDataAsoAnoAtual(Date dataAsoAnoAtual) {
+	public void setDataAsoAnoAtual(String dataAsoAnoAtual) {
 		this.dataAsoAnoAtual = dataAsoAnoAtual;
 	}
-	public Date getDataRealizacaoPreClinico() {
+	public String getDataRealizacaoPreClinico() {
 		return dataRealizacaoPreClinico;
 	}
-	public void setDataRealizacaoPreClinico(Date dataRealizacaoPreClinico) {
+	public void setDataRealizacaoPreClinico(String dataRealizacaoPreClinico) {
 		this.dataRealizacaoPreClinico = dataRealizacaoPreClinico;
 	}
 	public String getSituacaoAso() {
@@ -104,4 +103,11 @@ public class PanoramaDto {
 	public void setStatusPreClinico(String statusPreClinico) {
 		this.statusPreClinico = statusPreClinico;
 	}
+	public String getExamesPendentes() {
+		return examesPendentes;
+	}
+	public void setExamesPendentes(String examesPendentes) {
+		this.examesPendentes = examesPendentes;
+	}
+	
 }
