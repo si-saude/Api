@@ -43,7 +43,10 @@ public interface GenericReportBo<T> {
 			
 			for ( int i = 0; i <= fields.length - 1; i++ ) {
 				fields[i].setAccessible(true);
-				row.createCell(i).setCellValue(fields[i].get(entity).toString());
+				if ( fields[i].get(entity) == null )
+					row.createCell(i).setCellValue("");
+				else
+					row.createCell(i).setCellValue(fields[i].get(entity).toString());
 			}
 		}
 		
