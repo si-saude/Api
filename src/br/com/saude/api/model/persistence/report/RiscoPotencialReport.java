@@ -67,7 +67,7 @@ private static RiscoPotencialReport instance;
 				riscoPotencial.setEquipeResponsavelNome((String)row[3]);
 				riscoPotencial.setData((String)row[4]);
 				riscoPotencial.setStatus((String)row[5]);
-				riscoPotencial.setAbreviacaoequipeacolhimento((String)row[6]);
+				riscoPotencial.setAbreviacaoEquipeAcolhimento((String)row[6]);
 					
 				riscoPotenciais.add(riscoPotencial);
 			}

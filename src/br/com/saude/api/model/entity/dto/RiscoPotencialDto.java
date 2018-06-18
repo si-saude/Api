@@ -8,7 +8,7 @@ public class RiscoPotencialDto {
 	private String equipeResponsavelNome;
 	private String data;
 	private String status;
-	private String abreviacaoequipeacolhimento;
+	private String abreviacaoEquipeAcolhimento;
 	
 	public int getId() {
 		return id;
@@ -52,11 +52,11 @@ public class RiscoPotencialDto {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getAbreviacaoequipeacolhimento() {
-		return abreviacaoequipeacolhimento;
+	public String getAbreviacaoEquipeAcolhimento() {
+		return abreviacaoEquipeAcolhimento;
 	}
-	public void setAbreviacaoequipeacolhimento(String abreviacaoequipeacolhimento) {
-		this.abreviacaoequipeacolhimento = abreviacaoequipeacolhimento;
+	public void setAbreviacaoEquipeAcolhimento(String abreviacaoEquipeAcolhimento) {
+		this.abreviacaoEquipeAcolhimento = abreviacaoEquipeAcolhimento;
 	}
 	
 }
