@@ -75,7 +75,7 @@ from
 			from empregadoconvocacaoexame x
 			inner join exame ex on x.exame_id = ex.id
 			where x.empregadoconvocacao_id = ec.id
-			  and x.realizacao is not null) as exames_pendentes,
+			  and x.realizacao is null) as exames_pendentes,
 			
 			COALESCE(g1.codigo||'/'||g2.codigo,g2.codigo||'/'||g3.codigo,g3.codigo||'/'||g4.codigo) as primeira_linha,
 			ec.auditado

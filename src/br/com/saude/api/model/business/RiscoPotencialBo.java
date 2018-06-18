@@ -1,15 +1,19 @@
 package br.com.saude.api.model.business;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.RiscoPotencialExampleBuilder;
+import br.com.saude.api.model.entity.dto.RiscoPotencialDto;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.po.Notificacao;
@@ -17,6 +21,7 @@ import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.entity.po.Acompanhamento;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
+import br.com.saude.api.model.persistence.report.RiscoPotencialReport;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusRiscoEmpregado;
@@ -24,7 +29,8 @@ import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusTarefa;
 
 public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFilter, 
-	RiscoPotencialDao, RiscoPotencialBuilder, RiscoPotencialExampleBuilder> {
+	RiscoPotencialDao, RiscoPotencialBuilder, RiscoPotencialExampleBuilder>
+	implements GenericReportBo<RiscoPotencialDto>{
 
 	private Function<RiscoPotencialBuilder,RiscoPotencialBuilder> functionLoadAcoes;
 
@@ -78,6 +84,10 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 			});
 		
 		return riscos;
+	}
+	
+	public List<RiscoPotencialDto> getRiscoPotenciais(String uf) throws IOException{
+		return RiscoPotencialReport.getInstance().getRiscoPotenciais(uf);
 	}
 	
 	public RiscoPotencial criarPlano(RiscoPotencial riscoPotencial) throws Exception {

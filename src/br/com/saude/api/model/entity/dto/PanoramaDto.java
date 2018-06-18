@@ -17,7 +17,7 @@ public class PanoramaDto {
 	private String gerenciaPrimeiraLinha;
 	private String statusPreClinico;
 	private String examesPendentes;
-	
+	private boolean existePendenciaExames;
 	
 	public int getId() {
 		return id;
@@ -108,6 +108,12 @@ public class PanoramaDto {
 	}
 	public void setExamesPendentes(String examesPendentes) {
 		this.examesPendentes = examesPendentes;
+	}
+	public boolean isExistePendenciaExames() {
+		return existePendenciaExames;
+	}
+	public void setExistePendenciaExames(boolean existePendenciaExames) {
+		this.existePendenciaExames = existePendenciaExames;
 	}
 	
 }

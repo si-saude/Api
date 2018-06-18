@@ -70,6 +70,10 @@ public class PanoramaReport {
 				if(row[14] != null)
 					panorama.setExamesPendentes((String)row[14]);
 				
+				if ( panorama.getExamesPendentes() != null && panorama.getExamesPendentes().length() > 0 )
+					 panorama.setExistePendenciaExames(true);
+				else panorama.setExistePendenciaExames(false);
+					
 				panoramas.add(panorama);
 			}
 		}catch (Exception ex) {
