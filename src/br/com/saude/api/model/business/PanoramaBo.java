@@ -3,10 +3,12 @@ package br.com.saude.api.model.business;
 import java.io.IOException;
 import java.util.List;
 
+import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.model.entity.dto.PanoramaDto;
 import br.com.saude.api.model.persistence.report.PanoramaReport;
 
-public class PanoramaBo {
+public class PanoramaBo implements GenericReportBo<PanoramaDto>
+{
 
 	private static PanoramaBo instance;
 	

@@ -1,6 +1,8 @@
 package br.com.saude.api.service;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,12 +12,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import br.com.saude.api.generic.CustomValidator;
+import br.com.saude.api.generic.GenericReportService;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.RiscoPotencialBo;
 import br.com.saude.api.model.business.validate.RiscoPotencialValidator;
+import br.com.saude.api.model.entity.dto.RiscoPotencialDto;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.util.RequestInterceptor;
@@ -23,7 +28,7 @@ import br.com.saude.api.util.RequestInterceptor;
 @Path("risco-potencial")
 @RequestInterceptor
 public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,RiscoPotencialFilter,RiscoPotencialBo>
-							implements GenericService<RiscoPotencial,RiscoPotencialFilter>{
+							implements GenericReportService<RiscoPotencialDto, RiscoPotencialBo>, GenericService<RiscoPotencial,RiscoPotencialFilter>{
 	
 	@Override
 	protected RiscoPotencialBo getBo() {
@@ -153,5 +158,25 @@ public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,Ris
 	@Path("/delete")
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/get-risco-potenciais")
+	public Response getRiscoPotenciais(@QueryParam("uf") String uf) throws IOException {
+		return Response.ok(RiscoPotencialBo.getInstance().getRiscoPotenciais(uf)).build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-file")
+	public Response getFile(List<RiscoPotencialDto> entities) throws IOException {
+		try {
+			return Response.ok( this.exportXLSXFile(entities) ).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 }

@@ -1,4 +1,8 @@
-select id,gerencia,matricula,nome,mes_convocacao,base,aso_anterior,realizacao_pre_clinico,aso_atual,situacao_aso,
+select id,gerencia,matricula,nome,mes_convocacao,base,
+	EXTRACT(DAY from aso_anterior) || '/' || EXTRACT(MONTH from aso_anterior) || '/' || EXTRACT(YEAR from aso_anterior) as aso_anterior1,
+	EXTRACT(DAY from realizacao_pre_clinico) || '/' || EXTRACT(MONTH from realizacao_pre_clinico) || '/' || EXTRACT(YEAR from realizacao_pre_clinico) as realizacao_pre_clinico1,
+	EXTRACT(DAY from aso_atual) || '/' || EXTRACT(MONTH from aso_atual) || '/' || EXTRACT(YEAR from aso_atual) as aso_atual1,
+	situacao_aso,
 	CASE situacao_aso
 	WHEN 'PERIÓDICO REALIZADO'
 	THEN CASE WHEN date_trunc('day', aso_atual) <= date_trunc('day', aso_anterior_validade)
@@ -71,7 +75,7 @@ from
 			from empregadoconvocacaoexame x
 			inner join exame ex on x.exame_id = ex.id
 			where x.empregadoconvocacao_id = ec.id
-			  and x.realizacao is not null) as exames_pendentes,
+			  and x.realizacao is null) as exames_pendentes,
 			
 			COALESCE(g1.codigo||'/'||g2.codigo,g2.codigo||'/'||g3.codigo,g3.codigo||'/'||g4.codigo) as primeira_linha,
 			ec.auditado

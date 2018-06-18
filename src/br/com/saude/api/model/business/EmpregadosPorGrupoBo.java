@@ -3,10 +3,11 @@ package br.com.saude.api.model.business;
 import java.io.IOException;
 import java.util.List;
 
+import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.model.entity.dto.EmpregadosPorGrupoDto;
 import br.com.saude.api.model.persistence.report.EmpregadosPorGrupoReport;
 
-public class EmpregadosPorGrupoBo {
+public class EmpregadosPorGrupoBo implements GenericReportBo<EmpregadosPorGrupoDto> {
 	
 	private static EmpregadosPorGrupoBo instance;
 	

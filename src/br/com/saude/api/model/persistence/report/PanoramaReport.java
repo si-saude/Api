@@ -3,9 +3,7 @@ package br.com.saude.api.model.persistence.report;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -57,16 +55,9 @@ public class PanoramaReport {
 				panorama.setNome((String)row[3]);
 				panorama.setMesConvocacao((String)row[4]);
 				panorama.setBase((String)row[5]);
-				
-				if(row[6] != null)
-					panorama.setDataAsoAnoAnterior(Date.from(((Timestamp)row[6]).toInstant()));
-				
-				if(row[7] != null)
-					panorama.setDataRealizacaoPreClinico(Date.from(((Timestamp)row[7]).toInstant()));
-				
-				if(row[8] != null)
-					panorama.setDataAsoAnoAtual(Date.from(((Timestamp)row[8]).toInstant()));
-				
+				panorama.setDataAsoAnoAnterior((String)row[6]);
+				panorama.setDataRealizacaoPreClinico((String)row[7]);
+				panorama.setDataAsoAnoAtual((String)row[8]);
 				panorama.setSituacaoAso((String)row[9]);
 				panorama.setAsoNoPrazo((String)row[10]);
 				
@@ -79,6 +70,10 @@ public class PanoramaReport {
 				if(row[14] != null)
 					panorama.setExamesPendentes((String)row[14]);
 				
+				if ( panorama.getExamesPendentes() != null && panorama.getExamesPendentes().length() > 0 )
+					 panorama.setExistePendenciaExames(true);
+				else panorama.setExistePendenciaExames(false);
+					
 				panoramas.add(panorama);
 			}
 		}catch (Exception ex) {

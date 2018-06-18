@@ -40,6 +40,15 @@ public abstract class GenericDao<T> {
 		}
 	}
 	
+	private Field getVersion(Class<?> entityClass) {
+		try {
+			return entityClass.getDeclaredField("version");
+		} catch (NoSuchFieldException e) {
+			return getVersion(entityClass.getSuperclass());
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	public T save(T entity) throws Exception {
 		Session session = HibernateHelper.getSession();
 		
@@ -49,11 +58,19 @@ public abstract class GenericDao<T> {
 			if(this.functionBeforeSave != null)
 				entity = this.functionBeforeSave.apply(new Pair<T,Session>(entity,session));
 			
+			T entityMerged = (T) session.merge(entity);
+			transaction.commit();
+			
 			Field id = getId(entity.getClass());
 			id.setAccessible(true);
-			id.set(entity, id.get(session.merge(entity)));
+			id.set(entity, id.get(entityMerged));
 			
-			transaction.commit();
+//			entityMerged = (T) session.load(entity.getClass(), (Serializable)id.get(entityMerged));
+			
+			Field version = getVersion(entity.getClass());
+			version.setAccessible(true);
+			version.set(entity, version.get(entityMerged));
+			
 		}catch(Exception ex) {
 			throw ex;
 		}finally {
