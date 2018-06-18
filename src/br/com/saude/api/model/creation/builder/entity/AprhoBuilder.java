@@ -25,7 +25,7 @@ public class AprhoBuilder extends GenericEntityBuilder<Aprho, AprhoFilter> {
 		super(aprhos);
 	}
 
-	private AprhoBuilder(Aprho aprho) {
+	protected AprhoBuilder(Aprho aprho) {
 		super(aprho);
 	}
 

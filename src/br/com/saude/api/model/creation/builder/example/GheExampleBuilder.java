@@ -1,7 +1,5 @@
 package br.com.saude.api.model.creation.builder.example;
 
-import java.util.function.Function;
-
 import org.hibernate.criterion.Restrictions;
 
 import br.com.saude.api.generic.GenericExampleBuilder;
@@ -10,8 +8,6 @@ import br.com.saude.api.model.entity.filter.GheFilter;
 import br.com.saude.api.model.entity.po.Ghe;
 
 public class GheExampleBuilder extends GenericExampleBuilder<Ghe, GheFilter>{
-
-	private Function<GheExampleBuilder,GheExampleBuilder> functionAtivo;
 	
 	public static GheExampleBuilder newInstance(GheFilter filter) {
 		return new GheExampleBuilder(filter);
@@ -19,15 +15,6 @@ public class GheExampleBuilder extends GenericExampleBuilder<Ghe, GheFilter>{
 	
 	private GheExampleBuilder(GheFilter filter) {
 		super(filter);
-		
-		this.functionAtivo = exampleBuilder -> {
-			try {
-				exampleBuilder.createExampleAtivos();
-			} catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			return exampleBuilder;
-		};
 	}
 
 	@Override

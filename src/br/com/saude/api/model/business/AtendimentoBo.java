@@ -660,6 +660,11 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		for(Atividade atividade : atendimento.getTarefa().getServico().getAtividades()) {
 			
+			//VERIFICAR SE DEVE GERAR TAREGA PARA HO
+			if(atividade.getEquipe().getAbreviacao().equals("HIG") &&
+					empConList.getList().get(0).getEmpregado().getGerencia().isAusentePeriodico())
+				continue;
+			
 			Date inicio = Date.from(atendimento.getTarefa().getInicio().toInstant());
 			Date fim = Date.from(inicio.toInstant());
 			
