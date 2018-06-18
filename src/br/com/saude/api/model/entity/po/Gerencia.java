@@ -39,6 +39,8 @@ public class Gerencia {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Empregado secretario2;
 	
+	private boolean ausentePeriodico;
+		
 	@Version
 	private long version;
 
@@ -116,5 +118,13 @@ public class Gerencia {
 
 	public void setSecretario2(Empregado secretario2) {
 		this.secretario2 = secretario2;
+	}
+
+	public boolean isAusentePeriodico() {
+		return ausentePeriodico;
+	}
+
+	public void setAusentePeriodico(boolean ausentePeriodico) {
+		this.ausentePeriodico = ausentePeriodico;
 	}
 }

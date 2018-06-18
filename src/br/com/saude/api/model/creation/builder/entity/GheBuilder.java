@@ -24,7 +24,7 @@ public class GheBuilder extends GenericEntityBuilder<Ghe, GheFilter> {
 		super(ghes);
 	}
 
-	private GheBuilder(Ghe ghe) {
+	protected GheBuilder(Ghe ghe) {
 		super(ghe);
 	}
 	

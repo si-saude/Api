@@ -9,7 +9,9 @@ public class FornecedorFilter extends GenericFilter {
 	private String cpfCnpj;
 	private String codigoSap;
 	private String email;
+	private String atividadeFornecedor;
 	private EnderecoFilter endereco;
+	
 	public String getRazaoSocial() {
 		return razaoSocial;
 	}
@@ -46,4 +48,13 @@ public class FornecedorFilter extends GenericFilter {
 	public void setEndereco(EnderecoFilter endereco) {
 		this.endereco = endereco;
 	}
+	
+	public String getAtividadeFornecedor() {
+		return atividadeFornecedor;
+	}
+	public void setAtividadeFornecedor(String atividadeFornecedor) {
+		this.atividadeFornecedor = atividadeFornecedor;
+	}
+	
+	
 }

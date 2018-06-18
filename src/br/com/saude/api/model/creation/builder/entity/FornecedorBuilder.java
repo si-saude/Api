@@ -56,6 +56,7 @@ public class FornecedorBuilder extends GenericEntityBuilder<Fornecedor,Fornecedo
 		newFornecedor.setEmail(fornecedor.getEmail());
 		newFornecedor.setRazaoSocial(fornecedor.getRazaoSocial());
 		newFornecedor.setTipoPessoa(fornecedor.getTipoPessoa());
+		newFornecedor.setAtividadeFornecedor(fornecedor.getAtividadeFornecedor());
 		newFornecedor.setVersion(fornecedor.getVersion());
 		
 		return newFornecedor;

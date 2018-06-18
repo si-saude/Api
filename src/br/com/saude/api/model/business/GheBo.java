@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.GheBuilder;
 import br.com.saude.api.model.creation.builder.example.GheExampleBuilder;
 import br.com.saude.api.model.entity.filter.GheFilter;
@@ -46,4 +47,13 @@ public class GheBo extends GenericBo<Ghe, GheFilter, GheDao, GheBuilder, GheExam
 	public Ghe getById(Object id) throws Exception {
 		return super.getById(id,this.functionLoadAll);
 	}
+	
+	public PagedList<Ghe> getListGheAtivos(GheFilter gheFilterAux) throws Exception {	
+		
+		PagedList<Ghe> gheAux = getList(
+				GheExampleBuilder.newInstance(gheFilterAux).exampleAtivo());
+		
+		return gheAux;
+	}
+
 }

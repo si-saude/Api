@@ -54,6 +54,19 @@ public class GheService
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-ativo")
+	public Response getListAtivos(GheFilter filter) {
+
+			try {
+				return Response.ok(GheBo.getInstance().getListGheAtivos(filter).getGenericPagedList()).build();
+			}catch (Exception e) {
+				return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+			}
+	}
 
 	@Override
 	@POST

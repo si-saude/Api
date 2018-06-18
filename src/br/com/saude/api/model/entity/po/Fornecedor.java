@@ -26,7 +26,6 @@ public class Fornecedor {
 	private int id;
 	
 	@NotNull(message="É necessário informar o Nome/Razão Social do Fornecedor.")
-	@Size(max = 256, message="Tamanho máximo para Tipo de Pessoa: 256")
 	private String razaoSocial;
 	
 	@NotNull(message="É necessário informar o Logradouro do Endereço.")
@@ -47,10 +46,13 @@ public class Fornecedor {
 	@JoinColumn(name = "endereco_id")
 	private Endereco endereco;
 	
+	@Size(max = 16, message="Tamanho máximo para Sexo: 16")
+	private String atividadeFornecedor;
+	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name="telefone_fornecedor", 
 				joinColumns = {@JoinColumn(name="fornecedor_id")}, 
-				inverseJoinColumns = {@JoinColumn(name="telefone_id")})
+				inverseJoinColumns = {@JoinColumn(name="telefone_id")})	
 	private List<Telefone> telefones;
 	
 	@Version
@@ -111,6 +113,15 @@ public class Fornecedor {
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
+	
+	public String getAtividadeFornecedor() {
+		return atividadeFornecedor;
+	}
+
+	public void setAtividadeFornecedor(String atividadeFornecedor) {
+		this.atividadeFornecedor = atividadeFornecedor;
+	}
+
 
 	public List<Telefone> getTelefones() {
 		return telefones;

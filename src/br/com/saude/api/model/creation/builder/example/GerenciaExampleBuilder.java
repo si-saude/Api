@@ -61,6 +61,10 @@ public class GerenciaExampleBuilder extends GenericExampleBuilder<Gerencia,Geren
 		}
 	}
 	
+	protected void addAusentePeriodico() {
+		this.entity.setAusentePeriodico(this.addBoolean("ausentePeriodico", this.filter.getAusentePeriodico()));
+	}
+	
 	public GerenciaExampleBuilder exampleNotIn(List<Integer> ids) throws InstantiationException, IllegalAccessException{
 		if(this.filter!=null) {
 			initialize();
@@ -78,10 +82,12 @@ public class GerenciaExampleBuilder extends GenericExampleBuilder<Gerencia,Geren
 		addGerente();
 		addSecretario1();
 		addSecretario2();
+		addAusentePeriodico();
 	}
 	
 	@Override
 	protected void createExampleSelectList() {
 		addNeId();
+		addAusentePeriodico();
 	}
 }
