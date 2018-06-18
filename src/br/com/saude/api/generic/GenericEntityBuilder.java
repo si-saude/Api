@@ -47,7 +47,6 @@ public abstract class GenericEntityBuilder<T,F extends GenericFilter> {
 		return list;
 	}
 	
-	private static Object entityTemp;
 	protected GenericEntityBuilder<T,F> loadProperty(Function<Map<String,T>,T> function) {
 		Map<String,T> map = new HashMap<String,T>();
 		
@@ -57,13 +56,12 @@ public abstract class GenericEntityBuilder<T,F extends GenericFilter> {
 			this.newEntity = function.apply(map);
 		}else {
 			for(T entity:this.entityList) {
-				entityTemp = entity;
 				T newEntity = this.newEntityList.stream()
 						.filter(e->{
 							try {
 								Field field = e.getClass().getDeclaredField("id");
 								field.setAccessible(true);
-								return field.get(e).equals(field.get(entityTemp));
+								return field.get(e).equals(field.get(entity));
 							} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
 									| SecurityException e1) {
 								e1.printStackTrace();
@@ -74,7 +72,6 @@ public abstract class GenericEntityBuilder<T,F extends GenericFilter> {
 				map.put("origem", entity);
 				map.put("destino", newEntity);
 				newEntity = function.apply(map);
-				entityTemp = null;
 			}
 		}
 		
