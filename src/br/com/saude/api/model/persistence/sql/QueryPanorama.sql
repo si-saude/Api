@@ -17,7 +17,7 @@ select id,gerencia,matricula,nome,mes_convocacao,base,
 from
 	(select *,
 		CASE 
-		WHEN status_empregado = 'AFASTADO'|| status_empregado = 'SINDICALISTA' THEN status_empregado
+		WHEN status_empregado = 'AFASTADO' OR status_empregado = 'SINDICALISTA' THEN status_empregado
 		WHEN existe_periodico = 0 and aso_valido = 0 THEN 'PERIÓDICO NÃO REALIZADO (ASO INVÁLIDO)'
 		WHEN existe_periodico = 0 and aso_valido = 1 THEN 'PERIÓDICO NÃO REALIZADO (ASO VÁLIDO)'
 		WHEN existe_periodico = 1 THEN 'PERIÓDICO REALIZADO' ELSE '' END as situacao_aso
