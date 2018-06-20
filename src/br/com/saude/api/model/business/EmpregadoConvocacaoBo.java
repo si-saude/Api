@@ -94,7 +94,6 @@ public class EmpregadoConvocacaoBo
 		return super.save(eC);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void importFile(File arquivo) throws Exception {
 		/* 1 - Alterar a propriedade de recebimento para realização - OK
 		 * 2 - Ler o arquivo - OK
@@ -117,17 +116,16 @@ public class EmpregadoConvocacaoBo
 					&& sheet.getRow(row).getCell(0).getStringCellValue() != null
 					&& sheet.getRow(row).getCell(0).getStringCellValue().length() > 0) {
 				
+				row++;
+				
 				//OBTER A DATA DE REALIZAÇÃO
-				String dataString = sheet.getRow(row).getCell(3).getStringCellValue().trim().split("E")[0].trim();
-				String[] dataArray = dataString.split("/");
-				Date realizacao = new Date( new Integer(dataArray[2]) - 1900,
-						new Integer(dataArray[1])-1,
-						new Integer(dataArray[0]));
+				Date realizacao = sheet.getRow(row).getCell(3).getDateCellValue();
 				
 				// VERIFICAR SE O EMPREGADO CONVOCACAO EXISTE NA LISTA
 				EmpregadoConvocacao eC = null;
+				int rowAux = row;
 				List<EmpregadoConvocacao> listAux = list.stream().filter(e -> e.getEmpregado().getMatricula()
-						.contains(sheet.getRow(row).getCell(1).getStringCellValue().trim()))
+						.contains(sheet.getRow(rowAux).getCell(1).getStringCellValue().trim()))
 						.collect(Collectors.toList());
 				
 				if(listAux.size()> 0)
