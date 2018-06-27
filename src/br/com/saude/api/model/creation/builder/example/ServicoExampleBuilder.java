@@ -31,6 +31,7 @@ public class ServicoExampleBuilder extends GenericExampleBuilder<Servico, Servic
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		addPublico();
+		addGrupo();
 	}
 	
 	private void addId() {
