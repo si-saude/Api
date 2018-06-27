@@ -587,6 +587,8 @@ public class FilaEsperaOcupacionalBo
 		}else {
 			if(fila.getRiscoPotencial() != null && fila.getRiscoPotencial().getId() == 0)
 				fila.setRiscoPotencial(null);
+			if(risco!=null && risco.getId() > 0)
+				fila.setRiscoPotencial(risco);
 		}
 		
 		// 9 - INSERIR NO BANCO

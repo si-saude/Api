@@ -1,5 +1,7 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
+
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.ExameFilter;
@@ -22,11 +24,17 @@ public class ExameExampleBuilder extends GenericExampleBuilder<Exame,ExameFilter
 	
 	private void addDescricao() {
 		if(this.filter.getDescricao() != null)
-			this.entity.setDescricao(Helper.filterLike(this.filter.getDescricao()));
+			this.criterions.add(Restrictions.ilike("descricao", Helper.filterLike(this.filter.getDescricao())));
+	}
+	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
 	}
 
 	@Override
 	protected void createExample() {
+		addId();
 		addCodigo();
 		addDescricao();
 	}

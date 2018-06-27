@@ -1,5 +1,7 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
+
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.PessoaFilter;
@@ -17,7 +19,7 @@ public class PessoaExampleBuilder extends GenericExampleBuilder<Pessoa,PessoaFil
 
 	public void addNome() {
 		if(this.filter.getNome()!=null)
-			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
+			this.criterions.add(Restrictions.ilike("nome", Helper.filterLike(this.filter.getNome())));
 	}
 	
 	private void addCpf() {

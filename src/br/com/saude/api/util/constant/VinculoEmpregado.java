@@ -17,6 +17,6 @@ public class VinculoEmpregado extends GenericConstant {
 	}
 	
 	public final String CONTRATADO 				= "CONTRATADO";
-	public final String ESTAGIARIO			= "ESTAGI√ÅRIO";
-	public final String PROPRIO			= "PR√ìPRIO";
+	public final String ESTAGIARIO			= "ESTAGI¡RIO";
+	public final String PROPRIO			= "PR”PRIO";
 }
