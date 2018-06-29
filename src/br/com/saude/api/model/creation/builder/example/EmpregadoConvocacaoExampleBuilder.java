@@ -26,6 +26,7 @@ public class EmpregadoConvocacaoExampleBuilder
 		addEmpregado();
 		addConvocacao();
 		addAuditado();
+		addAuditadoSd2000();
 		addConvocado();
 		addResultadoAuditado();
 	}
@@ -58,6 +59,10 @@ public class EmpregadoConvocacaoExampleBuilder
 	
 	protected void addAuditado() {
 		this.entity.setAuditado(this.addBoolean("auditado", this.filter.getAuditado()));
+	}
+	
+	protected void addAuditadoSd2000() {
+		this.entity.setAuditadoSd2000(this.addBoolean("auditadoSd2000", this.filter.getAuditadoSd2000()));
 	}
 	
 	protected void addConvocado() {
