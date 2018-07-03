@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.GenericReportBo;
@@ -73,7 +74,28 @@ public class SolicitacaoCentralIntegraBo
 
 	@Override
 	public SolicitacaoCentralIntegra save(SolicitacaoCentralIntegra solicitacao) throws Exception {
+		switch( solicitacao.getStatus() ) {
+			case "ABERTO": case "PLANEJADO":
+				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
+				break;
+			case "EXECUÇÃO":
+				solicitacao.getTarefa().setInicio(Helper.getNow());
+				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().EXECUCAO);
+				break;
+			case "CONCLUIDO":
+				solicitacao.getTarefa().setFim(Helper.getNow());
+				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
+				break;
+			case "CANCELADO":
+				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().CANCELADA);
+				break;
+		}
+		
+		solicitacao.getTarefa().setAtualizacao(Helper.getNow());
+		
+		Map<Integer, Integer> anexo = solicitacao.getAnexo();
 		solicitacao = super.save(solicitacao);
+		solicitacao.setAnexo(anexo);
 		saveFiles(solicitacao);
 		return solicitacao;
 	}
@@ -92,7 +114,9 @@ public class SolicitacaoCentralIntegraBo
 		solicitacao.getTarefa().setEquipe(EquipeBo.getInstance().getList(equipeFilter).getList().get(0));
 		solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
 		
+		Map<Integer, Integer> anexo = solicitacao.getAnexo();
 		solicitacao = super.save(solicitacao);
+		solicitacao.setAnexo(anexo);
 		saveFiles(solicitacao);
 		return solicitacao;
 	}

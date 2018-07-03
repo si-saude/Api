@@ -15,6 +15,11 @@ public class Funcionalidade extends GenericConstant {
 			instance = new Funcionalidade();
 		return instance;
 	}
+	public static final String CAT_LISTAR						= "CAT_LISTAR";
+	public static final String CAT_ADICIONAR 			    	= "CAT_ADICIONAR";
+	public static final String CAT_ALTERAR		 			= "CAT_ALTERAR";
+	public static final String CAT_REMOVER 					= "CAT_REMOVER";
+	public static final String CAT_DETALHE 					= "CAT_DETALHE";
 	public static final String APRHO_LISTAR						= "APRHO_LISTAR";
 	public static final String APRHO_ADICIONAR 			    	= "APRHO_ADICIONAR";
 	public static final String APRHO_ALTERAR		 			= "APRHO_ALTERAR";

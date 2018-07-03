@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -178,9 +179,16 @@ public class SolicitacaoCentralIntegra {
 	}
 	
 	public boolean isAtrasado( ) {
-		if ( this.prazo != null && this.prazo.before( Helper.getToday() ) )
-			atrasado = true;
-		else atrasado = false;
+		if ( this.prazo != null ) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(this.prazo);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			
+			if ( calendar.getTime().before( Helper.getToday() ) ) {
+				atrasado = true;	
+			} else atrasado = false;
+		}
+		
 		return atrasado;
 	}
 	
