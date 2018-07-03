@@ -4,7 +4,8 @@ select distinct e.id,trim(p.nome),f.status, date_trunc('day', t.inicio), s.nome,
 			inner join equipe e2 on t2.equipe_id = e2.id
 			where t2.status in ('ABERTA','EXECUÇÃO')
 			  and t2.cliente_id = e.id
-			  and date_trunc('day', t2.inicio) = date_trunc('day', t.inicio)
+			  and t2.servico_id = t.servico_id
+			  and date_trunc('year', t2.inicio) = date_trunc('year', t.inicio)
 			) as pendencias
 from tarefa t
 inner join empregado e on t.cliente_id = e.id
