@@ -23,6 +23,7 @@ import br.com.saude.api.model.entity.dto.SolicitacaoCentralIntegraDto;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.filter.SolicitacaoCentralIntegraFilter;
 import br.com.saude.api.model.entity.po.SolicitacaoCentralIntegra;
+import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.persistence.SolicitacaoCentralIntegraDao;
 import br.com.saude.api.model.persistence.report.SolicitacaoCentralIntegraReport;
 import br.com.saude.api.util.constant.StatusSolicitacao;
@@ -95,6 +96,8 @@ public class SolicitacaoCentralIntegraBo
 		
 		Map<Integer, Integer> anexo = solicitacao.getAnexo();
 		solicitacao = super.save(solicitacao);
+		Tarefa tarefa = TarefaBo.getInstance().getById(solicitacao.getTarefa().getId());
+		solicitacao.setTarefa(tarefa);
 		solicitacao.setAnexo(anexo);
 		saveFiles(solicitacao);
 		return solicitacao;
