@@ -25,10 +25,10 @@ public class SolicitacaoCentralIntegra {
 	private int id;
 	
 	@NotNull(message="É necessário informar a Descrição da Solicitação.")
-	@Size(max = 1024, message="Tamanho máximo para Descrição da Solicitação: 1024")
+	@Size(max = 2048, message="Tamanho máximo para Descrição da Solicitação: 2048")
 	private String descricao;
 
-	@Size(max = 1024, message="Tamanho máximo para Descrição da Solicitação: 1024")
+	@Size(max = 2048, message="Tamanho máximo para Observação da Solicitação: 2048")
 	private String observacao;
 	
 	@NotNull(message="É necessário informar o Tipo da Solicitação da Solicitação.")
