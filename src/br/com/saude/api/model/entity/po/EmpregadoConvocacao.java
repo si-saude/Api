@@ -39,6 +39,8 @@ public class EmpregadoConvocacao {
 	
 	private boolean resultadoAuditado;
 	
+	private boolean auditadoSd2000;
+	
 	private boolean convocado;
 	
 	@Transient
@@ -126,5 +128,12 @@ public class EmpregadoConvocacao {
 	public void setResultadoAuditado(boolean resultadoAuditado) {
 		this.resultadoAuditado = resultadoAuditado;
 	}
-	
+
+	public boolean isAuditadoSd2000() {
+		return auditadoSd2000;
+	}
+
+	public void setAuditadoSd2000(boolean auditadoSd2000) {
+		this.auditadoSd2000 = auditadoSd2000;
+	}
 }

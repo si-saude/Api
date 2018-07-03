@@ -10,6 +10,7 @@ public class EmpregadoConvocacaoFilter extends GenericFilter{
 	private BooleanFilter convocado;
 	private BooleanFilter auditado;
 	private BooleanFilter resultadoAuditado;
+	private BooleanFilter auditadoSd2000;
 	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
@@ -41,5 +42,10 @@ public class EmpregadoConvocacaoFilter extends GenericFilter{
 	public void setResultadoAuditado(BooleanFilter resultadoAuditado) {
 		this.resultadoAuditado = resultadoAuditado;
 	}
-	
+	public BooleanFilter getAuditadoSd2000() {
+		return auditadoSd2000;
+	}
+	public void setAuditadoSd2000(BooleanFilter auditadoSd2000) {
+		this.auditadoSd2000 = auditadoSd2000;
+	}
 }

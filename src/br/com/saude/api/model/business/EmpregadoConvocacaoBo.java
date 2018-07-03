@@ -109,14 +109,12 @@ public class EmpregadoConvocacaoBo
 			
 			List<EmpregadoConvocacao> list = new ArrayList<EmpregadoConvocacao>();
 			
-			int row = 0;
+			int row = 1;
 			HSSFSheet sheet = (HSSFSheet) workbook.getSheetAt(0);
 			
 			while(row < sheet.getPhysicalNumberOfRows() 
 					&& sheet.getRow(row).getCell(0).getStringCellValue() != null
 					&& sheet.getRow(row).getCell(0).getStringCellValue().length() > 0) {
-				
-				row++;
 				
 				//OBTER A DATA DE REALIZAÇÃO
 				Date realizacao = sheet.getRow(row).getCell(3).getDateCellValue();
@@ -125,7 +123,7 @@ public class EmpregadoConvocacaoBo
 				EmpregadoConvocacao eC = null;
 				int rowAux = row;
 				List<EmpregadoConvocacao> listAux = list.stream().filter(e -> e.getEmpregado().getMatricula()
-						.contains(sheet.getRow(rowAux).getCell(1).getStringCellValue().trim()))
+						.contains(new Long((long)sheet.getRow(rowAux).getCell(1).getNumericCellValue()).toString()))
 						.collect(Collectors.toList());
 				
 				if(listAux.size()> 0)
@@ -136,7 +134,7 @@ public class EmpregadoConvocacaoBo
 					filter.setPageNumber(1);
 					filter.setPageSize(1);
 					filter.setEmpregado(new EmpregadoFilter());
-					filter.getEmpregado().setMatricula(sheet.getRow(row).getCell(1).getStringCellValue().trim());
+					filter.getEmpregado().setMatricula(new Long((long)sheet.getRow(row).getCell(1).getNumericCellValue()).toString());
 					filter.setConvocacao(new ConvocacaoFilter());
 					filter.getConvocacao().setTipo(sheet.getRow(row).getCell(4).getStringCellValue().trim());
 					filter.getConvocacao().setFim(new DateFilter());
@@ -176,6 +174,8 @@ public class EmpregadoConvocacaoBo
 					
 					list.add(eC);
 				}
+				
+				row++;
 			}
 			
 			saveList(list);
