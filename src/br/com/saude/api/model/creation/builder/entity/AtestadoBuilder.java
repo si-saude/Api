@@ -1,12 +1,16 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
 
 public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilter> {
+	
+	private Function<Map<String,Atestado>,Atestado> loadCat;
 
 	public static AtestadoBuilder newInstance(Atestado atestado) {
 		return new AtestadoBuilder(atestado);
@@ -26,7 +30,12 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 
 	@Override
 	protected void initializeFunctions() {
-		
+		this.loadCat = atestados ->{
+			if(atestados.get("origem").getCat() != null) {
+				atestados.get("destino").setCat(CatBuilder.newInstance(atestados.get("origem").getCat()).getEntity());
+			}
+			return atestados.get("destino");
+		};
 	}
 
 	@Override
@@ -35,17 +44,17 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		
 		newAtestado.setId(atestado.getId());
 		newAtestado.setAtestadoFisicoRecebido(atestado.isAtestadoFisicoRecebido());
-		newAtestado.setCID(atestado.getCID());
+		newAtestado.setCid(atestado.getCid());
 		newAtestado.setControleLicenca(atestado.isControleLicenca());
 		newAtestado.setDataAgendamento(atestado.getDataAgendamento());
 		newAtestado.setDataSolicitacao(atestado.getDataSolicitacao());
 		newAtestado.setImpossibilidadeLocomocao(atestado.isImpossibilidadeLocomocao());
-		newAtestado.setLancadoSAP(atestado.isLancadoSAP());
+		newAtestado.setLancadoSap(atestado.isLancadoSap());
 		newAtestado.setNumeroDias(atestado.getNumeroDias());
 		newAtestado.setStatus(atestado.getStatus());
 		newAtestado.setVersion(atestado.getVersion());
 		
-		if(newAtestado.getTarefa() != null)
+		if(atestado.getTarefa() != null)
 			newAtestado.setTarefa(TarefaBuilder.newInstance(atestado.getTarefa()).getEntity());
 		
 		return newAtestado;
@@ -54,6 +63,10 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 	@Override
 	public Atestado cloneFromFilter(AtestadoFilter filter) {
 		return null;
+	}
+	
+	public AtestadoBuilder loadCat() {
+		return (AtestadoBuilder) this.loadProperty(this.loadCat);
 	}
 
 }

@@ -1,6 +1,8 @@
 package br.com.saude.api.util.constant;
 
-public class StatusAtestado {
+import br.com.saude.api.generic.GenericConstant;
+
+public class StatusAtestado extends GenericConstant{
 	private static StatusAtestado instance;
 	
 	private StatusAtestado() {

@@ -61,11 +61,24 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 		return super.getSelectListGeneric(filter);
 	}
 	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/registrar-atestado")
+	public Response solicitacaoServico(Atestado atestado) {
+		try {
+			AtestadoBo.getInstance().solicitacaoServico(atestado);
+			return Response.ok("Salvo com sucesso.").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("id") String id) throws Exception {
-		return super.getGeneric(new Integer(id));
+		return super.getGeneric(new Long(id));
 	}
 	
 	@Override
@@ -73,7 +86,20 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/delete")
 	public Response delete(Object id) {
-		return super.deleteGeneric(new Integer(id.toString()));
+		return super.deleteGeneric(new Long(id.toString()));
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-anexo")
+	public Response getAnexo(int id) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		try {
+			return Response.ok(getBo().getAnexo(id)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 	}
 	
 }

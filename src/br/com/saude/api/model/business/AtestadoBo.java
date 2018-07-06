@@ -13,6 +13,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
@@ -22,10 +24,12 @@ import br.com.saude.api.model.creation.builder.entity.AtestadoBuilder;
 import br.com.saude.api.model.creation.builder.example.AtestadoExampleBuilder;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.filter.FeriadoFilter;
+import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
 import br.com.saude.api.model.entity.po.Feriado;
 import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.persistence.AtestadoDao;
+import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusAtestado;
 import br.com.saude.api.util.constant.StatusTarefa;
 
@@ -44,23 +48,49 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
 	}
 
 	@Override
-	protected void initializeFunctions() {}
+	protected void initializeFunctions() {
+		this.functionLoadAll = builder -> {
+			return builder.loadCat();
+		};
+	}
+	
+	@Override
+	protected Atestado getById(Object id, Function<AtestadoBuilder, AtestadoBuilder> loadFunction)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, Exception {
+		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+	}
 
 	@SuppressWarnings("static-access")
 	@Override
 	public Atestado save(Atestado atestado) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		
-		Servico servico = ServicoBo.getInstance().getById(atestado.getTarefa().getServico().getId());
+		atestado = configureAtestado(atestado);
 		
-		if ( servico.getAtividades() == null )
-			throw new Exception("Não existe atividade cadastrada para o serviço. Por favor, contacte o administrador do sistema.");
+		if ( atestado.getStatus().equals(StatusAtestado.EM_ANALISE) )
+			atestado.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
+		else if ( atestado.getStatus().equals(StatusAtestado.HOMOLOGADO) 
+				&& atestado.isAtestadoFisicoRecebido() && atestado.isLancadoSap())
+				atestado.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
+		else if ( atestado.getStatus().equals(StatusAtestado.RECUSADO) )
+			atestado.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
+		else atestado.getTarefa().setStatus(StatusTarefa.getInstance().EXECUCAO);
 		
-		atestado.getTarefa().setEquipe(servico.getAtividades().get(0).getEquipe());
+	    Map<Integer, Integer> anexo = atestado.getAnexo();
+	    atestado = super.save(atestado);
+	    atestado.setAnexo(anexo);
+	    saveFiles(atestado);
+		return atestado;
+	}
+	
+	public Atestado solicitacaoServico(Atestado atestado) throws IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		
+		atestado = configureAtestado(atestado);
 		
+		atestado.setStatus(StatusAtestado.EM_ANALISE);
 		atestado.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
-		atestado.setStatus(StatusAtestado.getInstance().EM_ANALISE);
 		atestado.setDataSolicitacao(Helper.getToday());
 		
 		FeriadoFilter feriadoFilter = new FeriadoFilter();
@@ -86,18 +116,35 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
 			calendar.add( Calendar.DAY_OF_MONTH, 1 );
 	    }
 	    
-//	    Calendar tomorrow = Calendar.getInstance();
-//	    tomorrow.setTime(Helper.getToday());
-//	    tomorrow.add(Calendar.DAY_OF_MONTH, 1);
-	    
 	    if ( calendar.getTime().before( Helper.getToday() ) )
 	    	throw new Exception("Não é possível enviar atestados com mais de três dias de atraso.");
 	    
-	    saveFiles(atestado);
+	    Map<Integer, Integer> anexo = atestado.getAnexo();
 	    atestado = super.save(atestado);
+	    atestado.setAnexo(anexo);
+	    saveFiles(atestado);
 		return atestado;
 	}
 	
+	@SuppressWarnings("static-access")
+	public Atestado configureAtestado(Atestado atestado) throws Exception{
+		ServicoFilter servicoFilter = new ServicoFilter();
+		servicoFilter.setCodigo("0001");
+		servicoFilter.setGrupo(GrupoServico.getInstance().HOMOLOGACAO_ATESTADO);
+		servicoFilter.setPageNumber(1);
+		servicoFilter.setPageSize(1);
+		Servico servico = ServicoBo.getInstance().getList(servicoFilter).getList().get(0);
+		servico = ServicoBo.getInstance().getById(servico.getId());
+		
+		if ( servico.getAtividades() == null )
+			throw new Exception("Não existe atividade cadastrada para o serviço. Por favor, contacte o administrador do sistema.");
+		
+		atestado.getTarefa().setServico(servico);
+		atestado.getTarefa().setEquipe(servico.getAtividades().get(0).getEquipe());
+		
+		return atestado; 
+	}
+		
 	@SuppressWarnings("resource")
 	public String getAnexo(int id) throws Exception {
 		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "atestado/anexo/"

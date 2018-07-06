@@ -20,6 +20,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String CAT_ALTERAR		 			= "CAT_ALTERAR";
 	public static final String CAT_REMOVER 					= "CAT_REMOVER";
 	public static final String CAT_DETALHE 					= "CAT_DETALHE";
+	public static final String ATESTADO_LISTAR						= "ATESTADO_LISTAR";
+	public static final String ATESTADO_ADICIONAR 			    	= "ATESTADO_ADICIONAR";
+	public static final String ATESTADO_ALTERAR		 			= "ATESTADO_ALTERAR";
+	public static final String ATESTADO_REMOVER 					= "ATESTADO_REMOVER";
+	public static final String ATESTADO_DETALHE 					= "ATESTADO_DETALHE";
 	public static final String APRHO_LISTAR						= "APRHO_LISTAR";
 	public static final String APRHO_ADICIONAR 			    	= "APRHO_ADICIONAR";
 	public static final String APRHO_ALTERAR		 			= "APRHO_ALTERAR";

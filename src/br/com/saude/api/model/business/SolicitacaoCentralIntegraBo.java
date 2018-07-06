@@ -76,18 +76,18 @@ public class SolicitacaoCentralIntegraBo
 	@Override
 	public SolicitacaoCentralIntegra save(SolicitacaoCentralIntegra solicitacao) throws Exception {
 		switch( solicitacao.getStatus() ) {
-			case "ABERTO": case "PLANEJADO":
+			case StatusSolicitacao.ABERTO: case StatusSolicitacao.PLANEJADO:
 				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
 				break;
-			case "EXECUÇÃO":
+			case StatusSolicitacao.EXECUCAO:
 				solicitacao.getTarefa().setInicio(Helper.getNow());
 				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().EXECUCAO);
 				break;
-			case "CONCLUIDO":
+			case StatusSolicitacao.CONCLUIDO:
 				solicitacao.getTarefa().setFim(Helper.getNow());
 				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
 				break;
-			case "CANCELADO":
+			case StatusSolicitacao.CANCELADO:
 				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().CANCELADA);
 				break;
 		}

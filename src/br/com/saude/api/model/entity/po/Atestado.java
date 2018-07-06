@@ -23,7 +23,7 @@ public class Atestado {
 	private long id;
 	
 	@Size(max = 16, message="Tamanho máximo para CID do Atestado: 16")
-	private String CID;
+	private String cid;
 	
 	private int numeroDias;
 	
@@ -33,15 +33,19 @@ public class Atestado {
 	@Transient
 	private String anexoBase64;
 	
-	@NotNull(message="É necessário informar a Tarefa da Solicitação.")
+	@NotNull(message="É necessário informar a Tarefa do Atestado.")
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private Tarefa tarefa;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Cat cat;
+	
 	private boolean impossibilidadeLocomocao;
 	
+	@NotNull(message="É necessário informar o Status do Atestado.")
 	private String status;
 	
-	private boolean lancadoSAP;
+	private boolean lancadoSap;
 	
 	private boolean atestadoFisicoRecebido;
 	
@@ -63,12 +67,12 @@ public class Atestado {
 		this.id = id;
 	}
 
-	public String getCID() {
-		return CID;
+	public String getCid() {
+		return cid;
 	}
 
-	public void setCID(String CID) {
-		this.CID = CID;
+	public void setCid(String Cid) {
+		this.cid = Cid;
 	}
 
 	public int getNumeroDias() {
@@ -119,12 +123,12 @@ public class Atestado {
 		this.status = status;
 	}
 
-	public boolean isLancadoSAP() {
-		return lancadoSAP;
+	public boolean isLancadoSap() {
+		return lancadoSap;
 	}
 
-	public void setLancadoSAP(boolean lancadoSAP) {
-		this.lancadoSAP = lancadoSAP;
+	public void setLancadoSap(boolean lancadoSap) {
+		this.lancadoSap = lancadoSap;
 	}
 
 	public boolean isAtestadoFisicoRecebido() {
@@ -152,11 +156,19 @@ public class Atestado {
 	}
 	
 	public Date getDataSolicitacao() {
-		return dataAgendamento;
+		return dataSolicitacao;
 	}
 
 	public void setDataSolicitacao(Date dataSolicitacao) {
 		this.dataSolicitacao = dataSolicitacao;
+	}
+	
+	public Cat getCat() {
+		return cat;
+	}
+
+	public void setCat(Cat cat) {
+		this.cat = cat;
 	}
 
 	public long getVersion() {
