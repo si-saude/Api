@@ -63,13 +63,14 @@ public abstract class GenericDao<T> {
 			
 			Field id = getId(entity.getClass());
 			id.setAccessible(true);
-			id.set(entity, id.get(entityMerged));
 			
-//			entityMerged = (T) session.load(entity.getClass(), (Serializable)id.get(entityMerged));
-			
-			Field version = getVersion(entity.getClass());
-			version.setAccessible(true);
-			version.set(entity, version.get(entityMerged));
+			if( new Long(id.get(entityMerged).toString()) > 0 ) {
+				id.set(entity, id.get(entityMerged));
+				
+				Field version = getVersion(entity.getClass());
+				version.setAccessible(true);
+				version.set(entity, version.get(entityMerged));				
+			}
 			
 		}catch(Exception ex) {
 			throw ex;

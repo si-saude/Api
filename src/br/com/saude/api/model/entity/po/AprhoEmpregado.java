@@ -29,6 +29,8 @@ public class AprhoEmpregado {
 	
 	private boolean atual;
 	
+	private boolean entrevistado;
+	
 	public Empregado getEmpregado() {
 		return empregado;
 	}
@@ -67,6 +69,14 @@ public class AprhoEmpregado {
 
 	public void setAtual(boolean atual) {
 		this.atual = atual;
+	}
+
+	public boolean isEntrevistado() {
+		return entrevistado;
+	}
+
+	public void setEntrevistado(boolean entrevistado) {
+		this.entrevistado = entrevistado;
 	}
 
 	

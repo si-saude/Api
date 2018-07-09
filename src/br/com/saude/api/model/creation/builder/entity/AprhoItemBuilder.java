@@ -36,20 +36,21 @@ public class AprhoItemBuilder
 		newAprhoItem.setFrequencia(aprhoItem.getFrequencia());
 		newAprhoItem.setDuracao(aprhoItem.getDuracao());
 		newAprhoItem.setMedidaControle(aprhoItem.getMedidaControle());
+		newAprhoItem.setAvaliacaoEficacia(aprhoItem.getAvaliacaoEficacia());
 		newAprhoItem.setMeioPropagacao(aprhoItem.getMeioPropagacao());
 		newAprhoItem.setVersion(aprhoItem.getVersion());	
 		
 		if(aprhoItem.getPossivelDanoSaude() != null)
-			newAprhoItem.setPossivelDanoSaude(new PossivelDanoSaudeBuilder(aprhoItem.getPossivelDanoSaude()).getEntity());
+			newAprhoItem.setPossivelDanoSaude(PossivelDanoSaudeBuilder.newInstance(aprhoItem.getPossivelDanoSaude()).getEntity());
 		
 		if(aprhoItem.getAgenteRisco() != null)
-			newAprhoItem.setAgenteRisco(new AgenteRiscoBuilder(aprhoItem.getAgenteRisco()).getEntity());
+			newAprhoItem.setAgenteRisco(AgenteRiscoBuilder.newInstance(aprhoItem.getAgenteRisco()).getEntity());
 		
 		if(aprhoItem.getFonteGeradora() != null)
-			newAprhoItem.setFonteGeradora(new FonteGeradoraBuilder(aprhoItem.getFonteGeradora()).getEntity());
+			newAprhoItem.setFonteGeradora(FonteGeradoraBuilder.newInstance(aprhoItem.getFonteGeradora()).getEntity());
 		
 		if(aprhoItem.getCategoriaRisco() != null)
-			newAprhoItem.setCategoriaRisco(new CategoriaRiscoBuilder(aprhoItem.getCategoriaRisco()).getEntity());
+			newAprhoItem.setCategoriaRisco(CategoriaRiscoBuilder.newInstance(aprhoItem.getCategoriaRisco()).getEntity());
 		
 		return newAprhoItem;
 	}

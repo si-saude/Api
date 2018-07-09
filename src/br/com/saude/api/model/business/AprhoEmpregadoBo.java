@@ -1,6 +1,7 @@
 package br.com.saude.api.model.business;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.AprhoEmpregadoBuilder;
 import br.com.saude.api.model.creation.builder.example.AprhoEmpregadoExampleBuilder;
 import br.com.saude.api.model.entity.filter.AprhoEmpregadoFilter;
@@ -25,5 +26,13 @@ public class AprhoEmpregadoBo
 	
 	@Override
 	protected void initializeFunctions() {
+		this.functionLoadAll = builder -> {
+			return builder.loadAprho().loadEmpregado();
+		};
 	}	
+	
+	public PagedList<AprhoEmpregado> getListLoadAll(AprhoEmpregadoFilter filter) throws Exception {
+		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), 
+				this.functionLoadAll);
+	}
 }

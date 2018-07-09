@@ -8,6 +8,7 @@ public class AprhoEmpregadoFilter extends GenericFilter{
 	private AprhoFilter aprho;
 	private EmpregadoFilter empregado;
 	private BooleanFilter atual;
+	private BooleanFilter entrevistado;
 	
 	public AprhoFilter getAprho() {
 		return aprho;
@@ -26,5 +27,11 @@ public class AprhoEmpregadoFilter extends GenericFilter{
 	}
 	public void setAtual(BooleanFilter atual) {
 		this.atual = atual;
+	}
+	public BooleanFilter getEntrevistado() {
+		return entrevistado;
+	}
+	public void setEntrevistado(BooleanFilter entrevistado) {
+		this.entrevistado = entrevistado;
 	}
 }
