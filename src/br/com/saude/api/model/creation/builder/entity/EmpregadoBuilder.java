@@ -34,7 +34,7 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 		return new EmpregadoBuilder(empregados);
 	}
 	
-	protected EmpregadoBuilder(Empregado empregado) {
+	private EmpregadoBuilder(Empregado empregado) {
 		super(empregado);
 	}
 

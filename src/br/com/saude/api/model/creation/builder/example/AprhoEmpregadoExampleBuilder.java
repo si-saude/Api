@@ -27,6 +27,7 @@ public class AprhoEmpregadoExampleBuilder
 		addAprho();				
 		addEmpregado();	
 		addAtual();
+		addEntrevistado(); 
 	}
 
 	@Override
@@ -57,6 +58,11 @@ public class AprhoEmpregadoExampleBuilder
 	protected void addAtual() {
 		this.entity.setAtual(this.addBoolean("atual", this.filter.getAtual()));
 	}
+	
+	protected void addEntrevistado() {
+		this.entity.setEntrevistado(this.addBoolean("entrevistado", this.filter.getEntrevistado()));
+	}
+	
 	
 
 }

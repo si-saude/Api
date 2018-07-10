@@ -20,7 +20,7 @@ public class PossivelDanoSaudeBuilder extends GenericEntityBuilder<PossivelDanoS
 		super(possivelDanoSaudes);
 	}
 
-	protected PossivelDanoSaudeBuilder(PossivelDanoSaude possivelDanoSaude) {
+	private PossivelDanoSaudeBuilder(PossivelDanoSaude possivelDanoSaude) {
 		super(possivelDanoSaude);
 	}
 

@@ -44,7 +44,7 @@ public class ProfissionalBuilder extends GenericEntityBuilder<Profissional,Profi
 		newProfissional.setVersion(profissional.getVersion());
 		
 		if(profissional.getEmpregado() != null)
-			newProfissional.setEmpregado(new EmpregadoBuilder(profissional.getEmpregado()).getEntity());
+			newProfissional.setEmpregado(EmpregadoBuilder.newInstance(profissional.getEmpregado()).getEntity());
 		
 		return newProfissional;
 	}

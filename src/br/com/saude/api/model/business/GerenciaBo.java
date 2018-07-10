@@ -186,4 +186,8 @@ public class GerenciaBo
 			}
 		}
 	}
+	
+	public Gerencia getUnidade(Gerencia gerencia) {
+		return gerencia.getGerencia() == null ? gerencia : getUnidade(gerencia.getGerencia());
+	}
 }

@@ -18,6 +18,7 @@ import br.com.saude.api.util.constant.AptidaoCardiorrespiratoria;
 import br.com.saude.api.util.constant.AptidaoFisicaBrigadista;
 import br.com.saude.api.util.constant.AtividadeFornecedor;
 import br.com.saude.api.util.constant.AutoavaliacaoHabitosAlimentares;
+import br.com.saude.api.util.constant.AvaliacaoEficacia;
 import br.com.saude.api.util.constant.CategoriaAgenteRisco;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.DoresCorporaisIntensidade;
@@ -453,5 +454,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStatusAtestadi(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(StatusAtestado.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/avaliacao-eficacia")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAvaliacaoEficacia(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(AvaliacaoEficacia.getInstance(),filter)).build();
 	}
 }
