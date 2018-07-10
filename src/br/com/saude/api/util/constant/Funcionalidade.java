@@ -15,6 +15,24 @@ public class Funcionalidade extends GenericConstant {
 			instance = new Funcionalidade();
 		return instance;
 	}
+	
+	public static final String REPORT_ATESTADO										= "REPORT-ATESTADO";
+	public static final String REPORT_CAT										= "REPORT-CAT";
+	public static final String PARTE_CORPO_ATINGIDA_LISTAR						= "PARTE-CORPO-ATINGIDA_LISTAR";
+	public static final String PARTE_CORPO_ATINGIDA_ADICIONAR 			    	= "PARTE-CORPO-ATINGIDA_ADICIONAR";
+	public static final String PARTE_CORPO_ATINGIDA_ALTERAR		 			= "PARTE-CORPO-ATINGIDA_ALTERAR";
+	public static final String PARTE_CORPO_ATINGIDA_REMOVER 					= "PARTE-CORPO-ATINGIDA_REMOVER";
+	public static final String PARTE_CORPO_ATINGIDA_DETALHE 					= "PARTE-CORPO-ATINGIDA_DETALHE";
+	public static final String NATUREZA_LESAO_LISTAR						= "NATUREZA-LESAO_LISTAR";
+	public static final String NATUREZA_LESAO_ADICIONAR 			    	= "NATUREZA-LESAO_ADICIONAR";
+	public static final String NATUREZA_LESAO_ALTERAR		 			= "NATUREZA-LESAO_ALTERAR";
+	public static final String NATUREZA_LESAO_REMOVER 					= "NATUREZA-LESAO_REMOVER";
+	public static final String NATUREZA_LESAO_DETALHE 					= "NATUREZA-LESAO_DETALHE";
+	public static final String AGENTE_CAUSADOR_LISTAR						= "AGENTE-CAUSADOR_LISTAR";
+	public static final String AGENTE_CAUSADOR_ADICIONAR 			    	= "AGENTE-CAUSADOR_ADICIONAR";
+	public static final String AGENTE_CAUSADOR_ALTERAR		 			= "AGENTE-CAUSADOR_ALTERAR";
+	public static final String AGENTE_CAUSADOR_REMOVER 					= "AGENTE-CAUSADOR_REMOVER";
+	public static final String AGENTE_CAUSADOR_DETALHE 					= "AGENTE-CAUSADOR_DETALHE";
 	public static final String CAT_LISTAR						= "CAT_LISTAR";
 	public static final String CAT_ADICIONAR 			    	= "CAT_ADICIONAR";
 	public static final String CAT_ALTERAR		 			= "CAT_ALTERAR";

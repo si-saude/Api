@@ -1,16 +1,21 @@
 package br.com.saude.api.model.business;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.CatBuilder;
 import br.com.saude.api.model.creation.builder.example.CatExampleBuilder;
+import br.com.saude.api.model.entity.dto.CatDto;
 import br.com.saude.api.model.entity.filter.CatFilter;
 import br.com.saude.api.model.entity.po.Cat;
 import br.com.saude.api.model.persistence.CatDao;
+import br.com.saude.api.model.persistence.report.CatReport;
 
-public class CatBo extends GenericBo<Cat, CatFilter, CatDao, CatBuilder, CatExampleBuilder> {
+public class CatBo extends GenericBo<Cat, CatFilter, CatDao, CatBuilder, CatExampleBuilder> 
+	implements GenericReportBo<CatDto> {
 
 	private static CatBo instance;
 
@@ -31,7 +36,8 @@ public class CatBo extends GenericBo<Cat, CatFilter, CatDao, CatBuilder, CatExam
 		};
 		
 		this.functionLoadAll = builder -> {
-			return this.functionLoad.apply(builder).loadDiagnostico().loadEmpregado().loadEmpresa().loadGerencia();
+			return this.functionLoad.apply(builder).loadDiagnostico().loadEmpregado().loadEmpresa().
+					loadGerencia().loadAgenteCausador().loadParteCorpoAtingida().loadNaturezaLesao();
 		};
 	}
 
@@ -47,4 +53,7 @@ public class CatBo extends GenericBo<Cat, CatFilter, CatDao, CatBuilder, CatExam
 		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
 
+	public List<CatDto> getCats() throws Exception{
+		return CatReport.getInstance().getCats();
+	}
 }

@@ -33,6 +33,9 @@ public class CatDao extends GenericDao<Cat> {
 			cat = loadDiagnostico(cat);
 			cat = loadEmpresa(cat);
 			cat = loadGerencia(cat);
+			cat = loadParteCorpoAtingida(cat);
+			cat = loadAgenteCausador(cat);
+			cat = loadNaturezaLesao(cat);
 			
 			return cat;
 		};
@@ -67,6 +70,24 @@ public class CatDao extends GenericDao<Cat> {
 	private Cat loadEmpresa(Cat cat) {
 		if(cat.getEmpresa()!=null)
 			Hibernate.initialize(cat.getEmpresa());
+		return cat;
+	}
+	
+	private Cat loadParteCorpoAtingida(Cat cat) {
+		if(cat.getParteCorpoAtingida()!=null)
+			Hibernate.initialize(cat.getParteCorpoAtingida());
+		return cat;
+	}
+	
+	private Cat loadAgenteCausador(Cat cat) {
+		if(cat.getAgenteCausador()!=null)
+			Hibernate.initialize(cat.getAgenteCausador());
+		return cat;
+	}
+	
+	private Cat loadNaturezaLesao(Cat cat) {
+		if(cat.getNaturezaLesao()!=null)
+			Hibernate.initialize(cat.getNaturezaLesao());
 		return cat;
 	}
 

@@ -24,6 +24,7 @@ public class Cat {
 	@Size(max = 16, message="Tamanho máximo para Número do Cat: 16")
 	private String numero;
 
+	@NotNull(message="É necessário informar a Gerência do Cat.")
 	@ManyToOne(fetch=FetchType.LAZY)	
 	private Gerencia gerencia;
 	
@@ -39,14 +40,18 @@ public class Cat {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Empregado empregado;
 	
+	@NotNull(message="É necessário informar o Nome do Cat.")
 	@Size(max = 256, message="Tamanho máximo para Nome do Cat: 256")
 	private String nome;
 	
+	@NotNull(message="É necessário informar a Data de Nascimento do Cat.")
 	private Date dataNascimento;
 	
+	@NotNull(message="É necessário informar o Sexo do Cat.")
 	@Size(max = 16, message="Tamanho máximo para Sexo do Cat: 16")
 	private String sexo;
 	
+	@NotNull(message="É necessário informar o CPF do Cat.")
 	@Size(max = 11, message="Tamanho máximo para CPF do Cat: 11")
 	private String cpf;
 	
@@ -91,6 +96,18 @@ public class Cat {
 
 	@ManyToOne(fetch=FetchType.LAZY)	
 	private Diagnostico diagnostico;
+	
+	@NotNull(message="É necessário informar a Parte do Corpo Atingida do Cat.")
+	@ManyToOne(fetch=FetchType.LAZY)	
+	private ParteCorpoAtingida parteCorpoAtingida;
+	
+	@NotNull(message="É necessário informar o Agente Causador do Cat.")
+	@ManyToOne(fetch=FetchType.LAZY)	
+	private AgenteCausador agenteCausador;
+	
+	@NotNull(message="É necessário informar a Natureza da Lesão do Cat.")
+	@ManyToOne(fetch=FetchType.LAZY)	
+	private NaturezaLesao naturezaLesao;
 	
 	private boolean comunicavelSus;
 	
@@ -360,6 +377,30 @@ public class Cat {
 
 	public void setTipoCat(String tipoCat) {
 		this.tipoCat = tipoCat;
+	}
+	
+	public ParteCorpoAtingida getParteCorpoAtingida() {
+		return parteCorpoAtingida;
+	}
+
+	public void setParteCorpoAtingida(ParteCorpoAtingida parteCorpoAtingida) {
+		this.parteCorpoAtingida = parteCorpoAtingida;
+	}
+
+	public AgenteCausador getAgenteCausador() {
+		return agenteCausador;
+	}
+
+	public void setAgenteCausador(AgenteCausador agenteCausador) {
+		this.agenteCausador = agenteCausador;
+	}
+
+	public NaturezaLesao getNaturezaLesao() {
+		return naturezaLesao;
+	}
+
+	public void setNaturezaLesao(NaturezaLesao naturezaLesao) {
+		this.naturezaLesao = naturezaLesao;
 	}
 
 	public long getVersion() {

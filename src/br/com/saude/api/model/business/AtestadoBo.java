@@ -13,15 +13,18 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.AtestadoBuilder;
 import br.com.saude.api.model.creation.builder.example.AtestadoExampleBuilder;
+import br.com.saude.api.model.entity.dto.AtestadoDto;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.filter.FeriadoFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
@@ -29,11 +32,13 @@ import br.com.saude.api.model.entity.po.Atestado;
 import br.com.saude.api.model.entity.po.Feriado;
 import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.persistence.AtestadoDao;
+import br.com.saude.api.model.persistence.report.AtestadoReport;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusAtestado;
 import br.com.saude.api.util.constant.StatusTarefa;
 
-public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao, AtestadoBuilder, AtestadoExampleBuilder> {
+public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao, AtestadoBuilder, AtestadoExampleBuilder> 
+	implements GenericReportBo<AtestadoDto>{
 
 	private static AtestadoBo instance;
 
@@ -59,6 +64,10 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, Exception {
 		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+	}
+	
+	public List<AtestadoDto> getAtestados() throws Exception{
+		return AtestadoReport.getInstance().getAtestados();
 	}
 
 	@SuppressWarnings("static-access")
@@ -216,5 +225,5 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
         	stream.close();
 		}
 	}
-
+	
 }
