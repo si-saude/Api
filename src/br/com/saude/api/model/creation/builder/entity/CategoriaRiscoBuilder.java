@@ -20,7 +20,7 @@ public class CategoriaRiscoBuilder extends GenericEntityBuilder<CategoriaRisco, 
 		super(categoriaRiscos);
 	}
 
-	protected CategoriaRiscoBuilder(CategoriaRisco categoriaRisco) {
+	private CategoriaRiscoBuilder(CategoriaRisco categoriaRisco) {
 		super(categoriaRisco);
 	}
 

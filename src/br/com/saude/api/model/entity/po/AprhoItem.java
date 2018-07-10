@@ -46,7 +46,7 @@ public class AprhoItem {
 	private FonteGeradora fonteGeradora;	
 	
 	@NotNull(message="É necessário informar a Atividade.")
-	@Size(max = 128, message="Tamanho máximo para Atividade: 128")
+	@Size(max = 2048, message="Tamanho máximo para Atividade: 128")
 	private String atividade;	
 	
 	@NotNull(message="É necessário informar o Local.")
@@ -58,12 +58,23 @@ public class AprhoItem {
 	private String frequencia;	
 	
 	@NotNull(message="É necessário informar a Duração.")
-	@Size(max = 8, message="Tamanho máximo para Duração: 8")
+	@Size(max = 32, message="Tamanho máximo para Duração: 32")
 	private String duracao;
 	
+	@NotNull(message="É necessário informar a Avaliação de Eficácia.")
+	@Size(max = 32, message="Tamanho máximo para Avaliação de Eficácia: 32")
+	private String avaliacaoEficacia;
+
 	@Version
 	private long version;
 	
+	public String getAvaliacaoEficacia() {
+		return avaliacaoEficacia;
+	}
+
+	public void setAvaliacaoEficacia(String avaliacaoEficacia) {
+		this.avaliacaoEficacia = avaliacaoEficacia;
+	}
 	public long getVersion() {
 		return version;
 	}
