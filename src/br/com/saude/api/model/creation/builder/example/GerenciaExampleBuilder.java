@@ -34,7 +34,7 @@ public class GerenciaExampleBuilder extends GenericExampleBuilder<Gerencia,Geren
 	
 	private void addDescricao() {
 		if(this.filter.getDescricao() != null)
-			this.entity.setDescricao(Helper.filterLike(this.filter.getDescricao()));
+			this.criterions.add(Restrictions.ilike("descricao", Helper.filterLike(this.filter.getDescricao())));
 	}
 	
 	private void addGerente() throws InstantiationException, IllegalAccessException {

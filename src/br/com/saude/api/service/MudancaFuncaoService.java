@@ -14,42 +14,58 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.AprhoBo;
-import br.com.saude.api.model.business.validate.AprhoValidator;
-import br.com.saude.api.model.entity.filter.AprhoFilter;
-import br.com.saude.api.model.entity.po.Aprho;
+import br.com.saude.api.model.business.MudancaFuncaoBo;
+import br.com.saude.api.model.business.validate.MudancaFuncaoValidator;
+import br.com.saude.api.model.entity.filter.MudancaFuncaoFilter;
+import br.com.saude.api.model.entity.po.MudancaFuncao;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("aprho")
-@RequestInterceptor
-public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo>
-							implements GenericService<Aprho, AprhoFilter>{
+@Path("mudanca-funcao")
+public class MudancaFuncaoService extends GenericServiceImpl<MudancaFuncao, MudancaFuncaoFilter, MudancaFuncaoBo>
+		implements GenericService<MudancaFuncao, MudancaFuncaoFilter> 
+{
 
 	@Override
-	protected AprhoBo getBo() {
-		return AprhoBo.getInstance();
+	protected MudancaFuncaoBo getBo() {
+		return MudancaFuncaoBo.getInstance();
 	}
-	
+
+	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=AprhoValidator.class)
+	@CustomValidator(validatorClass = MudancaFuncaoValidator.class)
 	@Override
-	public Response save(Aprho aprho) {
+	public Response save(MudancaFuncao solicitacao) {
 		try {
-			AprhoBo.getInstance().save(aprho);
+			MudancaFuncao sCI = MudancaFuncaoBo.getInstance().save(solicitacao);
+			return Response.ok(sCI).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("registrar-mudanca-funcao")
+	public Response registrarMudancaFuncao(MudancaFuncao solicitacao) {
+		try {
+			MudancaFuncaoBo.getInstance().registrarMudancaFuncao(solicitacao);
 			return Response.ok("Salvo com sucesso.").build();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(AprhoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(MudancaFuncaoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -59,11 +75,12 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(AprhoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(MudancaFuncaoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
-
+	
+	@RequestInterceptor
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -71,26 +88,13 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 		return super.getGeneric(new Integer(id));
 	}
 
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/delete")
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
-	}
-	
-	@POST
-	@RequestInterceptor
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/aprho-to-pdf")
-	public Response aprhoToPdf(Aprho aprho) throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		try {
-			return Response.ok(getBo().aprhoToPdf(aprho)).build();
-		}catch (Exception e) {
-			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
-		}
 	}
 
 }
