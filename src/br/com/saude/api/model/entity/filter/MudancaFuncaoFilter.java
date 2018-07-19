@@ -11,6 +11,7 @@ public class MudancaFuncaoFilter extends GenericFilter {
 	private RegimeFilter regime;	
 	private GerenciaFilter gerencia;	
 	private BaseFilter base;
+	private TarefaFilter tarefa;
 	
 	public CargoFilter getCargo() {
 		return cargo;
@@ -54,5 +55,10 @@ public class MudancaFuncaoFilter extends GenericFilter {
 	public void setBase(BaseFilter base) {
 		this.base = base;
 	}
-	
+	public TarefaFilter getTarefa() {
+		return tarefa;
+	}
+	public void setTarefa(TarefaFilter tarefa) {
+		this.tarefa = tarefa;
+	}
 }

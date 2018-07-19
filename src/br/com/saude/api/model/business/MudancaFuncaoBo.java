@@ -2,6 +2,7 @@ package br.com.saude.api.model.business;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
@@ -36,12 +37,43 @@ public class MudancaFuncaoBo
 		this.functionLoad = builder -> {
 			return builder.loadTarefas();
 		};
+		
+		this.functionLoadAll = builder -> {
+			return builder.loadTarefas();
+		};
 
 	}
 
 	@Override
+	public MudancaFuncao save(MudancaFuncao mudancaFuncao) throws Exception {
+					
+			mudancaFuncao.getTarefas().forEach(x->{
+				if(x.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA) && x.getFim() == null)
+					x.setFim(Helper.getNow());
+				
+				if(!(x.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)))
+					x.setFim(null);
+						
+			});	
+		
+		return super.save(mudancaFuncao);
+	}
+	
+	
+	@Override
 	public PagedList<MudancaFuncao> getList(MudancaFuncaoFilter filter) throws Exception {
-		return super.getList(getDao().getList(getExampleBuilder(filter).example()), this.functionLoad);
+		
+		PagedList<MudancaFuncao> mudancaFuncoes = super.getList(filter,this.functionLoad);
+		
+		mudancaFuncoes.getList().forEach(x->{		
+			String statusAux  =""; 					
+			for(Tarefa tarefa : x.getTarefas()) 
+				statusAux += tarefa.getEquipe().getAbreviacao() +"-" +tarefa.getStatus()+"/n";					
+				x.setStatus(statusAux);
+				x.setAbertura(x.getTarefas().get(0).getInicio());	
+				x.setCliente(x.getTarefas().get(0).getCliente());
+		});	
+		return mudancaFuncoes;
 	}
 
 	@Override
@@ -53,7 +85,9 @@ public class MudancaFuncaoBo
 
 	@Override
 	public MudancaFuncao getById(Object id) throws Exception {
-		return getByEntity(getDao().getById(id), this.functionLoadAll);
+		MudancaFuncao mudancaFuncao = getByEntity(getDao().getById(id), this.functionLoadAll);
+		mudancaFuncao.setCliente(mudancaFuncao.getTarefas().get(0).getCliente());
+		return mudancaFuncao ;
 	}	
 	
 	public MudancaFuncao registrarMudancaFuncao(MudancaFuncao mudancaFuncao) throws Exception {
@@ -71,10 +105,9 @@ public class MudancaFuncaoBo
 		for(Atividade atividade : mudancaFuncao.getTarefas().get(0).getServico().getAtividades()) {
 			
 		    Tarefa tarefa = TarefaBuilder.newInstance(mudancaFuncao.getTarefas().get(0)).getEntity();
-			tarefa.setAtualizacao(Helper.getNow());
 			tarefa.setEquipe(atividade.getEquipe());
 			tarefa.setInicio(Helper.getNow());
-			tarefa.setFim(Helper.getNow());
+			tarefa.setAtualizacao(tarefa.getInicio());
 			tarefa.setStatus(StatusTarefa.getInstance().ABERTA);
 			tarefas.add(tarefa);
 		}

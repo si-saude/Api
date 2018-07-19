@@ -36,10 +36,10 @@ public class MudancaFuncaoService extends GenericServiceImpl<MudancaFuncao, Muda
 	@Consumes(MediaType.APPLICATION_JSON)
 	@CustomValidator(validatorClass = MudancaFuncaoValidator.class)
 	@Override
-	public Response save(MudancaFuncao solicitacao) {
+	public Response save(MudancaFuncao mudancaFuncao) {
 		try {
-			MudancaFuncao sCI = MudancaFuncaoBo.getInstance().save(solicitacao);
-			return Response.ok(sCI).build();
+			MudancaFuncaoBo.getInstance().save(mudancaFuncao);
+			return Response.ok("Salvo com sucesso.").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
@@ -50,9 +50,9 @@ public class MudancaFuncaoService extends GenericServiceImpl<MudancaFuncao, Muda
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("registrar-mudanca-funcao")
-	public Response registrarMudancaFuncao(MudancaFuncao solicitacao) {
+	public Response registrarMudancaFuncao(MudancaFuncao mudancaFuncao) {
 		try {
-			MudancaFuncaoBo.getInstance().registrarMudancaFuncao(solicitacao);
+			MudancaFuncaoBo.getInstance().registrarMudancaFuncao(mudancaFuncao);
 			return Response.ok("Salvo com sucesso.").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -84,7 +84,7 @@ public class MudancaFuncaoService extends GenericServiceImpl<MudancaFuncao, Muda
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@QueryParam("id") String id) throws Exception {
+	public Response get(@QueryParam("id") String id) throws Exception {				
 		return super.getGeneric(new Integer(id));
 	}
 

@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 
@@ -48,6 +50,15 @@ public class MudancaFuncao {
 	inverseJoinColumns = {@JoinColumn(name="tarefa_id")})
 	private List<Tarefa> tarefas;
 	
+	@Transient
+	private String status;
+	
+	@Transient
+	private Empregado cliente;
+	
+	@Transient
+	private Date abertura;
+	
 	@Version
 	private long version;
 
@@ -58,12 +69,21 @@ public class MudancaFuncao {
 	public void setId(int id) {
 		this.id = id;
 	}	
+	
 	public long getVersion() {
 		return version;
 	}
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public Empregado getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Empregado cliente) {
+		this.cliente = cliente;
 	}
 
 	public Cargo getCargo() {
@@ -128,6 +148,22 @@ public class MudancaFuncao {
 
 	public void setTarefas(List<Tarefa> tarefas) {
 		this.tarefas = tarefas;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Date getAbertura() {
+		return abertura;
+	}
+
+	public void setAbertura(Date abertura) {
+		this.abertura = abertura;
 	}
 
 }

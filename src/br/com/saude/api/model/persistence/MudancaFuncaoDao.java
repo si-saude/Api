@@ -1,11 +1,15 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Hibernate;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.MudancaFuncao;
+import br.com.saude.api.model.entity.po.Tarefa;
 
 public class MudancaFuncaoDao extends GenericDao<MudancaFuncao>  {
 	
@@ -24,12 +28,7 @@ public class MudancaFuncaoDao extends GenericDao<MudancaFuncao>  {
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = mudancaFuncao -> {
-			if(mudancaFuncao.getTarefas()!=null)
-				Hibernate.initialize(mudancaFuncao.getTarefas());
-			
-			if(mudancaFuncao.getTarefas()!=null)
-				Hibernate.initialize(mudancaFuncao.getTarefas());
-			
+			mudancaFuncao = loadTarefas(mudancaFuncao);			
 			return mudancaFuncao;
 		};
 	
@@ -43,6 +42,18 @@ public class MudancaFuncaoDao extends GenericDao<MudancaFuncao>  {
 	@Override
 	public PagedList<MudancaFuncao> getList(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder, this.functionLoad);
+	}
+	
+	private MudancaFuncao loadTarefas(MudancaFuncao mudancaFuncao)
+	{
+		List<Tarefa> tarefas = new ArrayList<Tarefa>();
+		if(mudancaFuncao.getTarefas()!=null) {
+			mudancaFuncao.getTarefas().forEach(a->{				
+				tarefas.add((Tarefa) Hibernate.unproxy(a));				
+			});
+			mudancaFuncao.setTarefas(tarefas);
+		}
+		return mudancaFuncao;
 	}
 	
 }
