@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -43,7 +44,11 @@ public class Instalacao {
 	private List<IndicadorRiscoSanitarioInstalacao> indicadorRiscoSanitarioInstalacoes;
 	
 	@OneToMany(mappedBy="instalacao", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<IndicadorRiscoSaudeAmbientalInstalacao> indicadorRiscoSaudeAmbientalInstalacoes;
+	private List<IndicadorRiscoSaudeAmbientalInstalacao> indicadorRiscoSaudeAmbientalInstalacoes;	
+
+	@NotNull(message="É necessário informar a Base.")
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Base base;
 	
 	@Version
 	private long version;
@@ -54,6 +59,14 @@ public class Instalacao {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public Base getBase() {
+		return base;
+	}
+
+	public void setBase(Base base) {
+		this.base = base;
 	}
 
 	public String getNome() {

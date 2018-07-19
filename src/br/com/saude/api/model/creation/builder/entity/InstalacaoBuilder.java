@@ -83,6 +83,10 @@ public class InstalacaoBuilder extends GenericEntityBuilder<Instalacao,Instalaca
 		newInstalacao.setNome(instalacao.getNome());
 		newInstalacao.setLatitude(instalacao.getLatitude());
 		newInstalacao.setLongitude(instalacao.getLongitude());
+		
+		if(instalacao.getBase() != null)
+			newInstalacao.setBase(BaseBuilder.newInstance(instalacao.getBase()).getEntity());
+		
 		newInstalacao.setVersion(instalacao.getVersion());
 		
 		return newInstalacao;
