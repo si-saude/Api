@@ -49,6 +49,8 @@ public class ResultadoExame {
 	@Size(max = 64, message="Tamanho máximo para Tipo: 64")
 	private String local;
 	
+	private boolean particular;
+	
 	@Version
 	private long version;
 
@@ -139,6 +141,13 @@ public class ResultadoExame {
 	public void setDataRecebimento(Date dataRecebimento) {
 		this.dataRecebimento = dataRecebimento;
 	}
-	
+
+	public boolean isParticular() {
+		return particular;
+	}
+
+	public void setParticular(boolean particular) {
+		this.particular = particular;
+	}
 	
 }

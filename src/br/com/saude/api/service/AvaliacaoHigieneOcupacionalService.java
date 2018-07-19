@@ -14,32 +14,30 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.AprhoBo;
-import br.com.saude.api.model.business.validate.AprhoValidator;
-import br.com.saude.api.model.entity.filter.AprhoFilter;
-import br.com.saude.api.model.entity.po.Aprho;
-import br.com.saude.api.util.RequestInterceptor;
+import br.com.saude.api.model.business.AvaliacaoHigieneOcupacionalBo;
+import br.com.saude.api.model.business.validate.AvaliacaoHigieneOcupacionalValidator;
+import br.com.saude.api.model.entity.filter.AvaliacaoHigieneOcupacionalFilter;
+import br.com.saude.api.model.entity.po.AvaliacaoHigieneOcupacional;
 
-@Path("aprho")
-@RequestInterceptor
-public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo>
-							implements GenericService<Aprho, AprhoFilter>{
+@Path("avaliacao-higiene-ocupacional")
+public class AvaliacaoHigieneOcupacionalService extends GenericServiceImpl<AvaliacaoHigieneOcupacional, AvaliacaoHigieneOcupacionalFilter, AvaliacaoHigieneOcupacionalBo>
+		implements GenericService<AvaliacaoHigieneOcupacional, AvaliacaoHigieneOcupacionalFilter> {
 
 	@Override
-	protected AprhoBo getBo() {
-		return AprhoBo.getInstance();
+	protected AvaliacaoHigieneOcupacionalBo getBo() {
+		return AvaliacaoHigieneOcupacionalBo.getInstance();
 	}
-	
+
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=AprhoValidator.class)
+	@CustomValidator(validatorClass = AvaliacaoHigieneOcupacionalValidator.class)
 	@Override
-	public Response save(Aprho aprho) {
+	public Response save(AvaliacaoHigieneOcupacional avaliacaoHigieneOcupacional) {
 		try {
-			AprhoBo.getInstance().save(aprho);
+			AvaliacaoHigieneOcupacionalBo.getInstance().save(avaliacaoHigieneOcupacional);
 			return Response.ok("Salvo com sucesso.").build();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
@@ -49,7 +47,7 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(AprhoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(AvaliacaoHigieneOcupacionalFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -59,7 +57,7 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(AprhoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(AvaliacaoHigieneOcupacionalFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
@@ -68,7 +66,7 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@QueryParam("id") String id) throws Exception {
-		return super.getGeneric(new Integer(id));
+		return super.getGeneric(Long.parseLong(id));
 	}
 
 	@Override
@@ -76,21 +74,7 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/delete")
 	public Response delete(Object id) {
-		return super.deleteGeneric(new Integer(id.toString()));
-	}
-	
-	@POST
-	@RequestInterceptor
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/aprho-to-pdf")
-	public Response aprhoToPdf(Aprho aprho) throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		try {
-			return Response.ok(getBo().aprhoToPdf(aprho)).build();
-		}catch (Exception e) {
-			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
-		}
+		return super.deleteGeneric(Long.parseLong(id.toString()));
 	}
 
 }

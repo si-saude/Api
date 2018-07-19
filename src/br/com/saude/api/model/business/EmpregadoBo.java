@@ -63,7 +63,7 @@ public class EmpregadoBo
 		this.functionLoadAll = builder -> {
 			return this.functionLoad.apply(builder).loadBase().loadRegime().loadGhe().loadGhee().loadInstalacoes()
 					.loadEmpregadoVacinas().loadGrupoMonitoramentos().loadHistoricoGrupoMonitoramentos().loadEndereco()
-					.loadTelefones();
+					.loadTelefones().loadEnfase();
 		};
 
 		this.functionLoadGrupoMonitoramentos = builder -> {

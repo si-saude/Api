@@ -14,34 +14,20 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.AprhoBo;
-import br.com.saude.api.model.business.validate.AprhoValidator;
-import br.com.saude.api.model.entity.filter.AprhoFilter;
-import br.com.saude.api.model.entity.po.Aprho;
+import br.com.saude.api.model.business.FichaColetaBo;
+import br.com.saude.api.model.business.validate.FichaColetaValidator;
+import br.com.saude.api.model.entity.filter.FichaColetaFilter;
+import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("aprho")
+@Path("ficha-coleta")
 @RequestInterceptor
-public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo>
-							implements GenericService<Aprho, AprhoFilter>{
+public class FichaColetaService extends GenericServiceImpl<FichaColeta, FichaColetaFilter, FichaColetaBo>
+		implements GenericService<FichaColeta, FichaColetaFilter> {
 
 	@Override
-	protected AprhoBo getBo() {
-		return AprhoBo.getInstance();
-	}
-	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=AprhoValidator.class)
-	@Override
-	public Response save(Aprho aprho) {
-		try {
-			AprhoBo.getInstance().save(aprho);
-			return Response.ok("Salvo com sucesso.").build();
-		}catch (Exception e) {
-			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
-		}
+	protected FichaColetaBo getBo() {
+		return FichaColetaBo.getInstance();
 	}
 
 	@Override
@@ -49,7 +35,7 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(AprhoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(FichaColetaFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -59,7 +45,7 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(AprhoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(FichaColetaFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
@@ -78,17 +64,17 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
-	
+
 	@POST
-	@RequestInterceptor
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/aprho-to-pdf")
-	public Response aprhoToPdf(Aprho aprho) throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+	@CustomValidator(validatorClass = FichaColetaValidator.class)
+	@Override
+	public Response save(FichaColeta fichaColeta) {
 		try {
-			return Response.ok(getBo().aprhoToPdf(aprho)).build();
-		}catch (Exception e) {
+			FichaColetaBo.getInstance().save(fichaColeta);
+			return Response.ok("Salvo com sucesso.").build();
+		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}

@@ -1,5 +1,6 @@
 package br.com.saude.api.service;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.ws.rs.Consumes;
@@ -14,30 +15,30 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.AprhoBo;
-import br.com.saude.api.model.business.validate.AprhoValidator;
-import br.com.saude.api.model.entity.filter.AprhoFilter;
-import br.com.saude.api.model.entity.po.Aprho;
+import br.com.saude.api.model.business.EnfaseBo;
+import br.com.saude.api.model.business.validate.EnfaseValidator;
+import br.com.saude.api.model.entity.filter.EnfaseFilter;
+import br.com.saude.api.model.entity.po.Enfase;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("aprho")
+@Path("enfase")
 @RequestInterceptor
-public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo>
-							implements GenericService<Aprho, AprhoFilter>{
+public class EnfaseService extends GenericServiceImpl<Enfase, EnfaseFilter, EnfaseBo>
+							implements GenericService<Enfase, EnfaseFilter>{
 
 	@Override
-	protected AprhoBo getBo() {
-		return AprhoBo.getInstance();
+	protected EnfaseBo getBo() {
+		return EnfaseBo.getInstance();
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=AprhoValidator.class)
+	@CustomValidator(validatorClass=EnfaseValidator.class)
 	@Override
-	public Response save(Aprho aprho) {
+	public Response save(Enfase enfase) {
 		try {
-			AprhoBo.getInstance().save(aprho);
+			EnfaseBo.getInstance().save(enfase);
 			return Response.ok("Salvo com sucesso.").build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -49,7 +50,7 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(AprhoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(EnfaseFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -59,7 +60,7 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(AprhoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(EnfaseFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
@@ -80,17 +81,17 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	}
 	
 	@POST
-	@RequestInterceptor
+	@Path("/import")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/aprho-to-pdf")
-	public Response aprhoToPdf(Aprho aprho) throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+	public Response importFile(File arquivo) {
 		try {
-			return Response.ok(getBo().aprhoToPdf(aprho)).build();
-		}catch (Exception e) {
+			EnfaseBo.getInstance().importFile(arquivo);
+			return Response.ok("Salvo com sucesso.").build();
+		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
+		
 	}
-
 }

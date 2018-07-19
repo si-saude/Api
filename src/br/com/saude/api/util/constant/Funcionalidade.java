@@ -16,8 +16,18 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String ENFASE_LISTAR							= "ENFASE_LISTAR";
+	public static final String ENFASE_ADICIONAR 			    		= "ENFASE_ADICIONAR";
+	public static final String ENFASE_ALTERAR		 					= "ENFASE_ALTERAR";
+	public static final String ENFASE_REMOVER 							= "ENFASE_REMOVER";
+	public static final String ENFASE_DETALHE 							= "ENFASE_DETALHE";
 	public static final String REPORT_ATESTADO										= "REPORT-ATESTADO";
 	public static final String REPORT_CAT										= "REPORT-CAT";
+	public static final String AVALIACAO_HIGIENE_OCUPACIONAL_LISTAR						= "AVALIACAO-HIGIENE-OCUPACIONAL_LISTAR";
+	public static final String AVALIACAO_HIGIENE_OCUPACIONAL_ADICIONAR 			    	= "AVALIACAO-HIGIENE-OCUPACIONAL_ADICIONAR";
+	public static final String AVALIACAO_HIGIENE_OCUPACIONAL_ALTERAR		 			= "AVALIACAO-HIGIENE-OCUPACIONAL_ALTERAR";
+	public static final String AVALIACAO_HIGIENE_OCUPACIONAL_REMOVER 					= "AVALIACAO-HIGIENE-OCUPACIONAL_REMOVER";
+	public static final String AVALIACAO_HIGIENE_OCUPACIONAL_DETALHE 					= "AVALIACAO-HIGIENE-OCUPACIONAL_DETALHE";
 	public static final String PARTE_CORPO_ATINGIDA_LISTAR						= "PARTE-CORPO-ATINGIDA_LISTAR";
 	public static final String PARTE_CORPO_ATINGIDA_ADICIONAR 			    	= "PARTE-CORPO-ATINGIDA_ADICIONAR";
 	public static final String PARTE_CORPO_ATINGIDA_ALTERAR		 			= "PARTE-CORPO-ATINGIDA_ALTERAR";
