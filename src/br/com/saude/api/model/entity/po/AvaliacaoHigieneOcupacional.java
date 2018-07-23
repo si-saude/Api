@@ -52,6 +52,19 @@ public class AvaliacaoHigieneOcupacional {
 	
 	private boolean testeSensibilidadeInsatisfatorio;
 	
+	private boolean concordaDescricaoAprhoGhe;
+	
+	private boolean naoConcordaAgentesRiscos;
+	
+	private boolean naoConcordaAtividades;
+	
+	private boolean naoConcordaFrequenciaExposicaoRiscos;
+	
+	private boolean naoConcordaCategoriaRiscos;
+	
+	@Size(max = 512, message="Tamanho máximo para Motivo da Análise Preliminar da Avaliação de Higiene Ocupacional.: 512")
+	private String motivoAnalisePreliminar;
+	
 	@Size(max = 512, message="Tamanho máximo para Observação da Avaliação de Higiene Ocupacional.: 512")
 	private String observacao;
 	
@@ -185,5 +198,52 @@ public class AvaliacaoHigieneOcupacional {
 	public void setVersion(long version) {
 		this.version = version;
 	}
-	
+
+	public boolean isConcordaDescricaoAprhoGhe() {
+		return concordaDescricaoAprhoGhe;
+	}
+
+	public void setConcordaDescricaoAprhoGhe(boolean concordaDescricaoAprhoGhe) {
+		this.concordaDescricaoAprhoGhe = concordaDescricaoAprhoGhe;
+	}
+
+	public boolean isNaoConcordaAgentesRiscos() {
+		return naoConcordaAgentesRiscos;
+	}
+
+	public void setNaoConcordaAgentesRiscos(boolean naoConcordaAgentesRiscos) {
+		this.naoConcordaAgentesRiscos = naoConcordaAgentesRiscos;
+	}
+
+	public boolean isNaoConcordaAtividades() {
+		return naoConcordaAtividades;
+	}
+
+	public void setNaoConcordaAtividades(boolean naoConcordaAtividades) {
+		this.naoConcordaAtividades = naoConcordaAtividades;
+	}
+
+	public boolean isNaoConcordaFrequenciaExposicaoRiscos() {
+		return naoConcordaFrequenciaExposicaoRiscos;
+	}
+
+	public void setNaoConcordaFrequenciaExposicaoRiscos(boolean naoConcordaFrequenciaExposicaoRiscos) {
+		this.naoConcordaFrequenciaExposicaoRiscos = naoConcordaFrequenciaExposicaoRiscos;
+	}
+
+	public boolean isNaoConcordaCategoriaRiscos() {
+		return naoConcordaCategoriaRiscos;
+	}
+
+	public void setNaoConcordaCategoriaRiscos(boolean naoConcordaCategoriaRiscos) {
+		this.naoConcordaCategoriaRiscos = naoConcordaCategoriaRiscos;
+	}
+
+	public String getMotivoAnalisePreliminar() {
+		return motivoAnalisePreliminar;
+	}
+
+	public void setMotivoAnalisePreliminar(String motivoAnalisePreliminar) {
+		this.motivoAnalisePreliminar = motivoAnalisePreliminar;
+	}
 }

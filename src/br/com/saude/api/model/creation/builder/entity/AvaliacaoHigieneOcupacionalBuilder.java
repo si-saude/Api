@@ -54,6 +54,12 @@ public class AvaliacaoHigieneOcupacionalBuilder extends GenericEntityBuilder<Ava
 		newAvaliacaoHigieneOcupacional.setTesteSensibilidadeInsatisfatorio(avaliacaoHigieneOcupacional.isTesteSensibilidadeInsatisfatorio());
 		newAvaliacaoHigieneOcupacional.setUsoVoluntario(avaliacaoHigieneOcupacional.isUsoVoluntario());
 		newAvaliacaoHigieneOcupacional.setEnsaioVedacao(avaliacaoHigieneOcupacional.getEnsaioVedacao());
+		newAvaliacaoHigieneOcupacional.setConcordaDescricaoAprhoGhe(avaliacaoHigieneOcupacional.isConcordaDescricaoAprhoGhe());
+		newAvaliacaoHigieneOcupacional.setNaoConcordaAgentesRiscos(avaliacaoHigieneOcupacional.isNaoConcordaAgentesRiscos());
+		newAvaliacaoHigieneOcupacional.setNaoConcordaAtividades(avaliacaoHigieneOcupacional.isNaoConcordaAtividades());
+		newAvaliacaoHigieneOcupacional.setNaoConcordaFrequenciaExposicaoRiscos(avaliacaoHigieneOcupacional.isNaoConcordaFrequenciaExposicaoRiscos());
+		newAvaliacaoHigieneOcupacional.setNaoConcordaCategoriaRiscos(avaliacaoHigieneOcupacional.isNaoConcordaCategoriaRiscos());
+		newAvaliacaoHigieneOcupacional.setMotivoAnalisePreliminar(avaliacaoHigieneOcupacional.getMotivoAnalisePreliminar());
 		newAvaliacaoHigieneOcupacional.setVersion(avaliacaoHigieneOcupacional.getVersion());
 		
 		if(avaliacaoHigieneOcupacional.getEmpregado() != null)

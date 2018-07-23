@@ -4,6 +4,8 @@ import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class AvaliacaoHigieneOcupacionalFilter extends GenericFilter {
+	private EmpregadoFilter empregado;
+	
 	private BooleanFilter brigada;
 	private BooleanFilter espacoConfinado;
 	private BooleanFilter usoVoluntario;
@@ -12,6 +14,48 @@ public class AvaliacaoHigieneOcupacionalFilter extends GenericFilter {
 	private BooleanFilter testeSensibilidadeInsatisfatorio;
 	private BooleanFilter ensaioVedacao;
 	
+	private BooleanFilter concordaDescricaoAprhoGhe;
+	private BooleanFilter naoConcordaAgentesRiscos;
+	private BooleanFilter naoConcordaAtividades;
+	private BooleanFilter naoConcordaFrequenciaExposicaoRiscos;
+	private BooleanFilter naoConcordaCategoriaRiscos;
+	
+	public EmpregadoFilter getEmpregado() {
+		return empregado;
+	}
+	public void setEmpregado(EmpregadoFilter empregado) {
+		this.empregado = empregado;
+	}
+	public BooleanFilter isNaoConcordaCategoriaRiscos() {
+		return naoConcordaCategoriaRiscos;
+	}
+	public void setNaoConcordaCategoriaRiscos(BooleanFilter naoConcordaCategoriaRiscos) {
+		this.naoConcordaCategoriaRiscos = naoConcordaCategoriaRiscos;
+	}
+	public BooleanFilter isNaoConcordaFrequenciaExposicaoRiscos() {
+		return naoConcordaFrequenciaExposicaoRiscos;
+	}
+	public void setNaoConcordaFrequenciaExposicaoRiscos(BooleanFilter naoConcordaFrequenciaExposicaoRiscos) {
+		this.naoConcordaFrequenciaExposicaoRiscos = naoConcordaFrequenciaExposicaoRiscos;
+	}
+	public BooleanFilter isNaoConcordaAtividades() {
+		return naoConcordaAtividades;
+	}
+	public void setNaoConcordaAtividades(BooleanFilter naoConcordaAtividades) {
+		this.naoConcordaAtividades = naoConcordaAtividades;
+	}
+	public BooleanFilter isNaoConcordaAgentesRiscos() {
+		return naoConcordaAgentesRiscos;
+	}
+	public void setNaoConcordaAgentesRiscos(BooleanFilter naoConcordaAgentesRiscos) {
+		this.naoConcordaAgentesRiscos = naoConcordaAgentesRiscos;
+	}
+	public BooleanFilter isConcordaDescricaoAprhoGhe() {
+		return concordaDescricaoAprhoGhe;
+	}
+	public void setConcordaDescricaoAprhoGhe(BooleanFilter concordaDescricaoAprhoGhe) {
+		this.concordaDescricaoAprhoGhe = concordaDescricaoAprhoGhe;
+	}
 	public BooleanFilter isBrigada() {
 		return brigada;
 	}

@@ -61,6 +61,14 @@ public class AvaliacaoHigieneOcupacionalService extends GenericServiceImpl<Avali
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/download-relatorio")
+	public Response getDownloadRelatorio(AvaliacaoHigieneOcupacional avaliacaoHigieneOcupacional) throws Exception {
+		return Response.ok(getBo().avaliacaoHigienOcupacionalToPdf(avaliacaoHigieneOcupacional)).build();
+	}
 
 	@Override
 	@GET

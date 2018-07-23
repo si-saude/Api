@@ -21,6 +21,7 @@ public class Funcionalidade extends GenericConstant {
 	public static final String ENFASE_ALTERAR		 					= "ENFASE_ALTERAR";
 	public static final String ENFASE_REMOVER 							= "ENFASE_REMOVER";
 	public static final String ENFASE_DETALHE 							= "ENFASE_DETALHE";
+	public static final String REPORT_AVALIACAO_HIGIENE_OCUPACIONAL					= "REPORT-AVALIACAO-HIGIENE-OCUPACIONAL";
 	public static final String REPORT_ATESTADO										= "REPORT-ATESTADO";
 	public static final String REPORT_CAT										= "REPORT-CAT";
 	public static final String AVALIACAO_HIGIENE_OCUPACIONAL_LISTAR						= "AVALIACAO-HIGIENE-OCUPACIONAL_LISTAR";
