@@ -153,9 +153,16 @@ public class FilaAtendimentoOcupacionalBo
 				getList(getExampleBuilder(filaFilter).exampleStatusDiferenteEncerrado(),
 						this.functionLoadLocalizacao);
 		
-		if(filaAtendimentoOcupacionais.getTotal() > 0)
-			throw new Exception("O Profissional já está na Fila de Atendimento da Localização: "+
-					filaAtendimentoOcupacionais.getList().get(0).getLocalizacao().getNome()+".");
+		filaFilter.setLocalizacao(new LocalizacaoFilter());
+		filaFilter.getLocalizacao().setId(fila.getLocalizacao().getId());
+		
+		filaAtendimentoOcupacionais = getList(filaFilter, this.functionLoadLocalizacao);
+		
+		if ( filaAtendimentoOcupacionais.getTotal() > 0 ) {
+			this.voltar(fila);
+			return obterListaAtual(fila);
+		}
+			
 		
 		// 5 - INSTANCIAR FILA
 		fila.setInicio(Helper.getNow());
@@ -227,8 +234,9 @@ public class FilaAtendimentoOcupacionalBo
 		filaFilter.getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
 		filaFilter.getInicio().setInicio(Helper.getToday());
 		
+		//ESSA BUSCA DEVE TRAZER TODOS DIFERENTES DE ENCERRADO
 		PagedList<FilaAtendimentoOcupacional> filaAtendimentoOcupacionais = 
-				getList(filaFilter, this.functionLoadAll);
+				getListAll(getDao().getListLoadAll(getExampleBuilder(filaFilter).exampleStatusDiferenteEncerrado()));
 		
 		if(filaAtendimentoOcupacionais.getTotal() > 0)
 			return filaAtendimentoOcupacionais.getList().get(0);
@@ -346,7 +354,22 @@ public class FilaAtendimentoOcupacionalBo
 		verificacaoInicial(fila);
 		
 		// 3 - OBTER A FILA
-		fila = obterFilaDoProfissionalNaLocalizacao(fila);
+		Date today = Helper.getToday();
+		FilaAtendimentoOcupacionalFilter filaFilter = new FilaAtendimentoOcupacionalFilter();
+		filaFilter.setPageNumber(1);
+		filaFilter.setPageSize(1);
+		filaFilter.setProfissional(new ProfissionalFilter());
+		filaFilter.getProfissional().setId(fila.getProfissional().getId());
+		filaFilter.setInicio(new DateFilter());
+		filaFilter.getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
+		filaFilter.getInicio().setInicio(today);
+		PagedList<FilaAtendimentoOcupacional> filas = getListAll(
+				getDao().getListLoadAll(getExampleBuilder(filaFilter).exampleStatusDiferenteEncerrado()));
+		
+		if ( filas.getTotal() > 0 )
+			fila = filas.getList().get(0);
+		else 
+			throw new Exception("Profissional não está inserido em nenhuma fila.");
 		
 		// 4 - CHECAR STATUS
 		if(fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO) ||
@@ -397,7 +420,7 @@ public class FilaAtendimentoOcupacionalBo
 		fila = obterFilaDoProfissional(fila);
 		
 		if(fila.getId() == 0) {
-			if(fila.getLocalizacao() == null)
+			if(fila.getLocalizacao() == null || fila.getLocalizacao().getId() == 0)
 				throw new Exception("É necessário informar a Localização para entrar na Fila de Atendimento.");
 			
 			fila = obterFilaDoProfissionalNaLocalizacao(fila);

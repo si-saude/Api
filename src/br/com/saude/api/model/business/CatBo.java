@@ -37,7 +37,7 @@ public class CatBo extends GenericBo<Cat, CatFilter, CatDao, CatBuilder, CatExam
 		
 		this.functionLoadAll = builder -> {
 			return this.functionLoad.apply(builder).loadDiagnostico().loadEmpregado().loadEmpresa().
-					loadGerencia().loadAgenteCausador().loadParteCorpoAtingida().loadNaturezaLesao();
+					loadGerencia().loadAgenteCausador().loadParteCorpoAtingida().loadNaturezaLesao().loadBase();
 		};
 	}
 
