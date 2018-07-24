@@ -15,6 +15,7 @@ public class AprhoItemFilter extends GenericFilter{
 	private String local;
 	private String frequencia;
 	private String duracao;
+	private String avaliacaoEficacia;	
 	
 	public AprhoFilter getAprho() {
 		return aprho;
@@ -75,6 +76,12 @@ public class AprhoItemFilter extends GenericFilter{
 	}
 	public void setFonteGeradora(FonteGeradora fonteGeradora) {
 		this.fonteGeradora = fonteGeradora;
+	}
+	public String getAvaliacaoEficacia() {
+		return avaliacaoEficacia;
+	}
+	public void setAvaliacaoEficacia(String avaliacaoEficacia) {
+		this.avaliacaoEficacia = avaliacaoEficacia;
 	}
 	
 	

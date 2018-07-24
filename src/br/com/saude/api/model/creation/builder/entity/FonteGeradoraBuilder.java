@@ -20,7 +20,7 @@ public class FonteGeradoraBuilder extends GenericEntityBuilder<FonteGeradora, Fo
 		super(fonteGeradoras);
 	}
 
-	protected FonteGeradoraBuilder(FonteGeradora fonteGeradora) {
+	private FonteGeradoraBuilder(FonteGeradora fonteGeradora) {
 		super(fonteGeradora);
 	}
 

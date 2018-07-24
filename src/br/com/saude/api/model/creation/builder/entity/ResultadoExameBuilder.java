@@ -61,6 +61,7 @@ public class ResultadoExameBuilder extends GenericEntityBuilder<ResultadoExame, 
 		newResultadoExame.setDataRecebimento(resultadoExame.getDataRecebimento());
 		newResultadoExame.setLocal(resultadoExame.getLocal());
 		newResultadoExame.setTipo(resultadoExame.getTipo());
+		newResultadoExame.setParticular(resultadoExame.isParticular());
 		newResultadoExame.setVersion(resultadoExame.getVersion());
 		
 		if(resultadoExame.getExame() != null)

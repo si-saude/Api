@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -24,10 +25,10 @@ public class SolicitacaoCentralIntegra {
 	private int id;
 	
 	@NotNull(message="É necessário informar a Descrição da Solicitação.")
-	@Size(max = 1024, message="Tamanho máximo para Descrição da Solicitação: 1024")
+	@Size(max = 2048, message="Tamanho máximo para Descrição da Solicitação: 2048")
 	private String descricao;
 
-	@Size(max = 1024, message="Tamanho máximo para Descrição da Solicitação: 1024")
+	@Size(max = 2048, message="Tamanho máximo para Observação da Solicitação: 2048")
 	private String observacao;
 	
 	@NotNull(message="É necessário informar o Tipo da Solicitação da Solicitação.")
@@ -178,9 +179,16 @@ public class SolicitacaoCentralIntegra {
 	}
 	
 	public boolean isAtrasado( ) {
-		if ( this.prazo != null && this.prazo.before( Helper.getToday() ) )
-			atrasado = true;
-		else atrasado = false;
+		if ( this.prazo != null ) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(this.prazo);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			
+			if ( calendar.getTime().before( Helper.getToday() ) ) {
+				atrasado = true;	
+			} else atrasado = false;
+		}
+		
 		return atrasado;
 	}
 	

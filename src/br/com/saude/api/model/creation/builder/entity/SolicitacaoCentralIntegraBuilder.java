@@ -63,12 +63,12 @@ public class SolicitacaoCentralIntegraBuilder extends GenericEntityBuilder<Solic
 		newSolicitacao.setTempoEstimado(solicitacao.getTempoEstimado());
 		newSolicitacao.setTempoGasto(solicitacao.getTempoGasto());
 		
-		if(newSolicitacao.getTipoSolicitacao() != null)
+		if(solicitacao.getTipoSolicitacao() != null)
 			newSolicitacao.setTipoSolicitacao(TipoSolicitacaoBuilder.newInstance(solicitacao.getTipoSolicitacao())
 					.getEntity());
 		
-		if(newSolicitacao.getTarefa() != null)
-			newSolicitacao.setTarefa(TarefaBuilder.newInstance(newSolicitacao.getTarefa()).getEntity());
+		if(solicitacao.getTarefa() != null)
+			newSolicitacao.setTarefa(TarefaBuilder.newInstance(solicitacao.getTarefa()).getEntity());
 		
 		return newSolicitacao;
 	}

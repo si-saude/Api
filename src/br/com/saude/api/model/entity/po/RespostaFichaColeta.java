@@ -14,6 +14,9 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @Entity
 public class RespostaFichaColeta {
 
@@ -32,7 +35,8 @@ public class RespostaFichaColeta {
 	@Size(max = 2048, message="Tamanho máximo para Conteúdo da Pergunta: 2048")
 	private String conteudo;
 	
-	@OneToMany(mappedBy="resposta", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy="resposta", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<ItemRespostaFichaColeta> itens;
 	
 	@Version

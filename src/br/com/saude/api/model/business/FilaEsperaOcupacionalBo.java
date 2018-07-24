@@ -174,7 +174,7 @@ public class FilaEsperaOcupacionalBo
 				|| atendimento.getFilaEsperaOcupacional().getEmpregado().getId() == 0)
 			throw new Exception("É necessário informar o Empregado.");
 		
-		Profissional profissional = this.getProfissional("EU5X");
+		Profissional profissional = this.getProfissional("YSPR");
 		
 		if(profissional == null)
 			throw new Exception("Profissional inexistente.");
@@ -248,6 +248,11 @@ public class FilaEsperaOcupacionalBo
 			.replace("ramalProfissional", Objects.toString(profissional.getEmpregado().getRamal()))
 			.replace("tipoServico", Objects.toString(atendimentos.get(0).getTarefa().getServico().getNome()));
 		
+		if(profissional.getEmpregado().getFuncao() != null )
+			stringReplacer.replace("funcaoProfissional", Objects.toString(profissional.getEmpregado().getFuncao().getNome()));
+		else
+			stringReplacer.replace("funcaoProfissional", "---");
+		
 		if ( profissional.getEmpregado().getPessoa().getTelefones() != null && profissional.getEmpregado().getPessoa().getTelefones().size() > 0 )
 			stringReplacer.replace("telefoneProfissional", Objects.toString(profissional.getEmpregado().getPessoa().getTelefones().get(0)));
 		else stringReplacer.replace("telefoneProfissional", "---");
@@ -255,6 +260,11 @@ public class FilaEsperaOcupacionalBo
 		if ( profissional.getEmpregado().getPessoa().getEmail() != null )
 			stringReplacer.replace("emailProfissional", Objects.toString(profissional.getEmpregado().getPessoa().getEmail()));
 		else stringReplacer.replace("emailProfissional", "---");
+		
+		if(empregado.getBase().getUf().trim().equals("ES"))
+			stringReplacer.replace("localizacao", "da Base 61");
+		else
+			stringReplacer.replace("localizacao", "de Taquipe");
 		
 		URI assinatura = null;
 		

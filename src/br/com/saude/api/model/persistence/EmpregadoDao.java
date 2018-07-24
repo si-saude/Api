@@ -64,6 +64,7 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			empregado = loadHistoricoGrupoMonitoramentos(empregado);
 			empregado = loadEndereco(empregado);
 			empregado = loadTelefones(empregado);
+			empregado = loadEnfase(empregado);
 			
 			return empregado;
 		};
@@ -278,6 +279,12 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	private Empregado loadGrupoMonitoramentos(Empregado empregado) {
 		if(empregado.getGrupoMonitoramentos()!=null)
 			Hibernate.initialize(empregado.getGrupoMonitoramentos());
+		return empregado;
+	}
+	
+	private Empregado loadEnfase(Empregado empregado) {
+		if(empregado.getEnfase()!=null)
+			Hibernate.initialize(empregado.getEnfase());
 		return empregado;
 	}
 	

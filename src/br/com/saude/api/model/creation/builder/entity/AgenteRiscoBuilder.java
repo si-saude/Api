@@ -20,7 +20,7 @@ public class AgenteRiscoBuilder extends GenericEntityBuilder<AgenteRisco, Agente
 		super(agenteRiscos);
 	}
 
-	protected AgenteRiscoBuilder(AgenteRisco agenteRisco) {
+	private AgenteRiscoBuilder(AgenteRisco agenteRisco) {
 		super(agenteRisco);
 	}
 

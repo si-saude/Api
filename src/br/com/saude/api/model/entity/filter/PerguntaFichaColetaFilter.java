@@ -4,23 +4,23 @@ import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class PerguntaFichaColetaFilter extends GenericFilter {
-	private String grupo;
 	private String tipo;
 	private String codigo;
 	private String path;
+	private String grupo;
 	private BooleanFilter inativo;
 	
-	public String getGrupo() {
-		return grupo;
-	}
-	public void setGrupo(String grupo) {
-		this.grupo = grupo;
-	}
 	public String getTipo() {
 		return tipo;
 	}
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+	public String getGrupo() {
+		return grupo;
+	}
+	public void setGrupo(String grupo) {
+		this.grupo = grupo;
 	}
 	public String getCodigo() {
 		return codigo;

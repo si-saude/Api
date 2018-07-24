@@ -13,6 +13,7 @@ public class ResultadoExameFilter extends GenericFilter {
 	private String acao;
 	private String local;
 	private BooleanFilter conforme;
+	private BooleanFilter particular;
 	
 	public EmpregadoConvocacaoFilter getEmpregadoConvocacao() {
 		return empregadoConvocacao;
@@ -61,6 +62,12 @@ public class ResultadoExameFilter extends GenericFilter {
 	}
 	public void setDataRecebimento(DateFilter dataRecebimento) {
 		this.dataRecebimento = dataRecebimento;
+	}
+	public BooleanFilter getParticular() {
+		return particular;
+	}
+	public void setParticular(BooleanFilter particular) {
+		this.particular = particular;
 	}
 	
 }

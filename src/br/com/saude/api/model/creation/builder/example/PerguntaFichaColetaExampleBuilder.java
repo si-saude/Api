@@ -18,9 +18,9 @@ public class PerguntaFichaColetaExampleBuilder extends GenericExampleBuilder<Per
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addCodigo();
-		addGrupo();
 		addInativo();
 		addPath();
+		addGrupo();
 	}
 
 	@Override

@@ -78,5 +78,19 @@ public class AprhoService extends GenericServiceImpl<Aprho, AprhoFilter, AprhoBo
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
+	
+	@POST
+	@RequestInterceptor
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/aprho-to-pdf")
+	public Response aprhoToPdf(Aprho aprho) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		try {
+			return Response.ok(getBo().aprhoToPdf(aprho)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 
 }

@@ -11,5 +11,8 @@ public class AprhoValidator extends GenericValidator<Aprho> {
 		
 		if(aprho.getAprhoItens() != null)
 			new AprhoItemValidator().validate(aprho.getAprhoItens());
+		
+		if(aprho.getAprhoEmpregados() != null)
+			new AprhoEmpregadoValidator().validate(aprho.getAprhoEmpregados());
 	}
 }

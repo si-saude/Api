@@ -3,6 +3,10 @@ package br.com.saude.api.generic;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -49,4 +53,9 @@ public class Helper {
 		
 		return null;
 	}
+	
+	public static <T> Predicate<T> distinctByKey(Function<T, Object> keyExtractor){
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
 }
