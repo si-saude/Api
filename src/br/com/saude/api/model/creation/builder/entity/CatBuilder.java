@@ -91,7 +91,7 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 				cats.get("destino").setBase(BaseBuilder.newInstance(cats.get("origem").getBase()).getEntity());
 			}
 			return cats.get("destino");
-		};
+		}; 
 	}
 
 	@Override
