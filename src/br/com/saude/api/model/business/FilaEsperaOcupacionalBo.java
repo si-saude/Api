@@ -958,8 +958,34 @@ public class FilaEsperaOcupacionalBo
 									if(aList.getTotal() == 0)
 										continue;
 									
-									if(rE.getRegraAtendimentoEquipeRequisitos().size() > aList.getTotal())
-										continue;
+									if(rE.getRegraAtendimentoEquipeRequisitos().size() > aList.getTotal()) {
+										//VERIFICAR SE O EMPREGADO TEM TAREFA DE HO EM ABERTO, COM A MESMA DATA DA TAREFA
+										//PENDENTE, SE EXISTIR, OU DATA ATUAL. SE EXISTIR, CONTINUAR
+										
+										TarefaFilter tarefaFilterHo = criarFiltroTarefa(filaEspera);
+										tarefaFilterHo.setStatus(StatusTarefa.getInstance().ABERTA);
+										tarefaFilterHo.setEquipe(new EquipeFilter());
+										tarefaFilterHo.getEquipe().setAbreviacao("HIG");
+										tarefaFilterHo.getServico().setCodigo("0003");
+										
+										if(tarefaPendencia != null) {
+											tarefaFilterHo.setInicio(new DateFilter());
+											tarefaFilterHo.getInicio().setTypeFilter(TypeFilter.ENTRE);
+											tarefaFilterHo.getInicio().setInicio(tarefaPendencia.getInicio());
+											tarefaFilterHo.getInicio().setFim(tarefaPendencia.getFim());
+										}
+										
+										PagedList<Tarefa> tHo = new PagedList<Tarefa>();
+										
+										try {
+											tHo = TarefaBo.getInstance().getList(tarefaFilterHo);
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
+										
+										if(tHo.getTotal() > 0)
+											continue;
+									}
 									
 									List<Atendimento> listAtendimento = aList.getList();
 									if(rE.getRegraAtendimentoEquipeRequisitos().stream().filter(r-> {

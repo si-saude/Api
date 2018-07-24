@@ -1,10 +1,19 @@
 package br.com.saude.api.model.business;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.business.validate.GheValidator;
 import br.com.saude.api.model.creation.builder.entity.GheBuilder;
 import br.com.saude.api.model.creation.builder.example.GheExampleBuilder;
 import br.com.saude.api.model.entity.filter.GheFilter;
@@ -54,6 +63,36 @@ public class GheBo extends GenericBo<Ghe, GheFilter, GheDao, GheBuilder, GheExam
 				GheExampleBuilder.newInstance(gheFilterAux).exampleAtivo());
 		
 		return gheAux;
+	}
+	
+	public void importFile(File arquivo) throws Exception {
+		try {
+			List<Ghe> ghes = new ArrayList<Ghe>();
+			Workbook workbook = WorkbookFactory.create(arquivo);
+			
+			Sheet sheet = workbook.getSheetAt(0);
+			int rows = sheet.getPhysicalNumberOfRows();
+			
+			for (int r = 1; r < rows; r++)
+				ghes.add(getGheFromRow(sheet.getRow(r)));
+			
+			try {
+				GheValidator gheValidator = new GheValidator();
+				gheValidator.validate(ghes);
+				this.saveList(ghes);
+			}catch (Exception e) {
+				
+			}
+		}catch(Exception ex) {
+			
+		}
+	}
+	
+	private Ghe getGheFromRow(Row row) {
+		Ghe ghe = new Ghe();
+		ghe.setCodigo(row.getCell(0).getStringCellValue());
+		ghe.setNome(row.getCell(1).getStringCellValue());
+		return ghe;
 	}
 
 }
