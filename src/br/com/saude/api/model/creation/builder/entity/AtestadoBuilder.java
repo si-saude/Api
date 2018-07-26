@@ -11,6 +11,7 @@ import br.com.saude.api.model.entity.po.Atestado;
 public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilter> {
 	
 	private Function<Map<String,Atestado>,Atestado> loadCat;
+	private Function<Map<String,Atestado>,Atestado> loadProfissionalRealizouVisita;
 
 	public static AtestadoBuilder newInstance(Atestado atestado) {
 		return new AtestadoBuilder(atestado);
@@ -36,6 +37,14 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 			}
 			return atestados.get("destino");
 		};
+		
+		this.loadProfissionalRealizouVisita = atestados ->{
+			if(atestados.get("origem").getProfissionalRealizouVisita() != null) {
+				atestados.get("destino").setProfissionalRealizouVisita(
+						ProfissionalBuilder.newInstance(atestados.get("origem").getProfissionalRealizouVisita()).getEntity());
+			}
+			return atestados.get("destino");
+		};
 	}
 
 	@Override
@@ -52,6 +61,12 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		newAtestado.setLancadoSap(atestado.isLancadoSap());
 		newAtestado.setNumeroDias(atestado.getNumeroDias());
 		newAtestado.setStatus(atestado.getStatus());
+		newAtestado.setTipoBeneficio(atestado.getTipoBeneficio());
+		newAtestado.setCausaAfastamento(atestado.getCausaAfastamento());
+		newAtestado.setUltimoContato(atestado.getUltimoContato());
+		newAtestado.setProximoContato(atestado.getProximoContato());
+		newAtestado.setSituacaoEmpregado(atestado.getSituacaoEmpregado());
+	    
 		newAtestado.setVersion(atestado.getVersion());
 		
 		if(atestado.getTarefa() != null)
@@ -67,6 +82,10 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 	
 	public AtestadoBuilder loadCat() {
 		return (AtestadoBuilder) this.loadProperty(this.loadCat);
+	}
+	
+	public AtestadoBuilder loadProfissionalRealizouVisita() {
+		return (AtestadoBuilder) this.loadProperty(this.loadProfissionalRealizouVisita);
 	}
 
 }

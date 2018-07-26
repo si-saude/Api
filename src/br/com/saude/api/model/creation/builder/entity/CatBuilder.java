@@ -126,6 +126,10 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 		newCat.setTipoCat(cat.getTipoCat());
 		newCat.setRegime(cat.getRegime());
 		newCat.setRegistroSd2000(cat.isRegistroSd2000());
+		newCat.setInicioBeneficio(cat.getInicioBeneficio());
+		newCat.setUltimoDiaTrabalho(cat.getUltimoDiaTrabalho());
+		newCat.setRetornoTrabalho(cat.getRetornoTrabalho());
+		newCat.setNumeroBeneficio(cat.getNumeroBeneficio());
 		newCat.setVersion(cat.getVersion());
 		
 		return newCat;

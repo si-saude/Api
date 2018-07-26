@@ -129,6 +129,7 @@ public class Cat {
 	
 	private Date retornoTrabalho;
 	
+	@Size(max = 32, message="Tamanho máximo para Número do Cat: 32")
 	private String numeroBeneficio;
 	
 	@Version
