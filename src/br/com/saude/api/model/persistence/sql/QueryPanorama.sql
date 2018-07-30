@@ -1,7 +1,7 @@
 select id,gerencia,matricula,nome,mes_convocacao,base,
-	EXTRACT(DAY from aso_anterior) || '/' || EXTRACT(MONTH from aso_anterior) || '/' || EXTRACT(YEAR from aso_anterior) as aso_anterior1,
-	EXTRACT(DAY from realizacao_pre_clinico) || '/' || EXTRACT(MONTH from realizacao_pre_clinico) || '/' || EXTRACT(YEAR from realizacao_pre_clinico) as realizacao_pre_clinico1,
-	EXTRACT(DAY from aso_atual) || '/' || EXTRACT(MONTH from aso_atual) || '/' || EXTRACT(YEAR from aso_atual) as aso_atual1,
+	get_day_month(EXTRACT(DAY from aso_anterior)) || '/' || get_day_month(EXTRACT(MONTH from aso_anterior)) || '/' || EXTRACT(YEAR from aso_anterior) as aso_anterior1,
+	get_day_month(EXTRACT(DAY from realizacao_pre_clinico)) || '/' || get_day_month(EXTRACT(MONTH from realizacao_pre_clinico)) || '/' || EXTRACT(YEAR from realizacao_pre_clinico) as realizacao_pre_clinico1,
+	get_day_month(EXTRACT(DAY from aso_atual)) || '/' || get_day_month(EXTRACT(MONTH from aso_atual)) || '/' || EXTRACT(YEAR from aso_atual) as aso_atual1,
 	situacao_aso,
 	CASE situacao_aso
 	WHEN 'PERIÓDICO REALIZADO'

@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -42,6 +43,8 @@ public class EmpregadoConvocacao {
 	private boolean auditadoSd2000;
 	
 	private boolean convocado;
+	
+	private Date dataConvocacao;
 	
 	@Transient
 	private boolean selecionado;
@@ -136,4 +139,13 @@ public class EmpregadoConvocacao {
 	public void setAuditadoSd2000(boolean auditadoSd2000) {
 		this.auditadoSd2000 = auditadoSd2000;
 	}
+
+	public Date getDataConvocacao() {
+		return dataConvocacao;
+	}
+
+	public void setDataConvocacao(Date dataConvocacao) {
+		this.dataConvocacao = dataConvocacao;
+	}
+	
 }

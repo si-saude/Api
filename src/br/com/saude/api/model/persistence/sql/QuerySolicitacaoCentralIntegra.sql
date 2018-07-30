@@ -1,6 +1,6 @@
 SELECT sci.id as id, ts.nome as nome, sci.descricao as descricao, 
-	EXTRACT(DAY from sci.prazo) || '/' || EXTRACT(MONTH from sci.prazo) || '/' || EXTRACT(YEAR from sci.prazo) as prazo, 
-	EXTRACT(DAY from sci.abertura) || '/' || EXTRACT(MONTH from sci.abertura) || '/' || EXTRACT(YEAR from sci.abertura) as abertura,
+	get_day_month(EXTRACT(DAY from sci.prazo)) || '/' || get_day_month(EXTRACT(MONTH from sci.prazo)) || '/' || EXTRACT(YEAR from sci.prazo) as prazo, 
+	get_day_month(EXTRACT(DAY from sci.abertura)) || '/' || get_day_month(EXTRACT(MONTH from sci.abertura)) || '/' || EXTRACT(YEAR from sci.abertura) as abertura,
 	sci.prazo < CURRENT_DATE as atrasado,
 	sci.status as status, sci.observacao as observacao, sci.concluido as concluido
 FROM solicitacaocentralintegra sci
