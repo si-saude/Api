@@ -47,17 +47,39 @@ public class MudancaFuncaoBo
 	@Override
 	public MudancaFuncao save(MudancaFuncao mudancaFuncao) throws Exception {
 					
-			mudancaFuncao.getTarefas().forEach(x->{
-				if(x.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA) && x.getFim() == null)
-					x.setFim(Helper.getNow());
-				
-				if(!(x.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)))
-					x.setFim(null);
-						
-			});	
+		int qtdAlteracaoData = 0;
+		long qtdNaoConcluida = mudancaFuncao.getTarefas().stream()
+				.filter(t->!t.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)).count();
+		
+		for(Tarefa tarefa : mudancaFuncao.getTarefas()) {
+			if(tarefa.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA) && tarefa.getFim() == null) {
+				if(tarefa.getEquipe().getAbreviacao().equals("MED") && qtdNaoConcluida > 0)
+					throw new Exception("Para concluir a tarefa de Medicina, é necessário que as outras tarefas estejam concluídas.");
+					
+				tarefa.setFim(Helper.getNow());
+				qtdAlteracaoData++;
+			}
+			
+			if(!(tarefa.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)))
+				tarefa.setFim(null);
+		}		
 		
 		return super.save(mudancaFuncao);
 	}
+	
+	/**
+	 * CRIAR MÉTODO aplicarAltecacoes
+	 * 
+	 * 		
+		//getById NO EMPREGADO
+		
+		//SETAR APENAS GHE, GHEE, BASE (QUANDO DIFERENTE DE NULL)
+		
+		//SALVAR O EMPREGADO
+		  
+		//SETAR A DATA ATUAL NA APLICAÇÃO DA MUDANÇA DE FUNÇÃO, E SALVAR A MUDANÇA DE FUNÇÃO
+	 * 
+	 * */
 	
 	
 	@Override
