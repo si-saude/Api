@@ -16,6 +16,7 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String REPORT_PRE_REQUISITOS_AGENDAMENTO		= "REPORT-PRE-REQUISITOS-AGENDAMENTO";
 	public static final String ENFASE_LISTAR							= "ENFASE_LISTAR";
 	public static final String ENFASE_ADICIONAR 			    		= "ENFASE_ADICIONAR";
 	public static final String ENFASE_ALTERAR		 					= "ENFASE_ALTERAR";
