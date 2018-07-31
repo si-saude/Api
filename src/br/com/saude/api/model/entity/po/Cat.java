@@ -120,6 +120,18 @@ public class Cat {
 	
 	private float remuneracao;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Base base;
+	
+	private Date inicioBeneficio;
+	
+	private Date ultimoDiaTrabalho;
+	
+	private Date retornoTrabalho;
+	
+	@Size(max = 32, message="Tamanho máximo para Número do Cat: 32")
+	private String numeroBeneficio;
+	
 	@Version
 	private long version;
 
@@ -401,6 +413,46 @@ public class Cat {
 
 	public void setNaturezaLesao(NaturezaLesao naturezaLesao) {
 		this.naturezaLesao = naturezaLesao;
+	}
+	
+	public Base getBase() {
+		return base;
+	}
+
+	public void setBase(Base base) {
+		this.base = base;
+	}
+
+	public Date getInicioBeneficio() {
+		return inicioBeneficio;
+	}
+
+	public void setInicioBeneficio(Date inicioBeneficio) {
+		this.inicioBeneficio = inicioBeneficio;
+	}
+
+	public Date getUltimoDiaTrabalho() {
+		return ultimoDiaTrabalho;
+	}
+
+	public void setUltimoDiaTrabalho(Date ultimoDiaTrabalho) {
+		this.ultimoDiaTrabalho = ultimoDiaTrabalho;
+	}
+
+	public Date getRetornoTrabalho() {
+		return retornoTrabalho;
+	}
+
+	public void setRetornoTrabalho(Date retornoTrabalho) {
+		this.retornoTrabalho = retornoTrabalho;
+	}
+
+	public String getNumeroBeneficio() {
+		return numeroBeneficio;
+	}
+
+	public void setNumeroBeneficio(String numeroBeneficio) {
+		this.numeroBeneficio = numeroBeneficio;
 	}
 
 	public long getVersion() {

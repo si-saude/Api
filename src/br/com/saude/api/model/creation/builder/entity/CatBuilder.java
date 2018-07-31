@@ -17,6 +17,7 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 	private Function<Map<String,Cat>,Cat> loadParteCorpoAtingida;
 	private Function<Map<String,Cat>,Cat> loadAgenteCausador;
 	private Function<Map<String,Cat>,Cat> loadNaturezaLesao;
+	private Function<Map<String,Cat>,Cat> loadBase;
 
 	public static CatBuilder newInstance(Cat cat) {
 		return new CatBuilder(cat);
@@ -84,6 +85,13 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 			}
 			return cats.get("destino");
 		};
+		
+		this.loadBase = cats -> {
+			if(cats.get("origem").getBase() != null) {
+				cats.get("destino").setBase(BaseBuilder.newInstance(cats.get("origem").getBase()).getEntity());
+			}
+			return cats.get("destino");
+		}; 
 	}
 
 	@Override
@@ -118,6 +126,10 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 		newCat.setTipoCat(cat.getTipoCat());
 		newCat.setRegime(cat.getRegime());
 		newCat.setRegistroSd2000(cat.isRegistroSd2000());
+		newCat.setInicioBeneficio(cat.getInicioBeneficio());
+		newCat.setUltimoDiaTrabalho(cat.getUltimoDiaTrabalho());
+		newCat.setRetornoTrabalho(cat.getRetornoTrabalho());
+		newCat.setNumeroBeneficio(cat.getNumeroBeneficio());
 		newCat.setVersion(cat.getVersion());
 		
 		return newCat;
@@ -149,6 +161,10 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 	
 	public CatBuilder loadNaturezaLesao() {
 		return (CatBuilder) this.loadProperty(this.loadNaturezaLesao);
+	}
+	
+	public CatBuilder loadBase() {
+		return (CatBuilder) this.loadProperty(this.loadBase);
 	}
 
 	@Override

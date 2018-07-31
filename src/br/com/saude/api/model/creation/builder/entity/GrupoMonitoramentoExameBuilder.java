@@ -61,6 +61,7 @@ public class GrupoMonitoramentoExameBuilder
 		
 		newGrupoMonitoramentoExame.setId(grupoMonitoramentoExame.getId());
 		newGrupoMonitoramentoExame.setVersion(grupoMonitoramentoExame.getVersion());
+		newGrupoMonitoramentoExame.setOpcional(grupoMonitoramentoExame.isOpcional());
 		
 		return newGrupoMonitoramentoExame;
 	}

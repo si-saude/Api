@@ -56,6 +56,24 @@ public class Atestado {
 	@NotNull(message="É necessário informar a Data da Solicitação.")
 	private Date dataSolicitacao;
 	
+	@Size(max = 64, message="Tamanho máximo para Tipo Beneficio do Atestado: 64")
+    private String tipoBeneficio;
+    
+	@Size(max = 64, message="Tamanho máximo para Causa Afastamento do Atestado: 64")
+    private String causaAfastamento;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Profissional profissionalRealizouVisita;
+    
+    @Size(max = 2056, message="Tamanho máximo para Ultimo Contato do Atestado: 2056")
+    private String ultimoContato;
+    
+    @Size(max = 2056, message="Tamanho máximo para Proximo Contato do Atestado: 2056")
+    private String proximoContato;
+    
+    @Size(max = 64, message="Tamanho máximo para Situação Empregado do Atestado: 64")
+    private String situacaoEmpregado;
+	
 	@Version
 	private long version;
 
@@ -169,6 +187,54 @@ public class Atestado {
 
 	public void setCat(Cat cat) {
 		this.cat = cat;
+	}
+
+	public String getTipoBeneficio() {
+		return tipoBeneficio;
+	}
+
+	public void setTipoBeneficio(String tipoBeneficio) {
+		this.tipoBeneficio = tipoBeneficio;
+	}
+
+	public String getCausaAfastamento() {
+		return causaAfastamento;
+	}
+
+	public void setCausaAfastamento(String causaAfastamento) {
+		this.causaAfastamento = causaAfastamento;
+	}
+
+	public Profissional getProfissionalRealizouVisita() {
+		return profissionalRealizouVisita;
+	}
+
+	public void setProfissionalRealizouVisita(Profissional profissionalRealizouVisita) {
+		this.profissionalRealizouVisita = profissionalRealizouVisita;
+	}
+
+	public String getUltimoContato() {
+		return ultimoContato;
+	}
+
+	public void setUltimoContato(String ultimoContato) {
+		this.ultimoContato = ultimoContato;
+	}
+
+	public String getProximoContato() {
+		return proximoContato;
+	}
+
+	public void setProximoContato(String proximoContato) {
+		this.proximoContato = proximoContato;
+	}
+
+	public String getSituacaoEmpregado() {
+		return situacaoEmpregado;
+	}
+
+	public void setSituacaoEmpregado(String situacaoEmpregado) {
+		this.situacaoEmpregado = situacaoEmpregado;
 	}
 
 	public long getVersion() {

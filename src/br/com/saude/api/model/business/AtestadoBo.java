@@ -55,7 +55,7 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadCat();
+			return builder.loadCat().loadProfissionalRealizouVisita();
 		};
 	}
 	

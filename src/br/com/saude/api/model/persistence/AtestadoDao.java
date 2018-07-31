@@ -23,6 +23,7 @@ public class AtestadoDao extends GenericDao<Atestado> {
 	protected void initializeFunctions() {
 		this.functionLoadAll = atestado -> {
 			atestado = loadCat(atestado);
+			atestado = loadProfissionalRealizouVisita(atestado);
 			
 			return atestado;
 		};
@@ -31,6 +32,13 @@ public class AtestadoDao extends GenericDao<Atestado> {
 	private Atestado loadCat(Atestado atestado) {
 		if(atestado.getCat()!=null) {
 			Hibernate.initialize(atestado.getCat());
+		}
+		return atestado;
+	}
+	
+	private Atestado loadProfissionalRealizouVisita(Atestado atestado) {
+		if(atestado.getProfissionalRealizouVisita()!=null) {
+			Hibernate.initialize(atestado.getProfissionalRealizouVisita());
 		}
 		return atestado;
 	}
