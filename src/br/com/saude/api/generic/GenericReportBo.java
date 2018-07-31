@@ -21,7 +21,7 @@ public interface GenericReportBo<T> {
 		String ret = null;
 		
 		if ( entities == null )
-			throw new Exception("Arquivo vazio. Favor escolher um filtro algum valor.");
+			throw new Exception("Arquivo vazio. Favor escolher algum valor.");
 		
 		Field[] fields = entities.get(0).getClass().getDeclaredFields();
 		String name = entities.get(0).getClass().getName();
@@ -45,6 +45,10 @@ public interface GenericReportBo<T> {
 				fields[i].setAccessible(true);
 				if ( fields[i].get(entity) == null )
 					row.createCell(i).setCellValue("");
+				else if ( fields[i].get(entity) instanceof Boolean )
+					if ( fields[i].get(entity).toString().equals("true") )
+						row.createCell(i).setCellValue("SIM");
+					else row.createCell(i).setCellValue("NÃO");
 				else
 					row.createCell(i).setCellValue(fields[i].get(entity).toString());
 			}

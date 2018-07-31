@@ -14,6 +14,10 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 	private Function<Map<String,Cat>,Cat> loadEmpregado;
 	private Function<Map<String,Cat>,Cat> loadEmpresa;
 	private Function<Map<String,Cat>,Cat> loadDiagnostico;
+	private Function<Map<String,Cat>,Cat> loadParteCorpoAtingida;
+	private Function<Map<String,Cat>,Cat> loadAgenteCausador;
+	private Function<Map<String,Cat>,Cat> loadNaturezaLesao;
+	private Function<Map<String,Cat>,Cat> loadBase;
 
 	public static CatBuilder newInstance(Cat cat) {
 		return new CatBuilder(cat);
@@ -60,6 +64,34 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 			}
 			return cats.get("destino");
 		};
+		
+		this.loadParteCorpoAtingida = cats ->{
+			if(cats.get("origem").getParteCorpoAtingida() != null) {
+				cats.get("destino").setParteCorpoAtingida(ParteCorpoAtingidaBuilder.newInstance(cats.get("origem").getParteCorpoAtingida()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadAgenteCausador = cats ->{
+			if(cats.get("origem").getAgenteCausador() != null) {
+				cats.get("destino").setAgenteCausador(AgenteCausadorBuilder.newInstance(cats.get("origem").getAgenteCausador()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadNaturezaLesao = cats ->{
+			if(cats.get("origem").getNaturezaLesao() != null) {
+				cats.get("destino").setNaturezaLesao(NaturezaLesaoBuilder.newInstance(cats.get("origem").getNaturezaLesao()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadBase = cats -> {
+			if(cats.get("origem").getBase() != null) {
+				cats.get("destino").setBase(BaseBuilder.newInstance(cats.get("origem").getBase()).getEntity());
+			}
+			return cats.get("destino");
+		}; 
 	}
 
 	@Override
@@ -94,6 +126,10 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 		newCat.setTipoCat(cat.getTipoCat());
 		newCat.setRegime(cat.getRegime());
 		newCat.setRegistroSd2000(cat.isRegistroSd2000());
+		newCat.setInicioBeneficio(cat.getInicioBeneficio());
+		newCat.setUltimoDiaTrabalho(cat.getUltimoDiaTrabalho());
+		newCat.setRetornoTrabalho(cat.getRetornoTrabalho());
+		newCat.setNumeroBeneficio(cat.getNumeroBeneficio());
 		newCat.setVersion(cat.getVersion());
 		
 		return newCat;
@@ -113,6 +149,22 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 	
 	public CatBuilder loadDiagnostico() {
 		return (CatBuilder) this.loadProperty(this.loadDiagnostico);
+	}
+	
+	public CatBuilder loadParteCorpoAtingida() {
+		return (CatBuilder) this.loadProperty(this.loadParteCorpoAtingida);
+	}
+	
+	public CatBuilder loadAgenteCausador() {
+		return (CatBuilder) this.loadProperty(this.loadAgenteCausador);
+	}
+	
+	public CatBuilder loadNaturezaLesao() {
+		return (CatBuilder) this.loadProperty(this.loadNaturezaLesao);
+	}
+	
+	public CatBuilder loadBase() {
+		return (CatBuilder) this.loadProperty(this.loadBase);
 	}
 
 	@Override

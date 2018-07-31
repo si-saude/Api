@@ -172,6 +172,12 @@ public class EmpregadoConvocacaoBo
 						}
 					}
 					
+					EmpregadoConvocacao eAux = eC;
+					eC.getEmpregadoConvocacaoExames().forEach(x->x.setEmpregadoConvocacao(eAux));
+					eC.getResultadoExames().forEach(r->{
+						r.setEmpregadoConvocacao(eAux);
+						r.getItemResultadoExames().forEach(i->i.setResultadoExame(r));
+					});
 					list.add(eC);
 				}
 				

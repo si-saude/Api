@@ -38,6 +38,8 @@ public class GrupoMonitoramentoExame {
 	inverseJoinColumns = {@JoinColumn(name="criterio_id")})
 	private List<Criterio> criterios;
 	
+	private boolean opcional;
+	
 	@Version
 	private long version;
 
@@ -87,5 +89,13 @@ public class GrupoMonitoramentoExame {
 
 	public void setPeriodicidade(Periodicidade periodicidade) {
 		this.periodicidade = periodicidade;
+	}
+
+	public boolean isOpcional() {
+		return opcional;
+	}
+
+	public void setOpcional(boolean opcional) {
+		this.opcional = opcional;
 	}
 }

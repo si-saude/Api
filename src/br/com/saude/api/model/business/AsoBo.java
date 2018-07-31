@@ -150,7 +150,7 @@ public class AsoBo
 				}
 				
 				//VERIFICAR SE ENTRA AVALIAÇÃO P/ USO DE MÁSCARA
-				if(g.isRelatorio() && (!usoDeMascara)) {
+				if((g.getNome().contains("(NR 33)") || g.getNome().contains("(NR 20)")) && (!usoDeMascara)) {
 					requisito = new RequisitoAso();
 					requisito.setConteudo("Avaliação para uso de máscara");
 					requisitos.add(requisito);

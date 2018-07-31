@@ -29,6 +29,7 @@ public class ResultadoExameExampleBuilder extends GenericExampleBuilder<Resultad
 		addTipo();
 		addLocal();
 		addAcao();
+		addParticular();
 	}
 
 	@Override
@@ -54,6 +55,10 @@ public class ResultadoExameExampleBuilder extends GenericExampleBuilder<Resultad
 	
 	private void addConforme() {
 		this.entity.setConforme(this.addBoolean("conforme", this.filter.getConforme()));
+	}
+	
+	private void addParticular() {
+		this.entity.setParticular(this.addBoolean("particular", this.filter.getParticular()));
 	}
 	
 	private void addTipo() {

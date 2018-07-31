@@ -66,6 +66,9 @@ public class Empregado {
 	private Funcao funcao;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
+	private Enfase enfase;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
 	private Regime regime;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -287,5 +290,11 @@ public class Empregado {
 	public void setDataAdmissao(Date dataAdmissao) {
 		this.dataAdmissao = dataAdmissao;
 	}
-
+	public Enfase getEnfase() {
+		return enfase;
+	}
+	public void setEnfase(Enfase enfase) {
+		this.enfase = enfase;
+	}
+	
 }

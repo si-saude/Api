@@ -122,6 +122,7 @@ public class EmpregadoConvocacaoBuilder
 		newEmpregadoConvocacao.setSelecionado(empregadoConvocacao.isSelecionado());
 		newEmpregadoConvocacao.setConvocado(empregadoConvocacao.isConvocado());
 		newEmpregadoConvocacao.setAuditadoSd2000(empregadoConvocacao.isAuditadoSd2000());
+		newEmpregadoConvocacao.setDataConvocacao(empregadoConvocacao.getDataConvocacao());
 		newEmpregadoConvocacao.setVersion(empregadoConvocacao.getVersion());
 		return newEmpregadoConvocacao;
 	}

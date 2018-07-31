@@ -107,6 +107,7 @@ public class SolicitacaoCentralIntegraBo
 		return SolicitacaoCentralIntegraReport.getInstance().getSolicitacaoCentralIntegra(cpf);
 	}
 	
+	@SuppressWarnings("static-access")
 	public SolicitacaoCentralIntegra registrarSolicitacao(SolicitacaoCentralIntegra solicitacao) throws Exception {
 		solicitacao.setAbertura(Helper.getNow());
 		solicitacao.setStatus(StatusSolicitacao.getInstance().ABERTO);

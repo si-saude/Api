@@ -63,12 +63,12 @@ public class FilaEsperaOcupacionalDao extends GenericDao<FilaEsperaOcupacional> 
 				});
 				
 				respostas.forEach(r -> {
-					List<ItemRespostaFichaColeta> itens = new ArrayList<ItemRespostaFichaColeta>();
-					
-					r.getItens().forEach(i -> {
-						itens.add(inicializeItem(i));
-					});
-					r.setItens(itens);
+//					List<ItemRespostaFichaColeta> itens = new ArrayList<ItemRespostaFichaColeta>();
+//					
+//					r.getItens().forEach(i -> {
+//						itens.add(inicializeItem(i));
+//					});
+//					r.setItens(itens);
 					
 					r.setPergunta((PerguntaFichaColeta) Hibernate.unproxy(r.getPergunta()));
 					List<ItemPerguntaFichaColeta> itensPergunta = new ArrayList<ItemPerguntaFichaColeta>();

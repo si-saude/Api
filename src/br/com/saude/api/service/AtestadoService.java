@@ -1,6 +1,8 @@
 package br.com.saude.api.service;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,17 +12,21 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import br.com.saude.api.generic.CustomValidator;
+import br.com.saude.api.generic.GenericReportService;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.AtestadoBo;
 import br.com.saude.api.model.business.validate.AtestadoValidator;
+import br.com.saude.api.model.entity.dto.AtestadoDto;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
 
 @Path("atestado")
-public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter, AtestadoBo> implements GenericService<Atestado, AtestadoFilter>{
+public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter, AtestadoBo>
+	implements  GenericReportService<AtestadoDto, AtestadoBo>, GenericService<Atestado, AtestadoFilter>{
 	
 	@Override
 	protected AtestadoBo getBo() {
@@ -99,6 +105,26 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 			return Response.ok(getBo().getAnexo(id)).build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/get-atestados")
+	public Response getAtestados() throws Exception {
+		return Response.ok(AtestadoBo.getInstance().getAtestados()).build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-file")
+	public Response getFile(List<AtestadoDto> entities) throws IOException {
+		try {
+			return Response.ok( this.exportXLSXFile(entities) ).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 	

@@ -22,6 +22,7 @@ import br.com.saude.api.util.constant.AvaliacaoEficacia;
 import br.com.saude.api.util.constant.CategoriaAgenteRisco;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.DoresCorporaisIntensidade;
+import br.com.saude.api.util.constant.EnsaioVedacao;
 import br.com.saude.api.util.constant.Escolaridade;
 import br.com.saude.api.util.constant.EstadoCivil;
 import br.com.saude.api.util.constant.EstagioContemplacao;
@@ -44,6 +45,7 @@ import br.com.saude.api.util.constant.RefereQualidadeAguaQualidade;
 import br.com.saude.api.util.constant.Requisito;
 import br.com.saude.api.util.constant.SensacaoDor;
 import br.com.saude.api.util.constant.Sexo;
+import br.com.saude.api.util.constant.SituacaoEmpregado;
 import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusAtestado;
 import br.com.saude.api.util.constant.StatusEmpregado;
@@ -461,5 +463,19 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAvaliacaoEficacia(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(AvaliacaoEficacia.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/ensaio-vedacao")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getEnsaioVedacao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(EnsaioVedacao.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/situacao-empregado")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSituacaoEmpregado(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(SituacaoEmpregado.getInstance(),filter)).build();
 	}
 }
