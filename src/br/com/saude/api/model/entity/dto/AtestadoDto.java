@@ -3,6 +3,16 @@ package br.com.saude.api.model.entity.dto;
 public class AtestadoDto {
 	private String nomeEmpregado;
 	private String cid;
+	
+	private String matricula;
+	private String gerencia;
+	private String base;
+	
+	private int prazoRecebimento;
+	private boolean recebidoNoPrazo;
+	private String mesRecebimento;
+	private String fim;
+	
 	private int numeroDias;
 	private String inicio;
 	private boolean impossibilidadeLocomocao;
@@ -86,4 +96,47 @@ public class AtestadoDto {
 	public void setNumeroCat(String numeroCat) {
 		this.numeroCat = numeroCat;
 	}
+	public String getMatricula() {
+		return matricula;
+	}
+	public void setMatricula(String matricula) {
+		this.matricula = matricula;
+	}
+	public String getGerencia() {
+		return gerencia;
+	}
+	public void setGerencia(String gerencia) {
+		this.gerencia = gerencia;
+	}
+	public String getBase() {
+		return base;
+	}
+	public void setBase(String base) {
+		this.base = base;
+	}
+	public int getPrazoRecebimento() {
+		return prazoRecebimento;
+	}
+	public void setPrazoRecebimento(int prazoRecebimento) {
+		this.prazoRecebimento = prazoRecebimento;
+	}
+	public boolean isRecebidoNoPrazo() {
+		return recebidoNoPrazo;
+	}
+	public void setRecebidoNoPrazo(boolean recebidoNoPrazo) {
+		this.recebidoNoPrazo = recebidoNoPrazo;
+	}
+	public String getMesRecebimento() {
+		return mesRecebimento;
+	}
+	public void setMesRecebimento(String mesRecebimento) {
+		this.mesRecebimento = mesRecebimento;
+	}
+	public String getFim() {
+		return fim;
+	}
+	public void setFim(String fim) {
+		this.fim = fim;
+	}
+	
 }

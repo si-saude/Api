@@ -102,28 +102,10 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
 		atestado.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
 		atestado.setDataSolicitacao(Helper.getToday());
 		
-		FeriadoFilter feriadoFilter = new FeriadoFilter();
 		Calendar calendar = Calendar.getInstance();
-	    calendar.setTime(atestado.getTarefa().getInicio());
-	    
-		int days = 0;
-	    while ( days != 4 ) {
-	    	feriadoFilter.setData(new DateFilter());
-			feriadoFilter.getData().setInicio(calendar.getTime());
-			feriadoFilter.getData().setTypeFilter(TypeFilter.IGUAL);
-			ArrayList<Feriado> feriados = (ArrayList<Feriado>) FeriadoBo.getInstance().getList(feriadoFilter).getList();
-			
-			if ( feriados.size() > 0 ) {
-				calendar.setTime(feriados.get(0).getData());
-				
-				calendar.add(Calendar.DAY_OF_MONTH, 1);
-				continue;
-			}
-	    
-			if( calendar.get(Calendar.DAY_OF_WEEK) <= 5 )
-	            days++;
-			calendar.add( Calendar.DAY_OF_MONTH, 1 );
-	    }
+		calendar.setTime(atestado.getTarefa().getInicio());
+		
+		Helper.getValidDates(calendar, 4);
 	    
 	    if ( calendar.getTime().before( Helper.getToday() ) )
 	    	throw new Exception("Não é possível enviar atestados com mais de três dias de atraso.");
@@ -134,7 +116,7 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
 	    saveFiles(atestado);
 		return atestado;
 	}
-	
+
 	@SuppressWarnings("static-access")
 	public Atestado configureAtestado(Atestado atestado) throws Exception{
 		ServicoFilter servicoFilter = new ServicoFilter();

@@ -49,6 +49,7 @@ public class Aso {
 	
 	private boolean conforme;
 	
+	@Size(max = 1024, message="Tamanho máximo para Não Conformidade do ASO: 1024")
 	private String naoConformidades;
 
 	@Version
