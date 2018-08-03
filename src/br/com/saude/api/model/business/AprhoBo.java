@@ -68,7 +68,7 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 					// para obter os registros ATUAIS (GetListAll)
 					AprhoEmpregadoFilter filter = new AprhoEmpregadoFilter();
 					filter.setPageNumber(1);
-					filter.setPageSize(1);
+					filter.setPageSize(Integer.MAX_VALUE);
 					filter.setEmpregado(new EmpregadoFilter());
 					filter.getEmpregado().setId(e.getEmpregado().getId());
 					List<AprhoEmpregado> aprhoEmpregadosAux = new ArrayList<AprhoEmpregado>();
@@ -153,7 +153,7 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 		});	
 		
 		List<Gerencia> gerencias = gerenciaSetoriais.stream()
-				.filter(Helper.distinctByKey(g -> g.getGerencia().getId()))
+				.filter(Helper.distinctByKey(g -> g.getGerencia() != null ? g.getGerencia().getId() : g.getId()))
 				.collect(Collectors.toList());
 		
 		List<Gerencia> unidades = gerencias.stream()
@@ -164,11 +164,10 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 				gerenciaSetoriais.stream().map(g->g.getCodigoCompleto()).collect(Collectors.toList()));
 		
 		String gerenciaString = String.join("</br>",  
-				gerencias.stream().map(g->g.getGerencia().getCodigoCompleto()).collect(Collectors.toList()));
+				gerencias.stream().map(g->g.getGerencia() != null ? g.getGerencia().getCodigoCompleto() : g.getCodigoCompleto()).collect(Collectors.toList()));
 		
 		String unidadesString = String.join("</br>",  
-				unidades.stream().map(g-> GerenciaBo.getInstance().getUnidade(g).getCodigoCompleto()).collect(Collectors.toList()));		
-		
+				unidades.stream().map(g-> GerenciaBo.getInstance().getUnidade(g).getCodigoCompleto()).collect(Collectors.toList()));			
 		
 		List<Cargo> cargo = aprho.getAprhoEmpregados().stream()
 				.filter(Helper.distinctByKey(aE -> aE.getEmpregado().getCargo().getId()))
@@ -183,7 +182,7 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 		
 		String cargosEmpregados = String.join("</br>",cargo.stream().map(aE -> aE.getNome()).collect(Collectors.toList()));
 		
-		String elaboradores = String.join("<p>",aprho.getAprhoEmpregados().stream()
+		String elaboradores = String.join("<p>",aprho.getElaboradores().stream()
 				.map(aE -> aE.getEmpregado().getPessoa().getNome()+"- Mat."+aE.getEmpregado().getMatricula()+"</p>")
 				.collect(Collectors.toList()));
 		
@@ -218,10 +217,10 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 				aprhoItens.append("<td align='center'>"+e.getLocal()+"</td>");
 				aprhoItens.append("<td align='center'>"+e.getFrequencia()+"</td>");
 				aprhoItens.append("<td align='center'>"+e.getDuracao()+"</td>");
-				aprhoItens.append("<td align='center'>"+e.getFonteGeradora().getDescricao()+"</td>");
+				aprhoItens.append("<td align='center'>"+(e.getFonteGeradora() != null ? e.getFonteGeradora().getDescricao() : "")+"</td>");
 				aprhoItens.append("<td align='center'>"+e.getMeioPropagacao()+"</td>");
 				aprhoItens.append("<td align='center'>"+e.getPossivelDanoSaude().getDescricao()+"</td>");
-				aprhoItens.append("<td align='center'>"+e.getCategoriaRisco().getDescricao()+"</td>");
+				aprhoItens.append("<td align='center'>"+(e.getCategoriaRisco() !=null ? e.getCategoriaRisco().getDescricao() : "")+"</td>");
 				aprhoItens.append("<td align='center'>"+e.getMedidaControle()+"</td>");
 				aprhoItens.append("<td align='center'>"+e.getAvaliacaoEficacia()+"</td></tr>");			
 		});

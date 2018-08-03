@@ -11,7 +11,7 @@ import br.com.saude.api.model.entity.po.AprhoEmpregado;
 public class AprhoEmpregadoBuilder 
 		extends GenericEntityBuilder<AprhoEmpregado, AprhoEmpregadoFilter> {
 
-	private Function<Map<String,AprhoEmpregado>,AprhoEmpregado> loadAptho;
+	private Function<Map<String,AprhoEmpregado>,AprhoEmpregado> loadAprho;
 	private Function<Map<String,AprhoEmpregado>,AprhoEmpregado> loadEmpregado;
 	
 	
@@ -38,14 +38,12 @@ public class AprhoEmpregadoBuilder
 		newAprhoEmpregado.setAtual(aprhoEmpregado.isAtual());
 		newAprhoEmpregado.setEntrevistado(aprhoEmpregado.isEntrevistado());
 		newAprhoEmpregado.setVersion(aprhoEmpregado.getVersion());
-		if(aprhoEmpregado.getEmpregado() != null)
-			newAprhoEmpregado.setEmpregado(EmpregadoBuilder.newInstance(aprhoEmpregado.getEmpregado()).getEntity());
 		
 		return newAprhoEmpregado;
 	}
 	
 	public AprhoEmpregadoBuilder loadAprho() {
-		return (AprhoEmpregadoBuilder) this.loadProperty(this.loadAptho);
+		return (AprhoEmpregadoBuilder) this.loadProperty(this.loadAprho);
 	}
 
 	public AprhoEmpregadoBuilder loadEmpregado() {
@@ -54,7 +52,7 @@ public class AprhoEmpregadoBuilder
 	@Override
 	protected void initializeFunctions() {
 		
-		this.loadAptho = aprhoEmpregados ->{
+		this.loadAprho = aprhoEmpregados ->{
 			if(aprhoEmpregados.get("origem").getAprho() != null) {
 				aprhoEmpregados.get("destino").setAprho(AprhoBuilder.
 						newInstance(aprhoEmpregados.get("origem").getAprho()).getEntity());
