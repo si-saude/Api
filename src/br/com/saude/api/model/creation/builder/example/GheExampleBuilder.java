@@ -58,8 +58,13 @@ public class GheExampleBuilder extends GenericExampleBuilder<Ghe, GheFilter>{
 	}
 	
 	private void addNome() {
+<<<<<<< HEAD
 		if(this.filter.getNome() != null)
 			this.criterions.add(Restrictions.ilike("nome", Helper.filterLike(this.filter.getNome())));
+=======
+		if(this.filter.getNome() != null)	
+		this.criterions.add(Restrictions.ilike("nome", Helper.filterLike(this.filter.getNome())));
+>>>>>>> refs/heads/master
 	}
 	
 	private void addCodigo() {

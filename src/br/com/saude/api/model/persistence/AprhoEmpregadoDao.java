@@ -33,10 +33,19 @@ public class AprhoEmpregadoDao extends GenericDao<AprhoEmpregado> {
 			
 			if(aprhoEmpregado.getEmpregado() != null) {
 				aprhoEmpregado.setEmpregado((Empregado) Hibernate.unproxy(aprhoEmpregado.getEmpregado() ));
+<<<<<<< HEAD
 				if(aprhoEmpregado.getEmpregado().getCargo()!=null)
 					aprhoEmpregado.getEmpregado().setCargo((Cargo) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getCargo()));
 				if(aprhoEmpregado.getEmpregado().getGerencia()!=null)
 					aprhoEmpregado.getEmpregado().setGerencia((Gerencia) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getGerencia()));
+=======
+				
+				if(aprhoEmpregado.getEmpregado().getGerencia()!= null)
+					aprhoEmpregado.getEmpregado().setGerencia((Gerencia) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getGerencia()));
+				
+				if(aprhoEmpregado.getEmpregado().getCargo()!= null)
+					aprhoEmpregado.getEmpregado().setCargo((Cargo) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getCargo()));
+>>>>>>> refs/heads/master
 			}
 			
 			return aprhoEmpregado;

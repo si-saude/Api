@@ -78,15 +78,14 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 					// para obter os registros ATUAIS (GetListAll)
 					AprhoEmpregadoFilter filter = new AprhoEmpregadoFilter();
 					filter.setPageNumber(1);
-					filter.setPageSize(1);
+					filter.setPageSize(Integer.MAX_VALUE);
 					filter.setEmpregado(new EmpregadoFilter());
 					filter.getEmpregado().setId(e.getEmpregado().getId());
 					filter.setAtual(new BooleanFilter());
 					filter.getAtual().setValue(1);
 					List<AprhoEmpregado> aprhoEmpregadosAux = new ArrayList<AprhoEmpregado>();
 					try {
-						PagedList<AprhoEmpregado> pagedList = AprhoEmpregadoBo.getInstance().getListLoadAll(filter); 
-						aprhoEmpregadosAux = pagedList.getList();
+						aprhoEmpregadosAux = AprhoEmpregadoBo.getInstance().getListLoadAll(filter).getList();
 					} catch (Exception e1) {
 
 					}
@@ -192,23 +191,24 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 				return arg0.getCodigoCompleto().compareTo(arg1.getCodigoCompleto());
 			}
 		});
-
-		List<Gerencia> gerencias = gerenciaSetoriais.stream().filter(Helper.distinctByKey(g -> g.getGerencia().getId()))
+	
+		List<Gerencia> gerencias = gerenciaSetoriais.stream()
+				.filter(Helper.distinctByKey(g -> g.getGerencia() != null ? g.getGerencia().getId() : g.getId()))
 				.collect(Collectors.toList());
 
 		List<Gerencia> unidades = gerencias.stream()
 				.filter(Helper.distinctByKey(g -> GerenciaBo.getInstance().getUnidade(g).getId()))
 				.collect(Collectors.toList());
-
-		String gerenciaSetoriaisString = String.join("</br>",
-				gerenciaSetoriais.stream().map(g -> g.getCodigoCompleto()).collect(Collectors.toList()));
-
-		String gerenciaString = String.join("</br>",
-				gerencias.stream().map(g -> g.getGerencia().getCodigoCompleto()).collect(Collectors.toList()));
-
-		String unidadesString = String.join("</br>", unidades.stream()
-				.map(g -> GerenciaBo.getInstance().getUnidade(g).getCodigoCompleto()).collect(Collectors.toList()));
-
+		
+		String gerenciaSetoriaisString = String.join("</br>",  
+				gerenciaSetoriais.stream().map(g->g.getCodigoCompleto()).collect(Collectors.toList()));
+		
+		String gerenciaString = String.join("</br>",  
+				gerencias.stream().map(g->g.getGerencia() != null ? g.getGerencia().getCodigoCompleto() : g.getCodigoCompleto()).collect(Collectors.toList()));
+		
+		String unidadesString = String.join("</br>",  
+				unidades.stream().map(g-> GerenciaBo.getInstance().getUnidade(g).getCodigoCompleto()).collect(Collectors.toList()));			
+		
 		List<Cargo> cargo = aprho.getAprhoEmpregados().stream()
 				.filter(Helper.distinctByKey(aE -> aE.getEmpregado().getCargo().getId()))
 				.map(g -> g.getEmpregado().getCargo()).collect(Collectors.toList());
@@ -222,7 +222,7 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 		String cargosEmpregados = String.join("</br>",
 				cargo.stream().map(aE -> aE.getNome()).collect(Collectors.toList()));
 
-		String elaboradores = String.join("<p>", aprho.getAprhoEmpregados().stream().map(
+		String elaboradores = String.join("<p>", aprho.getElaboradores().stream().map(
 				aE -> aE.getEmpregado().getPessoa().getNome() + "- Mat." + aE.getEmpregado().getMatricula() + "</p>")
 				.collect(Collectors.toList()));
 
@@ -245,20 +245,20 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 		String data = sdfData.format(aprho.getData());
 		stringReplacer = stringReplacer.replace("dataCriacao", data);
 
-		StringBuilder aprhoItens = new StringBuilder();
-
-		aprho.getAprhoItens().forEach(e -> {
-			aprhoItens.append("<tr><td align='center'>" + e.getAgenteRisco().getDescricao() + "</td>");
-			aprhoItens.append("<td>" + e.getAtividade() + "</td>");
-			aprhoItens.append("<td align='center'>" + e.getLocal() + "</td>");
-			aprhoItens.append("<td align='center'>" + e.getFrequencia() + "</td>");
-			aprhoItens.append("<td align='center'>" + e.getDuracao() + "</td>");
-			aprhoItens.append("<td align='center'>" + e.getFonteGeradora().getDescricao() + "</td>");
-			aprhoItens.append("<td align='center'>" + e.getMeioPropagacao() + "</td>");
-			aprhoItens.append("<td align='center'>" + e.getPossivelDanoSaude().getDescricao() + "</td>");
-			aprhoItens.append("<td align='center'>" + e.getCategoriaRisco().getDescricao() + "</td>");
-			aprhoItens.append("<td align='center'>" + e.getMedidaControle() + "</td>");
-			aprhoItens.append("<td align='center'>" + e.getAvaliacaoEficacia() + "</td></tr>");
+		StringBuilder aprhoItens = new StringBuilder();	
+		
+		aprho.getAprhoItens().forEach(e -> {			
+				aprhoItens.append("<tr><td align='center'>"+e.getAgenteRisco().getDescricao()+"</td>");
+				aprhoItens.append("<td>"+e.getAtividade()+"</td>");
+				aprhoItens.append("<td align='center'>"+e.getLocal()+"</td>");
+				aprhoItens.append("<td align='center'>"+e.getFrequencia()+"</td>");
+				aprhoItens.append("<td align='center'>"+e.getDuracao()+"</td>");
+				aprhoItens.append("<td align='center'>"+(e.getFonteGeradora() != null ? e.getFonteGeradora().getDescricao() : "")+"</td>");
+				aprhoItens.append("<td align='center'>"+e.getMeioPropagacao()+"</td>");
+				aprhoItens.append("<td align='center'>"+e.getPossivelDanoSaude().getDescricao()+"</td>");
+				aprhoItens.append("<td align='center'>"+(e.getCategoriaRisco() !=null ? e.getCategoriaRisco().getDescricao() : "")+"</td>");
+				aprhoItens.append("<td align='center'>"+e.getMedidaControle()+"</td>");
+				aprhoItens.append("<td align='center'>"+e.getAvaliacaoEficacia()+"</td></tr>");			
 		});
 		stringReplacer = stringReplacer.replace("aprhoItens", aprhoItens.toString());
 
