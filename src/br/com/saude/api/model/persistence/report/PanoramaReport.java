@@ -41,46 +41,48 @@ public class PanoramaReport {
 		List<PanoramaDto> panoramas = new ArrayList<PanoramaDto>();
 
 		Session session = HibernateHelper.getSession();
+		List<Object[]> list = new ArrayList<Object[]>();
 		
 		try {
-			List<Object[]> list = session.createSQLQuery(query.toString()).list();
-			PanoramaDto panorama = null;
-			
-			for(Object[] row : list) {
-				panorama = new PanoramaDto();
-				
-				panorama.setId((int) row[0]);
-				panorama.setGerencia((String)row[1]);
-				panorama.setMatricula((String)row[2]);
-				panorama.setNome((String)row[3]);
-				panorama.setMesConvocacao((String)row[4]);
-				panorama.setBase((String)row[5]);
-				panorama.setDataAsoAnoAnterior((String)row[6]);
-				panorama.setDataRealizacaoPreClinico((String)row[7]);
-				panorama.setDataAsoAnoAtual((String)row[8]);
-				panorama.setSituacaoAso((String)row[9]);
-				panorama.setAsoNoPrazo((String)row[10]);
-				
-				if(row[11] != null)
-					panorama.setPendencias((String)row[11]);
-				
-				panorama.setGerenciaPrimeiraLinha((String)row[12]);
-				panorama.setStatusPreClinico((String)row[13]);
-				
-				if(row[14] != null)
-					panorama.setExamesPendentes((String)row[14]);
-				
-				if ( panorama.getExamesPendentes() != null && panorama.getExamesPendentes().length() > 0 )
-					 panorama.setExistePendenciaExames(true);
-				else panorama.setExistePendenciaExames(false);
-					
-				panoramas.add(panorama);
-			}
+			list = session.createSQLQuery(query.toString()).list();
 		}catch (Exception ex) {
 			throw ex;
 		}
 		finally {
 			HibernateHelper.close(session);
+		}
+		
+		PanoramaDto panorama = null;
+		
+		for(Object[] row : list) {
+			panorama = new PanoramaDto();
+			
+			panorama.setId((int) row[0]);
+			panorama.setGerencia((String)row[1]);
+			panorama.setMatricula((String)row[2]);
+			panorama.setNome((String)row[3]);
+			panorama.setMesConvocacao((String)row[4]);
+			panorama.setBase((String)row[5]);
+			panorama.setDataAsoAnoAnterior((String)row[6]);
+			panorama.setDataRealizacaoPreClinico((String)row[7]);
+			panorama.setDataAsoAnoAtual((String)row[8]);
+			panorama.setSituacaoAso((String)row[9]);
+			panorama.setAsoNoPrazo((String)row[10]);
+			
+			if(row[11] != null)
+				panorama.setPendencias((String)row[11]);
+			
+			panorama.setGerenciaPrimeiraLinha((String)row[12]);
+			panorama.setStatusPreClinico((String)row[13]);
+			
+			if(row[14] != null)
+				panorama.setExamesPendentes((String)row[14]);
+			
+			if ( panorama.getExamesPendentes() != null && panorama.getExamesPendentes().length() > 0 )
+				 panorama.setExistePendenciaExames(true);
+			else panorama.setExistePendenciaExames(false);
+				
+			panoramas.add(panorama);
 		}
 		
 		return panoramas;

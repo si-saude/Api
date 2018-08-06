@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -73,6 +74,9 @@ public class Atestado {
     
     @Size(max = 64, message="Tamanho máximo para Situação Empregado do Atestado: 64")
     private String situacaoEmpregado;
+    
+	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private HomologacaoAtestado homologacaoAtestado;
 	
 	@Version
 	private long version;
@@ -235,6 +239,14 @@ public class Atestado {
 
 	public void setSituacaoEmpregado(String situacaoEmpregado) {
 		this.situacaoEmpregado = situacaoEmpregado;
+	}
+	
+	public HomologacaoAtestado getHomologacaoAtestado() {
+		return homologacaoAtestado;
+	}
+
+	public void setHomologacaoAtestado(HomologacaoAtestado homologacaoAtestado) {
+		this.homologacaoAtestado = homologacaoAtestado;
 	}
 
 	public long getVersion() {

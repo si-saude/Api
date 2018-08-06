@@ -1,6 +1,5 @@
 package br.com.saude.api.model.entity.po;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -11,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,24 +24,11 @@ public class HomologacaoAtestado {
 	
 	private Date dataHomologacao;
 	
-	@Transient
-	private int prazoHomologacao;
-	
-	@Transient
-	private boolean homologadoNoPrazo;
-	
-	@Transient
-	private String medicoOdonto;
-	
 	@Size(max = 32, message="Tamanho máximo para Status da Homologação: 32")
 	private String status;
 	
 	@Size(max = 2056, message="Tamanho máximo para Observação da Homologação: 2056")
 	private String observacao;
-	
-	@Transient
-	@Size(max = 16, message="Tamanho máximo para Mês da Homologação: 16")
-	private String mesHomologacao;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "atestado_id")
@@ -51,7 +36,7 @@ public class HomologacaoAtestado {
 	private Atestado atestado;
 	
 	@NotNull(message="É necessário informar o Empregado do ASO.")
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Profissional profissional;
 
 	@Version
@@ -80,32 +65,7 @@ public class HomologacaoAtestado {
 	public void setDataHomologacao(Date dataHomologacao) {
 		this.dataHomologacao = dataHomologacao;
 	}
-
-	public int getPrazoHomologacao() {
-		Calendar calendarDataHomologacao = Calendar.getInstance();
-		calendarDataHomologacao.setTime(getDataHomologacao());
-		Calendar calendarDataEntrega = Calendar.getInstance();
-		calendarDataEntrega.setTime(getDataEntrega());
-		
-		return prazoHomologacao;
-	}
-
-	public boolean isHomologadoNoPrazo() {
-		return homologadoNoPrazo;
-	}
-
-	public void setHomologadoNoPrazo(boolean homologadoNoPrazo) {
-		this.homologadoNoPrazo = homologadoNoPrazo;
-	}
-
-	public String getMedicoOdonto() {
-		return medicoOdonto;
-	}
-
-	public void setMedicoOdonto(String medicoOdonto) {
-		this.medicoOdonto = medicoOdonto;
-	}
-
+	
 	public String getStatus() {
 		return status;
 	}
@@ -120,14 +80,6 @@ public class HomologacaoAtestado {
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
-	}
-
-	public String getMesHomologacao() {
-		return mesHomologacao;
-	}
-
-	public void setMesHomologacao(String mesHomologacao) {
-		this.mesHomologacao = mesHomologacao;
 	}
 
 	public Atestado getAtestado() {

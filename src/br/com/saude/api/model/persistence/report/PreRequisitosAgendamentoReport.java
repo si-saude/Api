@@ -40,33 +40,35 @@ private static PreRequisitosAgendamentoReport instance;
 		List<PreRequisitosAgendamentoDto> preRequisitosAgendamentos = new ArrayList<PreRequisitosAgendamentoDto>();
 
 		Session session = HibernateHelper.getSession();
+		List<Object[]> list = new ArrayList<Object[]>();
 		
 		try {
-			List<Object[]> list = session.createSQLQuery(query.toString()).list();
-			PreRequisitosAgendamentoDto preRequisitosAgendamento = null;
-			
-			for(Object[] row : list) {
-				preRequisitosAgendamento = new PreRequisitosAgendamentoDto();
-				
-				preRequisitosAgendamento.setMatricula((String) row[0]);
-				preRequisitosAgendamento.setChave((String)row[1]);
-				preRequisitosAgendamento.setNome((String)row[2]);
-				preRequisitosAgendamento.setGerencia((String)row[3]);
-				preRequisitosAgendamento.setBase((String)row[4]);
-				preRequisitosAgendamento.setResultadoAuditado((boolean)row[6]);
-				preRequisitosAgendamento.setAgendado(row[7] != null ? (int)row[7] : 0);
-				preRequisitosAgendamento.setTitulo((String)row[8]);
-				preRequisitosAgendamento.setStatusPreclinico((String)row[9]);
-				preRequisitosAgendamento.setDatasPreclinico((String)row[10]);
-				preRequisitosAgendamento.setExamesPendentes((String)row[11]);
-
-				preRequisitosAgendamentos.add(preRequisitosAgendamento);
-			}
+			list = session.createSQLQuery(query.toString()).list();
 		}catch (Exception ex) {
 			throw ex;
 		}
 		finally {
 			HibernateHelper.close(session);
+		}
+		
+		PreRequisitosAgendamentoDto preRequisitosAgendamento = null;
+		
+		for(Object[] row : list) {
+			preRequisitosAgendamento = new PreRequisitosAgendamentoDto();
+			
+			preRequisitosAgendamento.setMatricula((String) row[0]);
+			preRequisitosAgendamento.setChave((String)row[1]);
+			preRequisitosAgendamento.setNome((String)row[2]);
+			preRequisitosAgendamento.setGerencia((String)row[3]);
+			preRequisitosAgendamento.setBase((String)row[4]);
+			preRequisitosAgendamento.setResultadoAuditado((boolean)row[6]);
+			preRequisitosAgendamento.setAgendado(row[7] != null ? (int)row[7] : 0);
+			preRequisitosAgendamento.setTitulo((String)row[8]);
+			preRequisitosAgendamento.setStatusPreclinico((String)row[9]);
+			preRequisitosAgendamento.setDatasPreclinico((String)row[10]);
+			preRequisitosAgendamento.setExamesPendentes((String)row[11]);
+
+			preRequisitosAgendamentos.add(preRequisitosAgendamento);
 		}
 		
 		return preRequisitosAgendamentos;

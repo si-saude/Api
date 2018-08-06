@@ -16,6 +16,11 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String IMOVEL_LISTAR							= "IMOVEL_LISTAR";
+	public static final String IMOVEL_ADICIONAR 			    		= "IMOVEL_ADICIONAR";
+	public static final String IMOVEL_ALTERAR		 					= "IMOVEL_ALTERAR";
+	public static final String IMOVEL_REMOVER 							= "IMOVEL_REMOVER";
+	public static final String IMOVEL_DETALHE 							= "IMOVEL_DETALHE";
 	public static final String REPORT_PRE_REQUISITOS_AGENDAMENTO		= "REPORT-PRE-REQUISITOS-AGENDAMENTO";
 	public static final String ENFASE_LISTAR							= "ENFASE_LISTAR";
 	public static final String ENFASE_ADICIONAR 			    		= "ENFASE_ADICIONAR";

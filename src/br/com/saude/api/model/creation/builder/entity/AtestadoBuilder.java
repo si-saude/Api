@@ -12,6 +12,7 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 	
 	private Function<Map<String,Atestado>,Atestado> loadCat;
 	private Function<Map<String,Atestado>,Atestado> loadProfissionalRealizouVisita;
+	private Function<Map<String,Atestado>,Atestado> loadHomologacaoAtestado;
 
 	public static AtestadoBuilder newInstance(Atestado atestado) {
 		return new AtestadoBuilder(atestado);
@@ -42,6 +43,14 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 			if(atestados.get("origem").getProfissionalRealizouVisita() != null) {
 				atestados.get("destino").setProfissionalRealizouVisita(
 						ProfissionalBuilder.newInstance(atestados.get("origem").getProfissionalRealizouVisita()).getEntity());
+			}
+			return atestados.get("destino");
+		};
+		
+		this.loadHomologacaoAtestado = atestados -> {
+			if (atestados.get("origem").getHomologacaoAtestado() != null) {
+				atestados.get("destino").setHomologacaoAtestado(
+						HomologacaoAtestadoBuilder.newInstance(atestados.get("origem").getHomologacaoAtestado()).getEntity());
 			}
 			return atestados.get("destino");
 		};
@@ -88,4 +97,8 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		return (AtestadoBuilder) this.loadProperty(this.loadProfissionalRealizouVisita);
 	}
 
+	public AtestadoBuilder loadHomologacaoAgestado() {
+		return (AtestadoBuilder) this.loadProperty(this.loadHomologacaoAtestado);
+	}
+	
 }

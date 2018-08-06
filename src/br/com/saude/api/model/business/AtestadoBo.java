@@ -10,26 +10,21 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.Helper;
-import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.AtestadoBuilder;
 import br.com.saude.api.model.creation.builder.example.AtestadoExampleBuilder;
 import br.com.saude.api.model.entity.dto.AtestadoDto;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
-import br.com.saude.api.model.entity.filter.FeriadoFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
-import br.com.saude.api.model.entity.po.Feriado;
 import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.persistence.AtestadoDao;
 import br.com.saude.api.model.persistence.report.AtestadoReport;
@@ -55,7 +50,7 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadCat().loadProfissionalRealizouVisita();
+			return builder.loadCat().loadProfissionalRealizouVisita().loadHomologacaoAgestado();
 		};
 	}
 	
@@ -76,6 +71,9 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		
 		atestado = configureAtestado(atestado);
+		
+		if ( atestado.getHomologacaoAtestado() != null )
+			atestado.getHomologacaoAtestado().setAtestado(atestado);
 		
 		if ( atestado.getStatus().equals(StatusAtestado.EM_ANALISE) )
 			atestado.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
@@ -105,7 +103,7 @@ public class AtestadoBo  extends GenericBo<Atestado, AtestadoFilter, AtestadoDao
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(atestado.getTarefa().getInicio());
 		
-		Helper.getValidDates(calendar, 4);
+		FeriadoBo.getInstance().getValidDates(calendar, 4);
 	    
 	    if ( calendar.getTime().before( Helper.getToday() ) )
 	    	throw new Exception("Não é possível enviar atestados com mais de três dias de atraso.");

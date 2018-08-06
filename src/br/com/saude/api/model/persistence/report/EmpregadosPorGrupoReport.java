@@ -44,26 +44,28 @@ public class EmpregadosPorGrupoReport {
 		List<EmpregadosPorGrupoDto> empregadosPorGrupos = new ArrayList<EmpregadosPorGrupoDto>();
 
 		Session session = HibernateHelper.getSession();
+		List<Object[]> list = new ArrayList<Object[]>();
 		
 		try {
-			List<Object[]> list = session.createSQLQuery(query.toString()).list();
-			EmpregadosPorGrupoDto empregadosPorGrupo = null;
-			
-			for(Object[] row : list) {
-				empregadosPorGrupo = new EmpregadosPorGrupoDto();
-				
-				empregadosPorGrupo.setNome((String)row[0]);
-				empregadosPorGrupo.setChave((String)row[1]);
-				empregadosPorGrupo.setMatricula((String)row[2]);
-				empregadosPorGrupo.setGerencia((String)row[3]);
-				
-				empregadosPorGrupos.add(empregadosPorGrupo);
-			}
+			list = session.createSQLQuery(query.toString()).list();
 		}catch (Exception ex) {
 			throw ex;
 		}
 		finally {
 			HibernateHelper.close(session);
+		}
+		
+		EmpregadosPorGrupoDto empregadosPorGrupo = null;
+		
+		for(Object[] row : list) {
+			empregadosPorGrupo = new EmpregadosPorGrupoDto();
+			
+			empregadosPorGrupo.setNome((String)row[0]);
+			empregadosPorGrupo.setChave((String)row[1]);
+			empregadosPorGrupo.setMatricula((String)row[2]);
+			empregadosPorGrupo.setGerencia((String)row[3]);
+			
+			empregadosPorGrupos.add(empregadosPorGrupo);
 		}
 		
 		return empregadosPorGrupos;

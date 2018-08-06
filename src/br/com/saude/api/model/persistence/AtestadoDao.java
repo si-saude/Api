@@ -4,6 +4,7 @@ import org.hibernate.Hibernate;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.model.entity.po.Atestado;
+import br.com.saude.api.model.entity.po.HomologacaoAtestado;
 
 public class AtestadoDao extends GenericDao<Atestado> {
 
@@ -24,6 +25,7 @@ public class AtestadoDao extends GenericDao<Atestado> {
 		this.functionLoadAll = atestado -> {
 			atestado = loadCat(atestado);
 			atestado = loadProfissionalRealizouVisita(atestado);
+			atestado = loadHomologacaoAtestado(atestado);
 			
 			return atestado;
 		};
@@ -40,6 +42,12 @@ public class AtestadoDao extends GenericDao<Atestado> {
 		if(atestado.getProfissionalRealizouVisita()!=null) {
 			Hibernate.initialize(atestado.getProfissionalRealizouVisita());
 		}
+		return atestado;
+	}
+	
+	private Atestado loadHomologacaoAtestado(Atestado atestado) {
+		if (atestado.getHomologacaoAtestado() != null)
+			Hibernate.initialize(atestado.getHomologacaoAtestado());
 		return atestado;
 	}
 	

@@ -478,4 +478,5 @@ public class UtilService {
 	public Response getSituacaoEmpregado(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(SituacaoEmpregado.getInstance(),filter)).build();
 	}
+	
 }
