@@ -8,10 +8,7 @@ public class SolicitacaoCentralIntegraValidator extends GenericValidator<Solicit
 	@Override
 	public void validate(SolicitacaoCentralIntegra solicitacao) throws Exception {
 		super.validate(solicitacao);
-		
-		if(solicitacao.getTipoSolicitacao() != null)
-			new TipoSolicitacaoValidator().validate(solicitacao.getTipoSolicitacao());
-		
+				
 		if(solicitacao.getTarefa() != null)
 			new TarefaValidator().validate(solicitacao.getTarefa());
 	}

@@ -7,7 +7,9 @@ import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Aprho;
 import br.com.saude.api.model.entity.po.AprhoEmpregado;
+import br.com.saude.api.model.entity.po.Cargo;
 import br.com.saude.api.model.entity.po.Empregado;
+import br.com.saude.api.model.entity.po.Gerencia;
 
 public class AprhoEmpregadoDao extends GenericDao<AprhoEmpregado> {
 
@@ -29,8 +31,22 @@ public class AprhoEmpregadoDao extends GenericDao<AprhoEmpregado> {
 			if(aprhoEmpregado.getAprho() != null)
 				aprhoEmpregado.setAprho((Aprho) Hibernate.unproxy(aprhoEmpregado.getAprho() ));
 			
-			if(aprhoEmpregado.getEmpregado() != null)
+			if(aprhoEmpregado.getEmpregado() != null) {
 				aprhoEmpregado.setEmpregado((Empregado) Hibernate.unproxy(aprhoEmpregado.getEmpregado() ));
+<<<<<<< HEAD
+				if(aprhoEmpregado.getEmpregado().getCargo()!=null)
+					aprhoEmpregado.getEmpregado().setCargo((Cargo) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getCargo()));
+				if(aprhoEmpregado.getEmpregado().getGerencia()!=null)
+					aprhoEmpregado.getEmpregado().setGerencia((Gerencia) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getGerencia()));
+=======
+				
+				if(aprhoEmpregado.getEmpregado().getGerencia()!= null)
+					aprhoEmpregado.getEmpregado().setGerencia((Gerencia) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getGerencia()));
+				
+				if(aprhoEmpregado.getEmpregado().getCargo()!= null)
+					aprhoEmpregado.getEmpregado().setCargo((Cargo) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getCargo()));
+>>>>>>> refs/heads/master
+			}
 			
 			return aprhoEmpregado;
 		};

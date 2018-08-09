@@ -23,6 +23,7 @@ public class AprhoExampleBuilder extends GenericExampleBuilder<Aprho, AprhoFilte
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addEmpresa();
 		addData();
+		addDataRevisao();
 		addGhe();
 	}
 
@@ -48,4 +49,7 @@ public class AprhoExampleBuilder extends GenericExampleBuilder<Aprho, AprhoFilte
 		this.addData("data", this.filter.getData());
 	}
 
+	private void addDataRevisao() {
+		this.addData("dataRevisao", this.filter.getDataRevisao());
+	}
 }

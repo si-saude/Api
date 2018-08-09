@@ -27,7 +27,7 @@ public class Cargo {
 	@Column(unique=true)
 	private String nome;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name="curso_cargo", 
 	joinColumns = {@JoinColumn(name="cargo_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="curso_id")})

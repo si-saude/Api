@@ -28,4 +28,5 @@ public class GrupoServico extends GenericConstant {
 	public static final String PAGAMENTO 						= "PAGAMENTO";
 	public static final String PARECER 							= "PARECER";
 	public static final String TRANSPORTE 						= "REQUISIÇÃO DE TRANSPORTE";
+	public static final String SAUDE_OPERACIONAL 	 			= "SAÚDE OPERACIONAL";
 }

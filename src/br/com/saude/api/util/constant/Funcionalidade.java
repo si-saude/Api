@@ -15,12 +15,21 @@ public class Funcionalidade extends GenericConstant {
 			instance = new Funcionalidade();
 		return instance;
 	}
-	
 	public static final String IMOVEL_LISTAR							= "IMOVEL_LISTAR";
 	public static final String IMOVEL_ADICIONAR 			    		= "IMOVEL_ADICIONAR";
 	public static final String IMOVEL_ALTERAR		 					= "IMOVEL_ALTERAR";
 	public static final String IMOVEL_REMOVER 							= "IMOVEL_REMOVER";
 	public static final String IMOVEL_DETALHE 							= "IMOVEL_DETALHE";
+	public static final String ATENDIMENTO_AVULSO_LISTAR						= "ATENDIMENTO-AVULSO_LISTAR";
+	public static final String ATENDIMENTO_AVULSO_ADICIONAR 			    	= "ATENDIMENTO-AVULSO_ADICIONAR";
+	public static final String ATENDIMENTO_AVULSO_ALTERAR		 			= "ATENDIMENTO-AVULSO_ALTERAR";
+	public static final String ATENDIMENTO_AVULSO_REMOVER 					= "MUDANCA_-FUNCAO_REMOVER";
+	public static final String ATENDIMENTO_AVULSO_DETALHE 					= "ATENDIMENTO-AVULSO_DETALHE";
+	public static final String MUDANCA_FUNCAO_LISTAR						= "MUDANCA-FUNCAO_LISTAR";
+	public static final String MUDANCA_FUNCAO_ADICIONAR 			    	= "MUDANCA-FUNCAO_ADICIONAR";
+	public static final String MUDANCA_FUNCAO_ALTERAR		 			= "MUDANCA-FUNCAO_ALTERAR";
+	public static final String MUDANCA_FUNCAO_REMOVER 					= "MUDANCA_-FUNCAO_REMOVER";
+	public static final String MUDANCA_FUNCAO_DETALHE 					= "MUDANCA-FUNCAO_DETALHE";
 	public static final String REPORT_PRE_REQUISITOS_AGENDAMENTO		= "REPORT-PRE-REQUISITOS-AGENDAMENTO";
 	public static final String ENFASE_LISTAR							= "ENFASE_LISTAR";
 	public static final String ENFASE_ADICIONAR 			    		= "ENFASE_ADICIONAR";

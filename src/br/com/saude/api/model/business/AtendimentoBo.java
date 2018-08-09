@@ -17,6 +17,7 @@ import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.AtendimentoBuilder;
+import br.com.saude.api.model.creation.builder.entity.FilaAtendimentoOcupacionalBuilder;
 import br.com.saude.api.model.creation.builder.entity.TarefaBuilder;
 import br.com.saude.api.model.creation.builder.example.AtendimentoExampleBuilder;
 import br.com.saude.api.model.creation.builder.example.TarefaExampleBuilder;
@@ -40,6 +41,7 @@ import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.AtendimentoDao;
+import br.com.saude.api.service.FilaAtendimentoOcupacionalService;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusAso;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
@@ -337,17 +339,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 					StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 		
 		//VERIFICA SE FOI ATENDIMENTO MÉDICO PARA CRIAÇÃO DO ASO
-		if(atendimento.getFilaAtendimentoOcupacional()
-				.getProfissional().getEquipe().getAbreviacao().contains("MED")) {
-			
-			atendimento.setAso(new Aso());
-			atendimento.getAso().setAtendimento(atendimento);
-			atendimento.getAso().setData(now);
-			atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional()
-					.getEmpregado());
-			atendimento.getAso().setStatus(StatusAso.PENDENTE_AUDITORIA);
-			atendimento.getAso().setValidade(getValidadeAso(atendimento));
-		}
+		atendimento = verificarCriacaoAso(atendimento, now);
 		
 		atendimento.getFilaEsperaOcupacional().setAtualizacao(now);
 		
@@ -360,6 +352,23 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		atendimento = gerarRisco(atendimento);
 		
 		return save(addAtualizacao(atendimento));
+	}
+	
+	protected Atendimento verificarCriacaoAso(Atendimento atendimento,Date date) {
+		
+		if(atendimento.getFilaAtendimentoOcupacional()
+				.getProfissional().getEquipe().getAbreviacao().contains("MED")) {
+			
+			atendimento.setAso(new Aso());
+			atendimento.getAso().setAtendimento(atendimento);
+			atendimento.getAso().setData(date);
+			atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional()
+					.getEmpregado());
+			atendimento.getAso().setStatus(StatusAso.PENDENTE_AUDITORIA);
+			atendimento.getAso().setValidade(getValidadeAso(atendimento));
+		}
+		
+		return atendimento;
 	}
 	
 	protected Atendimento gerarRisco(Atendimento atendimento) {
@@ -684,6 +693,21 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		TarefaBo.getInstance().saveList(tarefas);
 		
 		return "Atendimento registrado com sucesso.";
+	}
+
+	public Atendimento salvarAtentimentoAvulso(Atendimento atendimento) throws Exception {
+		
+		atendimento.setFilaAtendimentoOcupacional(FilaAtendimentoOcupacionalBo.getInstance().getById(atendimento.getFilaAtendimentoOcupacional().getId()));
+		atendimento.setFilaEsperaOcupacional(FilaEsperaOcupacionalBo.getInstance().getById(atendimento.getFilaEsperaOcupacional().getId()));
+		atendimento.setTarefa(TarefaBo.getInstance().getById(atendimento.getTarefa().getId()));
+		
+		if(atendimento.getAso() != null && atendimento.getAso().getId() == 0)
+			atendimento.setAso(null);
+		
+		atendimento = verificarCriacaoAso(atendimento,Helper.getNow());
+		
+		
+		return super.save(atendimento,this.functionLoadAll);
 	}
 	
 }

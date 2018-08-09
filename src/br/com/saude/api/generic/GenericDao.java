@@ -155,7 +155,7 @@ public abstract class GenericDao<T> {
 		Session session = HibernateHelper.getSession();
 		
 		try {
-			Criteria criteria = session.createCriteria(this.entityType);
+			Criteria criteria = session.createCriteria(this.entityType,"main");
 			criteria.setFirstResult((exampleBuilder.getPageNumber() - 1) * exampleBuilder.getPageSize());
 			criteria.setMaxResults(exampleBuilder.getPageSize());
 			
@@ -163,7 +163,7 @@ public abstract class GenericDao<T> {
 				for(Criterion criterion : criterions)
 					criteria.add(criterion);
 			
-			criteria = loopCriterias(criteria, exampleBuilder.getCriterias());			
+			criteria = Helper.loopCriterias(criteria, exampleBuilder.getCriterias());			
 			criteria = finishCriteria(criteria,exampleBuilder);			
 			list = criteria.list();
 			
@@ -184,19 +184,6 @@ public abstract class GenericDao<T> {
 		}
 		
 		return pagedList;
-	}
-	
-	private Criteria loopCriterias(Criteria criteria, List<Triplet<String,CriteriaExample,JoinType>> criterias) {
-		if(criterias != null)
-			for(Triplet<String,CriteriaExample,JoinType> c: criterias) {
-				Criteria example = criteria.createCriteria(c.getValue0(),c.getValue0(),c.getValue2());
-				for(Criterion criterion : c.getValue1().getCriterions())
-					example.add(criterion);
-				example.add(c.getValue1().getExample());
-				
-				example = loopCriterias(example, c.getValue1().getCriterias());
-			}
-		return criteria;
 	}
 	
 	public T getFirst(List<Criterion> criterions) throws Exception{

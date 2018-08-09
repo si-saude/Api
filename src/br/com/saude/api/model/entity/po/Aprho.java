@@ -51,7 +51,7 @@ public class Aprho {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Profissional aprovador;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name="aprho_elaborador", 
 	joinColumns = {@JoinColumn(name="aprho_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="profissional_id")})

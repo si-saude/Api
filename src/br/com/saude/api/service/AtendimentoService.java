@@ -46,6 +46,24 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=AtendimentoValidator.class)
+	@Path("/salvar-atendimento-avulso")
+	public Response salvarAtendimentoAvulso(Atendimento atendimento) {
+		try {
+			getBo().salvarAtentimentoAvulso(atendimento);
+			return Response.ok("Salvo com sucesso.").build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)

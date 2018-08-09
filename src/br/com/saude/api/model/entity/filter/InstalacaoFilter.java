@@ -5,6 +5,7 @@ import br.com.saude.api.generic.GenericFilter;
 public class InstalacaoFilter extends GenericFilter {
 
 	private String nome;
+	private BaseFilter base;
 
 	public String getNome() {
 		return nome;
@@ -12,5 +13,12 @@ public class InstalacaoFilter extends GenericFilter {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public BaseFilter getBase() {
+		return base;
+	}
+	public void setBase(BaseFilter base) {
+		this.base = base;
 	}
 }
