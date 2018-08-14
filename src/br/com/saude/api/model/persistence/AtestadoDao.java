@@ -4,7 +4,6 @@ import org.hibernate.Hibernate;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.model.entity.po.Atestado;
-import br.com.saude.api.model.entity.po.HomologacaoAtestado;
 
 public class AtestadoDao extends GenericDao<Atestado> {
 

@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
-import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.generic.StringReplacer;
 import br.com.saude.api.model.creation.builder.entity.AprhoBuilder;
 import br.com.saude.api.model.creation.builder.example.AprhoExampleBuilder;

@@ -47,6 +47,7 @@ public class MudancaFuncaoBo
 	@Override
 	public MudancaFuncao save(MudancaFuncao mudancaFuncao) throws Exception {
 					
+		@SuppressWarnings("unused")
 		int qtdAlteracaoData = 0;
 		long qtdNaoConcluida = mudancaFuncao.getTarefas().stream()
 				.filter(t->!t.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)).count();
