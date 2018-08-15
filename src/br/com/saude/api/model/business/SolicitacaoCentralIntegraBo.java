@@ -77,13 +77,20 @@ public class SolicitacaoCentralIntegraBo
 	public SolicitacaoCentralIntegra save(SolicitacaoCentralIntegra solicitacao) throws Exception {
 		switch( solicitacao.getStatus() ) {
 			case StatusSolicitacao.ABERTO: case StatusSolicitacao.PLANEJADO:
+				if ( solicitacao.getTarefa().getStatus().equals(StatusTarefa.getInstance().EXECUCAO) )
+					solicitacao.getTarefa().setInicio(null);
 				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
 				break;
 			case StatusSolicitacao.EXECUCAO:
-				solicitacao.getTarefa().setInicio(Helper.getNow());
+				if ( solicitacao.getTarefa().getInicio() == null )
+					solicitacao.getTarefa().setInicio(Helper.getNow());
 				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().EXECUCAO);
 				break;
 			case StatusSolicitacao.CONCLUIDO:
+				if ( solicitacao.getTarefa().getInicio() == null )
+					throw new Exception("Não é possível concluir uma solicitação que não foi executada.");
+				if ( solicitacao.getTempoGasto() == 0 )
+					throw new Exception("Tempo gasto na solicitação não pode ser 0 (zero).");
 				solicitacao.getTarefa().setFim(Helper.getNow());
 				solicitacao.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
 				break;
