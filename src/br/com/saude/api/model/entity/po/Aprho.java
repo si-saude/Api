@@ -30,7 +30,7 @@ public class Aprho {
 	private String empresa;	
 	
 	@NotNull(message="É necessário informar a Revisão.")
-	@Size(max = 16, message="Tamanho máximo para Empresa: 16")
+	@Size(max = 16, message="Tamanho máximo para Revisão: 16")
 	private String revisao;
 
 	@NotNull(message="É necessário informar a Data de Criação.")

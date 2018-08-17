@@ -25,6 +25,7 @@ public class Fornecedor {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
+	@Size(max = 64, message="Tamanho máximo para Nome/Razão Social do Fornecedor: 64")
 	@NotNull(message="É necessário informar o Nome/Razão Social do Fornecedor.")
 	private String razaoSocial;
 	
@@ -39,6 +40,7 @@ public class Fornecedor {
 	@Size(max = 32, message="Tamanho máximo para Código SAP do Fornecedor: 32")
 	private String codigoSap;
 	
+	@Size(max = 128, message="Tamanho máximo para Email do Fornecedor: 128")
 	@Email(message="Email inválido para Fornecedor.")
 	private String email;
 	

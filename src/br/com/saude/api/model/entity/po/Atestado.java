@@ -43,6 +43,7 @@ public class Atestado {
 	
 	private boolean impossibilidadeLocomocao;
 	
+	@Size(max = 64, message="Tamanho máximo para Status do Atestado: 64")
 	@NotNull(message="É necessário informar o Status do Atestado.")
 	private String status;
 	

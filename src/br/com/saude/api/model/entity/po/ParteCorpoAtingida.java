@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class ParteCorpoAtingida {
@@ -15,10 +16,12 @@ public class ParteCorpoAtingida {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
+	@Size(max = 16, message="Tamanho máximo para o Código da Parte do Corpo Atingida: 16")
 	@NotNull(message="É necessário informar o Código da Parte do Corpo Atingida.")
 	@Column(unique = true)
 	private String codigo;
 	
+	@Size(max = 64, message="Tamanho máximo para a Descrição da Parte do Corpo Atingida: 64")
 	@NotNull(message="É necessário informar a Descrição da Parte do Corpo Atingida.")
 	private String descricao;
 	

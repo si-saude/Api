@@ -21,8 +21,10 @@ public class ItemResultadoExame {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private ResultadoExame resultadoExame;
 	
+	@Size(max = 16, message="Tamanho máximo para Código do Item Resultado Exame: 16")
 	private String codigo;
 	
+	@Size(max = 254, message="Tamanho máximo para Título do Item Resultado Exame: 254")
 	private String titulo;
 	
 	@Size(max = 2048, message="Tamanho máximo para Resultado: 2048")

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class ItemPerguntaFichaColeta {
@@ -16,9 +17,11 @@ public class ItemPerguntaFichaColeta {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
+	@Size(max = 64, message="Tamanho máximo para Label do Item Pergunta Ficha Coleta.: 64")
 	@NotNull(message="É necessário informar o Label da Pergunta.")
 	private String label;
 	
+	@Size(max = 64, message="Tamanho máximo para Path do Item Pergunta Ficha Coleta.: 64")
 	private String path; 
 	
 	@ManyToOne(fetch=FetchType.EAGER)

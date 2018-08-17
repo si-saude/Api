@@ -34,7 +34,8 @@ public class PerguntaFichaColeta {
 	@NotNull(message="É necessário informar o Código da Pergunta.")
 	@Size(max = 4, message="Tamanho máximo para Código da Pergunta: 4")
 	private String codigo;
-
+	
+	@Size(max = 128, message="Tamanho máximo para Path da Pergunta: 128")
 	private String path;
 	
 	@NotNull(message="É necessário informar o Descrição da Pergunta.")

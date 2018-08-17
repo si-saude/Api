@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class AgenteCausador {
@@ -14,10 +15,12 @@ public class AgenteCausador {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
+	@Size(max = 32, message="Tamanho máximo para Código do Agente Causador: 32")
 	@NotNull(message="É necessário informar o Código do Agente Causador.")
 	@Column(unique = true)
 	private String codigo;
 	
+	@Size(max = 256, message="Tamanho máximo para Descricao do Agente Causador: 256")
 	@NotNull(message="É necessário informar a Descrição do Agente Causador.")
 	private String descricao;
 	

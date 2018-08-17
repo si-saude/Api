@@ -44,6 +44,7 @@ public class AvaliacaoHigieneOcupacional {
 	
 	private boolean usoVoluntario;
 	
+	@Size(max = 64, message="Tamanho máximo para Ensaio Vedação da Avaliação de Higiene Ocupacional.: 64")
 	private String ensaioVedacao;
 	
 	private boolean naoBarbeado;

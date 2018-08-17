@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Enfase {
@@ -14,6 +15,7 @@ public class Enfase {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
+	@Size(max = 256, message="Tamanho máximo para Descrição da Ênfase: 256")
 	@NotNull(message="É necessário informar a Descrição da Ênfase.")
 	@Column(unique = true)
 	private String descricao;

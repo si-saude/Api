@@ -33,8 +33,6 @@ public class Cargo {
 	inverseJoinColumns = {@JoinColumn(name="curso_id")})
 	private List<Curso> cursos;
 	
-	private String operador;
-	
 	@Version
 	private long version;
 

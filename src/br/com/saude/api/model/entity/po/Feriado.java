@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Feriado {
@@ -16,6 +17,7 @@ public class Feriado {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
+	@Size(max = 32, message="Tamanho máximo para Título do Feriado: 32")
 	@NotNull(message="É necessário informar o Título do Feriado.")
 	private String titulo;
 	
