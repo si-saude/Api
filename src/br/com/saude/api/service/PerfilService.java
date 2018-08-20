@@ -70,6 +70,13 @@ public class PerfilService extends GenericServiceImpl<Perfil,PerfilFilter,Perfil
 	public Response get(@QueryParam("id") String id) throws Exception {
 		return super.getGeneric(new Integer(id));
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/get-all")
+	public Response getAll(@QueryParam("id") String id) throws Exception {
+		return Response.ok(PerfilBo.getInstance().getFullPerfil(Integer.parseInt(id))).build();
+	}
 
 	@Override
 	@POST
