@@ -27,15 +27,9 @@ public class CargoExampleBuilder extends GenericExampleBuilder<Cargo,CargoFilter
 			this.criterions.add(Restrictions.ilike("nome", Helper.filterLike(this.filter.getNome())));
 	}
 	
-	private void addOperador() {
-		if(this.filter.getOperador() != null)
-			this.entity.setOperador(Helper.filterLike(this.filter.getOperador()));
-	}
-
 	@Override
 	protected void createExample() {
 		addNome();
-		addOperador();
 	}
 
 	@Override

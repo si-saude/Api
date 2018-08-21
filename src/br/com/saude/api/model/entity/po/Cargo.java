@@ -67,12 +67,4 @@ public class Cargo {
 	public void setCursos(List<Curso> cursos) {
 		this.cursos = cursos;
 	}
-
-	public String getOperador() {
-		return operador;
-	}
-
-	public void setOperador(String operador) {
-		this.operador = operador;
-	}
 }
