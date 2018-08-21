@@ -32,7 +32,7 @@ public class Usuario {
 	@NotNull(message="É necessário informar a Senha do Usuário.")
 	private String senha;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name="usuario_perfil", 
 	joinColumns = {@JoinColumn(name="usuario_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="perfil_id")})
