@@ -39,10 +39,14 @@ public class Helper {
 		return today;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static Criterion getCriterionDateFilter(String propertyName, DateFilter dateFilter) {
 		if(dateFilter != null && dateFilter.getInicio() != null) {
 			switch(dateFilter.getTypeFilter()) {
-				case ENTRE: return Restrictions.between(propertyName, 
+				case ENTRE:
+					dateFilter.getFim().setHours(23);
+					dateFilter.getFim().setMinutes(59);
+					return Restrictions.between(propertyName, 
 								dateFilter.getInicio(), 
 								dateFilter.getFim());
 			case MAIOR_IGUAL:return Restrictions.ge(propertyName, dateFilter.getInicio());
