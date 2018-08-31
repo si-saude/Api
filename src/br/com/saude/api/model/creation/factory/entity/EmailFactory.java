@@ -1,8 +1,10 @@
 package br.com.saude.api.model.creation.factory.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import br.com.saude.api.model.entity.po.Email;
+import br.com.saude.api.model.entity.po.Empregado;
 
 public class EmailFactory {
 	private Email email;
@@ -32,6 +34,11 @@ public class EmailFactory {
 	
 	public EmailFactory dataEnvio(Date dataEnvio) {
 		this.email.setDataEnvio(dataEnvio);
+		return this;
+	}
+	
+	public EmailFactory destinatarios(List<Empregado> destinatarios) {
+		this.email.setDestinatarios(destinatarios);
 		return this;
 	}
 	

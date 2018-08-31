@@ -13,6 +13,7 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 	private Function<Map<String,Atestado>,Atestado> loadCat;
 	private Function<Map<String,Atestado>,Atestado> loadProfissionalRealizouVisita;
 	private Function<Map<String,Atestado>,Atestado> loadHomologacaoAtestado;
+	private Function<Map<String,Atestado>,Atestado> loadRegime;
 
 	public static AtestadoBuilder newInstance(Atestado atestado) {
 		return new AtestadoBuilder(atestado);
@@ -54,6 +55,14 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 			}
 			return atestados.get("destino");
 		};
+		
+		this.loadRegime = atestados -> {
+			if (atestados.get("origem").getRegime() != null) {
+				atestados.get("destino").setRegime(
+						RegimeBuilder.newInstance(atestados.get("origem").getRegime()).getEntity());
+			}
+			return atestados.get("destino");
+		};
 	}
 
 	@Override
@@ -61,8 +70,8 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		Atestado newAtestado = new Atestado();
 		
 		newAtestado.setId(atestado.getId());
-		newAtestado.setAtestadoFisicoRecebido(atestado.isAtestadoFisicoRecebido());
 		newAtestado.setCid(atestado.getCid());
+		newAtestado.setAtestadoFisicoRecebido(atestado.isAtestadoFisicoRecebido());
 		newAtestado.setControleLicenca(atestado.isControleLicenca());
 		newAtestado.setDataAgendamento(atestado.getDataAgendamento());
 		newAtestado.setDataSolicitacao(atestado.getDataSolicitacao());
@@ -75,8 +84,27 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		newAtestado.setUltimoContato(atestado.getUltimoContato());
 		newAtestado.setProximoContato(atestado.getProximoContato());
 		newAtestado.setSituacaoEmpregado(atestado.getSituacaoEmpregado());
-	    
+		newAtestado.setInicio(atestado.getInicio());
+		newAtestado.setContatoMedico(atestado.getContatoMedico());
+		newAtestado.setLocalAtendimento(atestado.getLocalAtendimento());
+		newAtestado.setClinica(atestado.getClinica());
+		newAtestado.setTelefoneExterno(atestado.getTelefoneExterno());
+		newAtestado.setEmailExterno(atestado.getEmailExterno());
+		newAtestado.setAposentadoInss(atestado.isAposentadoInss());
+		newAtestado.setPresencial(atestado.isPresencial());
+		newAtestado.setDataInicioEscalaTrabalho(atestado.getDataInicioEscalaTrabalho());
+		newAtestado.setDataFimEscalaTrabalho(atestado.getDataFimEscalaTrabalho());
+		newAtestado.setPossuiFeriasAgendadas(atestado.isPossuiFeriasAgendadas());
+		newAtestado.setCiente(atestado.isCiente());
+		newAtestado.setLimiteAuditar(atestado.getLimiteAuditar());
+		newAtestado.setLimiteHomologar(atestado.getLimiteHomologar());
+		newAtestado.setLimiteLancar(atestado.getLimiteLancar());
+		newAtestado.setDataInicioFerias(atestado.getDataInicioFerias());
+		newAtestado.setDataFimFerias(atestado.getDataFimFerias());
 		newAtestado.setVersion(atestado.getVersion());
+		
+		if(atestado.getEmpregado() != null)
+			newAtestado.setEmpregado(EmpregadoBuilder.newInstance(atestado.getEmpregado()).getEntity());
 		
 		if(atestado.getTarefa() != null)
 			newAtestado.setTarefa(TarefaBuilder.newInstance(atestado.getTarefa()).getEntity());
@@ -99,6 +127,10 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 
 	public AtestadoBuilder loadHomologacaoAgestado() {
 		return (AtestadoBuilder) this.loadProperty(this.loadHomologacaoAtestado);
+	}
+	
+	public AtestadoBuilder loadRegime() {
+		return (AtestadoBuilder) this.loadProperty(this.loadRegime);
 	}
 	
 }

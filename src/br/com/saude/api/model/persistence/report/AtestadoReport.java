@@ -87,7 +87,7 @@ public class AtestadoReport {
 			//CALCULA O FIM DO ATESTADO
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(sdf.parse(atestado.getInicio()));
-			FeriadoBo.getInstance().getValidDates(calendar, atestado.getNumeroDias() - 1);
+			calendar = FeriadoBo.getInstance().getValidDates(calendar, atestado.getNumeroDias() - 1);
 			atestado.setFim(sdf.format(calendar.getTime()));
 			
 			//CALCULA O PRAZO RECEBIMENTO

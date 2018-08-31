@@ -33,9 +33,9 @@ public class FeriadoBo extends GenericBo<Feriado, FeriadoFilter, FeriadoDao, Fer
 
 	// RECEBE UMA INSTANCIA DE CALENDAR COM A DATA A SER ADICIONADO OS DIAS VALIDOS
 	// E ADICIONA A DATA NO CALENDARIO
-	public void getValidDates(Calendar calendar, int days) throws Exception {
+	public Calendar getValidDates(Calendar calendar, int days) throws Exception {
 		int d = 0;
-		while (d != days) {
+		while (d <= days) {
 			PagedList<Feriado> feriados = configureBasicFilter(calendar);
 
 			if (feriados.getTotal() > 0) {
@@ -43,10 +43,16 @@ public class FeriadoBo extends GenericBo<Feriado, FeriadoFilter, FeriadoDao, Fer
 				continue;
 			}
 
-			if (calendar.get(Calendar.DAY_OF_WEEK) <= 5)
+			if (calendar.get(Calendar.DAY_OF_WEEK) > 1 && calendar.get(Calendar.DAY_OF_WEEK) < 7) {
 				d++;
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
+				if(d <= days)
+					calendar.add(Calendar.DAY_OF_MONTH, 1);
+			}
+			else
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
+		
+		return (Calendar) calendar.clone();
 	}
 
 	public int getDaysBetweenDates(Calendar dataInicial, Calendar dataFinal) throws Exception {
@@ -55,10 +61,11 @@ public class FeriadoBo extends GenericBo<Feriado, FeriadoFilter, FeriadoDao, Fer
 		if (dataInicial.after(dataFinal))
 			throw new Exception("Data de inicio maior que data do final.");
 
-		while (dataInicial.compareTo(dataFinal) == 0) {
+		while (!dataInicial.after(dataFinal)) {
 			PagedList<Feriado> feriados = configureBasicFilter(dataInicial);
 
-			if (dataInicial.get(Calendar.DAY_OF_WEEK) <= 5 && feriados.getTotal() == 0) {
+			if (dataInicial.get(Calendar.DAY_OF_WEEK) > 1 &&
+					dataInicial.get(Calendar.DAY_OF_WEEK) < 7 && feriados.getTotal() == 0) {
 				days++;
 			}
 			dataInicial.add(Calendar.DAY_OF_MONTH, 1);

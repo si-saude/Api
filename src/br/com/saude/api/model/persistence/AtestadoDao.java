@@ -25,6 +25,7 @@ public class AtestadoDao extends GenericDao<Atestado> {
 			atestado = loadCat(atestado);
 			atestado = loadProfissionalRealizouVisita(atestado);
 			atestado = loadHomologacaoAtestado(atestado);
+			atestado = loadRegime(atestado);
 			
 			return atestado;
 		};
@@ -47,6 +48,12 @@ public class AtestadoDao extends GenericDao<Atestado> {
 	private Atestado loadHomologacaoAtestado(Atestado atestado) {
 		if (atestado.getHomologacaoAtestado() != null)
 			Hibernate.initialize(atestado.getHomologacaoAtestado());
+		return atestado;
+	}
+	
+	private Atestado loadRegime(Atestado atestado) {
+		if (atestado.getRegime() != null)
+			Hibernate.initialize(atestado.getRegime());
 		return atestado;
 	}
 	
