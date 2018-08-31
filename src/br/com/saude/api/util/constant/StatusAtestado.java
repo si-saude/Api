@@ -15,7 +15,10 @@ public class StatusAtestado extends GenericConstant{
 		return instance;
 	}
 	
-	public static final String EM_ANALISE 				= "EM ANÁLISE";
 	public static final String HOMOLOGADO 				= "HOMOLOGADO";
 	public static final String RECUSADO			= "RECUSADO";
+	public static final String ANALISE_ADMINISTRATIVA			= "ANÁLISE ADMINISTRATIVA";
+	public static final String ANALISE_TECNICA			= "ANÁLISE TÉCNICA";
+	public static final String PENDENTE_DE_ARQUIVAMENTO			= "PENDENTE DE ARQUIVAMENTO";
+	public static final String ARQUIVADO			= "ARQUIVADO";
 }

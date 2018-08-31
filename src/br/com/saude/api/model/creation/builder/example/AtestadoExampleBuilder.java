@@ -20,6 +20,10 @@ public class AtestadoExampleBuilder extends GenericExampleBuilder<Atestado, Ates
 		addControleLicenca();
 		addImpossibilidadeLocomocao();
 		addLancadoSap();
+		addAposentadoInss();
+		addPresencial();
+		addPossuiFeriasAgendadas();
+		addCiente();
 	}
 	
 	@Override
@@ -41,4 +45,19 @@ public class AtestadoExampleBuilder extends GenericExampleBuilder<Atestado, Ates
 		this.entity.setLancadoSap(this.addBoolean("lancadoSap", this.filter.getLancadoSap()));
 	}
 	
+	protected void addAposentadoInss() {
+		this.entity.setAposentadoInss(this.addBoolean("aposentadoInss", this.filter.getAposentadoInss()));
+	}
+	
+	protected void addPresencial() {
+		this.entity.setPresencial(this.addBoolean("presencial", this.filter.getPresencial()));
+	}
+	
+	protected void addPossuiFeriasAgendadas() {
+		this.entity.setPossuiFeriasAgendadas(this.addBoolean("possuiFeriasAgendadas", this.filter.getPossuiFeriasAgendadas()));
+	}
+	
+	protected void addCiente() {
+		this.entity.setCiente(this.addBoolean("ciente", this.filter.getCiente()));
+	}
 }

@@ -122,6 +122,18 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/verificar-prazo-atestado")
+	public Response verificarPrazoAtestado(Atestado atestado) throws Exception {
+		try {
+			return Response.ok(AtestadoBo.getInstance().verifyDeadlineAtestado(atestado)).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/get-file")
 	public Response getFile(List<AtestadoDto> entities) throws IOException {
 		try {

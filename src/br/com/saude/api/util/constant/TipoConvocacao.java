@@ -23,4 +23,5 @@ public class TipoConvocacao extends GenericConstant {
 	public static final String ESPECIAL				= "ESPECIAL";
 	public static final String SUPLETIVO				= "SUPLETIVO";
 	public static final String ADMISSIONAL				= "ADMISSIONAL";
+	public static final String PERICIAL				= "PERICIAL";
 }

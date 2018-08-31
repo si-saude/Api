@@ -13,18 +13,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.com.saude.api.generic.CustomValidator;
+import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.EquipeBo;
 import br.com.saude.api.model.business.validate.EquipeValidator;
+import br.com.saude.api.model.creation.builder.example.EquipeExampleBuilder;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("equipe")
 @RequestInterceptor
-public class EquipeService extends GenericServiceImpl<Equipe,EquipeFilter,EquipeBo>
-							implements GenericService<Equipe,EquipeFilter>{
+public class EquipeService extends GenericServiceImpl<Equipe,EquipeFilter,EquipeBo> implements GenericService<Equipe,EquipeFilter>{
 
 	@Override
 	protected EquipeBo getBo() {
@@ -92,5 +93,17 @@ public class EquipeService extends GenericServiceImpl<Equipe,EquipeFilter,Equipe
 			e.printStackTrace();
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
+	}
+	
+	@GET
+	@Path("get-medicina-odonto")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMedicinaOdonto() throws Exception {
+		EquipeFilter equipeFilter = new EquipeFilter();
+		equipeFilter.setPageNumber(1);
+		equipeFilter.setPageSize(Integer.MIN_VALUE);
+		GenericExampleBuilder<Equipe, EquipeFilter> geb = 
+				EquipeExampleBuilder.newInstance(equipeFilter).exampleMedicinaOuOdonto();
+		return Response.ok(EquipeBo.getInstance().getList(geb).getGenericPagedList()).build();
 	}
 }
