@@ -37,6 +37,7 @@ public class AprhoEmpregadoDao extends GenericDao<AprhoEmpregado> {
 					aprhoEmpregado.getEmpregado().setCargo((Cargo) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getCargo()));
 				if(aprhoEmpregado.getEmpregado().getGerencia()!=null)
 					aprhoEmpregado.getEmpregado().setGerencia((Gerencia) Hibernate.unproxy(aprhoEmpregado.getEmpregado().getGerencia()));
+
 			}
 			
 			return aprhoEmpregado;
