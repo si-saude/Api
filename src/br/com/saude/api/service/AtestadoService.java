@@ -57,6 +57,15 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 		return super.getListGeneric(filter);
 	}
 	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-regime")
+	public Response getListAll(AtestadoFilter filter) throws InstantiationException, IllegalAccessException,
+		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return Response.ok(getBo().getListRegime(filter).getGenericPagedList()).build();
+	}
+	
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

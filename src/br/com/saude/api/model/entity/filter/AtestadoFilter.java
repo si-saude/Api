@@ -13,6 +13,8 @@ public class AtestadoFilter extends GenericFilter {
 	private BooleanFilter presencial;
 	private BooleanFilter possuiFeriasAgendadas;
 	private BooleanFilter ciente;
+	private EmpregadoFilter empregado;
+	private MotivoRecusaAtestadoFilter motivoRecusa;
 	
 	public BooleanFilter getAtestadoFisicoRecebido() {
 		return atestadoFisicoRecebido;
@@ -61,5 +63,17 @@ public class AtestadoFilter extends GenericFilter {
 	}
 	public void setCiente(BooleanFilter ciente) {
 		this.ciente = ciente;
+	}
+	public EmpregadoFilter getEmpregado() {
+		return empregado;
+	}
+	public void setEmpregado(EmpregadoFilter empregado) {
+		this.empregado = empregado;
+	}
+	public MotivoRecusaAtestadoFilter getMotivoRecusa() {
+		return motivoRecusa;
+	}
+	public void setMotivoRecusa(MotivoRecusaAtestadoFilter motivoRecusa) {
+		this.motivoRecusa = motivoRecusa;
 	}
 }

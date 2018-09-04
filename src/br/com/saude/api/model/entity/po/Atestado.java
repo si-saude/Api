@@ -128,6 +128,9 @@ public class Atestado {
 	@NotNull(message = "É necessário informar o Empregado da Solicitação.")
 	private Empregado empregado;
 	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private MotivoRecusaAtestado motivoRecusa;
+	
 	private int limiteAuditar, limiteHomologar, limiteLancar;
 	
 	@Version
@@ -475,6 +478,14 @@ public class Atestado {
 
 	public void setDataFimFerias(Date dataFimFerias) {
 		this.dataFimFerias = dataFimFerias;
+	}
+
+	public MotivoRecusaAtestado getMotivoRecusa() {
+		return motivoRecusa;
+	}
+
+	public void setMotivoRecusa(MotivoRecusaAtestado motivoRecusa) {
+		this.motivoRecusa = motivoRecusa;
 	}
 	
 }

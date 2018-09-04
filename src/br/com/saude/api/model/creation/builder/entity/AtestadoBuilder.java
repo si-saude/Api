@@ -109,6 +109,9 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		if(atestado.getTarefa() != null)
 			newAtestado.setTarefa(TarefaBuilder.newInstance(atestado.getTarefa()).getEntity());
 		
+		if(atestado.getMotivoRecusa() != null)
+			newAtestado.setMotivoRecusa(MotivoRecusaAtestadoBuilder.newInstance(atestado.getMotivoRecusa()).getEntity());
+		
 		return newAtestado;
 	}
 
