@@ -1,11 +1,18 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.function.Function;
+
 import org.hibernate.Hibernate;
 
 import br.com.saude.api.generic.GenericDao;
+import br.com.saude.api.generic.GenericExampleBuilder;
+import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
 
 public class AtestadoDao extends GenericDao<Atestado> {
+	
+	protected Function<Atestado,Atestado> functionLoadRegime;
 
 	private static AtestadoDao instance;
 	
@@ -25,6 +32,12 @@ public class AtestadoDao extends GenericDao<Atestado> {
 			atestado = loadCat(atestado);
 			atestado = loadProfissionalRealizouVisita(atestado);
 			atestado = loadHomologacaoAtestado(atestado);
+			atestado = loadRegime(atestado);
+			
+			return atestado;
+		};
+		
+		this.functionLoadRegime = atestado -> {
 			atestado = loadRegime(atestado);
 			
 			return atestado;
@@ -59,5 +72,9 @@ public class AtestadoDao extends GenericDao<Atestado> {
 	
 	public Atestado getByIdLoadAll(Object id) throws Exception {
 		return super.getById(id,this.functionLoadAll);
+	}
+	
+	public PagedList<Atestado> getListRegime(GenericExampleBuilder<Atestado,AtestadoFilter> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder, this.functionLoadRegime);
 	}
 }

@@ -19,6 +19,7 @@ import java.util.function.Function;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.Helper;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.AtestadoBuilder;
 import br.com.saude.api.model.creation.builder.example.AtestadoExampleBuilder;
 import br.com.saude.api.model.creation.factory.entity.EmailFactory;
@@ -37,6 +38,8 @@ public class AtestadoBo
 		extends GenericBo<Atestado, AtestadoFilter, AtestadoDao, AtestadoBuilder, AtestadoExampleBuilder>
 		implements GenericReportBo<AtestadoDto> {
 
+	protected Function<AtestadoBuilder, AtestadoBuilder> functionLoadRegime;
+	
 	private static AtestadoBo instance;
 
 	private AtestadoBo() {
@@ -54,6 +57,10 @@ public class AtestadoBo
 		this.functionLoadAll = builder -> {
 			return builder.loadCat().loadProfissionalRealizouVisita().loadHomologacaoAgestado().loadRegime();
 		};
+		
+		this.functionLoadRegime = builder -> {
+			return builder.loadRegime();
+		};
 	}
 
 	@Override
@@ -62,7 +69,11 @@ public class AtestadoBo
 			SecurityException, Exception {
 		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
-
+	
+	public PagedList<Atestado> getListRegime(AtestadoFilter filter) throws Exception {
+		return super.getList(getDao().getListRegime(getExampleBuilder(filter).example()), this.functionLoadRegime);
+	}
+	
 	public List<AtestadoDto> getAtestados() throws Exception {
 		return AtestadoReport.getInstance().getAtestados();
 	}
@@ -121,6 +132,7 @@ public class AtestadoBo
 
 		String servico = atestado.getTarefa().getServico().getNome();
 		atestado.setTarefa(null);
+		atestado.setMotivoRecusa(null);
 
 		Map<Integer, Integer> anexo = atestado.getAnexo();
 		Map<Integer, Integer> anexoRelatorioMedico = atestado.getAnexoRelatorioMedico();
