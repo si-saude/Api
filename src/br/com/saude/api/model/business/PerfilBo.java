@@ -66,7 +66,6 @@ public class PerfilBo extends GenericBo<Perfil, PerfilFilter, PerfilDao,
 		return perfil;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Perfil save(Perfil perfil) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
