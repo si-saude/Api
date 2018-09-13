@@ -21,6 +21,7 @@ import br.com.saude.api.model.creation.builder.entity.TarefaBuilder;
 import br.com.saude.api.model.creation.builder.example.AtendimentoExampleBuilder;
 import br.com.saude.api.model.creation.builder.example.TarefaExampleBuilder;
 import br.com.saude.api.model.creation.factory.entity.AtendimentoFactory;
+import br.com.saude.api.model.creation.factory.entity.EmailFactory;
 import br.com.saude.api.model.creation.factory.entity.FilaAtendimentoOcupacionalAtualizacaoFactory;
 import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
@@ -31,6 +32,7 @@ import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Atividade;
+import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
 import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
@@ -337,17 +339,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 					StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 		
 		//VERIFICA SE FOI ATENDIMENTO MÉDICO PARA CRIAÇÃO DO ASO
-		if(atendimento.getFilaAtendimentoOcupacional()
-				.getProfissional().getEquipe().getAbreviacao().contains("MED")) {
-			
-			atendimento.setAso(new Aso());
-			atendimento.getAso().setAtendimento(atendimento);
-			atendimento.getAso().setData(now);
-			atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional()
-					.getEmpregado());
-			atendimento.getAso().setStatus(StatusAso.PENDENTE_AUDITORIA);
-			atendimento.getAso().setValidade(getValidadeAso(atendimento));
-		}
+		atendimento = verificarCriacaoAso(atendimento, now);
 		
 		atendimento.getFilaEsperaOcupacional().setAtualizacao(now);
 		
@@ -360,6 +352,23 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		atendimento = gerarRisco(atendimento);
 		
 		return save(addAtualizacao(atendimento));
+	}
+	
+	protected Atendimento verificarCriacaoAso(Atendimento atendimento,Date date) {
+		
+		if(atendimento.getFilaAtendimentoOcupacional()
+				.getProfissional().getEquipe().getAbreviacao().contains("MED")) {
+			
+			atendimento.setAso(new Aso());
+			atendimento.getAso().setAtendimento(atendimento);
+			atendimento.getAso().setData(date);
+			atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional()
+					.getEmpregado());
+			atendimento.getAso().setStatus(StatusAso.PENDENTE_AUDITORIA);
+			atendimento.getAso().setValidade(getValidadeAso(atendimento));
+		}
+		
+		return atendimento;
 	}
 	
 	protected Atendimento gerarRisco(Atendimento atendimento) {
@@ -574,8 +583,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 						
 					//PERICIAL
 					case "0007":
-						
-						break;
+						return TipoConvocacao.PERICIAL;
 						
 					//AVALIAÇÃO DE CAPACIDADE LABORAL
 					case "0008":
@@ -693,7 +701,104 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		// 6 - SALVAR NO BANCO
 		TarefaBo.getInstance().saveList(tarefas);
 		
+		// 7 - NOTIFICAR EMPREGADO
+		notifyEmployee(atendimento);
+		
 		return "Atendimento registrado com sucesso.";
+	}
+	
+	@SuppressWarnings("deprecation")
+	public String registrarSolicitacaoExamePericial(Atendimento atendimento) throws Exception {
+		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO, CUJA DATA INFORMADA ESTÁ NO PERÍODO
+		// DO CRONOGRAMA, CUJO TIPO DA CONVOCAÇÃO CORRESPONDA AO SERVIÇO SELECIONADO
+		EmpregadoConvocacaoFilter empConFilter = configureEmpregadoConvocacaoFilter(atendimento);
+		PagedList<EmpregadoConvocacao> empConList = EmpregadoConvocacaoBo.getInstance().getList(empConFilter);
+
+		if (empConList.getTotal() == 0)
+			throw new Exception("Não foi possível solicitar o serviço, pois não existe "
+					+ "convocação para o empregado cujo cronograma atenda à data informada.");
+		
+		if( atendimento.getTarefa().getEquipe() == null )
+			throw new Exception("Equipe da tarefa do Exame Pericial deve existir.");
+
+		// 3 - VERIFICAR SE A SOLICITAÇÃO JÁ FOI REALIZADA PREVIAMENTE
+		Date f = Date
+				.from(LocalDateTime.ofInstant(atendimento.getTarefa().getInicio().toInstant(), ZoneId.systemDefault())
+						.plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
+
+		TarefaFilter filter = new TarefaFilter();
+		filter.setPageNumber(1);
+		filter.setPageSize(1);
+		filter.setCliente(new EmpregadoFilter());
+		filter.getCliente().setId(atendimento.getTarefa().getCliente().getId());
+		filter.setServico(new ServicoFilter());
+		filter.getServico().setId(atendimento.getTarefa().getServico().getId());
+		filter.setInicio(new DateFilter());
+		filter.getInicio().setInicio(atendimento.getTarefa().getInicio());
+		filter.getInicio().setFim(f);
+		filter.getInicio().setTypeFilter(TypeFilter.ENTRE);
+
+		PagedList<Tarefa> ts = TarefaBo.getInstance().getList(filter);
+
+		if (ts.getTotal() > 0)
+			throw new Exception("Não foi possível solicitar o serviço, pois já foi realizada "
+					+ "uma solicitação para o mesmo dia.");
+
+		// 5 - INSTANCIAR UMA TAREFA PARA CADA ATIVIDADE DO SERVIÇO.
+		// SERVIÇO PERIÓDICO RESERVA TODA A AGENDA DO DIA.
+		Tarefa tarefa = null;
+
+		Date inicio = Date.from(atendimento.getTarefa().getInicio().toInstant());
+		Date fim = Date.from(inicio.toInstant());
+
+		inicio.setHours(8);
+		fim.setHours(16);
+
+		tarefa = TarefaBuilder.newInstance(atendimento.getTarefa()).getEntity();
+		tarefa.setAtualizacao(Helper.getNow());
+		tarefa.setInicio(inicio);
+		tarefa.setFim(fim);
+		tarefa.setStatus(StatusTarefa.getInstance().ABERTA);
+
+		// 6 - SALVAR NO BANCO
+		TarefaBo.getInstance().save(tarefa);
+		
+		// 7 - NOTIFICAR EMPREGADO
+		notifyEmployee(atendimento);
+
+		return "Atendimento registrado com sucesso.";
+	}
+
+	@SuppressWarnings({ "deprecation", "static-access" })
+	private void notifyEmployee(Atendimento atendimento)
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, Exception {
+		
+		EmailFactory email = EmailFactory.newInstance();
+		List<Empregado> destinatarios = new ArrayList<Empregado>();
+		destinatarios.add(atendimento.getTarefa().getCliente());
+		
+		email.conteudo("Prezado(a),<br><br>informamos que foi agendado o "
+				+ "serviço "+ atendimento.getTarefa().getServico().getNome() +" para o dia "+ 
+				atendimento.getTarefa().getInicio().toLocaleString().split(" ")[0]+".")
+			.assunto(atendimento.getTarefa().getServico().getNome()).dataEnvio(new Helper().getToday())
+			.destinatarios(destinatarios);
+		
+		EmailBo.getInstance().save(email.get());
+	}
+
+	public Atendimento salvarAtentimentoAvulso(Atendimento atendimento) throws Exception {
+		
+		atendimento.setFilaAtendimentoOcupacional(FilaAtendimentoOcupacionalBo.getInstance().getById(atendimento.getFilaAtendimentoOcupacional().getId()));
+		atendimento.setFilaEsperaOcupacional(FilaEsperaOcupacionalBo.getInstance().getById(atendimento.getFilaEsperaOcupacional().getId()));
+		atendimento.setTarefa(TarefaBo.getInstance().getById(atendimento.getTarefa().getId()));
+		
+		if(atendimento.getAso() != null && atendimento.getAso().getId() == 0)
+			atendimento.setAso(null);
+		
+		atendimento = verificarCriacaoAso(atendimento,Helper.getNow());
+		
+		
+		return super.save(atendimento,this.functionLoadAll);
 	}
 	
 }

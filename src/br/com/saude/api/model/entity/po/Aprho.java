@@ -30,7 +30,7 @@ public class Aprho {
 	private String empresa;	
 	
 	@NotNull(message="É necessário informar a Revisão.")
-	@Size(max = 16, message="Tamanho máximo para Empresa: 16")
+	@Size(max = 16, message="Tamanho máximo para Revisão: 16")
 	private String revisao;
 
 	@NotNull(message="É necessário informar a Data de Criação.")
@@ -51,7 +51,7 @@ public class Aprho {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Profissional aprovador;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(name="aprho_elaborador", 
 	joinColumns = {@JoinColumn(name="aprho_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="profissional_id")})

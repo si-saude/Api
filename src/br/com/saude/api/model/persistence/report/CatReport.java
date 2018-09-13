@@ -38,54 +38,56 @@ public class CatReport {
 		in.close();
 
 		List<CatDto> cats = new ArrayList<CatDto>();
-
 		Session session = HibernateHelper.getSession();
 
+		List<Object[]> list = new ArrayList<Object[]>();
+		
 		try {
-			List<Object[]> list = session.createSQLQuery(query.toString()).list();
-			CatDto cat = null;
-
-			for (Object[] row : list) {
-				cat = new CatDto();
-
-				cat.setNumero((String) row[0]);
-				cat.setContratado((boolean) row[1]);
-				cat.setNome((String) row[2]);
-				cat.setDataNascimento((String) row[3]);
-				cat.setCargo((String) row[4]);
-				cat.setRegime((String) row[5]);
-				cat.setCpf((String) row[6]);
-				cat.setSexo((String) row[7]);
-				cat.setRta((String) row[8]);
-				cat.setInstalacao((String) row[9]);
-				cat.setParteCorpoAtingida((String) row[10]);
-				cat.setAgenteCausador((String) row[11]);
-				cat.setNaturezaLesao((String) row[12]);
-				cat.setGerencia((String) row[13]);
-				cat.setClassificacaoSisin((int) row[14]);
-				cat.setDiaHoraAcidente((String) row[15]);
-				cat.setAfastamento((boolean) row[16]);
-				cat.setDataEmissaoCat((String) row[17]);
-				cat.setGravidade((String) row[18]);
-				cat.setDataAvaliacaoMedica((String) row[19]);
-				cat.setRegistoSd2000((boolean) row[20]);
-				cat.setCatSd2000((boolean) row[21]);
-				cat.setTipoAcidente((String) row[22]);
-				cat.setTipoCat((String) row[23]);
-				cat.setDiagnostico((String) row[24]);
-				cat.setCodigoCartaSindicato((String) row[25]);
-				cat.setComunicavelSus((boolean) row[26]);
-				cat.setFerimentoGraveConformeAnp((boolean) row[27]);
-				cat.setDataComunicacaoSindicato((String) row[28]);
-				cat.setRemuneracao((float) row[29]);
-				cat.setFornecedor((String) row[30]);
-
-				cats.add(cat);
-			}
+			list = session.createSQLQuery(query.toString()).list();
 		} catch (Exception ex) {
 			throw ex;
 		} finally {
 			HibernateHelper.close(session);
+		}
+		
+		CatDto cat = null;
+
+		for (Object[] row : list) {
+			cat = new CatDto();
+
+			cat.setNumero((String) row[0]);
+			cat.setContratado((boolean) row[1]);
+			cat.setNome((String) row[2]);
+			cat.setDataNascimento((String) row[3]);
+			cat.setCargo((String) row[4]);
+			cat.setRegime((String) row[5]);
+			cat.setCpf((String) row[6]);
+			cat.setSexo((String) row[7]);
+			cat.setRta((String) row[8]);
+			cat.setInstalacao((String) row[9]);
+			cat.setParteCorpoAtingida((String) row[10]);
+			cat.setAgenteCausador((String) row[11]);
+			cat.setNaturezaLesao((String) row[12]);
+			cat.setGerencia((String) row[13]);
+			cat.setClassificacaoSisin((int) row[14]);
+			cat.setDiaHoraAcidente((String) row[15]);
+			cat.setAfastamento((boolean) row[16]);
+			cat.setDataEmissaoCat((String) row[17]);
+			cat.setGravidade((String) row[18]);
+			cat.setDataAvaliacaoMedica((String) row[19]);
+			cat.setRegistoSd2000((boolean) row[20]);
+			cat.setCatSd2000((boolean) row[21]);
+			cat.setTipoAcidente((String) row[22]);
+			cat.setTipoCat((String) row[23]);
+			cat.setDiagnostico((String) row[24]);
+			cat.setCodigoCartaSindicato((String) row[25]);
+			cat.setComunicavelSus((boolean) row[26]);
+			cat.setFerimentoGraveConformeAnp((boolean) row[27]);
+			cat.setDataComunicacaoSindicato((String) row[28]);
+			cat.setRemuneracao((float) row[29]);
+			cat.setFornecedor((String) row[30]);
+
+			cats.add(cat);
 		}
 
 		return cats;

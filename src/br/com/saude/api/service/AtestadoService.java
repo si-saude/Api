@@ -57,6 +57,15 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 		return super.getListGeneric(filter);
 	}
 	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-regime")
+	public Response getListAll(AtestadoFilter filter) throws InstantiationException, IllegalAccessException,
+		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return Response.ok(getBo().getListRegime(filter).getGenericPagedList()).build();
+	}
+	
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -112,7 +121,23 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get-atestados")
 	public Response getAtestados() throws Exception {
-		return Response.ok(AtestadoBo.getInstance().getAtestados()).build();
+		try {
+			return Response.ok(AtestadoBo.getInstance().getAtestados()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/verificar-prazo-atestado")
+	public Response verificarPrazoAtestado(Atestado atestado) throws Exception {
+		try {
+			return Response.ok(AtestadoBo.getInstance().verifyDeadlineAtestado(atestado)).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 	}
 	
 	@POST

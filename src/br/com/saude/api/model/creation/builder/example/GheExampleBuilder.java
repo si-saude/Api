@@ -59,7 +59,7 @@ public class GheExampleBuilder extends GenericExampleBuilder<Ghe, GheFilter>{
 	
 	private void addNome() {
 		if(this.filter.getNome() != null)
-			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
+			this.criterions.add(Restrictions.ilike("nome", Helper.filterLike(this.filter.getNome())));
 	}
 	
 	private void addCodigo() {

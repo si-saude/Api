@@ -25,23 +25,19 @@ public class AprhoItem {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private AgenteRisco agenteRisco;
 	
-	@NotNull(message="É necessário informar o Agente de Risco.")
+	@NotNull(message="É necessário informar o Possivel Dana à Saúde.")
 	@ManyToOne(fetch=FetchType.EAGER)
 	private PossivelDanoSaude possivelDanoSaude;
-	
-	@NotNull(message="É necessário informar a Categoria do Risco.")
+
 	@ManyToOne(fetch=FetchType.EAGER)
 	private CategoriaRisco categoriaRisco;	
 	
-	@NotNull(message="É necessário informar o Meio de Propagação.")
 	@Size(max = 128, message="Tamanho máximo para Meio de Propagação: 128")
 	private String meioPropagacao;	
 	
-	@NotNull(message="É necessário informar a Medida de Controle.")
 	@Size(max = 128, message="Tamanho máximo para Medida de Controle: 128")
 	private String medidaControle;	
 	
-	@NotNull(message="É necessário informar a Fonte Geradora.")
 	@ManyToOne(fetch=FetchType.EAGER)
 	private FonteGeradora fonteGeradora;	
 	

@@ -254,7 +254,6 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
 			stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath());
 			
-			
 			//EXAMES
 			if(eC.getEmpregadoConvocacaoExames().size() < 26) {
 				int total = eC.getEmpregadoConvocacaoExames().size(); 
@@ -343,10 +342,17 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		zipStream.closeEntry();
 		zipStream.close();
 		FileUtils.cleanDirectory(file);
-		
+				
 		//RETORNO
 		byte[] zipArray = new byte[(int) zipFile.length()];
 		new FileInputStream(zipFile).read(zipArray);
+		
+		//RETIRAR OS REGISTROS CUJO ID DO EXAME == 0, DEPOIS SALVA CONVOCAÇÃO
+		convocacao.getEmpregadoConvocacoes().forEach(eC -> {
+			eC.getEmpregadoConvocacaoExames().removeIf(x->x.getExame().getId() == 0);
+		});
+		this.save(convocacao);
+		
 		return Base64.getEncoder().encodeToString(zipArray);
 	}
 	

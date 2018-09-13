@@ -1,17 +1,17 @@
 select c.numero, c.contratado,c.nome, 
-	EXTRACT(DAY from c.dataNascimento) || '/' || EXTRACT(MONTH from c.dataNascimento) || '/' || EXTRACT(YEAR from c.dataNascimento) as dataNascimento, 
+	get_day_month(EXTRACT(DAY from c.dataNascimento)) || '/' || get_day_month(EXTRACT(MONTH from c.dataNascimento)) || '/' || EXTRACT(YEAR from c.dataNascimento) as dataNascimento, 
 	c.cargo, c.regime, c.cpf, c.sexo, c.rta, 
 	c.instalacao, pca.descricao as pcadescricao, ac.descricao as acdescricao, nl.descricao as nldescricao, 
 	COALESCE( g1.codigo||'/','')||COALESCE( g2.codigo||'/','')||COALESCE( g3.codigo||'/','')||g4.codigo as gerencia, 
 	c.classificacaoSisin, 
-	EXTRACT(DAY from c.diaHoraAcidente) || '/' || EXTRACT(MONTH from c.diaHoraAcidente) || '/' || EXTRACT(YEAR from c.diaHoraAcidente) as diaHoraAcidente,
+	get_day_month(EXTRACT(DAY from c.diaHoraAcidente)) || '/' || get_day_month(EXTRACT(MONTH from c.diaHoraAcidente)) || '/' || EXTRACT(YEAR from c.diaHoraAcidente) as diaHoraAcidente,
 	c.afastamento, 
-	EXTRACT(DAY from c.dataEmissaoCat) || '/' || EXTRACT(MONTH from c.dataEmissaoCat) || '/' || EXTRACT(YEAR from c.dataEmissaoCat) as dataEmissaoCat, 
+	get_day_month(EXTRACT(DAY from c.dataEmissaoCat)) || '/' || get_day_month(EXTRACT(MONTH from c.dataEmissaoCat)) || '/' || EXTRACT(YEAR from c.dataEmissaoCat) as dataEmissaoCat, 
 	c.gravidade, 
-	EXTRACT(DAY from c.dataAvaliacaoMedica) || '/' || EXTRACT(MONTH from c.dataAvaliacaoMedica) || '/' || EXTRACT(YEAR from c.dataAvaliacaoMedica) as dataAvaliacaoMedica, 
+	get_day_month(EXTRACT(DAY from c.dataAvaliacaoMedica)) || '/' || get_day_month(EXTRACT(MONTH from c.dataAvaliacaoMedica)) || '/' || EXTRACT(YEAR from c.dataAvaliacaoMedica) as dataAvaliacaoMedica, 
 	c.registroSd2000,
 	c.catSd2000, c.tipoAcidente, c.tipoCat, d.descricao, c.codigoCartaSindicato, c.comunicavelSus, c.ferimentoGraveConformeAnp,
-	EXTRACT(DAY from c.dataComunicacaoSindicato) || '/' || EXTRACT(MONTH from c.dataComunicacaoSindicato) || '/' || EXTRACT(YEAR from c.dataComunicacaoSindicato) as dataComunicacaoSindicato, 
+	get_day_month(EXTRACT(DAY from c.dataComunicacaoSindicato)) || '/' || get_day_month(EXTRACT(MONTH from c.dataComunicacaoSindicato)) || '/' || EXTRACT(YEAR from c.dataComunicacaoSindicato) as dataComunicacaoSindicato, 
 	c.remuneracao, f.razaosocial
 from cat c
 inner join partecorpoatingida pca on pca.id = c.partecorpoatingida_id

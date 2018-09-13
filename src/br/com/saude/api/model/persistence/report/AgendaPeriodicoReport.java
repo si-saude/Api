@@ -58,37 +58,38 @@ private static AgendaPeriodicoReport instance;
 		List<AgendaPeriodicoDto> agendaPeriodicos = new ArrayList<AgendaPeriodicoDto>();
 
 		Session session = HibernateHelper.getSession();
+		List<Object[]> list = new ArrayList<Object[]>();
 		
 		try {
-			List<Object[]> list = session.createSQLQuery(query.toString()).list();
-			AgendaPeriodicoDto agendaPeriodico = null;
-			
-			for(Object[] row : list) {
-				agendaPeriodico = new AgendaPeriodicoDto();
-				
-				agendaPeriodico.setEmpregadoId((int)row[0]);
-				agendaPeriodico.setEmpregadoNome((String)row[1]);
-				if ( sdf.parse(row[3].toString()).before(Helper.getToday()) && 
-						( !((String)row[2]).equals("ABERTA") && !((String)row[2]).equals("CANCELADA") && !((String)row[2]).equals("FINALIZADO") ) )
-					agendaPeriodico.setStatus("PENDENTE");
-				else if ( ((String)row[2]).equals("ABERTA") )
-					agendaPeriodico.setStatus( "AGENDADO" );
-				else agendaPeriodico.setStatus((String)row[2]); 
-				agendaPeriodico.setData((String)row[3].toString());
-				agendaPeriodico.setNomeServico((String)row[4].toString());
-				try {
-					agendaPeriodico.setPendencias((String)row[5].toString());
-				} catch(NullPointerException ex) {
-					agendaPeriodico.setPendencias("");
-				}
-				
-				agendaPeriodicos.add(agendaPeriodico);
-			}
+			list = session.createSQLQuery(query.toString()).list();
 		}catch (Exception ex) {
 			throw ex;
-		}
-		finally {
+		} finally {
 			HibernateHelper.close(session);
+		}
+		
+		AgendaPeriodicoDto agendaPeriodico = null;
+		
+		for(Object[] row : list) {
+			agendaPeriodico = new AgendaPeriodicoDto();
+			
+			agendaPeriodico.setEmpregadoId((int)row[0]);
+			agendaPeriodico.setEmpregadoNome((String)row[1]);
+			if ( sdf.parse(row[3].toString()).before(Helper.getToday()) && 
+					( !((String)row[2]).equals("ABERTA") && !((String)row[2]).equals("CANCELADA") && !((String)row[2]).equals("FINALIZADO") ) )
+				agendaPeriodico.setStatus("PENDENTE");
+			else if ( ((String)row[2]).equals("ABERTA") )
+				agendaPeriodico.setStatus( "AGENDADO" );
+			else agendaPeriodico.setStatus((String)row[2]); 
+			agendaPeriodico.setData((String)row[3].toString());
+			agendaPeriodico.setNomeServico((String)row[4].toString());
+			try {
+				agendaPeriodico.setPendencias((String)row[5].toString());
+			} catch(NullPointerException ex) {
+				agendaPeriodico.setPendencias("");
+			}
+			
+			agendaPeriodicos.add(agendaPeriodico);
 		}
 		
 		return agendaPeriodicos;

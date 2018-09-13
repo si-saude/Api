@@ -56,6 +56,8 @@ private static AvaliacaoHigieneOcupacionalBo instance;
 		return getByEntity(getDao().getByIdLoadAll(id),this.functionLoadAll);
 	}
 	
+
+	@SuppressWarnings({ "resource" })
 	public String avaliacaoHigienOcupacionalToPdf(AvaliacaoHigieneOcupacional avaliacaoHigieneOcupacional) throws Exception{
 		//OBTER O HTML DO RELATÓRIO		
 		StringBuilder html = new StringBuilder();

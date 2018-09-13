@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class TipoSolicitacao {
@@ -13,6 +14,7 @@ public class TipoSolicitacao {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
+	@Size(max = 128, message="Tamanho máximo para Nome do Tipo da Solicitação: 128")
 	@NotNull(message="É necessário informar o Nome do Tipo da Solicitação.")
 	private String nome;
 	

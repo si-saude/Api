@@ -30,7 +30,7 @@ public class Acao {
 	@Size(max = 128, message="Tamanho máximo para Tipo do Contato: 128")
 	private String tipoContato;
 	
-	@Size(max = 2048, message="Tamanho máximo para Status da Ação: 2048")
+	@Size(max = 2048, message="Tamanho máximo para Detalhe da Ação: 2048")
 	private String detalhe;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL )

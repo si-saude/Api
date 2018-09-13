@@ -3,6 +3,16 @@ package br.com.saude.api.model.entity.dto;
 public class AtestadoDto {
 	private String nomeEmpregado;
 	private String cid;
+	
+	private String matricula;
+	private String gerencia;
+	private String base;
+	
+	private int prazoRecebimento;
+	private boolean recebidoNoPrazo;
+	private String mesRecebimento;
+	private String fim;
+	
 	private int numeroDias;
 	private String inicio;
 	private boolean impossibilidadeLocomocao;
@@ -13,6 +23,15 @@ public class AtestadoDto {
 	private String dataSolicitacao;
 	private String dataAgendamento;
 	private String numeroCat;
+	
+	private String dataHomologacao;
+	private String dataEntrega;
+	private int prazoHomologacao;
+	private boolean homologacaoNoPrazo;
+	private String mesHomologacao;
+	private String medicoOdonto;
+	private String nomeProfissionalHomologacao;
+	private String observacao;
 	
 	public String getNomeEmpregado() {
 		return nomeEmpregado;
@@ -86,4 +105,95 @@ public class AtestadoDto {
 	public void setNumeroCat(String numeroCat) {
 		this.numeroCat = numeroCat;
 	}
+	public String getMatricula() {
+		return matricula;
+	}
+	public void setMatricula(String matricula) {
+		this.matricula = matricula;
+	}
+	public String getGerencia() {
+		return gerencia;
+	}
+	public void setGerencia(String gerencia) {
+		this.gerencia = gerencia;
+	}
+	public String getBase() {
+		return base;
+	}
+	public void setBase(String base) {
+		this.base = base;
+	}
+	public int getPrazoRecebimento() {
+		return prazoRecebimento;
+	}
+	public void setPrazoRecebimento(int prazoRecebimento) {
+		this.prazoRecebimento = prazoRecebimento;
+	}
+	public boolean isRecebidoNoPrazo() {
+		return recebidoNoPrazo;
+	}
+	public void setRecebidoNoPrazo(boolean recebidoNoPrazo) {
+		this.recebidoNoPrazo = recebidoNoPrazo;
+	}
+	public String getMesRecebimento() {
+		return mesRecebimento;
+	}
+	public void setMesRecebimento(String mesRecebimento) {
+		this.mesRecebimento = mesRecebimento;
+	}
+	public String getFim() {
+		return fim;
+	}
+	public void setFim(String fim) {
+		this.fim = fim;
+	}
+	public String getDataHomologacao() {
+		return dataHomologacao;
+	}
+	public void setDataHomologacao(String dataHomologacao) {
+		this.dataHomologacao = dataHomologacao;
+	}
+	public String getDataEntrega() {
+		return dataEntrega;
+	}
+	public void setDataEntrega(String dataEntrega) {
+		this.dataEntrega = dataEntrega;
+	}
+	public int getPrazoHomologacao() {
+		return prazoHomologacao;
+	}
+	public void setPrazoHomologacao(int prazoHomologacao) {
+		this.prazoHomologacao = prazoHomologacao;
+	}
+	public boolean isHomologacaoNoPrazo() {
+		return homologacaoNoPrazo;
+	}
+	public void setHomologacaoNoPrazo(boolean homologacaoNoPrazo) {
+		this.homologacaoNoPrazo = homologacaoNoPrazo;
+	}
+	public String getMesHomologacao() {
+		return mesHomologacao;
+	}
+	public void setMesHomologacao(String mesHomologacao) {
+		this.mesHomologacao = mesHomologacao;
+	}
+	public String getMedicoOdonto() {
+		return medicoOdonto;
+	}
+	public void setMedicoOdonto(String medicoOdonto) {
+		this.medicoOdonto = medicoOdonto;
+	}
+	public String getNomeProfissionalHomologacao() {
+		return nomeProfissionalHomologacao;
+	}
+	public void setNomeProfissionalHomologacao(String nomeProfissionalHomologacao) {
+		this.nomeProfissionalHomologacao = nomeProfissionalHomologacao;
+	}
+	public String getObservacao() {
+		return observacao;
+	}
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
+	
 }

@@ -46,6 +46,24 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=AtendimentoValidator.class)
+	@Path("/salvar-atendimento-avulso")
+	public Response salvarAtendimentoAvulso(Atendimento atendimento) {
+		try {
+			getBo().salvarAtentimentoAvulso(atendimento);
+			return Response.ok("Salvo com sucesso.").build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -53,6 +71,18 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	public Response registrarSolicitacaoAtendimento(Atendimento atendimento) {
 		try {
 			return Response.ok(getBo().registrarSolicitacaoAtendimento(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/registrar-solicitacao-exame-pericial")
+	public Response registrarSolicitacaoExamePericial(Atendimento atendimento) {
+		try {
+			return Response.ok(getBo().registrarSolicitacaoExamePericial(atendimento)).build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}

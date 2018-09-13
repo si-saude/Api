@@ -17,7 +17,7 @@ public class RequisitoAso {
 	private int id;
 	
 	@NotNull(message="É necessário informar o Conteúdo do Requisito.")
-	@Size(max = 50, message="Tamanho máximo para Conteúdo do Requisito: 1024")
+	@Size(max = 50, message="Tamanho máximo para Conteúdo do Requisito: 50")
 	private String conteudo;
 	
 	@Version

@@ -45,7 +45,6 @@ public class CargoBuilder extends GenericEntityBuilder<Cargo,CargoFilter> {
 		
 		newCargo.setId(cargo.getId());
 		newCargo.setNome(cargo.getNome());
-		newCargo.setOperador(cargo.getOperador());
 		newCargo.setVersion(cargo.getVersion());
 		
 		return newCargo;

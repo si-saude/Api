@@ -30,6 +30,7 @@ public class Servico {
 	@Size(max = 4, message="Tamanho máximo para Código do Serviço: 4")
 	private String codigo;
 	
+	@Size(max = 64, message="Tamanho máximo para Grupo do Serviço: 64")
 	@NotNull(message="É necessário informar Grupo do Serviço.")
 	private String grupo;
 	

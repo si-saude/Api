@@ -44,31 +44,33 @@ private static SolicitacaoCentralIntegraReport instance;
 		List<SolicitacaoCentralIntegraDto> solicitacaoCentralIntegras = new ArrayList<SolicitacaoCentralIntegraDto>();
 
 		Session session = HibernateHelper.getSession();
+		List<Object[]> list = new ArrayList<Object[]>();
 		
 		try {
-			List<Object[]> list = session.createSQLQuery(query.toString()).list();
-			SolicitacaoCentralIntegraDto solicitacaoCentralIntegra = null;
-			
-			for(Object[] row : list) {
-				solicitacaoCentralIntegra = new SolicitacaoCentralIntegraDto();
-				
-				solicitacaoCentralIntegra.setId((int)row[0]);
-				solicitacaoCentralIntegra.setNome((String)row[1]);
-				solicitacaoCentralIntegra.setDescricao((String)row[2]);
-				solicitacaoCentralIntegra.setPrazo((String)row[3]);
-				solicitacaoCentralIntegra.setAbertura((String)row[4]);
-				solicitacaoCentralIntegra.setAtrasado((boolean)row[5]);
-				solicitacaoCentralIntegra.setStatus((String)row[6]);
-				solicitacaoCentralIntegra.setObservacao((String)row[7]);
-				solicitacaoCentralIntegra.setConcluido((boolean)row[8]);
-				
-				solicitacaoCentralIntegras.add(solicitacaoCentralIntegra);
-			}
+			list = session.createSQLQuery(query.toString()).list();
 		}catch (Exception ex) {
 			throw ex;
 		}
 		finally {
 			HibernateHelper.close(session);
+		}
+		
+		SolicitacaoCentralIntegraDto solicitacaoCentralIntegra = null;
+		
+		for(Object[] row : list) {
+			solicitacaoCentralIntegra = new SolicitacaoCentralIntegraDto();
+			
+			solicitacaoCentralIntegra.setId((int)row[0]);
+			solicitacaoCentralIntegra.setNome((String)row[1]);
+			solicitacaoCentralIntegra.setDescricao((String)row[2]);
+			solicitacaoCentralIntegra.setPrazo((String)row[3]);
+			solicitacaoCentralIntegra.setAbertura((String)row[4]);
+			solicitacaoCentralIntegra.setAtrasado((boolean)row[5]);
+			solicitacaoCentralIntegra.setStatus((String)row[6]);
+			solicitacaoCentralIntegra.setObservacao((String)row[7]);
+			solicitacaoCentralIntegra.setConcluido((boolean)row[8]);
+			
+			solicitacaoCentralIntegras.add(solicitacaoCentralIntegra);
 		}
 		
 		return solicitacaoCentralIntegras;

@@ -45,37 +45,39 @@ private static RiscoPotencialReport instance;
 		List<RiscoPotencialDto> riscoPotenciais = new ArrayList<RiscoPotencialDto>();
 
 		Session session = HibernateHelper.getSession();
+		List<Object[]> list = new ArrayList<Object[]>();
 		
 		try {
-			List<Object[]> list = session.createSQLQuery(query.toString()).list();
-			RiscoPotencialDto riscoPotencial = null;
-			
-			for(Object[] row : list) {
-				riscoPotencial = new RiscoPotencialDto();
-				
-				riscoPotencial.setId((int) row[0]);
-				riscoPotencial.setRanking((double)row[1]);
-				
-				if ( riscoPotencial.getRanking() > 0 && riscoPotencial.getRanking() < 0.6 )
-					riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().ACEITAVEL);
-				else if ( riscoPotencial.getRanking() >= 0.6 && riscoPotencial.getRanking() < 0.8 )
-					riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().TOLERAVEL);
-				else if ( riscoPotencial.getRanking() >= 0.8 )
-					riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().INACEITAVEL);
-					
-				riscoPotencial.setEmpregadoNome((String)row[2]);
-				riscoPotencial.setEquipeResponsavelNome((String)row[3]);
-				riscoPotencial.setData((String)row[4]);
-				riscoPotencial.setStatus((String)row[5]);
-				riscoPotencial.setAbreviacaoEquipeAcolhimento((String)row[6]);
-					
-				riscoPotenciais.add(riscoPotencial);
-			}
+			list = session.createSQLQuery(query.toString()).list();
 		}catch (Exception ex) {
 			throw ex;
 		}
 		finally {
 			HibernateHelper.close(session);
+		}
+		
+		RiscoPotencialDto riscoPotencial = null;
+		
+		for(Object[] row : list) {
+			riscoPotencial = new RiscoPotencialDto();
+			
+			riscoPotencial.setId((int) row[0]);
+			riscoPotencial.setRanking((double)row[1]);
+			
+			if ( riscoPotencial.getRanking() > 0 && riscoPotencial.getRanking() < 0.6 )
+				riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().ACEITAVEL);
+			else if ( riscoPotencial.getRanking() >= 0.6 && riscoPotencial.getRanking() < 0.8 )
+				riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().TOLERAVEL);
+			else if ( riscoPotencial.getRanking() >= 0.8 )
+				riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().INACEITAVEL);
+				
+			riscoPotencial.setEmpregadoNome((String)row[2]);
+			riscoPotencial.setEquipeResponsavelNome((String)row[3]);
+			riscoPotencial.setData((String)row[4]);
+			riscoPotencial.setStatus((String)row[5]);
+			riscoPotencial.setAbreviacaoEquipeAcolhimento((String)row[6]);
+				
+			riscoPotenciais.add(riscoPotencial);
 		}
 		
 		return riscoPotenciais;
