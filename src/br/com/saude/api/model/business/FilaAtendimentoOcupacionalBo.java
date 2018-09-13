@@ -19,11 +19,14 @@ import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.FilaAtendimentoOcupacionalExampleBuilder;
 import br.com.saude.api.model.creation.factory.entity.FilaAtendimentoOcupacionalAtualizacaoFactory;
 import br.com.saude.api.model.entity.filter.AtendimentoFilter;
+import br.com.saude.api.model.entity.filter.EmpregadoFilter;
+import br.com.saude.api.model.entity.filter.EquipeFilter;
 import br.com.saude.api.model.entity.filter.FilaAtendimentoOcupacionalFilter;
 import br.com.saude.api.model.entity.filter.LocalizacaoFilter;
 import br.com.saude.api.model.entity.filter.ProfissionalFilter;
 import br.com.saude.api.model.entity.filter.RiscoEmpregadoFilter;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
+import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.filter.TriagemFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
@@ -34,6 +37,7 @@ import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.FilaAtendimentoOcupacionalDao;
+import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
 
@@ -495,11 +499,25 @@ public class FilaAtendimentoOcupacionalBo
 								.getById(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId()));
 				}
 				
+				//E SE JÁ TIVER UMA TAREFA DE ENFERMAGEM CONCLUÍDA
+				TarefaFilter tF = new TarefaFilter();
+				tF.setPageNumber(1);
+				tF.setPageSize(1);
+				tF.setCliente(new EmpregadoFilter());
+				tF.getCliente().setId(atendimentoAux.getTarefa().getCliente().getId());
+				tF.setServico(new ServicoFilter());
+				tF.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
+				tF.getServico().setCodigo("0003");
+				tF.setEquipe(new EquipeFilter());
+				tF.getEquipe().setAbreviacao("ENF");
+				tF.setStatus(StatusTarefa.getInstance().CONCLUIDA);
+				
 				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares() != null &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getRiscosInterdiciplinares().size() > 0 &&
 						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getAbreviacaoEquipeAcolhimento().equals(
-								fila.getProfissional().getEquipe().getAbreviacao())) {
+								fila.getProfissional().getEquipe().getAbreviacao()) &&
+						TarefaBo.getInstance().getList(tF).getTotal() > 0) {
 					
 					
 					if((atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getEquipeResponsavel() == null || 
@@ -508,7 +526,6 @@ public class FilaAtendimentoOcupacionalBo
 							atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().setEquipeResponsavel(
 									atendimento.getFilaEsperaOcupacional().getRiscoPotencial().
 									getRiscosInterdiciplinares().get(0).getEquipe());
-					
 					
 					if(atendimento.getTriagensTodosAtendimentos() == null || atendimento.getTriagensTodosAtendimentos().size() == 0) {
 						//OBTER TODAS AS TRIAGENS

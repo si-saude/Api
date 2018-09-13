@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.Triagem;
@@ -42,6 +43,9 @@ public class TriagemDao extends GenericDao<Triagem> {
 				triagem.setRiscoEmpregado(
 						(RiscoEmpregado) Hibernate.unproxy(triagem.getRiscoEmpregado()));
 			
+			if( triagem.getAtendimento() != null )
+				triagem.setAtendimento((Atendimento)Hibernate.unproxy(triagem.getAtendimento()));
+			
 			return triagem;
 		};
 	}
@@ -49,5 +53,10 @@ public class TriagemDao extends GenericDao<Triagem> {
 	@Override
 	public PagedList<Triagem> getList(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
 		return super.getList(exampleBuilder,this.functionLoadAll);
+	}
+	
+	@Override
+	public Triagem getById(Object id) throws Exception {
+		return super.getById(id,this.functionLoadAll);
 	}
 }

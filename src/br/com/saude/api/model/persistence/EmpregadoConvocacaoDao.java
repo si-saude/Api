@@ -154,6 +154,8 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 			}
 		}
 		
+//		criteria.addOrder(Order.desc("id"));
+		
 		return criteria;
 	}
 }

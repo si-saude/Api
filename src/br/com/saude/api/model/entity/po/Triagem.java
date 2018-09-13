@@ -25,6 +25,7 @@ public class Triagem {
 	private IndicadorSast indicadorSast;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
+	@NotNull(message="É necessário informar o Atendimento da Triagem.")
 	private Atendimento atendimento;
 	
 	private int indice = -1;

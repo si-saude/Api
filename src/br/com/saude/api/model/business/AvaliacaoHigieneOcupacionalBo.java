@@ -12,7 +12,6 @@ import java.util.Base64;
 import java.util.Objects;
 
 import com.itextpdf.text.Document;
-import com.itextpdf.text.html.simpleparser.HTMLWorker;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import br.com.saude.api.generic.BooleanFilter;
@@ -57,7 +56,6 @@ private static AvaliacaoHigieneOcupacionalBo instance;
 		return getByEntity(getDao().getByIdLoadAll(id),this.functionLoadAll);
 	}
 	
-	@SuppressWarnings({ "deprecation", "resource" })
 	public String avaliacaoHigienOcupacionalToPdf(AvaliacaoHigieneOcupacional avaliacaoHigieneOcupacional) throws Exception{
 		//OBTER O HTML DO RELATÓRIO		
 		StringBuilder html = new StringBuilder();

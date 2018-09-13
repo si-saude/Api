@@ -1,6 +1,7 @@
 package br.com.saude.api.model.business;
 
 import java.util.List;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
@@ -33,13 +34,23 @@ public class TriagemBo extends GenericBo<Triagem, TriagemFilter, TriagemDao, Tri
 		};
 		
 		this.functionLoadAll = builder -> {
-			return builder.loadIndicadorEquipe().loadRiscoEmpregado();
+			return builder.loadIndicadorEquipe().loadRiscoEmpregado().loadAtendimento();
 		};
+	}
+	
+	@Override
+	public Triagem getById(Object id) throws Exception {
+		return super.getById(id,this.functionLoadAll);
 	}
 	
 	@Override
 	public PagedList<Triagem> getList(TriagemFilter filter) throws Exception {
 		return super.getList(filter,this.functionLoadAll);
+	}
+	
+	@Override
+	protected Triagem getById(Object id, Function<TriagemBuilder, TriagemBuilder> loadFunction) throws Exception {
+		return super.getById(id, this.functionLoadAll);
 	}
 
 	public void saveListTriagem(List<Triagem> triagens) throws Exception {

@@ -1,5 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
@@ -8,6 +9,7 @@ import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.po.Convocacao;
+import br.com.saude.api.util.constant.TipoConvocacao;
 
 public class ConvocacaoExampleBuilder extends GenericExampleBuilder<Convocacao, ConvocacaoFilter> {
 
@@ -48,8 +50,13 @@ public class ConvocacaoExampleBuilder extends GenericExampleBuilder<Convocacao, 
 	}
 	
 	private void addTipo() {
-		if(this.filter.getTipo() != null && !this.filter.getTipo().equals(""))
-			this.entity.setTipo(Helper.filterLike(this.filter.getTipo()));
+		if(this.filter.getTipo() != null) {
+			if(!this.filter.getTipo().equals(""))
+				this.entity.setTipo(Helper.filterLike(this.filter.getTipo()));
+			if (this.filter.getTipo().equals(TipoConvocacao.PERIODICO) && 
+					(this.filter.getTitulo() == null || this.filter.getTitulo().equals("")))
+				this.criterions.add(Restrictions.not(Restrictions.ilike("titulo", Helper.filterLike("ADIANTADO"))));
+		}
 	}
 	
 	private void addTitulo() {

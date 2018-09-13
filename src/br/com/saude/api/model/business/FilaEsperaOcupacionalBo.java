@@ -440,6 +440,7 @@ public class FilaEsperaOcupacionalBo
 			tarefaFilter.getCliente().setMatricula(fila.getEmpregado().getMatricula());
 			tarefaFilter.setServico(new ServicoFilter());
 			tarefaFilter.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
+			tarefaFilter.setStatus(StatusTarefa.getInstance().ABERTA);
 			
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(today);
@@ -451,10 +452,10 @@ public class FilaEsperaOcupacionalBo
 			tarefaFilter.getInicio().setFim(calendar.getTime());
 			
 			PagedList<Tarefa> tarefas = TarefaBo.getInstance()
-				.getList(TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluidoCancelado());
+				.getList(TarefaExampleBuilder.newInstance(tarefaFilter).example());
 			
 			if(tarefas.getTotal() == 0)
-				throw new Exception("Não há agendamento para este Empregado.");
+				throw new Exception("Não há atendimento pendente agendado para este Empregado hoje.");
 			
 			//OBTER A EQUIPE DE ACOLHIMENTO
 			if(tarefas.getList().stream().filter(t->t.getEquipe().getAbreviacao().equals("ACO"))
@@ -480,6 +481,11 @@ public class FilaEsperaOcupacionalBo
 			PagedList<RiscoPotencial> riscos = RiscoPotencialBo.getInstance().getListLoadAll(riscoFilter);
 			if(riscos.getTotal() > 0) {
 				risco = riscos.getList().get(0);
+				
+				risco = RiscoPotencialBo.getInstance().getById(risco.getId());
+				RiscoPotencial riscoAux = risco;
+				if(risco.getRiscoEmpregados() != null)
+					risco.getRiscoEmpregados().forEach(r->r.setRiscoPotencial(riscoAux));
 				
 				FilaEsperaOcupacionalFilter filaFilter = new FilaEsperaOcupacionalFilter();
 				filaFilter.setPageNumber(1);
@@ -589,6 +595,21 @@ public class FilaEsperaOcupacionalBo
 				fila.setRiscoPotencial(null);
 			if(risco!=null && risco.getId() > 0)
 				fila.setRiscoPotencial(risco);
+		}
+		
+		if(fila.getRiscoPotencial() != null && fila.getRiscoPotencial().getRiscoEmpregados() != null) {
+			fila.getRiscoPotencial().getRiscoEmpregados().forEach(r->{
+				if(r.getTriagens() != null) {
+					for(int i = 0; i < r.getTriagens().size(); i++) {
+						try {
+							r.getTriagens().set(i, TriagemBo.getInstance().getById(r.getTriagens().get(i).getId()));
+							r.getTriagens().get(i).setRiscoEmpregado(r);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}						
+					}
+				}
+			});
 		}
 		
 		// 9 - INSERIR NO BANCO
@@ -965,15 +986,16 @@ public class FilaEsperaOcupacionalBo
 								//SE DEPENDER DE ALGUMA EQUIPE...
 								if(rE.getRegraAtendimentoEquipeRequisitos().size() > 0) {
 									
-									if(aList.getTotal() == 0)
+									if(aList.getList() == null || aList.getList().size() == 0)
 										continue;
 									
-									if(rE.getRegraAtendimentoEquipeRequisitos().size() > aList.getTotal()) {
+									boolean temHo = true;
+									
+									if(rE.getRegraAtendimentoEquipeRequisitos().size() > aList.getList().size()) {
 										//VERIFICAR SE O EMPREGADO TEM TAREFA DE HO EM ABERTO, COM A MESMA DATA DA TAREFA
 										//PENDENTE, SE EXISTIR, OU DATA ATUAL. SE EXISTIR, CONTINUAR
 										
 										TarefaFilter tarefaFilterHo = criarFiltroTarefa(filaEspera);
-										tarefaFilterHo.setStatus(StatusTarefa.getInstance().ABERTA);
 										tarefaFilterHo.setEquipe(new EquipeFilter());
 										tarefaFilterHo.getEquipe().setAbreviacao("HIG");
 										tarefaFilterHo.getServico().setCodigo("0003");
@@ -995,15 +1017,16 @@ public class FilaEsperaOcupacionalBo
 										
 										if(tHo.getTotal() > 0)
 											continue;
+										else
+											temHo = false;
 									}
 									
 									List<Atendimento> listAtendimento = aList.getList();
 									if(rE.getRegraAtendimentoEquipeRequisitos().stream().filter(r-> {
 										return listAtendimento.stream().filter(a->{
-											return a.getFilaAtendimentoOcupacional().getProfissional()
-													.getEquipe().getId() == r.getEquipe().getId();
+											return a.getTarefa().getEquipe().getId() == r.getEquipe().getId();
 										}).count() > 0;
-									}).count() != rE.getRegraAtendimentoEquipeRequisitos().size())
+									}).count() != (rE.getRegraAtendimentoEquipeRequisitos().size() - (rE.isAcolhimento() && !temHo ? 1 : 0) ))
 										continue;
 									
 									//SE FOR ACOLHIMENTO, 

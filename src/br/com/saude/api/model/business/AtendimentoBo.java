@@ -465,9 +465,11 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		String tipoTipoAtendimento = getTipoAtendimento(atendimento);
 		
 		switch(tipoTipoAtendimento) {
+			case "VALIDAÇÃO DE ASO":
 			case TipoConvocacao.PERIODICO:
+			case TipoConvocacao.RETORNO_AO_TRABALHO:
 				meses = 12;
-				break;
+				break;				
 		}
 		
 		return Date.from(LocalDateTime.ofInstant(Helper.getToday().toInstant(), ZoneId.systemDefault())
@@ -489,6 +491,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				.getEmpregado().getId());
 		tarefaFilter.setServico(new ServicoFilter());
 		tarefaFilter.getServico().setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
+		tarefaFilter.getServico().setCodigo(atendimento.getTarefa().getServico().getCodigo());
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(today);
@@ -552,7 +555,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 					case "0003":
 						return TipoConvocacao.PERIODICO;
 					case "1003":
-						return TipoConvocacao.PERIODICO;
+						return "VALIDAÇÃO DE ASO";
 						
 					//RETORNO AO TRABALHO
 					case "0004":
@@ -585,11 +588,15 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		return "***";
 	}
 	
+	@SuppressWarnings("deprecation")
 	public EmpregadoConvocacaoFilter configureEmpregadoConvocacaoFilter(Atendimento atendimento) {
 		String tipoAtendimento = getTipoAtendimento(atendimento);
 		
-		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO, CUJA DATA INFORMADA ESTÁ NO PERÍODO
-		// DO CRONOGRAMA, CUJO TIPO DA CONVOCAÇÃO CORRESPONDA AO SERVIÇO SELECIONADO
+		Date primeiroDiaAno = Helper.getToday();
+		primeiroDiaAno.setDate(1);
+		primeiroDiaAno.setMonth(0);
+		
+		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO
 		EmpregadoConvocacaoFilter empConFilter = new EmpregadoConvocacaoFilter();
 		empConFilter.setPageNumber(1);
 		empConFilter.setPageSize(1);
@@ -597,12 +604,15 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		empConFilter.getEmpregado().setId(atendimento.getTarefa().getCliente().getId());
 		empConFilter.setConvocacao(new ConvocacaoFilter());
 		empConFilter.getConvocacao().setInicio(new DateFilter());
-		empConFilter.getConvocacao().getInicio().setTypeFilter(TypeFilter.MENOR_IGUAL);
-		empConFilter.getConvocacao().getInicio().setInicio(atendimento.getTarefa().getInicio());
-		empConFilter.getConvocacao().setFim(new DateFilter());
-		empConFilter.getConvocacao().getFim().setTypeFilter(TypeFilter.MAIOR_IGUAL);
-		empConFilter.getConvocacao().getFim().setInicio(atendimento.getTarefa().getInicio());
-		empConFilter.getConvocacao().setTipo(tipoAtendimento);
+		empConFilter.getConvocacao().getInicio().setTypeFilter(TypeFilter.MAIOR_IGUAL);
+		empConFilter.getConvocacao().getInicio().setInicio(primeiroDiaAno);
+		
+		if(tipoAtendimento.equals("VALIDAÇÃO DE ASO")) {
+			empConFilter.getConvocacao().setTipo(TipoConvocacao.PERIODICO);
+			empConFilter.getConvocacao().setTitulo("ADIANTADO");
+		}
+		else
+			empConFilter.getConvocacao().setTipo(tipoAtendimento);
 		return empConFilter;
 	}
 	
