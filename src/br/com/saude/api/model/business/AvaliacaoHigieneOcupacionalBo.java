@@ -12,6 +12,7 @@ import java.util.Base64;
 import java.util.Objects;
 
 import com.itextpdf.text.Document;
+import com.itextpdf.text.html.simpleparser.HTMLWorker;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import br.com.saude.api.generic.BooleanFilter;
