@@ -105,7 +105,7 @@ public abstract class GenericDao<T> {
 		return entities;
 	}
 	
-	private long getCount(Session session, GenericExampleBuilder<?,?> exampleBuilder) {
+	protected long getCount(Session session, GenericExampleBuilder<?,?> exampleBuilder) {
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(entityType);
 		

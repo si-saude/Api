@@ -100,6 +100,7 @@ public class TarefaExampleBuilder extends GenericExampleBuilder<Tarefa, TarefaFi
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
 		addInicio();
 		addFim();
 		addAtualizacao();
@@ -113,6 +114,10 @@ public class TarefaExampleBuilder extends GenericExampleBuilder<Tarefa, TarefaFi
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		
+	}
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
 	}
 	
 	private void addInicio() {

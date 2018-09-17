@@ -44,6 +44,20 @@ public class FilaEsperaOcupacionalService extends GenericServiceImpl<FilaEsperaO
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
+	}	
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/save-fila-espera-ocupacional-retroativo")
+	public Response checkInRetroativo(FilaEsperaOcupacionalFilter filter) {
+		try {
+			getBo().checkInRetroativo(filter);
+			return Response.ok("Salvo com sucesso.").build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 	}
 	
 	@POST

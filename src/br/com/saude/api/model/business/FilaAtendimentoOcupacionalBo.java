@@ -33,6 +33,8 @@ import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
+import br.com.saude.api.model.entity.po.Localizacao;
+import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Triagem;
@@ -639,5 +641,33 @@ public class FilaAtendimentoOcupacionalBo
 	public PagedList<FilaAtendimentoOcupacional> 
 		getListAll(PagedList<FilaAtendimentoOcupacional> pagedList) throws Exception {
 		return super.getList(pagedList, this.functionLoadAll);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public FilaAtendimentoOcupacional saveFilaAtendimentoOcupacionalRetroativo (FilaAtendimentoOcupacionalFilter filter) throws Exception {
+		
+		FilaAtendimentoOcupacional filaAtendimentoOcupacional = new FilaAtendimentoOcupacional();
+	    filter.getInicio().setFim(new Date(filter.getInicio().getInicio().getTime()));
+		filter.setPageNumber(1);
+		filter.setPageSize(1);
+		
+		PagedList<FilaAtendimentoOcupacional> filasAtendimentoOcupacional = this.getList(filter);
+        if(filasAtendimentoOcupacional.getTotal() == 0) {
+
+			filaAtendimentoOcupacional.setLocalizacao(new Localizacao());
+			filaAtendimentoOcupacional.getLocalizacao().setId(Integer.parseInt(new Long(filter.getLocalizacao().getId()).toString()));
+			filter.getInicio().getInicio().setHours(8);
+			filter.getInicio().getFim().setHours(16);
+			filaAtendimentoOcupacional.setInicio(filter.getInicio().getInicio());
+			filaAtendimentoOcupacional.setInicio(filter.getInicio().getFim());
+			filaAtendimentoOcupacional.setAtualizacao(Helper.getNow());
+			filaAtendimentoOcupacional.setProfissional(new Profissional());
+			filaAtendimentoOcupacional.getProfissional().setId(Integer.parseInt(new Long(filter.getProfissional().getId()).toString()));
+			filaAtendimentoOcupacional.setStatus(StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO_AUTOMATICAMENTE);			
+	        
+        }else 
+        	return filasAtendimentoOcupacional.getList().get(0);
+		
+		return super.save(filaAtendimentoOcupacional);
 	}
 }

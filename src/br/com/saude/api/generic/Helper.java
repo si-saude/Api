@@ -44,6 +44,8 @@ public class Helper {
 		if(dateFilter != null && dateFilter.getInicio() != null) {
 			switch(dateFilter.getTypeFilter()) {
 				case ENTRE:
+					dateFilter.getInicio().setHours(0);
+					dateFilter.getInicio().setMinutes(0);
 					dateFilter.getFim().setHours(23);
 					dateFilter.getFim().setMinutes(59);
 					return Restrictions.between(propertyName, 

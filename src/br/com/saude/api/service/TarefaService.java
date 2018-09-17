@@ -55,6 +55,16 @@ public class TarefaService extends GenericServiceImpl<Tarefa,TarefaFilter,Tarefa
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-atendimento-avulso")
+	public Response getListAtendimentoAvulso(TarefaFilter filter) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return Response.ok(getBo().getListAtendimentoAvulso(filter).getGenericPagedList()).build();
+	}
 
 	@Override
 	@POST
