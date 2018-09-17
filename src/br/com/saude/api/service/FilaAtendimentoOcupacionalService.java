@@ -42,6 +42,20 @@ public class FilaAtendimentoOcupacionalService extends GenericServiceImpl<FilaAt
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
+	}	
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/save-fila-atendimento-ocupacional-retroativo")
+	public Response saveFilaAtendimentoOcupacionalRetroativo(FilaAtendimentoOcupacionalFilter filter) {
+		try {
+			getBo().saveFilaAtendimentoOcupacionalRetroativo(filter);
+			return Response.ok("Salvo com sucesso.").build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 	}
 	
 	@RequestInterceptor

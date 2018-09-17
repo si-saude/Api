@@ -44,25 +44,7 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
-	}
-	
-	
-	
-	@RequestInterceptor
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=AtendimentoValidator.class)
-	@Path("/salvar-atendimento-avulso")
-	public Response salvarAtendimentoAvulso(Atendimento atendimento) {
-		try {
-			getBo().salvarAtentimentoAvulso(atendimento);
-			return Response.ok("Salvo com sucesso.").build();
-		}catch (Exception e) {
-			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
-		}
-	}
-	
+	}	
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -162,6 +144,20 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@CustomValidator(validatorClass=AtendimentoValidator.class)
+	@Path("/finalizar-retroativo")
+	public Response finalizarRetroativo(Atendimento atendimento) {
+		try {
+			return Response.ok(getBo().finalizarRetroativo(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=AtendimentoValidator.class)
 	@Path("/finalizar-pausar")
 	public Response finalizarPausar(Atendimento atendimento) {
 		try {
@@ -216,6 +212,19 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	public Response atualizar(Atendimento atendimento) {
 		try {
 			return Response.ok(FilaAtendimentoOcupacionalBo.getInstance().atualizar(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/complemento-atendimento-avulso")
+	public Response getComplementoAtendimentoAvulso(Atendimento atendimento) {
+		try {
+			return Response.ok(getBo().getComplementoAtendimentoAvulso(atendimento)).build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
