@@ -93,7 +93,7 @@ public class ConvocacaoService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/processar-convocacao")
 	public Response processarConvocacao(Convocacao convocacao) throws Exception {
-		return Response.ok(getBo().processarConvocacao(convocacao)).build();
+		return Response.ok(getBo().processarConvocacaoBase64(convocacao)).build();
 	}
 
 	@Override

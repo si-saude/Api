@@ -32,6 +32,10 @@ public class AtestadoExampleBuilder extends GenericExampleBuilder<Atestado, Ates
 		addCiente();
 		addEmpregado();
 		addMotivoRecusa();
+		addLancamentoSd2000();
+		addAusenciaExames();
+		addDataAuditoria();
+		addConvocado();
 	}
 	
 	@Override
@@ -69,6 +73,18 @@ public class AtestadoExampleBuilder extends GenericExampleBuilder<Atestado, Ates
 		this.entity.setCiente(this.addBoolean("ciente", this.filter.getCiente()));
 	}
 	
+	protected void addLancamentoSd2000() {
+		this.entity.setLancamentoSd2000(this.addBoolean("lancamentoSd2000", this.filter.getLancamentoSd2000()));
+	}
+	
+	protected void addAusenciaExames() {
+		this.entity.setAusenciaExames(this.addBoolean("ausenciaExames", this.filter.getAusenciaExames()));
+	}
+	
+	protected void addConvocado() {
+		this.entity.setConvocado(this.addBoolean("convocado", this.filter.getConvocado()));
+	}
+	
 	private void addId() {
 		if(this.filter.getId() > 0)
 			this.criterions.add(Restrictions.eq("id", this.filter.getId()));
@@ -88,5 +104,9 @@ public class AtestadoExampleBuilder extends GenericExampleBuilder<Atestado, Ates
 					.newInstance(this.filter.getMotivoRecusa()).getCriteriaExample();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("motivoRecusa", criteriaExample, JoinType.INNER_JOIN));
 		}
+	}
+	
+	private void addDataAuditoria() {
+		super.addData("dataAuditoria", this.filter.getDataAuditoria());
 	}
 }
