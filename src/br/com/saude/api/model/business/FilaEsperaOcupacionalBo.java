@@ -220,8 +220,7 @@ public class FilaEsperaOcupacionalBo
 		StringBuilder html = new StringBuilder();
 		String line;
 		
-		URI uriDoc = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				.replace("/WEB-INF/classes", "")+"REPORT/DeclaracaoComparecimento.html");
+		URI uriDoc = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "")+"REPORT/DeclaracaoComparecimento.html");
 		
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(uriDoc.getPath()));
 		
@@ -234,8 +233,7 @@ public class FilaEsperaOcupacionalBo
 		//CONFIGURAR DIRETÓRIO DOS PDFs
 		URI pdfUri;
 		File pdf;
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				+"declaracaoComparecimento/");
+		URI uri = new URI(Helper.getProjectPath()+"declaracaoComparecimento/");
 		File file = new File(uri.getPath());
 		file.mkdirs();
 		
@@ -269,16 +267,13 @@ public class FilaEsperaOcupacionalBo
 		URI assinatura = null;
 		
 		try {
-			 assinatura = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() 
-					+ "empregado/assinatura/" + profissional.getEmpregado().getId() + ".png");
+			 assinatura = new URI(Helper.getProjectPath() + "empregado/assinatura/" + profissional.getEmpregado().getId() + ".png");
 		} catch (Exception e) {
 			assinatura = null;
 		}
 				
-		URI logoUri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
-		URI np2 = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				.replace("/WEB-INF/classes", "")+"IMAGE/np-2.png");
+		URI logoUri = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
+		URI np2 = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "")+"IMAGE/np-2.png");
 		
 		stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath())
 				.replace("np2", np2.getPath());

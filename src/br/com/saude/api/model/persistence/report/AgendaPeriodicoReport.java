@@ -29,8 +29,7 @@ private static AgendaPeriodicoReport instance;
 	public List<AgendaPeriodicoDto> getAgendaPeriodicos(String dataInicioInicio, String dataInicioFim, String servicoId) 
 			throws Exception {
 		
-		BufferedReader in = new BufferedReader(new FileReader(getClass().getProtectionDomain()
-				.getCodeSource().getLocation().toString().replace("file:/", "")
+		BufferedReader in = new BufferedReader(new FileReader(Helper.getProjectPath().replace("file:/", "")
 				+"br/com/saude/api/model/persistence/sql/QueryAgendaPeriodico.sql"));
 		String str;
 		StringBuffer query = new StringBuffer();

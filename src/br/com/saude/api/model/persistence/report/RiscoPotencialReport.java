@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.model.entity.dto.RiscoPotencialDto;
 import br.com.saude.api.util.constant.StatusRPSat;
@@ -29,8 +30,7 @@ private static RiscoPotencialReport instance;
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public List<RiscoPotencialDto> getRiscoPotenciais(String uf) throws IOException {
 		
-		BufferedReader in = new BufferedReader(new FileReader(getClass().getProtectionDomain()
-				.getCodeSource().getLocation().toString().replace("file:/", "")
+		BufferedReader in = new BufferedReader(new FileReader(Helper.getProjectPath().replace("file:/", "")
 				+"br/com/saude/api/model/persistence/sql/QueryRiscoPotencial.sql"));
 		String str;
 		StringBuffer query = new StringBuffer();
@@ -64,11 +64,11 @@ private static RiscoPotencialReport instance;
 			riscoPotencial.setId((int) row[0]);
 			riscoPotencial.setRanking((double)row[1]);
 			
-			if ( riscoPotencial.getRanking() > 0 && riscoPotencial.getRanking() < 0.6 )
+			if ( riscoPotencial.getRanking() > 0 && riscoPotencial.getRanking() < 0.57 )
 				riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().ACEITAVEL);
-			else if ( riscoPotencial.getRanking() >= 0.6 && riscoPotencial.getRanking() < 0.8 )
+			else if ( riscoPotencial.getRanking() >= 0.57 && riscoPotencial.getRanking() < 0.72 )
 				riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().TOLERAVEL);
-			else if ( riscoPotencial.getRanking() >= 0.8 )
+			else if ( riscoPotencial.getRanking() >= 0.72 )
 				riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().INACEITAVEL);
 				
 			riscoPotencial.setEmpregadoNome((String)row[2]);

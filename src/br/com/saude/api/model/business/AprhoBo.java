@@ -146,8 +146,7 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 		StringBuilder html = new StringBuilder();
 		String line;
 
-		URI uriDoc = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				.replace("/WEB-INF/classes", "") + "REPORT/aprho.html");
+		URI uriDoc = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "") + "REPORT/aprho.html");
 
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(uriDoc.getPath()));
 
@@ -157,14 +156,13 @@ public class AprhoBo extends GenericBo<Aprho, AprhoFilter, AprhoDao, AprhoBuilde
 
 		bufferedReader.close();
 
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "aprho/");
+		URI uri = new URI(Helper.getProjectPath() + "aprho/");
 		File file = new File(uri.getPath());
 		file.mkdirs();
 		StringReplacer stringReplacer = new StringReplacer(html.toString());
 		//
 
-		URI logoUri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				.replace("/WEB-INF/classes", "") + "IMAGE/petrobras.png");
+		URI logoUri = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "") + "IMAGE/petrobras.png");
 
 		File imgPathLogo = new File(logoUri.getPath());
 

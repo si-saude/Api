@@ -99,4 +99,13 @@ public class Helper {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
+	
+	public static String getProjectPath() {
+		boolean isRunningOnXampp = false;
+		
+		if(isRunningOnXampp)
+			return "C:/Users/BJZE/Downloads/xampp/tomcat/webapps/Api/WEB-INF/classes/";
+		else
+			return Helper.class.getProtectionDomain().getCodeSource().getLocation().toString();
+	}
 }

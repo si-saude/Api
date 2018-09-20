@@ -35,8 +35,8 @@ public class AtestadoReport {
 	public List<AtestadoDto> getAtestados() throws Exception {
 
 		BufferedReader in = new BufferedReader(new FileReader(
-				getClass().getProtectionDomain().getCodeSource().getLocation().toString().replace("file:/", "")
-						+ "br/com/saude/api/model/persistence/sql/QueryAtestado.sql"));
+				Helper.getProjectPath().replace("file:/", "") 
+					+ "br/com/saude/api/model/persistence/sql/QueryAtestado.sql"));
 		String str;
 		StringBuffer query = new StringBuffer();
 		while ((str = in.readLine()) != null) {

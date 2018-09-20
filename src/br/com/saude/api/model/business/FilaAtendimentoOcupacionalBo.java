@@ -486,12 +486,6 @@ public class FilaAtendimentoOcupacionalBo
 				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null
 						&& atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId() > 0) {
 					
-					if(atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial() != null
-							&& atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId() > 0) {
-						atendimento.getFilaEsperaOcupacional().getRiscoPotencial().setVersion(
-								atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getVersion());
-					}
-					
 					atendimentoAux.getFilaEsperaOcupacional().setRiscoPotencial(
 							atendimento.getFilaEsperaOcupacional().getRiscoPotencial());
 				}

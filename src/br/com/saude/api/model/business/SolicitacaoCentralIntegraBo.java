@@ -134,7 +134,7 @@ public class SolicitacaoCentralIntegraBo
 	
 	@SuppressWarnings("resource")
 	public String getAnexo(int id) throws Exception {
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "solicitacaoCentralIntegra/anexo/"
+		URI uri = new URI(Helper.getProjectPath() + "solicitacaoCentralIntegra/anexo/"
 				+ id + ".zip");
 		
 		File anexoPath = new File(uri.getPath());
@@ -155,7 +155,7 @@ public class SolicitacaoCentralIntegraBo
 	@SuppressWarnings("resource")
 	private SolicitacaoCentralIntegra loadFiles(SolicitacaoCentralIntegra solicitacao) throws URISyntaxException {
 
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "solicitacaoCentralIntegra/anexo/"
+		URI uri = new URI(Helper.getProjectPath() + "solicitacaoCentralIntegra/anexo/"
 				+ solicitacao.getId() + ".zip");
 
 		File anexoPath = new File(uri.getPath());
@@ -176,7 +176,7 @@ public class SolicitacaoCentralIntegraBo
 	private void saveFiles(SolicitacaoCentralIntegra solicitacao) throws URISyntaxException, IOException {
 		if (solicitacao.getAnexo() != null) {
 			
-			URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+			URI uri = new URI(Helper.getProjectPath()
 					+ "solicitacaoCentralIntegra/anexo/" + solicitacao.getId() + ".zip");
 			File file = new File(uri.getPath());
 			file.getParentFile().mkdirs();

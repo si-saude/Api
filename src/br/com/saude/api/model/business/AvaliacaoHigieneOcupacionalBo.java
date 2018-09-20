@@ -17,6 +17,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.StringReplacer;
 import br.com.saude.api.model.creation.builder.entity.AvaliacaoHigieneOcupacionalBuilder;
 import br.com.saude.api.model.creation.builder.example.AvaliacaoHigieneOcupacionalExampleBuilder;
@@ -67,8 +68,7 @@ private static AvaliacaoHigieneOcupacionalBo instance;
 		avaliacaoHigieneOcupacional = AvaliacaoHigieneOcupacionalBo.getInstance().getById(avaliacaoHigieneOcupacional.getId());
 		Empregado empregado = EmpregadoBo.getInstance().getById(avaliacaoHigieneOcupacional.getEmpregado().getId());
 		
-		URI uriDoc = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				.replace("/WEB-INF/classes", "")+"REPORT/RelatorioAvaliacaoHigieneOcupacional.html");
+		URI uriDoc = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "")+"REPORT/RelatorioAvaliacaoHigieneOcupacional.html");
 		
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(uriDoc.getPath()));
 		
@@ -78,14 +78,12 @@ private static AvaliacaoHigieneOcupacionalBo instance;
 		
 		bufferedReader.close();
 		
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				+"avaliacao-higiene-ocupacional/");
+		URI uri = new URI(Helper.getProjectPath()+"avaliacao-higiene-ocupacional/");
 		File file = new File(uri.getPath());
 		file.mkdirs();
 		StringReplacer stringReplacer = new StringReplacer(html.toString());
 		
-		URI logoUri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
+		URI logoUri = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
 		stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath());
 		
 		String aprhoEmpregadoRevisao = "";

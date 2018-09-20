@@ -54,8 +54,7 @@ public interface GenericReportBo<T> {
 			}
 		}
 		
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				+ "reports/arquivos/");
+		URI uri = new URI(Helper.getProjectPath() + "reports/arquivos/");
 		File file = new File(uri.getPath());
 		file.mkdirs();
 		

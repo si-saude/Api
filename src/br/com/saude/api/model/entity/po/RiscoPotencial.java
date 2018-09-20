@@ -19,7 +19,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -81,9 +80,6 @@ public class RiscoPotencial {
 	
 	@Transient
 	private List<Acao> acoesDelete;
-	
-	@Version
-	private long version;
 
 	public int getId() {
 		return id;
@@ -115,14 +111,6 @@ public class RiscoPotencial {
 
 	public void setRiscoEmpregados(List<RiscoEmpregado> riscoEmpregados) {
 		this.riscoEmpregados = riscoEmpregados;
-	}
-
-	public long getVersion() {
-		return version;
-	}
-
-	public void setVersion(long version) {
-		this.version = version;
 	}
 
 	public List<RiscoEmpregado> getRiscosInterdiciplinares() throws Exception {
@@ -304,11 +292,11 @@ public class RiscoPotencial {
 	public String getStatusRPSat() throws Exception {
 		this.getValor();
 		
-		if ( this.valor > 0 && this.valor < 0.6 ) {
+		if ( this.valor > 0 && this.valor < 0.57 ) {
 			this.statusRPSat = StatusRPSat.getInstance().ACEITAVEL;
-		} else if ( this.valor >= 0.6 && this.valor < 0.8 ) {
+		} else if ( this.valor >= 0.57 && this.valor < 0.72 ) {
 			this.statusRPSat = StatusRPSat.getInstance().TOLERAVEL;
-		} else if ( this.valor >= 0.8 ) {
+		} else if ( this.valor >= 0.72 ) {
 			this.statusRPSat = StatusRPSat.getInstance().INACEITAVEL;
 		}
 		

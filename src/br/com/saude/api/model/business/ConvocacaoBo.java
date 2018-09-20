@@ -31,6 +31,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.StringReplacer;
 import br.com.saude.api.model.creation.builder.entity.ConvocacaoBuilder;
 import br.com.saude.api.model.creation.builder.example.ConvocacaoExampleBuilder;
@@ -185,8 +186,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		StringBuilder html = new StringBuilder();
 		String line;
 		
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				.replace("/WEB-INF/classes", "")+"REPORT/GuiaExames.html");
+		URI uri = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "")+"REPORT/GuiaExames.html");
 		
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(uri.getPath()));
 		
@@ -199,8 +199,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		//CONFIGURAR DIRETÓRIO DOS PDFs
 		URI pdfUri;
 		File pdf;
-		uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				+"convocacao/"+convocacao.getId());
+		uri = new URI(Helper.getProjectPath()+"convocacao/"+convocacao.getId());
 		File file = new File(uri.getPath());
 		file.mkdirs();
 		FileUtils.cleanDirectory(file);
@@ -250,8 +249,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			} else
 				stringReplacer.replace("mesConvocacao","---");
 			
-			URI logoUri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-					.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
+			URI logoUri = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
 			stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath());
 			
 			//EXAMES
@@ -315,8 +313,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		
 		//GERAR ZIP
 		file = new File(file.getPath());
-		URI zipUri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation()
-									.toString()+"convocacao/"+convocacao.getTitulo().replace(' ', '_')+".zip");
+		URI zipUri = new URI(Helper.getProjectPath().toString()+"convocacao/"+convocacao.getTitulo().replace(' ', '_')+".zip");
 		File zipFile = new File(zipUri.getPath());
 		
 		ZipEntry zipEntry;

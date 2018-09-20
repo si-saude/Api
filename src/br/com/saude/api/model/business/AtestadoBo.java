@@ -213,8 +213,7 @@ public class AtestadoBo
 
 	@SuppressWarnings("resource")
 	public String getAnexo(int id) throws Exception {
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "atestado/anexo/"
-				+ id + ".pdf");
+		URI uri = new URI(Helper.getProjectPath() + "atestado/anexo/"+ id + ".pdf");
 
 		File anexoPath = new File(uri.getPath());
 
@@ -234,8 +233,7 @@ public class AtestadoBo
 	@SuppressWarnings({ "resource", "unused" })
 	private Atestado loadFiles(Atestado atestado) throws URISyntaxException {
 
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "atestado/anexo/"
-				+ atestado.getId() + ".zip");
+		URI uri = new URI(Helper.getProjectPath() + "atestado/anexo/"+ atestado.getId() + ".zip");
 
 		File anexoPath = new File(uri.getPath());
 
@@ -255,8 +253,7 @@ public class AtestadoBo
 	private void saveFiles(Atestado atestado) throws URISyntaxException, IOException {
 		if (atestado.getAnexo() != null) {
 
-			URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-					+ "atestado/anexo/" + atestado.getId() + ".pdf");
+			URI uri = new URI(Helper.getProjectPath()+ "atestado/anexo/" + atestado.getId() + ".pdf");
 
 			File file = new File(uri.getPath());
 
@@ -285,8 +282,7 @@ public class AtestadoBo
 		}
 		if (atestado.getAnexoRelatorioMedico() != null) {
 
-			URI uriRM = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-					+ "atestado/relatorio/" + atestado.getId() + ".pdf");
+			URI uriRM = new URI(Helper.getProjectPath() + "atestado/relatorio/" + atestado.getId() + ".pdf");
 
 			File fileRM = new File(uriRM.getPath());
 

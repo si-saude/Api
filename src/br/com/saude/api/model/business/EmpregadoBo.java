@@ -27,6 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.business.validate.EmpregadoValidator;
 import br.com.saude.api.model.creation.builder.entity.EmpregadoBuilder;
@@ -126,8 +127,7 @@ public class EmpregadoBo
 	@SuppressWarnings("resource")
 	private Empregado loadFiles(Empregado empregado) throws URISyntaxException {
 
-		URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "empregado/foto/"
-				+ empregado.getId() + ".png");
+		URI uri = new URI(Helper.getProjectPath() + "empregado/foto/"+ empregado.getId() + ".png");
 
 		File imgPath = new File(uri.getPath());
 
@@ -140,8 +140,7 @@ public class EmpregadoBo
 			e.printStackTrace();
 		}
 
-		URI uriAssinatura = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-				+ "empregado/assinatura/" + empregado.getId() + ".png");
+		URI uriAssinatura = new URI(Helper.getProjectPath()+ "empregado/assinatura/" + empregado.getId() + ".png");
 
 		File imgPathAssinatura = new File(uriAssinatura.getPath());
 
@@ -166,8 +165,7 @@ public class EmpregadoBo
 				assinaturaArray[i] = new Integer(empregado.getAssinatura().get(i + "")).byteValue();
 			}
 
-			URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-					+ "empregado/assinatura/" + newEmpregado.getId() + ".png");
+			URI uri = new URI(Helper.getProjectPath()+ "empregado/assinatura/" + newEmpregado.getId() + ".png");
 			File file = new File(uri.getPath());
 			file.getParentFile().mkdirs();
 
@@ -182,8 +180,7 @@ public class EmpregadoBo
 				fotoArray[i] = new Integer(empregado.getFoto().get(i + "")).byteValue();
 			}
 
-			URI uri = new URI(getClass().getProtectionDomain().getCodeSource().getLocation().toString()
-					+ "empregado/foto/" + newEmpregado.getId() + ".png");
+			URI uri = new URI(Helper.getProjectPath()+ "empregado/foto/" + newEmpregado.getId() + ".png");
 			File file = new File(uri.getPath());
 			file.getParentFile().mkdirs();
 

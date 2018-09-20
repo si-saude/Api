@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.model.entity.dto.CatDto;
 
@@ -28,8 +29,8 @@ public class CatReport {
 	public List<CatDto> getCats() throws Exception {
 
 		BufferedReader in = new BufferedReader(new FileReader(
-				getClass().getProtectionDomain().getCodeSource().getLocation().toString().replace("file:/", "")
-						+ "br/com/saude/api/model/persistence/sql/QueryCat.sql"));
+				Helper.getProjectPath().replace("file:/", "") 
+					+ "br/com/saude/api/model/persistence/sql/QueryCat.sql"));
 		String str;
 		StringBuffer query = new StringBuffer();
 		while ((str = in.readLine()) != null) {

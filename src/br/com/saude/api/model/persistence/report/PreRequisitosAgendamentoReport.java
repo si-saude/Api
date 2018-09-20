@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.model.entity.dto.PreRequisitosAgendamentoDto;
 
@@ -27,8 +28,7 @@ private static PreRequisitosAgendamentoReport instance;
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public List<PreRequisitosAgendamentoDto> getPanoramas() throws IOException {
 		
-		BufferedReader in = new BufferedReader(new FileReader(getClass().getProtectionDomain()
-				.getCodeSource().getLocation().toString().replace("file:/", "")
+		BufferedReader in = new BufferedReader(new FileReader(Helper.getProjectPath().replace("file:/", "")
 				+"br/com/saude/api/model/persistence/sql/QueryPreRequisitosAgendamento.sql"));
 		String str;
 		StringBuffer query = new StringBuffer();
