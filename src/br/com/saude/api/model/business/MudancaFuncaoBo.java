@@ -11,6 +11,7 @@ import br.com.saude.api.model.creation.builder.entity.TarefaBuilder;
 import br.com.saude.api.model.creation.builder.example.MudancaFuncaoExampleBuilder;
 import br.com.saude.api.model.entity.filter.MudancaFuncaoFilter;
 import br.com.saude.api.model.entity.po.Atividade;
+import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.MudancaFuncao;
 import br.com.saude.api.model.persistence.MudancaFuncaoDao;
@@ -52,21 +53,113 @@ public class MudancaFuncaoBo
 		long qtdNaoConcluida = mudancaFuncao.getTarefas().stream()
 				.filter(t->!t.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)).count();
 		
+		
+		mudancaFuncao.setCliente(EmpregadoBo.getInstance().getById(mudancaFuncao.getTarefas().get(0).getCliente().getId()));
+		boolean temMudanca = existeAlteracaoMudancaFuncao(mudancaFuncao);
+		
+		
 		for(Tarefa tarefa : mudancaFuncao.getTarefas()) {
 			if(tarefa.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA) && tarefa.getFim() == null) {
-				if(tarefa.getEquipe().getAbreviacao().equals("MED") && qtdNaoConcluida > 0)
-					throw new Exception("Para concluir a tarefa de Medicina, é necessário que as outras tarefas estejam concluídas.");
+				
+				if(tarefa.getEquipe().getAbreviacao().equals("MED")) {
+					if(qtdNaoConcluida > 0)
+						throw new Exception("Para concluir a tarefa de Medicina, é necessário que as outras tarefas estejam concluídas.");
+					else if(temMudanca)
+						throw new Exception("A tarefa de Medicina deve ser concluída por meio de um Atendimento Ocupacional de Mudança de Função.");
+				}
 					
 				tarefa.setFim(Helper.getNow());
 				qtdAlteracaoData++;
+				
+				
+				if(tarefa.getEquipe().getAbreviacao().equals("ERG") &&  mudancaFuncao.getGhee() != null) {
+					mudancaFuncao.getCliente().setGhee(mudancaFuncao.getGhee());				
+				}
+				
+				if(tarefa.getEquipe().getAbreviacao().equals("HIG") &&  mudancaFuncao.getGhe() != null) {
+					mudancaFuncao.getCliente().setGhe(mudancaFuncao.getGhe());	
+				}
 			}
 			
 			if(!(tarefa.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)))
 				tarefa.setFim(null);
 		}		
 		
+		if(temMudanca) {
+			EmpregadoBo.getInstance().save(mudancaFuncao.getCliente());
+		}
 		return super.save(mudancaFuncao);
 	}
+	
+	public String solicitarConvocacao(MudancaFuncao mudancaFuncao) throws Exception {
+		if(!existeAlteracaoMudancaFuncao(mudancaFuncao)) {
+			throw new Exception("As mudanças já foram aplicadas");		
+		}
+		return "";
+	}
+	
+	private boolean existeAlteracaoMudancaFuncao(MudancaFuncao mudancaFuncao) throws Exception {
+	
+		Empregado empregado = EmpregadoBo.getInstance().getById(mudancaFuncao.getTarefas().get(0).getCliente().getId());
+		
+		if( mudancaFuncao.getEnfase() != null && 
+				(empregado.getEnfase() != null && mudancaFuncao.getEnfase().getId() != empregado.getEnfase().getId()
+				|| (empregado.getEnfase() == null )))			
+			return true;
+		if( mudancaFuncao.getFuncao() != null && 
+				(empregado.getFuncao() != null &&  mudancaFuncao.getFuncao().getId() != empregado.getFuncao().getId())
+				|| (empregado.getFuncao() == null))			
+			return true;
+		if( mudancaFuncao.getGhe() != null && 
+				(empregado.getGhe() != null &&  mudancaFuncao.getGhe().getId() != empregado.getGhe().getId())
+				|| (empregado.getGhe() == null))			
+			return true;
+		if( mudancaFuncao.getGhee() != null &&
+				(empregado.getGhee() != null &&  mudancaFuncao.getGhee().getId() != empregado.getGhee().getId())
+				||(empregado.getGhee() == null))			
+			return true;
+		if( mudancaFuncao.getRegime() != null &&
+				(empregado.getRegime() != null &&  mudancaFuncao.getRegime().getId() != empregado.getRegime().getId())
+				|| (empregado.getRegime() == null))			
+			return true;
+		if( mudancaFuncao.getGerencia() != null &&
+				(empregado.getGerencia() != null &&  mudancaFuncao.getGerencia().getId() != empregado.getGerencia().getId())
+				||(empregado.getGerencia() == null))			
+			return true;
+		if( mudancaFuncao.getBase() != null &&
+				(empregado.getBase() != null &&  mudancaFuncao.getBase().getId() != empregado.getBase().getId())
+				||(empregado.getBase() == null))			
+			return true;
+		
+		return false;
+	}
+	
+	public Empregado aplicarAlteracoes(MudancaFuncao mudancaFuncao) throws Exception {
+		
+		if(existeAlteracaoMudancaFuncao(mudancaFuncao)) {
+			   mudancaFuncao.setCliente(EmpregadoBo.getInstance().getById(mudancaFuncao.getTarefas().get(0).getCliente().getId()));
+			   
+			if(mudancaFuncao.getEnfase() != null)
+			   mudancaFuncao.getCliente().setEnfase(mudancaFuncao.getEnfase());
+			
+			if(mudancaFuncao.getFuncao() != null)
+			   mudancaFuncao.getCliente().setFuncao(mudancaFuncao.getFuncao());
+			
+			if(mudancaFuncao.getRegime() != null)
+			   mudancaFuncao.getCliente().setRegime(mudancaFuncao.getRegime());
+			
+			if(mudancaFuncao.getGerencia() != null)
+			   mudancaFuncao.getCliente().setGerencia(mudancaFuncao.getGerencia());
+			
+			if(mudancaFuncao.getBase() != null)
+			   mudancaFuncao.getCliente().setBase(mudancaFuncao.getBase());
+			
+		}else
+			throw new Exception("As mudanças já foram aplicadas");		
+		 
+		 return EmpregadoBo.getInstance().save(mudancaFuncao.getCliente());
+	}
+	
 	
 	/**
 	 * CRIAR MÉTODO aplicarAltecacoes
@@ -115,7 +208,7 @@ public class MudancaFuncaoBo
 	
 	public MudancaFuncao registrarMudancaFuncao(MudancaFuncao mudancaFuncao) throws Exception {
 		
-		if(mudancaFuncao.getCargo() == null && mudancaFuncao.getFuncao() == null &&
+		if(mudancaFuncao.getEnfase() == null && mudancaFuncao.getFuncao() == null &&
 		   mudancaFuncao.getGhe() == null && mudancaFuncao.getGhee() == null &&
 		   mudancaFuncao.getRegime() == null && mudancaFuncao.getGerencia() == null &&
 		   mudancaFuncao.getBase() == null)				

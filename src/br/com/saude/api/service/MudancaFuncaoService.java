@@ -58,6 +58,33 @@ public class MudancaFuncaoService extends GenericServiceImpl<MudancaFuncao, Muda
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("aplicar-alteracoes")
+	public Response aplicarAlteracoes(MudancaFuncao mudancaFuncao) {
+		try {
+			MudancaFuncaoBo.getInstance().aplicarAlteracoes(mudancaFuncao);
+			return Response.ok("Mudanças aplicadas com sucesso.").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("solicitar-convocacao")
+	public Response solicitarConvocacao(MudancaFuncao mudancaFuncao) {
+		try {
+			return Response.ok(MudancaFuncaoBo.getInstance().solicitarConvocacao(mudancaFuncao)).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 
 	@RequestInterceptor
 	@Override

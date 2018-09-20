@@ -44,6 +44,8 @@ public class Helper {
 		if(dateFilter != null && dateFilter.getInicio() != null) {
 			switch(dateFilter.getTypeFilter()) {
 				case ENTRE:
+					dateFilter.getInicio().setHours(0);
+					dateFilter.getInicio().setMinutes(0);
 					dateFilter.getFim().setHours(23);
 					dateFilter.getFim().setMinutes(59);
 					return Restrictions.between(propertyName, 
@@ -107,5 +109,11 @@ public class Helper {
 			return "C:/Users/BJZE/Downloads/xampp/tomcat/webapps/Api/WEB-INF/classes/";
 		else
 			return Helper.class.getProtectionDomain().getCodeSource().getLocation().toString();
+	}
+	
+	public static Date cloneDate(Date data) {
+		if(data != null)
+			return new Date(data.getTime());
+		return data;
 	}
 }
