@@ -371,6 +371,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	public Atendimento finalizar(Atendimento atendimento) throws Exception {
 		atendimento = merge(atendimento);
 		atendimento = addAtualizacao(finalizar(atendimento,Helper.getNow()));
+		atendimento.getTarefa().setFim(Helper.getNow());
 		
 		return save(atendimento);
 	}
@@ -387,8 +388,6 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	private Atendimento finalizar(Atendimento atendimento, Date data) throws Exception {
 		
-		Date fim = new Date(atendimento.getTarefa().getFim().getTime());
-		
 		if(!(atendimento.getFilaAtendimentoOcupacional().getStatus()
 				.equals(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO)) &&
 			!(atendimento.getFilaAtendimentoOcupacional().getStatus()
@@ -399,7 +398,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		boolean liberado = atendimento.getFilaAtendimentoOcupacional().getStatus()
 				.equals(StatusFilaAtendimentoOcupacional.getInstance().LANCAMENTO_DE_INFORMACOES);
 		
-		if(finalizouAtendimento(atendimento,data)) {
+		if(finalizouAtendimento(atendimento, Helper.cloneDate(data))) {
 			if(!liberado)
 				atendimento.getFilaEsperaOcupacional().setStatus(
 					StatusFilaEsperaOcupacional.getInstance().FINALIZADO);
@@ -413,14 +412,13 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 					StatusFilaEsperaOcupacional.getInstance().AGUARDANDO);
 		
 		//VERIFICA SE FOI ATENDIMENTO MÉDICO PARA CRIAÇÃO DO ASO
-		atendimento = verificarCriacaoAso(atendimento, data);
+		atendimento = verificarCriacaoAso(atendimento, Helper.cloneDate(data));
 		
-		atendimento.getFilaEsperaOcupacional().setAtualizacao(data);
+		atendimento.getFilaEsperaOcupacional().setAtualizacao(Helper.cloneDate(data));
 		
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().DISPONIVEL);
 		
-		atendimento.getTarefa().setFim(fim);
 		atendimento.getTarefa().setStatus(StatusTarefa.getInstance().CONCLUIDA);
 		
 		atendimento = gerarRisco(atendimento);
@@ -530,7 +528,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		tarefaFilter.setInicio(new DateFilter());
 		tarefaFilter.getInicio().setTypeFilter(TypeFilter.ENTRE);
-		tarefaFilter.getInicio().setInicio(today);
+		tarefaFilter.getInicio().setInicio(Helper.cloneDate(today));
 		tarefaFilter.getInicio().setFim(calendar.getTime());
 		
 		PagedList<Tarefa> tarefas = TarefaBo.getInstance().getList(
@@ -538,13 +536,13 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		
 		//VERIFICAR PENDÊNCIA
 		Tarefa tarefaPendencia = FilaEsperaOcupacionalBo.getInstance().checkPendecia(
-				atendimento.getFilaEsperaOcupacional().getEmpregado(),today);
+				atendimento.getFilaEsperaOcupacional().getEmpregado(),Helper.cloneDate(today));
 		
 		if(tarefaPendencia != null) {
 			tarefaFilter.setInicio(new DateFilter());
 			tarefaFilter.getInicio().setTypeFilter(TypeFilter.ENTRE);
-			tarefaFilter.getInicio().setInicio(tarefaPendencia.getInicio());
-			tarefaFilter.getInicio().setFim(tarefaPendencia.getFim());
+			tarefaFilter.getInicio().setInicio(Helper.cloneDate(tarefaPendencia.getInicio()));
+			tarefaFilter.getInicio().setFim(Helper.cloneDate(tarefaPendencia.getFim()));
 			
 			PagedList<Tarefa> t = TarefaBo.getInstance().getList(
 					TarefaExampleBuilder.newInstance(tarefaFilter).exampleStatusNaoConcluidoCancelado());

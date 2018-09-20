@@ -156,19 +156,19 @@ public class FilaAtendimentoOcupacionalBo
 		filaFilter.getInicio().setInicio(today);
 		
 		PagedList<FilaAtendimentoOcupacional> filaAtendimentoOcupacionais = 
-				getList(getExampleBuilder(filaFilter).exampleStatusDiferenteEncerrado(),
-						this.functionLoadLocalizacao);
-		
-		filaFilter.setLocalizacao(new LocalizacaoFilter());
-		filaFilter.getLocalizacao().setId(fila.getLocalizacao().getId());
-		
-		filaAtendimentoOcupacionais = getList(filaFilter, this.functionLoadLocalizacao);
+				getList(filaFilter,this.functionLoadLocalizacao);
 		
 		if ( filaAtendimentoOcupacionais.getTotal() > 0 ) {
-			this.voltar(fila);
-			return obterListaAtual(fila);
+			//SE O STATUS FOR ENCERRADO OU ENCERRADO AUTOMATICAMENTE, VOLTAR PARA A FILA
+			//ELSE, RETORNAR A EXCEÇÃO
+			FilaAtendimentoOcupacional filaAux = filaAtendimentoOcupacionais.getList().get(0);
+			if(filaAux.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO_AUTOMATICAMENTE) ||
+					filaAux.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO))
+				return this.voltar(fila);
+			else
+				throw new Exception("O Profissional já está na Fila de Atendimento da Localização: "+
+						filaAtendimentoOcupacionais.getList().get(0).getLocalizacao().getNome()+".");
 		}
-			
 		
 		// 5 - INSTANCIAR FILA
 		fila.setInicio(Helper.getNow());
@@ -261,7 +261,8 @@ public class FilaAtendimentoOcupacionalBo
 		// 4 - CHECAR STATUS
 		if(!fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().INDISPONIVEL) &&
 				!fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().ALMOCO) &&
-				!fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO))
+				!fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO) &&
+				!fila.getStatus().equals(StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO_AUTOMATICAMENTE))
 			throw new Exception("Não é possível voltar para a fila de atendimento. "
 					+ "Status: "+fila.getStatus());
 		

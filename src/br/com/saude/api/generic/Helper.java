@@ -101,4 +101,10 @@ public class Helper {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
+	
+	public static Date cloneDate(Date data) {
+		if(data != null)
+			return new Date(data.getTime());
+		return data;
+	}
 }

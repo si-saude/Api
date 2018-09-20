@@ -24,7 +24,7 @@ public class MudancaFuncao {
 	private int id;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
-	private Cargo cargo;
+	private Enfase enfase;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Funcao funcao;
@@ -86,12 +86,12 @@ public class MudancaFuncao {
 		this.cliente = cliente;
 	}
 
-	public Cargo getCargo() {
-		return cargo;
+	public Enfase getEnfase() {
+		return enfase;
 	}
 
-	public void setCargo(Cargo cargo) {
-		this.cargo = cargo;
+	public void setEnfase(Enfase enfase) {
+		this.enfase = enfase;
 	}
 
 	public Funcao getFuncao() {

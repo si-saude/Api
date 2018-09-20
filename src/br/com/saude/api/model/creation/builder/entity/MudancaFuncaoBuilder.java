@@ -46,8 +46,8 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 		newSolicitacao.setId(solicitacao.getId());
 		newSolicitacao.setVersion(solicitacao.getVersion());
 		
-		if(solicitacao.getCargo() != null)
-			newSolicitacao.setCargo(CargoBuilder.newInstance(solicitacao.getCargo()).getEntity());
+		if(solicitacao.getEnfase() != null)
+			newSolicitacao.setEnfase(EnfaseBuilder.newInstance(solicitacao.getEnfase()).getEntity());
 		if(solicitacao.getFuncao() != null)
 			newSolicitacao.setFuncao(FuncaoBuilder.newInstance(solicitacao.getFuncao()).getEntity());
 		if(solicitacao.getGhe() != null)
