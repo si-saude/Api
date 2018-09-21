@@ -20,13 +20,13 @@ import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.AtestadoBo;
 import br.com.saude.api.model.business.validate.AtestadoValidator;
-import br.com.saude.api.model.entity.dto.AtestadoDto;
+import br.com.saude.api.model.entity.dto.ControleAtestadoDto;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
 
 @Path("atestado")
 public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter, AtestadoBo>
-	implements  GenericReportService<AtestadoDto, AtestadoBo>, GenericService<Atestado, AtestadoFilter>{
+	implements  GenericReportService<ControleAtestadoDto, AtestadoBo>, GenericService<Atestado, AtestadoFilter>{
 	
 	@Override
 	protected AtestadoBo getBo() {
@@ -167,7 +167,7 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/get-file")
-	public Response getFile(List<AtestadoDto> entities) throws IOException {
+	public Response getFile(List<ControleAtestadoDto> entities) throws IOException {
 		try {
 			return Response.ok( this.exportXLSXFile(entities) ).build();
 		} catch (Exception e) {

@@ -25,7 +25,7 @@ import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.AtestadoBuilder;
 import br.com.saude.api.model.creation.builder.example.AtestadoExampleBuilder;
 import br.com.saude.api.model.creation.factory.entity.EmailFactory;
-import br.com.saude.api.model.entity.dto.AtestadoDto;
+import br.com.saude.api.model.entity.dto.ControleAtestadoDto;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
@@ -43,7 +43,7 @@ import br.com.saude.api.model.entity.po.Profissiograma;
 import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.persistence.AtestadoDao;
-import br.com.saude.api.model.persistence.report.AtestadoReport;
+import br.com.saude.api.model.persistence.report.ControleAtestadoReport;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusAtestado;
 import br.com.saude.api.util.constant.StatusTarefa;
@@ -51,7 +51,7 @@ import br.com.saude.api.util.constant.TipoConvocacao;
 
 public class AtestadoBo
 		extends GenericBo<Atestado, AtestadoFilter, AtestadoDao, AtestadoBuilder, AtestadoExampleBuilder>
-		implements GenericReportBo<AtestadoDto> {
+		implements GenericReportBo<ControleAtestadoDto> {
 
 	protected Function<AtestadoBuilder, AtestadoBuilder> functionLoadRegime;
 	
@@ -146,8 +146,8 @@ public class AtestadoBo
 		return super.getList(getDao().getListAll(getExampleBuilder(filter).example()), this.functionLoadAll);
 	}
 	
-	public List<AtestadoDto> getAtestados() throws Exception {
-		return AtestadoReport.getInstance().getAtestados();
+	public List<ControleAtestadoDto> getAtestados() throws Exception {
+		return ControleAtestadoReport.getInstance().getAtestados();
 	}
 
 	public boolean verificarAtrasoAtestado(Atestado atestado) throws Exception {
@@ -219,7 +219,7 @@ public class AtestadoBo
 			if(!atestado.isAusenciaExames()) {
 				criarConvocacao(atestado,tipoConvocacao);
 			}
-			else {
+			else if(atestado.getNumeroDias() >= 5) {
 				
 				Calendar data = Calendar.getInstance();
 				data.setTime(getVencimentoAtestado(atestado).getTime());
@@ -519,16 +519,15 @@ public class AtestadoBo
 		return atestado;
 	}
 
-	private int dataLimite(Calendar amanha) throws Exception {
-		amanha.setTime(Helper.getToday());
-		amanha.add(Calendar.DATE, 1);
+	private int dataLimite(Calendar hoje) throws Exception {
+		hoje.setTime(Helper.getToday());
 
 		Calendar mesSeguinte = Calendar.getInstance();
 		mesSeguinte.setTime(Helper.getToday());
 		mesSeguinte.add(Calendar.MONTH, 1);
 		mesSeguinte.set(Calendar.DATE, 10);
 
-		int days = FeriadoBo.getInstance().getDaysBetweenDates(amanha, mesSeguinte);
+		int days = FeriadoBo.getInstance().getDaysBetweenDates(hoje, mesSeguinte);
 
 		return days;
 	}
