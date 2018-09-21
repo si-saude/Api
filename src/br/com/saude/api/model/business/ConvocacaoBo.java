@@ -31,6 +31,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.StringReplacer;
 import br.com.saude.api.model.creation.builder.entity.ConvocacaoBuilder;
 import br.com.saude.api.model.creation.builder.example.ConvocacaoExampleBuilder;
