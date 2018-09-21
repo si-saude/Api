@@ -1,6 +1,7 @@
 package br.com.saude.api.model.entity.filter;
 
 import br.com.saude.api.generic.BooleanFilter;
+import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class AtestadoFilter extends GenericFilter {
@@ -13,8 +14,12 @@ public class AtestadoFilter extends GenericFilter {
 	private BooleanFilter presencial;
 	private BooleanFilter possuiFeriasAgendadas;
 	private BooleanFilter ciente;
+	private BooleanFilter lancamentoSd2000;
 	private EmpregadoFilter empregado;
 	private MotivoRecusaAtestadoFilter motivoRecusa;
+	private BooleanFilter ausenciaExames;
+	private DateFilter dataAuditoria;
+	private BooleanFilter convocado;
 	
 	public BooleanFilter getAtestadoFisicoRecebido() {
 		return atestadoFisicoRecebido;
@@ -76,4 +81,29 @@ public class AtestadoFilter extends GenericFilter {
 	public void setMotivoRecusa(MotivoRecusaAtestadoFilter motivoRecusa) {
 		this.motivoRecusa = motivoRecusa;
 	}
+	public BooleanFilter getLancamentoSd2000() {
+		return lancamentoSd2000;
+	}
+	public void setLancamentoSd2000(BooleanFilter lancamentoSd2000) {
+		this.lancamentoSd2000 = lancamentoSd2000;
+	}
+	public BooleanFilter getAusenciaExames() {
+		return ausenciaExames;
+	}
+	public void setAusenciaExames(BooleanFilter ausenciaExames) {
+		this.ausenciaExames = ausenciaExames;
+	}
+	public DateFilter getDataAuditoria() {
+		return dataAuditoria;
+	}
+	public void setDataAuditoria(DateFilter dataAuditoria) {
+		this.dataAuditoria = dataAuditoria;
+	}
+	public BooleanFilter getConvocado() {
+		return convocado;
+	}
+	public void setConvocado(BooleanFilter convocado) {
+		this.convocado = convocado;
+	}
+	
 }

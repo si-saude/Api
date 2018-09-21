@@ -1,6 +1,8 @@
 package br.com.saude.api.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -79,4 +81,18 @@ public class FeriadoService extends GenericServiceImpl<Feriado,FeriadoFilter,Fer
 		}
 	}
 	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/get-date-after-nday")
+	public Response getDateAfterNDays(@QueryParam("data") String data, @QueryParam("dias") int dias) {
+		try {
+			Calendar calendar = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			calendar.setTime(sdf.parse(data));
+			FeriadoBo.getInstance().getValidDates(calendar, dias);
+			return Response.ok(calendar.getTime()).build();	
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 }
