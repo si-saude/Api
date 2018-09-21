@@ -66,9 +66,9 @@ private static RiscoPotencialReport instance;
 			
 			if ( riscoPotencial.getRanking() > 0 && riscoPotencial.getRanking() < 0.57 )
 				riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().ACEITAVEL);
-			else if ( riscoPotencial.getRanking() >= 0.57 && riscoPotencial.getRanking() < 0.72 )
+			else if ( riscoPotencial.getRanking() >= 0.57 && riscoPotencial.getRanking() < 0.725 )
 				riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().TOLERAVEL);
-			else if ( riscoPotencial.getRanking() >= 0.72 )
+			else if ( riscoPotencial.getRanking() >= 0.725 )
 				riscoPotencial.setStatusRPSat(StatusRPSat.getInstance().INACEITAVEL);
 				
 			riscoPotencial.setEmpregadoNome((String)row[2]);

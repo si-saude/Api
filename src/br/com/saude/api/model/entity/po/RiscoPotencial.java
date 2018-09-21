@@ -294,9 +294,9 @@ public class RiscoPotencial {
 		
 		if ( this.valor > 0 && this.valor < 0.57 ) {
 			this.statusRPSat = StatusRPSat.getInstance().ACEITAVEL;
-		} else if ( this.valor >= 0.57 && this.valor < 0.72 ) {
+		} else if ( this.valor >= 0.57 && this.valor < 0.725 ) {
 			this.statusRPSat = StatusRPSat.getInstance().TOLERAVEL;
-		} else if ( this.valor >= 0.72 ) {
+		} else if ( this.valor >= 0.725 ) {
 			this.statusRPSat = StatusRPSat.getInstance().INACEITAVEL;
 		}
 		
