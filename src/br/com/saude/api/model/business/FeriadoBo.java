@@ -57,9 +57,11 @@ public class FeriadoBo extends GenericBo<Feriado, FeriadoFilter, FeriadoDao, Fer
 
 	public int getDaysBetweenDates(Calendar dataInicial, Calendar dataFinal) throws Exception {
 		int days = 0;
-
+		
 		if (dataInicial.after(dataFinal))
 			throw new Exception("Data de inicio maior que data do final.");
+		
+		dataInicial.add(Calendar.DATE, 1);
 
 		while (!dataInicial.after(dataFinal)) {
 			PagedList<Feriado> feriados = configureBasicFilter(dataInicial);

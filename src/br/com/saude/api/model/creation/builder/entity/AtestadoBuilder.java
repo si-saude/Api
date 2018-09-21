@@ -10,10 +10,10 @@ import br.com.saude.api.model.entity.po.Atestado;
 
 public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilter> {
 	
-	private Function<Map<String,Atestado>,Atestado> loadCat;
-	private Function<Map<String,Atestado>,Atestado> loadProfissionalRealizouVisita;
-	private Function<Map<String,Atestado>,Atestado> loadHomologacaoAtestado;
 	private Function<Map<String,Atestado>,Atestado> loadRegime;
+	private Function<Map<String,Atestado>,Atestado> loadAgendamento;
+	private Function<Map<String,Atestado>,Atestado> loadExamesConvocacao;
+	private Function<Map<String,Atestado>,Atestado> loadHistoricoAtestados;
 
 	public static AtestadoBuilder newInstance(Atestado atestado) {
 		return new AtestadoBuilder(atestado);
@@ -33,33 +33,34 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 
 	@Override
 	protected void initializeFunctions() {
-		this.loadCat = atestados ->{
-			if(atestados.get("origem").getCat() != null) {
-				atestados.get("destino").setCat(CatBuilder.newInstance(atestados.get("origem").getCat()).getEntity());
-			}
-			return atestados.get("destino");
-		};
-		
-		this.loadProfissionalRealizouVisita = atestados ->{
-			if(atestados.get("origem").getProfissionalRealizouVisita() != null) {
-				atestados.get("destino").setProfissionalRealizouVisita(
-						ProfissionalBuilder.newInstance(atestados.get("origem").getProfissionalRealizouVisita()).getEntity());
-			}
-			return atestados.get("destino");
-		};
-		
-		this.loadHomologacaoAtestado = atestados -> {
-			if (atestados.get("origem").getHomologacaoAtestado() != null) {
-				atestados.get("destino").setHomologacaoAtestado(
-						HomologacaoAtestadoBuilder.newInstance(atestados.get("origem").getHomologacaoAtestado()).getEntity());
-			}
-			return atestados.get("destino");
-		};
-		
 		this.loadRegime = atestados -> {
 			if (atestados.get("origem").getRegime() != null) {
 				atestados.get("destino").setRegime(
 						RegimeBuilder.newInstance(atestados.get("origem").getRegime()).getEntity());
+			}
+			return atestados.get("destino");
+		};
+		
+		this.loadAgendamento = atestados -> {
+			if (atestados.get("origem").getAgendamento() != null) {
+				atestados.get("destino").setAgendamento(
+						TarefaBuilder.newInstance(atestados.get("origem").getAgendamento()).getEntity());
+			}
+			return atestados.get("destino");
+		};
+		
+		this.loadExamesConvocacao = atestados -> {
+			if (atestados.get("origem").getExamesConvocacao() != null) {
+				atestados.get("destino").setExamesConvocacao(
+						ExameBuilder.newInstance(atestados.get("origem").getExamesConvocacao()).getEntityList());
+			}
+			return atestados.get("destino");
+		};
+		
+		this.loadHistoricoAtestados = atestados -> {
+			if (atestados.get("origem").getHistoricoAtestados() != null) {
+				atestados.get("destino").setHistoricoAtestados(
+						HistoricoAtestadoBuilder.newInstance(atestados.get("origem").getHistoricoAtestados()).getEntityList());
 			}
 			return atestados.get("destino");
 		};
@@ -70,20 +71,13 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		Atestado newAtestado = new Atestado();
 		
 		newAtestado.setId(atestado.getId());
-		newAtestado.setCid(atestado.getCid());
 		newAtestado.setAtestadoFisicoRecebido(atestado.isAtestadoFisicoRecebido());
 		newAtestado.setControleLicenca(atestado.isControleLicenca());
-		newAtestado.setDataAgendamento(atestado.getDataAgendamento());
 		newAtestado.setDataSolicitacao(atestado.getDataSolicitacao());
 		newAtestado.setImpossibilidadeLocomocao(atestado.isImpossibilidadeLocomocao());
 		newAtestado.setLancadoSap(atestado.isLancadoSap());
 		newAtestado.setNumeroDias(atestado.getNumeroDias());
 		newAtestado.setStatus(atestado.getStatus());
-		newAtestado.setTipoBeneficio(atestado.getTipoBeneficio());
-		newAtestado.setCausaAfastamento(atestado.getCausaAfastamento());
-		newAtestado.setUltimoContato(atestado.getUltimoContato());
-		newAtestado.setProximoContato(atestado.getProximoContato());
-		newAtestado.setSituacaoEmpregado(atestado.getSituacaoEmpregado());
 		newAtestado.setInicio(atestado.getInicio());
 		newAtestado.setContatoMedico(atestado.getContatoMedico());
 		newAtestado.setLocalAtendimento(atestado.getLocalAtendimento());
@@ -101,7 +95,19 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		newAtestado.setLimiteLancar(atestado.getLimiteLancar());
 		newAtestado.setDataInicioFerias(atestado.getDataInicioFerias());
 		newAtestado.setDataFimFerias(atestado.getDataFimFerias());
+		newAtestado.setSomaDiasAtestados(atestado.getSomaDiasAtestados());
+		newAtestado.setConcatenacaoDatasCids(atestado.getConcatenacaoDatasCids());
+		newAtestado.setObservacao(atestado.getObservacao());
+		newAtestado.setLancamentoSd2000(atestado.isLancamentoSd2000());
+		newAtestado.setFim(atestado.getFim());
+		newAtestado.setAusenciaExames(atestado.isAusenciaExames());
+		newAtestado.setPreviewStatus(atestado.getPreviewStatus());
+		newAtestado.setDataAuditoria(atestado.getDataAuditoria());
+		newAtestado.setConvocado(atestado.isConvocado());
 		newAtestado.setVersion(atestado.getVersion());
+		
+		if (atestado.getProfissional() != null) 
+			newAtestado.setProfissional(ProfissionalBuilder.newInstance(atestado.getProfissional()).getEntity());
 		
 		if(atestado.getEmpregado() != null)
 			newAtestado.setEmpregado(EmpregadoBuilder.newInstance(atestado.getEmpregado()).getEntity());
@@ -112,6 +118,9 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		if(atestado.getMotivoRecusa() != null)
 			newAtestado.setMotivoRecusa(MotivoRecusaAtestadoBuilder.newInstance(atestado.getMotivoRecusa()).getEntity());
 		
+		if(atestado.getCid() != null) 
+			newAtestado.setCid(DiagnosticoBuilder.newInstance(atestado.getCid()).getEntity());
+		
 		return newAtestado;
 	}
 
@@ -120,20 +129,19 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		return null;
 	}
 	
-	public AtestadoBuilder loadCat() {
-		return (AtestadoBuilder) this.loadProperty(this.loadCat);
-	}
-	
-	public AtestadoBuilder loadProfissionalRealizouVisita() {
-		return (AtestadoBuilder) this.loadProperty(this.loadProfissionalRealizouVisita);
-	}
-
-	public AtestadoBuilder loadHomologacaoAgestado() {
-		return (AtestadoBuilder) this.loadProperty(this.loadHomologacaoAtestado);
-	}
-	
 	public AtestadoBuilder loadRegime() {
 		return (AtestadoBuilder) this.loadProperty(this.loadRegime);
 	}
 	
+	public AtestadoBuilder loadAgendamento() {
+		return (AtestadoBuilder) this.loadProperty(this.loadAgendamento);
+	}
+	
+	public AtestadoBuilder loadExamesConvocacao() {
+		return (AtestadoBuilder) this.loadProperty(this.loadExamesConvocacao);
+	}
+	
+	public AtestadoBuilder loadHistoricoAtestados() {
+		return (AtestadoBuilder) this.loadProperty(this.loadHistoricoAtestados);
+	}
 }

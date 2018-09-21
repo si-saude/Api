@@ -1,6 +1,7 @@
 package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
@@ -9,13 +10,17 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Formula;
 
 @Entity
 public class Atestado {
@@ -24,9 +29,6 @@ public class Atestado {
 	private long id;
 	
 	private int numeroDias;
-	
-	@Size(max = 16, message="Tamanho máximo para CID do Atestado: 16")
-	private String cid;
 	
 	@Transient
 	private Map<Integer,Integer> anexo;
@@ -42,10 +44,7 @@ public class Atestado {
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private Tarefa tarefa;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	private Cat cat;
-	
+		
 	private boolean impossibilidadeLocomocao;
 	
 	@Size(max = 64, message="Tamanho máximo para Status do Atestado: 64")
@@ -58,32 +57,10 @@ public class Atestado {
 	
 	private boolean controleLicenca;
 	
-	private Date dataAgendamento;
-	
 	@NotNull(message="É necessário informar a Data da Solicitação.")
 	private Date dataSolicitacao;
 	
-	@Size(max = 64, message="Tamanho máximo para Tipo Beneficio do Atestado: 64")
-    private String tipoBeneficio;
-    
-	@Size(max = 64, message="Tamanho máximo para Causa Afastamento do Atestado: 64")
-    private String causaAfastamento;
-    
-    @ManyToOne(fetch=FetchType.LAZY)
-    private Profissional profissionalRealizouVisita;
-    
-    @Size(max = 2056, message="Tamanho máximo para Ultimo Contato do Atestado: 2056")
-    private String ultimoContato;
-    
-    @Size(max = 2056, message="Tamanho máximo para Proximo Contato do Atestado: 2056")
-    private String proximoContato;
-    
-    @Size(max = 64, message="Tamanho máximo para Situação Empregado do Atestado: 64")
-    private String situacaoEmpregado;
-    
-	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private HomologacaoAtestado homologacaoAtestado;
-	
+	@NotNull(message="É necessário informar o Início da Solicitação.")
 	private Date inicio;
 	
 	@NotNull(message="É necessário informar o Contado do Médico da Solicitação.")
@@ -133,9 +110,62 @@ public class Atestado {
 	
 	private int limiteAuditar, limiteHomologar, limiteLancar;
 	
+	@Transient
+	private Date dataLimiteAuditar;
+	
+	@Transient
+	private Date dataLimiteAgendamento;
+	
+	@Transient
+	private Date dataLimiteLancar;
+	
+	@Transient
+	private Date dataLimiteHomologar;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Diagnostico cid;
+	
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private Tarefa agendamento;
+	
+	@Formula("(select somaDiasAtestados(id))")
+	private int somaDiasAtestados;
+
+	@Formula("(select concatenacaoDatasCidsAtestado(id))")
+	private String concatenacaoDatasCids;
+	
+	@Size(max = 2048, message="Tamanho máximo para Observação do Atestado: 2048")
+	private String observacao;
+	
+	private boolean lancamentoSd2000;
+	
+	@Formula("(select addNumeroDiasInicioAtestado(id))")
+	private Date fim;
+	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="exame_atestado", 
+				joinColumns = {@JoinColumn(name="atestado_id")}, 
+				inverseJoinColumns = {@JoinColumn(name="exame_id")})
+	private List<Exame> examesConvocacao;
+	
+	private boolean ausenciaExames;
+	
+	@OneToMany(mappedBy="atestado", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<HistoricoAtestado> historicoAtestados;
+	
+	@Transient
+	private Profissional profissional;
+	
+	@Transient
+	private String previewStatus;
+	
+	private Date dataAuditoria;
+	
+	private boolean convocado;
+	
 	@Version
 	private long version;
-
+	
 	public long getId() {
 		return id;
 	}
@@ -144,14 +174,6 @@ public class Atestado {
 		this.id = id;
 	}
 	
-	public String getCid() {
-		return cid;
-	}
-
-	public void setCid(String cid) {
-		this.cid = cid;
-	}
-
 	public int getNumeroDias() {
 		return numeroDias;
 	}
@@ -240,84 +262,12 @@ public class Atestado {
 		this.controleLicenca = controleLicenca;
 	}
 
-	public Date getDataAgendamento() {
-		return dataAgendamento;
-	}
-
-	public void setDataAgendamento(Date dataAgendamento) {
-		this.dataAgendamento = dataAgendamento;
-	}
-	
 	public Date getDataSolicitacao() {
 		return dataSolicitacao;
 	}
 
 	public void setDataSolicitacao(Date dataSolicitacao) {
 		this.dataSolicitacao = dataSolicitacao;
-	}
-	
-	public Cat getCat() {
-		return cat;
-	}
-
-	public void setCat(Cat cat) {
-		this.cat = cat;
-	}
-
-	public String getTipoBeneficio() {
-		return tipoBeneficio;
-	}
-
-	public void setTipoBeneficio(String tipoBeneficio) {
-		this.tipoBeneficio = tipoBeneficio;
-	}
-
-	public String getCausaAfastamento() {
-		return causaAfastamento;
-	}
-
-	public void setCausaAfastamento(String causaAfastamento) {
-		this.causaAfastamento = causaAfastamento;
-	}
-
-	public Profissional getProfissionalRealizouVisita() {
-		return profissionalRealizouVisita;
-	}
-
-	public void setProfissionalRealizouVisita(Profissional profissionalRealizouVisita) {
-		this.profissionalRealizouVisita = profissionalRealizouVisita;
-	}
-
-	public String getUltimoContato() {
-		return ultimoContato;
-	}
-
-	public void setUltimoContato(String ultimoContato) {
-		this.ultimoContato = ultimoContato;
-	}
-
-	public String getProximoContato() {
-		return proximoContato;
-	}
-
-	public void setProximoContato(String proximoContato) {
-		this.proximoContato = proximoContato;
-	}
-
-	public String getSituacaoEmpregado() {
-		return situacaoEmpregado;
-	}
-
-	public void setSituacaoEmpregado(String situacaoEmpregado) {
-		this.situacaoEmpregado = situacaoEmpregado;
-	}
-	
-	public HomologacaoAtestado getHomologacaoAtestado() {
-		return homologacaoAtestado;
-	}
-
-	public void setHomologacaoAtestado(HomologacaoAtestado homologacaoAtestado) {
-		this.homologacaoAtestado = homologacaoAtestado;
 	}
 
 	public long getVersion() {
@@ -486,6 +436,150 @@ public class Atestado {
 
 	public void setMotivoRecusa(MotivoRecusaAtestado motivoRecusa) {
 		this.motivoRecusa = motivoRecusa;
+	}
+
+	public Date getDataLimiteAuditar() {
+		return dataLimiteAuditar;
+	}
+
+	public void setDataLimiteAuditar(Date dataLimiteAuditar) {
+		this.dataLimiteAuditar = dataLimiteAuditar;
+	}
+
+	public Date getDataLimiteAgendamento() {
+		return dataLimiteAgendamento;
+	}
+
+	public void setDataLimiteAgendamento(Date dataLimiteAgendamento) {
+		this.dataLimiteAgendamento = dataLimiteAgendamento;
+	}
+
+	public Date getDataLimiteLancar() {
+		return dataLimiteLancar;
+	}
+
+	public void setDataLimiteLancar(Date dataLimiteLancar) {
+		this.dataLimiteLancar = dataLimiteLancar;
+	}
+
+	public Diagnostico getCid() {
+		return cid;
+	}
+
+	public void setCid(Diagnostico cid) {
+		this.cid = cid;
+	}
+
+	public Tarefa getAgendamento() {
+		return agendamento;
+	}
+
+	public void setAgendamento(Tarefa agendamento) {
+		this.agendamento = agendamento;
+	}
+
+	public Date getDataLimiteHomologar() {
+		return dataLimiteHomologar;
+	}
+
+	public void setDataLimiteHomologar(Date dataLimiteHomologar) {
+		this.dataLimiteHomologar = dataLimiteHomologar;
+	}
+
+	public int getSomaDiasAtestados() {
+		return somaDiasAtestados;
+	}
+
+	public void setSomaDiasAtestados(int somaDiasAtestados) {
+		this.somaDiasAtestados = somaDiasAtestados;
+	}
+
+	public String getConcatenacaoDatasCids() {
+		return concatenacaoDatasCids;
+	}
+
+	public void setConcatenacaoDatasCids(String concatenacaoDatasCids) {
+		this.concatenacaoDatasCids = concatenacaoDatasCids;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
+
+	public boolean isLancamentoSd2000() {
+		return lancamentoSd2000;
+	}
+
+	public void setLancamentoSd2000(boolean lancamentoSd2000) {
+		this.lancamentoSd2000 = lancamentoSd2000;
+	}
+
+	public Date getFim() {
+		return fim;
+	}
+
+	public void setFim(Date fim) {
+		this.fim = fim;
+	}
+
+	public List<Exame> getExamesConvocacao() {
+		return examesConvocacao;
+	}
+
+	public void setExamesConvocacao(List<Exame> examesConvocacao) {
+		this.examesConvocacao = examesConvocacao;
+	}
+
+	public boolean isAusenciaExames() {
+		return ausenciaExames;
+	}
+
+	public void setAusenciaExames(boolean ausenciaExames) {
+		this.ausenciaExames = ausenciaExames;
+	}
+
+	public List<HistoricoAtestado> getHistoricoAtestados() {
+		return historicoAtestados;
+	}
+
+	public void setHistoricoAtestados(List<HistoricoAtestado> historicoAtestados) {
+		this.historicoAtestados = historicoAtestados;
+	}
+
+	public Profissional getProfissional() {
+		return profissional;
+	}
+
+	public void setProfissional(Profissional profissional) {
+		this.profissional = profissional;
+	}
+
+	public String getPreviewStatus() {
+		return previewStatus;
+	}
+
+	public void setPreviewStatus(String previewStatus) {
+		this.previewStatus = previewStatus;
+	}
+
+	public Date getDataAuditoria() {
+		return dataAuditoria;
+	}
+
+	public void setDataAuditoria(Date dataAuditoria) {
+		this.dataAuditoria = dataAuditoria;
+	}
+
+	public boolean isConvocado() {
+		return convocado;
+	}
+
+	public void setConvocado(boolean convocado) {
+		this.convocado = convocado;
 	}
 	
 }
