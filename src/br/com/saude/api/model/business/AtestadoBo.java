@@ -124,9 +124,8 @@ public class AtestadoBo
 		}else
 			atestado.setDataLimiteAgendamento(null);
 		
-		if ( atestado.getAgendamento() != null && atestado.getAgendamento().getId() > 0 && 
-				atestado.getAgendamento().getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)) {
-			data.setTime(atestado.getAgendamento().getFim());
+		if ( atestado.getDataHomologacao() != null ) {
+			data.setTime(atestado.getDataHomologacao());
 			atestado.setDataLimiteLancar(
 					FeriadoBo.getInstance().getValidDates(data, atestado.getLimiteLancar()).getTime());
 		}else
@@ -148,6 +147,10 @@ public class AtestadoBo
 	
 	public List<ControleAtestadoDto> getAtestados() throws Exception {
 		return ControleAtestadoReport.getInstance().getAtestados();
+	}
+	
+	public List<ControleAtestadoDto> getAtestadosByAno(int ano) throws Exception {
+		return ControleAtestadoReport.getInstance().getAtestadosByAno(ano);
 	}
 
 	public boolean verificarAtrasoAtestado(Atestado atestado) throws Exception {

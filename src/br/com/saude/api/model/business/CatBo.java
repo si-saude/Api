@@ -1,6 +1,5 @@
 package br.com.saude.api.model.business;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericBo;
@@ -31,29 +30,23 @@ public class CatBo extends GenericBo<Cat, CatFilter, CatDao, CatBuilder, CatExam
 
 	@Override
 	protected void initializeFunctions() {
-		this.functionLoad = builder -> {
-			return builder.loadEmpregado();
-		};
-		
 		this.functionLoadAll = builder -> {
-			return this.functionLoad.apply(builder).loadDiagnostico().loadEmpregado().loadEmpresa().
-					loadGerencia().loadAgenteCausador().loadParteCorpoAtingida().loadNaturezaLesao().loadBase();
+			return builder.loadProfissionalCaracterizacao().loadProfissionalClassificacao();
 		};
 	}
 
 	@Override
-	public PagedList<Cat> getList(CatFilter filter) throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
-	}
-
-	@Override
-	public Cat getById(Object id) throws IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+	public Cat getById(Object id) throws Exception {
 		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
 	}
-
+	
 	public List<CatDto> getCats() throws Exception{
 		return CatReport.getInstance().getCats();
 	}
+
+	@Override
+	public PagedList<Cat> getList(CatFilter filter) throws Exception {
+		return super.getList(filter);
+	}
+	
 }

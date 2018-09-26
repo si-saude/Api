@@ -130,6 +130,21 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
 	}
 	
+	private void addOrChaveMatriculaCpf() {
+		this.criterions.add(Restrictions.or(Restrictions.eq("chave", this.filter.getChave()), 
+				Restrictions.eq("matricula", this.filter.getMatricula())));	
+	}
+	
+	public GenericExampleBuilder<Empregado, EmpregadoFilter> exampleOrChaveMatriculaCpf()
+			throws InstantiationException, IllegalAccessException {
+		if(this.filter!=null) {
+			initialize();
+			createExampleOrChaveMatriculaCpf();
+			this.criterions.add(getExample());
+		}
+		return this;
+	}
+	
 	public GenericExampleBuilder<Empregado, EmpregadoFilter> exampleEq()
 			throws InstantiationException, IllegalAccessException {
 		if(this.filter!=null) {
@@ -195,5 +210,9 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 		addGhe();
 		addGhee();
 		addRegime();
+	}
+	
+	protected void createExampleOrChaveMatriculaCpf() throws InstantiationException, IllegalAccessException {
+		addOrChaveMatriculaCpf();
 	}
 }

@@ -2,7 +2,6 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,118 +18,81 @@ public class Cat {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(unique = true)
-	@NotNull(message="É necessário informar o Número do Cat.")
-	@Size(max = 16, message="Tamanho máximo para Número do Cat: 16")
-	private String numero;
-
-	@NotNull(message="É necessário informar a Gerência do Cat.")
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private Gerencia gerencia;
-	
-	@Size(max = 64, message="Tamanho máximo para RTA do Cat: 64")
-	@NotNull(message="É necessário informar o RTA do CAT.")
-	private String rta;
-	
-	@Size(max = 128, message="Tamanho máximo para Instalação do Cat: 128")
-	private String instalacao;
-	
-	private boolean contratado;
-
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar o Empregado do CAT.")
 	private Empregado empregado;
 	
-	@NotNull(message="É necessário informar o Nome do Cat.")
-	@Size(max = 256, message="Tamanho máximo para Nome do Cat: 256")
-	private String nome;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar a Empresa do CAT.")
+	private Empresa empresa;
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar a Gerência do CAT.")
+	private Gerencia gerencia;
 	
-	@NotNull(message="É necessário informar a Data de Nascimento do Cat.")
-	private Date dataNascimento;
+	@Size(max = 128, message="Tamanho máximo para Gerente de Contrato do CAT: 128")
+	private String gerenteContrato;
 	
-	@NotNull(message="É necessário informar o Sexo do Cat.")
-	@Size(max = 16, message="Tamanho máximo para Sexo do Cat: 16")
-	private String sexo;
+	@Size(max = 16, message="Tamanho máximo para Telefone do Gerente do Contrato do CAT: 16")
+	private String telefoneGerente;
 	
-	@NotNull(message="É necessário informar o CPF do Cat.")
-	@Size(max = 11, message="Tamanho máximo para CPF do Cat: 11")
-	private String cpf;
+	@Size(max = 128, message="Tamanho máximo para Fiscal de Contrato do CAT: 128")
+	private String fiscalContrato;
 	
-	@Size(max = 128, message="Tamanho máximo para Cargo do Cat: 128")
-	private String cargo;
+	@Size(max = 16, message="Tamanho máximo para Telefone do Fiscal do Contrato do CAT: 16")
+	private String telefoneFiscal;
+	
+	@NotNull(message="É necessário informar a Data de Ocorrência do CAT.")
+	private Date dataOcorrencia;
+	
+	@Size(max = 512, message="Tamanho máximo para Local do CAT: 512")
+	@NotNull(message="É necessário informar o Local do CAT.")
+	private String local;
+	
+	@Size(max = 4096, message="Tamanho máximo para Descrição do CAT: 4096")
+	@NotNull(message="É necessário informar a Descrição do CAT.")
+	private String descricao;
+	
+	private boolean empregadoServicoCompanhia;
+	
+	private boolean ocorrenciaAmbienteTrabalho;
+	
+	private boolean ocorrenciaTrajeto;
+	
+	@Size(max = 256, message="Tamanho máximo para Responsável pela Informação do CAT: 256")
+	private String responsavelInformacao;
+	
+	private Date dataInformacao;
+	
+	@Size(max = 4096, message="Tamanho máximo para Caracterização do CAT: 4096")
+	@NotNull(message="É necessário informar a Caracterização do CAT.")
+	private String caracterizacao;
+	
+	private boolean lesaoCorporal;
+	
+	@Size(max = 32, message="Tamanho máximo para Nexo Causal do CAT: 32")
+	private String nexoCausal;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	private Fornecedor empresa;
+	private Profissional profissionalCaracterizacao;
 	
-	@Size(max = 32, message="Tamanho máximo para Regime do Cat: 32")
-	private String regime;
+	private Date dataCaracterizacao;
 	
-	private boolean afastamento;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar a Classificacao do Afastamento do CAT.")
+	private ClassificacaoAfastamento classificacao;
 	
-	@Size(max = 32, message="Tamanho máximo para Partes do Corpo do Cat: 32")
-	private String partesCorpo;
+	private int tempoPrevisto;
 	
-	@NotNull(message="É necessário informar o Dia/Hora do Acidente do CAT.")
-	private Date diaHoraAcidente;
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Diagnostico cid;
 	
-	@Size(max = 16, message="Tamanho máximo para Número de SISIN do Cat: 16")
-	private String numeroSisin;
-	
-	private int classificacaoSisin;
-	
-	private Date dataEmissaoCat;
-	
-	@Size(max = 32, message="Tamanho máximo para Gravidade do Cat: 32")
-	private String gravidade;
-	
-	private Date dataAvaliacaoMedica;
-	
-	private boolean registroSd2000;
-	
-	private boolean catSd2000;
-
-	@Size(max = 16, message="Tamanho máximo para Tipo de Acidente do Cat: 16")
-	private String tipoAcidente;
-	
-	@Size(max = 16, message="Tamanho máximo para Tipo CAT do Cat: 16")
-	private String tipoCat;
-
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private Diagnostico diagnostico;
-	
-	@NotNull(message="É necessário informar a Parte do Corpo Atingida do Cat.")
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private ParteCorpoAtingida parteCorpoAtingida;
-	
-	@NotNull(message="É necessário informar o Agente Causador do Cat.")
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private AgenteCausador agenteCausador;
-	
-	@NotNull(message="É necessário informar a Natureza da Lesão do Cat.")
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private NaturezaLesao naturezaLesao;
-	
-	private boolean comunicavelSus;
-	
-	private boolean ferimentoGraveConformeAnp;
-	
-	@Size(max = 16, message="Tamanho máximo para Código da Carta do Sindicato do Cat: 16")
-	private String codigoCartaSindicato;
-	
-	private Date dataComunicacaoSindicato;
-	
-	private float remuneracao;
+	private boolean ferimentoGrave;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	private Base base;
+	private Profissional profissionalClassificacao;
 	
-	private Date inicioBeneficio;
-	
-	private Date ultimoDiaTrabalho;
-	
-	private Date retornoTrabalho;
-	
-	@Size(max = 32, message="Tamanho máximo para Número do Cat: 32")
-	private String numeroBeneficio;
+	private Date dataClassificacao;
 	
 	@Version
 	private long version;
@@ -143,46 +105,6 @@ public class Cat {
 		this.id = id;
 	}
 
-	public String getNumero() {
-		return numero;
-	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
-	
-	public Gerencia getGerencia() {
-		return gerencia;
-	}
-
-	public void setGerencia(Gerencia gerencia) {
-		this.gerencia = gerencia;
-	}
-
-	public String getRta() {
-		return rta;
-	}
-
-	public void setRta(String Rta) {
-		rta = Rta;
-	}
-
-	public String getInstalacao() {
-		return instalacao;
-	}
-
-	public void setInstalacao(String instalacao) {
-		this.instalacao = instalacao;
-	}
-
-	public boolean isContratado() {
-		return contratado;
-	}
-
-	public void setContratado(boolean contratado) {
-		this.contratado = contratado;
-	}
-
 	public Empregado getEmpregado() {
 		return empregado;
 	}
@@ -191,268 +113,204 @@ public class Cat {
 		this.empregado = empregado;
 	}
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public Date getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-
-	public String getSexo() {
-		return sexo;
-	}
-
-	public void setSexo(String sexo) {
-		this.sexo = sexo;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public String getCargo() {
-		return cargo;
-	}
-
-	public void setCargo(String cargo) {
-		this.cargo = cargo;
-	}
-
-	public Fornecedor getEmpresa() {
+	public Empresa getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(Fornecedor empresa) {
+	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
 
-	public String getRegime() {
-		return regime;
+	public Gerencia getGerencia() {
+		return gerencia;
 	}
 
-	public void setRegime(String regime) {
-		this.regime = regime;
+	public void setGerencia(Gerencia gerencia) {
+		this.gerencia = gerencia;
 	}
 
-	public boolean isAfastamento() {
-		return afastamento;
+	public String getGerenteContrato() {
+		return gerenteContrato;
 	}
 
-	public void setAfastamento(boolean afastamento) {
-		this.afastamento = afastamento;
+	public void setGerenteContrato(String gerenteContrato) {
+		this.gerenteContrato = gerenteContrato;
 	}
 
-	public Date getDiaHoraAcidente() {
-		return diaHoraAcidente;
+	public String getTelefoneGerente() {
+		return telefoneGerente;
 	}
 
-	public void setDiaHoraAcidente(Date diaHoraAcidente) {
-		this.diaHoraAcidente = diaHoraAcidente;
+	public void setTelefoneGerente(String telefoneGerente) {
+		this.telefoneGerente = telefoneGerente;
 	}
 
-	public String getNumeroSisin() {
-		return numeroSisin;
+	public String getFiscalContrato() {
+		return fiscalContrato;
 	}
 
-	public void setNumeroSisin(String numeroSisin) {
-		this.numeroSisin = numeroSisin;
+	public void setFiscalContrato(String fiscalContrato) {
+		this.fiscalContrato = fiscalContrato;
 	}
 
-	public int getClassificacaoSisin() {
-		return classificacaoSisin;
+	public String getTelefoneFiscal() {
+		return telefoneFiscal;
 	}
 
-	public void setClassificacaoSisin(int classificacaoSisin) {
-		this.classificacaoSisin = classificacaoSisin;
+	public void setTelefoneFiscal(String telefoneFiscal) {
+		this.telefoneFiscal = telefoneFiscal;
 	}
 
-	public Date getDataEmissaoCat() {
-		return dataEmissaoCat;
+	public Date getDataOcorrencia() {
+		return dataOcorrencia;
 	}
 
-	public void setDataEmissaoCat(Date dataEmissaoCat) {
-		this.dataEmissaoCat = dataEmissaoCat;
+	public void setDataOcorrencia(Date dataOcorrencia) {
+		this.dataOcorrencia = dataOcorrencia;
 	}
 
-	public String getGravidade() {
-		return gravidade;
+	public String getLocal() {
+		return local;
 	}
 
-	public void setGravidade(String gravidade) {
-		this.gravidade = gravidade;
+	public void setLocal(String local) {
+		this.local = local;
 	}
 
-	public Date getDataAvaliacaoMedica() {
-		return dataAvaliacaoMedica;
+	public String getDescricao() {
+		return descricao;
 	}
 
-	public void setDataAvaliacaoMedica(Date dataAvaliacaoMedica) {
-		this.dataAvaliacaoMedica = dataAvaliacaoMedica;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
-	public boolean isRegistroSd2000() {
-		return registroSd2000;
+	public boolean isEmpregadoServicoCompanhia() {
+		return empregadoServicoCompanhia;
 	}
 
-	public void setRegistroSd2000(boolean registroSd2000) {
-		this.registroSd2000 = registroSd2000;
+	public void setEmpregadoServicoCompanhia(boolean empregadoServicoCompanhia) {
+		this.empregadoServicoCompanhia = empregadoServicoCompanhia;
 	}
 
-	public boolean isCatSd2000() {
-		return catSd2000;
+	public boolean isOcorrenciaAmbienteTrabalho() {
+		return ocorrenciaAmbienteTrabalho;
 	}
 
-	public void setCatSd2000(boolean CatSd2000) {
-		this.catSd2000 = CatSd2000;
+	public void setOcorrenciaAmbienteTrabalho(boolean ocorrenciaAmbienteTrabalho) {
+		this.ocorrenciaAmbienteTrabalho = ocorrenciaAmbienteTrabalho;
 	}
 
-	public String getTipoAcidente() {
-		return tipoAcidente;
+	public boolean isOcorrenciaTrajeto() {
+		return ocorrenciaTrajeto;
 	}
 
-	public void setTipoAcidente(String tipoAcidente) {
-		this.tipoAcidente = tipoAcidente;
+	public void setOcorrenciaTrajeto(boolean ocorrenciaTrajeto) {
+		this.ocorrenciaTrajeto = ocorrenciaTrajeto;
 	}
 
-	public Diagnostico getDiagnostico() {
-		return diagnostico;
+	public String getResponsavelInformacao() {
+		return responsavelInformacao;
 	}
 
-	public void setDiagnostico(Diagnostico diagnostico) {
-		this.diagnostico = diagnostico;
+	public void setResponsavelInformacao(String responsavelInformacao) {
+		this.responsavelInformacao = responsavelInformacao;
 	}
 
-	public boolean isComunicavelSus() {
-		return comunicavelSus;
+	public Date getDataInformacao() {
+		return dataInformacao;
 	}
 
-	public void setComunicavelSus(boolean comunicavelSus) {
-		this.comunicavelSus = comunicavelSus;
+	public void setDataInformacao(Date dataInformacao) {
+		this.dataInformacao = dataInformacao;
 	}
 
-	public boolean isFerimentoGraveConformeAnp() {
-		return ferimentoGraveConformeAnp;
+	public String getCaracterizacao() {
+		return caracterizacao;
 	}
 
-	public void setFerimentoGraveConformeAnp(boolean ferimentoGraveConformeAnp) {
-		this.ferimentoGraveConformeAnp = ferimentoGraveConformeAnp;
+	public void setCaracterizacao(String caracterizacao) {
+		this.caracterizacao = caracterizacao;
 	}
 
-	public String getCodigoCartaSindicato() {
-		return codigoCartaSindicato;
+	public boolean isLesaoCorporal() {
+		return lesaoCorporal;
 	}
 
-	public void setCodigoCartaSindicato(String codigoCartaSindicato) {
-		this.codigoCartaSindicato = codigoCartaSindicato;
+	public void setLesaoCorporal(boolean lesaoCorporal) {
+		this.lesaoCorporal = lesaoCorporal;
 	}
 
-	public Date getDataComunicacaoSindicato() {
-		return dataComunicacaoSindicato;
+	public String getNexoCausal() {
+		return nexoCausal;
 	}
 
-	public void setDataComunicacaoSindicato(Date dataComunicacaoSindicato) {
-		this.dataComunicacaoSindicato = dataComunicacaoSindicato;
+	public void setNexoCausal(String nexoCausal) {
+		this.nexoCausal = nexoCausal;
 	}
 
-	public float getRemuneracao() {
-		return remuneracao;
+	public Profissional getProfissionalCaracterizacao() {
+		return profissionalCaracterizacao;
 	}
 
-	public void setRemuneracao(float remuneracao) {
-		this.remuneracao = remuneracao;
-	}
-	
-	public String getPartesCorpo() {
-		return partesCorpo;
+	public void setProfissionalCaracterizacao(Profissional profissionalCaracterizacao) {
+		this.profissionalCaracterizacao = profissionalCaracterizacao;
 	}
 
-	public void setPartesCorpo(String partesCorpo) {
-		this.partesCorpo = partesCorpo;
+	public Date getDataCaracterizacao() {
+		return dataCaracterizacao;
 	}
 
-	public String getTipoCat() {
-		return tipoCat;
+	public void setDataCaracterizacao(Date dataCaracterizacao) {
+		this.dataCaracterizacao = dataCaracterizacao;
 	}
 
-	public void setTipoCat(String tipoCat) {
-		this.tipoCat = tipoCat;
-	}
-	
-	public ParteCorpoAtingida getParteCorpoAtingida() {
-		return parteCorpoAtingida;
+	public ClassificacaoAfastamento getClassificacao() {
+		return classificacao;
 	}
 
-	public void setParteCorpoAtingida(ParteCorpoAtingida parteCorpoAtingida) {
-		this.parteCorpoAtingida = parteCorpoAtingida;
+	public void setClassificacao(ClassificacaoAfastamento classificacao) {
+		this.classificacao = classificacao;
 	}
 
-	public AgenteCausador getAgenteCausador() {
-		return agenteCausador;
+	public int getTempoPrevisto() {
+		return tempoPrevisto;
 	}
 
-	public void setAgenteCausador(AgenteCausador agenteCausador) {
-		this.agenteCausador = agenteCausador;
+	public void setTempoPrevisto(int tempoPrevisto) {
+		this.tempoPrevisto = tempoPrevisto;
 	}
 
-	public NaturezaLesao getNaturezaLesao() {
-		return naturezaLesao;
+	public Diagnostico getCid() {
+		return cid;
 	}
 
-	public void setNaturezaLesao(NaturezaLesao naturezaLesao) {
-		this.naturezaLesao = naturezaLesao;
-	}
-	
-	public Base getBase() {
-		return base;
+	public void setCid(Diagnostico cid) {
+		this.cid = cid;
 	}
 
-	public void setBase(Base base) {
-		this.base = base;
+	public boolean isFerimentoGrave() {
+		return ferimentoGrave;
 	}
 
-	public Date getInicioBeneficio() {
-		return inicioBeneficio;
+	public void setFerimentoGrave(boolean ferimentoGrave) {
+		this.ferimentoGrave = ferimentoGrave;
 	}
 
-	public void setInicioBeneficio(Date inicioBeneficio) {
-		this.inicioBeneficio = inicioBeneficio;
+	public Profissional getProfissionalClassificacao() {
+		return profissionalClassificacao;
 	}
 
-	public Date getUltimoDiaTrabalho() {
-		return ultimoDiaTrabalho;
+	public void setProfissionalClassificacao(Profissional profissionalClassificacao) {
+		this.profissionalClassificacao = profissionalClassificacao;
 	}
 
-	public void setUltimoDiaTrabalho(Date ultimoDiaTrabalho) {
-		this.ultimoDiaTrabalho = ultimoDiaTrabalho;
+	public Date getDataClassificacao() {
+		return dataClassificacao;
 	}
 
-	public Date getRetornoTrabalho() {
-		return retornoTrabalho;
-	}
-
-	public void setRetornoTrabalho(Date retornoTrabalho) {
-		this.retornoTrabalho = retornoTrabalho;
-	}
-
-	public String getNumeroBeneficio() {
-		return numeroBeneficio;
-	}
-
-	public void setNumeroBeneficio(String numeroBeneficio) {
-		this.numeroBeneficio = numeroBeneficio;
+	public void setDataClassificacao(Date dataClassificacao) {
+		this.dataClassificacao = dataClassificacao;
 	}
 
 	public long getVersion() {

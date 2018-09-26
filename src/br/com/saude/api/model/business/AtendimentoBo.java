@@ -739,14 +739,6 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	@SuppressWarnings("deprecation")
 	public String registrarSolicitacaoExamePericial(Atendimento atendimento) throws Exception {
-		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO, CUJA DATA INFORMADA ESTÁ NO PERÍODO
-		// DO CRONOGRAMA, CUJO TIPO DA CONVOCAÇÃO CORRESPONDA AO SERVIÇO SELECIONADO
-		EmpregadoConvocacaoFilter empConFilter = configureEmpregadoConvocacaoFilter(atendimento);
-		PagedList<EmpregadoConvocacao> empConList = EmpregadoConvocacaoBo.getInstance().getList(empConFilter);
-
-		if (empConList.getTotal() == 0)
-			throw new Exception("Não foi possível solicitar o serviço, pois não existe "
-					+ "convocação para o empregado cujo cronograma atenda à data informada.");
 		
 		if( atendimento.getTarefa().getEquipe() == null )
 			throw new Exception("Equipe da tarefa do Exame Pericial deve existir.");

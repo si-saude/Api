@@ -1,8 +1,11 @@
 package br.com.saude.api.model.persistence.report;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,9 +31,46 @@ public class ControleAtestadoReport {
 		return instance;
 	}
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
 	public List<ControleAtestadoDto> getAtestados() throws Exception {
 
+		StringBuffer query = parseSqlToString();
+
+		return performQuery(query);
+	}
+	
+	public List<ControleAtestadoDto> getAtestadosByAno(int ano) throws Exception {
+
+		StringBuffer query = parseSqlToString();
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.DATE, 1);
+		calendar.set(Calendar.MONTH, 0);
+		calendar.set(Calendar.YEAR, ano);
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		
+		int indexReplace = query.indexOf("[DATA_INICIO]");
+		query.replace(indexReplace, indexReplace+13, "'"+sdf.format(calendar.getTime())+"'");
+		
+		indexReplace = query.indexOf("[DATA_INICIO]");
+		query.replace(indexReplace, indexReplace+13, "'"+sdf.format(calendar.getTime())+"'");
+		
+		calendar.set(Calendar.DATE, 31);
+		calendar.set(Calendar.MONTH, 11);
+		
+		indexReplace = query.indexOf("[DATA_FIM]");
+		query.replace(indexReplace, indexReplace+10, "'"+sdf.format(calendar.getTime())+"'");
+		
+		indexReplace = query.indexOf("[DATA_FIM]");
+		query.replace(indexReplace, indexReplace+10, "'"+sdf.format(calendar.getTime())+"'");
+		
+		return performQuery(new StringBuffer(query));
+	}
+
+
+	private StringBuffer parseSqlToString() throws FileNotFoundException, IOException {
 		BufferedReader in = new BufferedReader(new FileReader(
 				Helper.getProjectPath().replace("file:/", "")
 						+ "br/com/saude/api/model/persistence/sql/QueryControleAtestado.sql"));
@@ -40,7 +80,11 @@ public class ControleAtestadoReport {
 			query.append(str + "\n ");
 		}
 		in.close();
+		return query;
+	}
 
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	private List<ControleAtestadoDto> performQuery(StringBuffer query) throws Exception {
 		List<ControleAtestadoDto> atestados = new ArrayList<ControleAtestadoDto>();
 
 		Session session = HibernateHelper.getSession();
@@ -129,6 +173,13 @@ public class ControleAtestadoReport {
 				atestado.setObservacao((String) row[16]);
 			
 			atestado.setStatusAtestado((String) row[17]);
+			
+			if (row[18] != null) {
+				calendar1.setTimeInMillis((long) ((Timestamp)row[18]).getTime());
+				atestado.setDataAgendamento(calendar1.get(Calendar.DATE) + "/" +
+						((Integer)(calendar1.get(Calendar.MONTH)+1)).toString() + "/" +
+						calendar1.get(Calendar.YEAR));
+			}
 			
 			atestados.add(atestado);
 		}
