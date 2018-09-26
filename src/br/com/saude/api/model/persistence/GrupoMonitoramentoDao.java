@@ -9,14 +9,9 @@ import org.javatuples.Pair;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
-import br.com.saude.api.model.entity.po.Criterio;
-import br.com.saude.api.model.entity.po.Exame;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
-import br.com.saude.api.model.entity.po.GrupoMonitoramentoExame;
 
 public class GrupoMonitoramentoDao extends GenericDao<GrupoMonitoramento> {
-
-	private Function<GrupoMonitoramento,GrupoMonitoramento> functionLoadGrupoMonitoramentoExames;
 	
 	private static GrupoMonitoramentoDao instance;
 	
@@ -39,41 +34,10 @@ public class GrupoMonitoramentoDao extends GenericDao<GrupoMonitoramento> {
 		
 		this.functionLoadAll = grupoMonitoramento -> {
 			grupoMonitoramento = this.functionLoad.apply(grupoMonitoramento);
-			grupoMonitoramento = loadGrupoMonitoramentoExames(grupoMonitoramento);
 			grupoMonitoramento = loadEmpregados(grupoMonitoramento);
 			return grupoMonitoramento;
 		};
 		
-		this.functionLoadGrupoMonitoramentoExames = grupoMonitoramento -> {
-			grupoMonitoramento = this.functionLoad.apply(grupoMonitoramento);
-			grupoMonitoramento = loadGrupoMonitoramentoExames(grupoMonitoramento);
-			return grupoMonitoramento;
-		};
-		
-		this.functionBeforeSave = pair -> {
-			GrupoMonitoramento grupoMonitoramento = pair.getValue0();
-			Session session = pair.getValue1();
-			
-			if(grupoMonitoramento.getGrupoMonitoramentoExames() != null)
-				for(int i=0; i < grupoMonitoramento.getGrupoMonitoramentoExames().size(); i++){
-					GrupoMonitoramentoExame grupoMonitoramentoExame = 
-							grupoMonitoramento.getGrupoMonitoramentoExames().get(i);
-					
-					//CARREGAR OS EXAMES
-					grupoMonitoramentoExame.setExame(
-							session.get(Exame.class,grupoMonitoramentoExame.getExame().getId()));
-					
-					//CARREGAR OS CRITÉRIOS
-					if(grupoMonitoramentoExame.getCriterios() != null) {
-						for(int j=0; j < grupoMonitoramentoExame.getCriterios().size(); j++) {
-							grupoMonitoramentoExame.getCriterios().set(j, 
-									session.get(Criterio.class, grupoMonitoramentoExame.getCriterios().get(j).getId()));
-						}
-					}
-				}
-			
-			return grupoMonitoramento;
-		};
 	}
 	
 	public GrupoMonitoramento getByIdLoadAll(Object id) throws Exception {
@@ -88,26 +52,9 @@ public class GrupoMonitoramentoDao extends GenericDao<GrupoMonitoramento> {
 		return super.getList(exampleBuilder, this.functionLoadAll);
 	}
 	
-	public PagedList<GrupoMonitoramento> getListFunctionLoadGrupoMonitoramentoExames(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
-		return super.getList(exampleBuilder, this.functionLoadGrupoMonitoramentoExames);
-	}
-	
 	private GrupoMonitoramento loadTipoGrupoMonitoramento(GrupoMonitoramento grupoMonitoramento) {
 		if(grupoMonitoramento.getTipoGrupoMonitoramento() != null)
 			Hibernate.initialize(grupoMonitoramento.getTipoGrupoMonitoramento());
-		return grupoMonitoramento;
-	}
-	
-	private GrupoMonitoramento loadGrupoMonitoramentoExames(GrupoMonitoramento grupoMonitoramento) {
-		if(grupoMonitoramento.getGrupoMonitoramentoExames() != null) {
-			
-			Hibernate.initialize(grupoMonitoramento.getGrupoMonitoramentoExames());
-			
-			grupoMonitoramento.getGrupoMonitoramentoExames().forEach(g->{
-				if(g.getCriterios() != null)
-					Hibernate.initialize(g.getCriterios());
-			});
-		}
 		return grupoMonitoramento;
 	}
 	

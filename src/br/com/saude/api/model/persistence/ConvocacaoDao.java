@@ -93,11 +93,6 @@ public class ConvocacaoDao extends GenericDao<Convocacao> {
 					
 					if(eC.getEmpregado().getGrupoMonitoramentos() != null) {
 						Hibernate.initialize(eC.getEmpregado().getGrupoMonitoramentos());
-						
-						eC.getEmpregado().getGrupoMonitoramentos().forEach(g->{
-							if(g.getGrupoMonitoramentoExames() != null)
-								Hibernate.initialize(g.getGrupoMonitoramentoExames());
-						});
 					}
 				}
 				

@@ -11,7 +11,6 @@ import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 public class GrupoMonitoramentoBuilder 
 		extends GenericEntityBuilder<GrupoMonitoramento, GrupoMonitoramentoFilter> {
 
-	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadGrupoMonitoramentoExames;
 	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadTipoGrupoMonitoramento;
 	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadEmpregados;
 	
@@ -33,14 +32,6 @@ public class GrupoMonitoramentoBuilder
 
 	@Override
 	protected void initializeFunctions() {
-		this.loadGrupoMonitoramentoExames = grupoMonitoramentos -> {
-			if(grupoMonitoramentos.get("origem").getGrupoMonitoramentoExames() != null)
-				grupoMonitoramentos.get("destino").setGrupoMonitoramentoExames(
-						GrupoMonitoramentoExameBuilder
-						.newInstance(grupoMonitoramentos.get("origem").getGrupoMonitoramentoExames())
-						.loadExame().loadPeriodicidade().loadCriterios().getEntityList());
-			return grupoMonitoramentos.get("destino");
-		};
 		
 		this.loadTipoGrupoMonitoramento = grupoMonitoramentos -> {
 			if(grupoMonitoramentos.get("origem").getTipoGrupoMonitoramento() != null)
@@ -72,10 +63,6 @@ public class GrupoMonitoramentoBuilder
 		newGrupoMonitoramento.setVersion(grupoMonitoramento.getVersion());
 		
 		return newGrupoMonitoramento;
-	}
-	
-	public GrupoMonitoramentoBuilder loadGrupoMonitoramentoExames() {
-		return (GrupoMonitoramentoBuilder) this.loadProperty(this.loadGrupoMonitoramentoExames);
 	}
 	
 	public GrupoMonitoramentoBuilder loadTipoGrupoMonitoramento() {
