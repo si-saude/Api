@@ -163,6 +163,8 @@ public class Atestado {
 	
 	private boolean convocado;
 	
+	private Date dataHomologacao;
+	
 	@Version
 	private long version;
 	
@@ -580,6 +582,14 @@ public class Atestado {
 
 	public void setConvocado(boolean convocado) {
 		this.convocado = convocado;
+	}
+
+	public Date getDataHomologacao() {
+		return dataHomologacao;
+	}
+
+	public void setDataHomologacao(Date dataHomologacao) {
+		this.dataHomologacao = dataHomologacao;
 	}
 	
 }

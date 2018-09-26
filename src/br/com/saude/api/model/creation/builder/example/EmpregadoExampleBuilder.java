@@ -8,6 +8,7 @@ import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
+import br.com.saude.api.model.entity.filter.PessoaFilter;
 import br.com.saude.api.model.entity.po.Empregado;
 
 public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,EmpregadoFilter> {
@@ -130,6 +131,21 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 			this.criterions.add(Restrictions.eq("id", (int)this.filter.getId()));
 	}
 	
+	private void addOrChaveMatriculaCpf() {
+		this.criterions.add(Restrictions.or(Restrictions.eq("chave", this.filter.getChave()), 
+				Restrictions.eq("matricula", this.filter.getMatricula())));	
+	}
+	
+	public GenericExampleBuilder<Empregado, EmpregadoFilter> exampleOrChaveMatriculaCpf()
+			throws InstantiationException, IllegalAccessException {
+		if(this.filter!=null) {
+			initialize();
+			createExampleOrChaveMatriculaCpf();
+			this.criterions.add(getExample());
+		}
+		return this;
+	}
+	
 	public GenericExampleBuilder<Empregado, EmpregadoFilter> exampleEq()
 			throws InstantiationException, IllegalAccessException {
 		if(this.filter!=null) {
@@ -195,5 +211,9 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 		addGhe();
 		addGhee();
 		addRegime();
+	}
+	
+	protected void createExampleOrChaveMatriculaCpf() throws InstantiationException, IllegalAccessException {
+		addOrChaveMatriculaCpf();
 	}
 }

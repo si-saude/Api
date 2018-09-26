@@ -9,6 +9,7 @@ public class ControleAtestadoDto {
 	private String fimAtestado;
 	private int numeroDias;
 	private String dataRecebimento;
+	private String dataAgendamento;
 	
 	private int prazoRecebimento;
 	private boolean recebidoNoPrazo;
@@ -73,6 +74,12 @@ public class ControleAtestadoDto {
 	}
 	public void setDataRecebimento(String dataRecebimento) {
 		this.dataRecebimento = dataRecebimento;
+	}
+	public String getDataAgendamento() {
+		return dataAgendamento;
+	}
+	public void setDataAgendamento(String dataAgendamento) {
+		this.dataAgendamento = dataAgendamento;
 	}
 	public int getPrazoRecebimento() {
 		return prazoRecebimento;

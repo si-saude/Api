@@ -104,6 +104,7 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		newAtestado.setPreviewStatus(atestado.getPreviewStatus());
 		newAtestado.setDataAuditoria(atestado.getDataAuditoria());
 		newAtestado.setConvocado(atestado.isConvocado());
+		newAtestado.setDataHomologacao(atestado.getDataHomologacao());
 		newAtestado.setVersion(atestado.getVersion());
 		
 		if (atestado.getProfissional() != null) 

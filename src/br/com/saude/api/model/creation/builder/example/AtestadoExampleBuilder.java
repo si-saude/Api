@@ -36,6 +36,7 @@ public class AtestadoExampleBuilder extends GenericExampleBuilder<Atestado, Ates
 		addAusenciaExames();
 		addDataAuditoria();
 		addConvocado();
+		addDataHomologacao();
 	}
 	
 	@Override
@@ -83,6 +84,10 @@ public class AtestadoExampleBuilder extends GenericExampleBuilder<Atestado, Ates
 	
 	protected void addConvocado() {
 		this.entity.setConvocado(this.addBoolean("convocado", this.filter.getConvocado()));
+	}
+	
+	private void addDataHomologacao() {
+		super.addData("dataHomologacao", this.filter.getDataHomologacao());
 	}
 	
 	private void addId() {

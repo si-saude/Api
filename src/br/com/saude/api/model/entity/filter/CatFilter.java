@@ -1,144 +1,185 @@
 package br.com.saude.api.model.entity.filter;
 
 import br.com.saude.api.generic.BooleanFilter;
+import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class CatFilter extends GenericFilter {
 
-	private String numero;
-	private String nome;
-	private String cpf;
-	private String sexo;
-	private String regime;
-	private String gravidade;
-	private String partesCorpo;
-	private String tipoAcidente;
-	private String tipoCat;
-	private BooleanFilter afastamento;
-	private BooleanFilter catSd2000;
-	private BooleanFilter comunicavelSus;
-	private BooleanFilter contratado;
-	private BooleanFilter ferimentoGraveConformeAnp;
-	private BooleanFilter registroSd2000;
-	
-	public String getNumero() {
-		return numero;
+	private EmpregadoFilter empregado;
+	private EmpresaFilter empresa;
+	private GerenciaFilter gerencia;
+	private String telefoneGerente;
+	private String fiscalContrato;
+	private String telefoneFiscal;
+	private DateFilter dataOcorrencia;
+	private String local;
+	private String descricao;
+	private BooleanFilter empregadoServicoCompanhia;
+	private BooleanFilter ocorrenciaAmbienteTrabalho;
+	private BooleanFilter ocorrenciaTrajeto;
+	private String responsavelInformacao;
+	private DateFilter dataInformacao;
+	private String caracterizacao;
+	private BooleanFilter lesaoCorporal;
+	private String nexoCausal;
+	private ProfissionalFilter profissionalCaracterizacao;
+	private DateFilter dataCaracterizacao;
+	private ClassificacaoAfastamentoFilter classificacao;
+	private int tempoPrevisto;
+	private DiagnosticoFilter cid;
+	private BooleanFilter ferimentoGrave;
+	private ProfissionalFilter profissionalClassificacao;
+	private DateFilter dataClassificacao;
+	public EmpregadoFilter getEmpregado() {
+		return empregado;
 	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
+	public void setEmpregado(EmpregadoFilter empregado) {
+		this.empregado = empregado;
 	}
-	
-	public String getNome() {
-		return nome;
+	public EmpresaFilter getEmpresa() {
+		return empresa;
 	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setEmpresa(EmpresaFilter empresa) {
+		this.empresa = empresa;
 	}
-
-	public String getCpf() {
-		return cpf;
+	public GerenciaFilter getGerencia() {
+		return gerencia;
 	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public void setGerencia(GerenciaFilter gerencia) {
+		this.gerencia = gerencia;
 	}
-	
-	public String getSexo() {
-		return sexo;
+	public String getTelefoneGerente() {
+		return telefoneGerente;
 	}
-
-	public void setSexo(String sexo) {
-		this.sexo = sexo;
+	public void setTelefoneGerente(String telefoneGerente) {
+		this.telefoneGerente = telefoneGerente;
 	}
-	
-	public String getRegime() {
-		return regime;
+	public String getFiscalContrato() {
+		return fiscalContrato;
 	}
-
-	public void setRegime(String regime) {
-		this.regime = regime;
+	public void setFiscalContrato(String fiscalContrato) {
+		this.fiscalContrato = fiscalContrato;
 	}
-	
-	public String getGravidade() {
-		return gravidade;
+	public String getTelefoneFiscal() {
+		return telefoneFiscal;
 	}
-
-	public void setGravidade(String gravidade) {
-		this.gravidade = gravidade;
+	public void setTelefoneFiscal(String telefoneFiscal) {
+		this.telefoneFiscal = telefoneFiscal;
 	}
-	
-	public String getPartesCorpo() {
-		return partesCorpo;
+	public DateFilter getDataOcorrencia() {
+		return dataOcorrencia;
 	}
-
-	public void setPartesCorpo(String partesCorpo) {
-		this.partesCorpo = partesCorpo;
+	public void setDataOcorrencia(DateFilter dataOcorrencia) {
+		this.dataOcorrencia = dataOcorrencia;
 	}
-	
-	public String getTipoAcidente() {
-		return tipoAcidente;
+	public String getLocal() {
+		return local;
 	}
-
-	public void setTipoAcidente(String tipoAcidente) {
-		this.tipoAcidente = tipoAcidente;
+	public void setLocal(String local) {
+		this.local = local;
 	}
-	
-	public String getTipoCat() {
-		return tipoCat;
+	public String getDescricao() {
+		return descricao;
 	}
-
-	public void setTipoCat(String tipoCat) {
-		this.tipoCat = tipoCat;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
-
-	public BooleanFilter getAfastamento() {
-		return afastamento;
+	public BooleanFilter getEmpregadoServicoCompanhia() {
+		return empregadoServicoCompanhia;
 	}
-
-	public void setAfastamento(BooleanFilter afastamento) {
-		this.afastamento = afastamento;
+	public void setEmpregadoServicoCompanhia(BooleanFilter empregadoServicoCompanhia) {
+		this.empregadoServicoCompanhia = empregadoServicoCompanhia;
 	}
-
-	public BooleanFilter getCatSd2000() {
-		return catSd2000;
+	public BooleanFilter getOcorrenciaAmbienteTrabalho() {
+		return ocorrenciaAmbienteTrabalho;
 	}
-
-	public void setCatSd2000(BooleanFilter catSd2000) {
-		this.catSd2000 = catSd2000;
+	public void setOcorrenciaAmbienteTrabalho(BooleanFilter ocorrenciaAmbienteTrabalho) {
+		this.ocorrenciaAmbienteTrabalho = ocorrenciaAmbienteTrabalho;
 	}
-
-	public BooleanFilter getComunicavelSus() {
-		return comunicavelSus;
+	public BooleanFilter getOcorrenciaTrajeto() {
+		return ocorrenciaTrajeto;
 	}
-
-	public void setComunicavelSus(BooleanFilter comunicavelSus) {
-		this.comunicavelSus = comunicavelSus;
+	public void setOcorrenciaTrajeto(BooleanFilter ocorrenciaTrajeto) {
+		this.ocorrenciaTrajeto = ocorrenciaTrajeto;
 	}
-
-	public BooleanFilter getContratado() {
-		return contratado;
+	public String getResponsavelInformacao() {
+		return responsavelInformacao;
 	}
-
-	public void setContratado(BooleanFilter contratado) {
-		this.contratado = contratado;
+	public void setResponsavelInformacao(String responsavelInformacao) {
+		this.responsavelInformacao = responsavelInformacao;
 	}
-
-	public BooleanFilter getFerimentoGraveConformeAnp() {
-		return ferimentoGraveConformeAnp;
+	public DateFilter getDataInformacao() {
+		return dataInformacao;
 	}
-
-	public void setFerimentoGraveConformeAnp(BooleanFilter ferimentoGraveConformeAnp) {
-		this.ferimentoGraveConformeAnp = ferimentoGraveConformeAnp;
+	public void setDataInformacao(DateFilter dataInformacao) {
+		this.dataInformacao = dataInformacao;
 	}
-
-	public BooleanFilter getRegistroSd2000() {
-		return registroSd2000;
+	public String getCaracterizacao() {
+		return caracterizacao;
 	}
-
-	public void setRegistroSd2000(BooleanFilter registroSd2000) {
-		this.registroSd2000 = registroSd2000;
+	public void setCaracterizacao(String caracterizacao) {
+		this.caracterizacao = caracterizacao;
+	}
+	public BooleanFilter getLesaoCorporal() {
+		return lesaoCorporal;
+	}
+	public void setLesaoCorporal(BooleanFilter lesaoCorporal) {
+		this.lesaoCorporal = lesaoCorporal;
+	}
+	public String getNexoCausal() {
+		return nexoCausal;
+	}
+	public void setNexoCausal(String nexoCausal) {
+		this.nexoCausal = nexoCausal;
+	}
+	public ProfissionalFilter getProfissionalCaracterizacao() {
+		return profissionalCaracterizacao;
+	}
+	public void setProfissionalCaracterizacao(ProfissionalFilter profissionalCaracterizacao) {
+		this.profissionalCaracterizacao = profissionalCaracterizacao;
+	}
+	public DateFilter getDataCaracterizacao() {
+		return dataCaracterizacao;
+	}
+	public void setDataCaracterizacao(DateFilter dataCaracterizacao) {
+		this.dataCaracterizacao = dataCaracterizacao;
+	}
+	public ClassificacaoAfastamentoFilter getClassificacao() {
+		return classificacao;
+	}
+	public void setClassificacao(ClassificacaoAfastamentoFilter classificacao) {
+		this.classificacao = classificacao;
+	}
+	public int getTempoPrevisto() {
+		return tempoPrevisto;
+	}
+	public void setTempoPrevisto(int tempoPrevisto) {
+		this.tempoPrevisto = tempoPrevisto;
+	}
+	public DiagnosticoFilter getCid() {
+		return cid;
+	}
+	public void setCid(DiagnosticoFilter cid) {
+		this.cid = cid;
+	}
+	public BooleanFilter getFerimentoGrave() {
+		return ferimentoGrave;
+	}
+	public void setFerimentoGrave(BooleanFilter ferimentoGrave) {
+		this.ferimentoGrave = ferimentoGrave;
+	}
+	public ProfissionalFilter getProfissionalClassificacao() {
+		return profissionalClassificacao;
+	}
+	public void setProfissionalClassificacao(ProfissionalFilter profissionalClassificacao) {
+		this.profissionalClassificacao = profissionalClassificacao;
+	}
+	public DateFilter getDataClassificacao() {
+		return dataClassificacao;
+	}
+	public void setDataClassificacao(DateFilter dataClassificacao) {
+		this.dataClassificacao = dataClassificacao;
 	}
 	
 }
