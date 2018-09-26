@@ -8,7 +8,6 @@ import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
-import br.com.saude.api.model.entity.filter.PessoaFilter;
 import br.com.saude.api.model.entity.po.Empregado;
 
 public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,EmpregadoFilter> {
