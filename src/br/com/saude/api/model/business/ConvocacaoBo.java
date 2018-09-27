@@ -181,12 +181,13 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 	}
 	
 	@SuppressWarnings("resource")
-	public String processarConvocacao(Convocacao convocacao) throws Exception {
+	private String[] processarConvocacao(Convocacao convocacao, boolean gerarZip) throws Exception {
 		//OBTER O HTML DO RELATÓRIO		
 		StringBuilder html = new StringBuilder();
 		String line;
 		
-		URI uri = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "")+"REPORT/GuiaExames.html");
+		URI uri = new URI(Helper.getProjectPath()
+				.replace("/WEB-INF/classes", "")+"REPORT/GuiaExames.html");
 		
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(uri.getPath()));
 		
@@ -197,9 +198,10 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		bufferedReader.close();
 		
 		//CONFIGURAR DIRETÓRIO DOS PDFs
-		URI pdfUri;
+		URI pdfUri = null;
 		File pdf;
-		uri = new URI(Helper.getProjectPath()+"convocacao/"+convocacao.getId());
+		uri = new URI(Helper.getProjectPath()
+				+"convocacao/"+convocacao.getId());
 		File file = new File(uri.getPath());
 		file.mkdirs();
 		FileUtils.cleanDirectory(file);
@@ -249,7 +251,8 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			} else
 				stringReplacer.replace("mesConvocacao","---");
 			
-			URI logoUri = new URI(Helper.getProjectPath().replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
+			URI logoUri = new URI(Helper.getProjectPath()
+					.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
 			stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath());
 			
 			//EXAMES
@@ -310,47 +313,58 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			stream.close();
 		}
 		
-		
-		//GERAR ZIP
-		file = new File(file.getPath());
-		URI zipUri = new URI(Helper.getProjectPath().toString()+"convocacao/"+convocacao.getTitulo().replace(' ', '_')+".zip");
-		File zipFile = new File(zipUri.getPath());
-		
-		ZipEntry zipEntry;
-		FileInputStream in;
-		FileOutputStream stream = new FileOutputStream(zipFile);
-		ZipOutputStream zipStream = new ZipOutputStream(stream);
-		byte[] buffer = new byte[1024];
-		
-		for(File f : file.listFiles() ) {
-			zipEntry = new ZipEntry( f.getName() );
-			zipStream.putNextEntry(zipEntry);
-			
-			in = new FileInputStream( f.getAbsolutePath() );
-			
-			int len;
-        	while ((len = in.read(buffer)) > 0) {
-        		zipStream.write(buffer, 0, len);
-        	}
-
-        	in.close();
-		}
-
-		zipStream.closeEntry();
-		zipStream.close();
-		FileUtils.cleanDirectory(file);
-				
-		//RETORNO
-		byte[] zipArray = new byte[(int) zipFile.length()];
-		new FileInputStream(zipFile).read(zipArray);
-		
 		//RETIRAR OS REGISTROS CUJO ID DO EXAME == 0, DEPOIS SALVA CONVOCAÇÃO
 		convocacao.getEmpregadoConvocacoes().forEach(eC -> {
 			eC.getEmpregadoConvocacaoExames().removeIf(x->x.getExame().getId() == 0);
 		});
 		this.save(convocacao);
 		
-		return Base64.getEncoder().encodeToString(zipArray);
+		if(gerarZip) {
+			//GERAR ZIP
+			file = new File(file.getPath());
+			URI zipUri = new URI(Helper.getProjectPath()
+										.toString()+"convocacao/"+convocacao.getTitulo().replace(' ', '_')+".zip");
+			File zipFile = new File(zipUri.getPath());
+			
+			ZipEntry zipEntry;
+			FileInputStream in;
+			FileOutputStream stream = new FileOutputStream(zipFile);
+			ZipOutputStream zipStream = new ZipOutputStream(stream);
+			byte[] buffer = new byte[1024];
+			
+			for(File f : file.listFiles() ) {
+				zipEntry = new ZipEntry( f.getName() );
+				zipStream.putNextEntry(zipEntry);
+				
+				in = new FileInputStream( f.getAbsolutePath() );
+				
+				int len;
+	        	while ((len = in.read(buffer)) > 0) {
+	        		zipStream.write(buffer, 0, len);
+	        	}
+
+	        	in.close();
+			}
+
+			zipStream.closeEntry();
+			zipStream.close();
+			FileUtils.cleanDirectory(file);
+			
+			//RETORNO
+			byte[] zipArray = new byte[(int) zipFile.length()];
+			new FileInputStream(zipFile).read(zipArray);
+			
+			return new String[] {zipUri.getPath(), Base64.getEncoder().encodeToString(zipArray)};
+		}else 
+			return new String[] {pdfUri.getPath(), ""};
+	}
+	
+	public String processarConvocacaoBase64(Convocacao convocacao) throws Exception {
+		return processarConvocacao(convocacao,true)[1];
+	}
+	
+	public String processarConvocacaoPath(Convocacao convocacao) throws Exception {
+		return processarConvocacao(convocacao,false)[0];
 	}
 	
 	@Override

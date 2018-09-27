@@ -19,7 +19,7 @@ public class ExameExampleBuilder extends GenericExampleBuilder<Exame,ExameFilter
 	
 	private void addCodigo() {
 		if(this.filter.getCodigo() != null)
-			this.entity.setCodigo(Helper.filterLike(this.filter.getCodigo()));
+			this.criterions.add(Restrictions.ilike("codigo", Helper.filterLike(this.filter.getCodigo())));
 	}
 	
 	private void addDescricao() {

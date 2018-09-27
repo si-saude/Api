@@ -147,6 +147,9 @@ public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 							if(tr.getAtendimento() != null)
 								tr.setAtendimento((Atendimento) Hibernate.unproxy(tr.getAtendimento()));
 							
+							if(tr.getAtendimento() != null)
+								tr.setAtendimento((Atendimento)Hibernate.unproxy(tr.getAtendimento()));
+							
 							t.add(tr);
 						});
 						r.setTriagens(t);
@@ -182,6 +185,6 @@ public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 	}
 	
 	public PagedList<RiscoPotencial> getListLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
-		return super.getList(exampleBuilder,this.functionLoadAll);
+		return super.getList(exampleBuilder,this.functionLoadAcoes);
 	}
 }

@@ -312,6 +312,10 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 		return empregado;
 	}
 	
+	public Empregado getByIdLoad(Object id) throws Exception {
+		return super.getById(id,this.functionLoad);
+	}
+	
 	public Empregado getByIdLoadAll(Object id) throws Exception {
 		return super.getById(id,this.functionLoadAll);
 	}

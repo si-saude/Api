@@ -34,7 +34,7 @@ public class RiscoEmpregado {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Equipe equipe;
 	
-	@OneToMany(mappedBy="riscoEmpregado", fetch=FetchType.LAZY, orphanRemoval=true,
+	@OneToMany(mappedBy="riscoEmpregado", fetch=FetchType.LAZY,
 			cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private List<Triagem> triagens;
 	

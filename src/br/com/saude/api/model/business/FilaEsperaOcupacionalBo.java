@@ -474,6 +474,14 @@ public class FilaEsperaOcupacionalBo
 			if(riscos.getTotal() > 0) {
 				risco = riscos.getList().get(0);
 				
+				RiscoPotencial riscoAux = risco;
+				risco.getRiscoEmpregados().forEach(r->{
+					r.setRiscoPotencial(riscoAux);
+					r.getTriagens().forEach(t->{
+						t.setRiscoEmpregado(r);
+					});
+				});
+				
 				FilaEsperaOcupacionalFilter filaFilter = new FilaEsperaOcupacionalFilter();
 				filaFilter.setPageNumber(1);
 				filaFilter.setPageSize(Integer.MAX_VALUE);

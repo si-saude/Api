@@ -20,13 +20,13 @@ import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.AtestadoBo;
 import br.com.saude.api.model.business.validate.AtestadoValidator;
-import br.com.saude.api.model.entity.dto.AtestadoDto;
+import br.com.saude.api.model.entity.dto.ControleAtestadoDto;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
 
 @Path("atestado")
 public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter, AtestadoBo>
-	implements  GenericReportService<AtestadoDto, AtestadoBo>, GenericService<Atestado, AtestadoFilter>{
+	implements  GenericReportService<ControleAtestadoDto, AtestadoBo>, GenericService<Atestado, AtestadoFilter>{
 	
 	@Override
 	protected AtestadoBo getBo() {
@@ -57,15 +57,6 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 		return super.getListGeneric(filter);
 	}
 	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/list-regime")
-	public Response getListAll(AtestadoFilter filter) throws InstantiationException, IllegalAccessException,
-		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		return Response.ok(getBo().getListRegime(filter).getGenericPagedList()).build();
-	}
-	
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -74,6 +65,14 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 	public Response getSelectList(AtestadoFilter filter) throws InstantiationException, IllegalAccessException,
 		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-all")
+	public Response getListAll(AtestadoFilter filter) throws Exception {
+		return Response.ok(getBo().getListAll(filter).getGenericPagedList()).build();
 	}
 	
 	@POST
@@ -89,10 +88,22 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 		}
 	}
 	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/recalcular-limites-datas")
+	public Response recalcularLimitesDatas(Atestado atestado) {
+		try {
+			return Response.ok(AtestadoBo.getInstance().recalcularLimites(atestado)).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@QueryParam("id") String id) throws Exception {
+	public Response get(@QueryParam("id") String id)  throws Exception {
 		return super.getGeneric(new Long(id));
 	}
 	
@@ -107,11 +118,35 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/get-anexo")
-	public Response getAnexo(int id) throws InstantiationException, IllegalAccessException,
+	@Path("/get-atestado")
+	public Response getAtestado(int id) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		try {
-			return Response.ok(getBo().getAnexo(id)).build();
+			return Response.ok(getBo().getAnexo(id,"atestado/anexo/")).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-relatorio-medico")
+	public Response getRelatorioMedico(int id) throws Exception {
+		try {
+			return Response.ok(getBo().getAnexo(id, "atestado/relatorio/")).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-atestados-by-ano")
+	public Response getAtestadosByAno(int ano) throws Exception {
+		try {
+			return Response.ok(AtestadoBo.getInstance().getAtestadosByAno(ano)).build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
@@ -134,7 +169,7 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 	@Path("/verificar-prazo-atestado")
 	public Response verificarPrazoAtestado(Atestado atestado) throws Exception {
 		try {
-			return Response.ok(AtestadoBo.getInstance().verifyDeadlineAtestado(atestado)).build();
+			return Response.ok(AtestadoBo.getInstance().verificarAtrasoAtestado(atestado)).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
@@ -144,12 +179,24 @@ public class AtestadoService extends GenericServiceImpl<Atestado, AtestadoFilter
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/get-file")
-	public Response getFile(List<AtestadoDto> entities) throws IOException {
+	public Response getFile(List<ControleAtestadoDto> entities) throws IOException {
 		try {
 			return Response.ok( this.exportXLSXFile(entities) ).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/cancelar-agendamento")
+	public Response cancelarAgendamento(Atestado atestado) throws Exception {
+		try {
+			return Response.ok(getBo().cancelarAgendamento(atestado)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
 	

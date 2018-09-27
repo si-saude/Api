@@ -45,6 +45,21 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 	}
 	
 	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass=EmpregadoValidator.class)
+	@Path("/save-and-return")
+	public Response saveAndReturn(Empregado empregado) {
+		try {
+			Empregado emp = EmpregadoBo.getInstance().saveAndReturn(empregado);
+			return Response.ok(emp).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@RequestInterceptor
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

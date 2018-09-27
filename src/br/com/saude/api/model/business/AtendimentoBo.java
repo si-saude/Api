@@ -341,7 +341,6 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 					int ii = i;
 					riscos.get(i).getTriagens().forEach(t->{
 						t.setRiscoEmpregado(riscos.get(ii));
-						/*VERIFICAR COMO O ATENDIMENTO ESTÁ VINDO*/
 					});
 				}
 			}
@@ -364,6 +363,17 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO_AUTOMATICAMENTE);
 		
 		atendimento = tratarAtendimento(atendimento);
+		
+		Atendimento aux = atendimento;
+		if(aux.getFilaEsperaOcupacional().getRiscoPotencial() != null && aux.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados() != null) {
+			Optional<RiscoEmpregado> riscoEmpregado = aux.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados().stream().filter(r -> 
+				r.getEquipe().getId() == aux.getTarefa().getEquipe().getId()).findFirst();
+			
+			if(riscoEmpregado != null && riscoEmpregado.isPresent()) {
+				riscoEmpregado.get().setAtivo(false);
+				riscoEmpregado.get().setTriagens(null);
+			}
+		}
 		
 		return save(atendimento);
 	}
@@ -469,7 +479,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 			double r1 = r0 + r01;
 			
 			if (triagens.stream().filter(t->t.getIndice() <= t.getIndicadorSast().getCritico()).count() > 0)
-				r1 = 0.95;
+				r1 = 0.95 + r01;
 			
 			RiscoEmpregado risco = new RiscoEmpregado();
 			risco.setRiscoPotencial(atendimento.getFilaEsperaOcupacional().getRiscoPotencial());
@@ -729,14 +739,6 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	@SuppressWarnings("deprecation")
 	public String registrarSolicitacaoExamePericial(Atendimento atendimento) throws Exception {
-		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO, CUJA DATA INFORMADA ESTÁ NO PERÍODO
-		// DO CRONOGRAMA, CUJO TIPO DA CONVOCAÇÃO CORRESPONDA AO SERVIÇO SELECIONADO
-		EmpregadoConvocacaoFilter empConFilter = configureEmpregadoConvocacaoFilter(atendimento);
-		PagedList<EmpregadoConvocacao> empConList = EmpregadoConvocacaoBo.getInstance().getList(empConFilter);
-
-		if (empConList.getTotal() == 0)
-			throw new Exception("Não foi possível solicitar o serviço, pois não existe "
-					+ "convocação para o empregado cujo cronograma atenda à data informada.");
 		
 		if( atendimento.getTarefa().getEquipe() == null )
 			throw new Exception("Equipe da tarefa do Exame Pericial deve existir.");

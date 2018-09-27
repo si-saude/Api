@@ -1,5 +1,10 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
+import org.javatuples.Triplet;
+
+import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.CatFilter;
@@ -17,94 +22,173 @@ public class CatExampleBuilder extends GenericExampleBuilder<Cat, CatFilter> {
 
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
-		addNumero();
-		addCpf();
-		addGravidade();
-		addNome();
-		addPartesCorpo();
-		addRegime();
-		addSexo();
-		addTipoAcidente();
-		addTipoCAT();
-		addAfastamento();
-		addCatSd2000();
-		addComunicavelSus();
-		addContratado();
-		addFerimentoGraveConformeAnp();
-		addRegistroSd2000();
+		addEmpregado();
+		addEmpresa();
+		addGerencia();
+		addTelefoneGerente();
+		addFiscalContrato();
+		addTelefoneFiscal();
+		addDataOcorrencia();
+		addLocal();
+		addDescricao();
+		addEmpregadoServicoCompanhia();
+		addOcorrenciaAmbienteTrabalho();
+		addOcorrenciaTrajeto();
+		addResponsavelInformacao();
+		addDataInformacao();
+		addCaracterizacao();
+		addLesaoCorporal();
+		addNexoCausal();
+		addProfissionalCaracterizacao();
+		addDataCaracterizacao();
+		addClassificacao();
+		addTempoPrevisto();
+		addCid();
+		addFerimentoGrave();
+		addProfissionalClassificacao();
+		addDataClassificacao();
 	}
 
 	@Override
-	protected void createExampleSelectList() {
+	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		addEmpregado();
 	}
 	
-	private void addNumero() {
-		if(this.filter.getNumero() != null)
-			this.entity.setNumero(Helper.filterLike(this.filter.getNumero()));
+	private void addEmpregado() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getEmpregado()!=null) {
+			CriteriaExample criteriaExample = EmpregadoExampleBuilder
+					.newInstance(this.filter.getEmpregado()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("empregado", criteriaExample, JoinType.INNER_JOIN));
+		}
 	}
 	
-	private void addCpf() {
-		if(this.filter.getCpf() != null)
-			this.entity.setCpf(Helper.filterLike(this.filter.getCpf()));
+	private void addEmpresa() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getEmpresa()!=null) {
+			CriteriaExample criteriaExample = EmpresaExampleBuilder
+					.newInstance(this.filter.getEmpresa()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("empresa", criteriaExample, JoinType.INNER_JOIN));
+		}
 	}
 	
-	private void addGravidade() {
-		if(this.filter.getGravidade() != null)
-			this.entity.setGravidade(Helper.filterLike(this.filter.getGravidade()));
+	private void addGerencia() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getGerencia()!=null) {
+			CriteriaExample criteriaExample = GerenciaExampleBuilder
+					.newInstance(this.filter.getGerencia()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("gerencia", criteriaExample, JoinType.INNER_JOIN));
+		}
 	}
 	
-	private void addNome() {
-		if(this.filter.getNome() != null)
-			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
+	private void addTelefoneGerente() {
+		if(this.filter.getTelefoneGerente() != null)
+			this.criterions.add(Restrictions.ilike("telefoneGerente", Helper.filterLike(this.filter.getTelefoneGerente())));
 	}
 	
-	private void addPartesCorpo() {
-		if(this.filter.getPartesCorpo() != null)
-			this.entity.setPartesCorpo(Helper.filterLike(this.filter.getPartesCorpo()));
+	private void addFiscalContrato() {
+		if(this.filter.getFiscalContrato() != null)
+			this.criterions.add(Restrictions.ilike("fiscalContrato", Helper.filterLike(this.filter.getFiscalContrato())));
 	}
 	
-	private void addRegime() {
-		if(this.filter.getRegime() != null)
-			this.entity.setRegime(Helper.filterLike(this.filter.getRegime()));
+	private void addTelefoneFiscal() {
+		if(this.filter.getTelefoneFiscal() != null)
+			this.criterions.add(Restrictions.ilike("telefoneFiscal", Helper.filterLike(this.filter.getTelefoneFiscal())));
 	}
 	
-	private void addSexo() {
-		if(this.filter.getSexo() != null)
-			this.entity.setSexo(Helper.filterLike(this.filter.getSexo()));
+	private void addDataOcorrencia() {
+		this.addData("dataOcorrencia", this.filter.getDataOcorrencia());
 	}
 	
-	private void addTipoAcidente() {
-		if(this.filter.getTipoAcidente() != null)
-			this.entity.setTipoAcidente(Helper.filterLike(this.filter.getTipoAcidente()));
+	private void addLocal() {
+		if(this.filter.getLocal() != null)
+			this.criterions.add(Restrictions.ilike("local", Helper.filterLike(this.filter.getLocal())));
 	}
 	
-	private void addTipoCAT() {
-		if(this.filter.getTipoCat() != null)
-			this.entity.setTipoCat(Helper.filterLike(this.filter.getTipoCat()));
+	private void addDescricao() {
+		if(this.filter.getDescricao() != null)
+			this.criterions.add(Restrictions.ilike("descricao", Helper.filterLike(this.filter.getDescricao())));
 	}
 	
-	protected void addAfastamento() {
-		this.entity.setAfastamento(this.addBoolean("afastamento", this.filter.getAfastamento()));
+	protected void addEmpregadoServicoCompanhia() {
+		this.entity.setEmpregadoServicoCompanhia(this.addBoolean("empregadoServicoCompanhia", this.filter.getEmpregadoServicoCompanhia()));
 	}
 	
-	protected void addCatSd2000() {
-		this.entity.setCatSd2000(this.addBoolean("catSd2000", this.filter.getCatSd2000()));
+	protected void addOcorrenciaAmbienteTrabalho() {
+		this.entity.setOcorrenciaAmbienteTrabalho(this.addBoolean("ocorrenciaAmbienteTrabalho", this.filter.getOcorrenciaAmbienteTrabalho()));
 	}
 	
-	protected void addComunicavelSus() {
-		this.entity.setComunicavelSus(this.addBoolean("comunicavelSus", this.filter.getComunicavelSus()));
+	protected void addOcorrenciaTrajeto() {
+		this.entity.setOcorrenciaTrajeto(this.addBoolean("ocorrenciaTrajeto", this.filter.getOcorrenciaTrajeto()));
 	}
 	
-	protected void addContratado() {
-		this.entity.setContratado(this.addBoolean("contratado", this.filter.getContratado()));
+	private void addResponsavelInformacao() {
+		if(this.filter.getResponsavelInformacao() != null)
+			this.criterions.add(Restrictions.ilike("responsavelInformacao", Helper.filterLike(this.filter.getResponsavelInformacao())));
 	}
 	
-	protected void addFerimentoGraveConformeAnp() {
-		this.entity.setFerimentoGraveConformeAnp(this.addBoolean("ferimentoGraveConformeAnp", this.filter.getFerimentoGraveConformeAnp()));
+	private void addDataInformacao() {
+		this.addData("dataInformacao", this.filter.getDataInformacao());
 	}
 	
-	protected void addRegistroSd2000() {
-		this.entity.setRegistroSd2000(this.addBoolean("registroSd2000", this.filter.getRegistroSd2000()));
+	private void addCaracterizacao() {
+		if(this.filter.getCaracterizacao() != null)
+			this.criterions.add(Restrictions.ilike("caracterizacao", Helper.filterLike(this.filter.getCaracterizacao())));
+	}
+	
+	protected void addLesaoCorporal() {
+		this.entity.setLesaoCorporal(this.addBoolean("lesaoCorporal", this.filter.getLesaoCorporal()));
+	}
+	
+	private void addNexoCausal() {
+		if(this.filter.getNexoCausal() != null)
+			this.criterions.add(Restrictions.ilike("nexoCausal", Helper.filterLike(this.filter.getNexoCausal())));
+	}
+	
+	private void addProfissionalCaracterizacao() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getProfissionalCaracterizacao()!=null) {
+			CriteriaExample criteriaExample = ProfissionalExampleBuilder
+					.newInstance(this.filter.getProfissionalCaracterizacao()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("profissionalCaracterizacao", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addDataCaracterizacao() {
+		this.addData("dataCaracterizacao", this.filter.getDataCaracterizacao());
+	}
+	
+	private void addClassificacao() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getClassificacao()!=null) {
+			CriteriaExample criteriaExample = ClassificacaoAfastamentoExampleBuilder
+					.newInstance(this.filter.getClassificacao()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("classificacao", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addTempoPrevisto() {
+		if(this.filter.getTempoPrevisto() > 0)
+			this.criterions.add(Restrictions.eq("tempoPrevisto", (int)this.filter.getTempoPrevisto()));
+	}
+	
+	private void addCid() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getCid()!=null) {
+			CriteriaExample criteriaExample = DiagnosticoExampleBuilder
+					.newInstance(this.filter.getCid()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("cid", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	protected void addFerimentoGrave() {
+		this.entity.setFerimentoGrave(this.addBoolean("ferimentoGrave", this.filter.getFerimentoGrave()));
+	}
+	
+	private void addProfissionalClassificacao() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getProfissionalClassificacao()!=null) {
+			CriteriaExample criteriaExample = ProfissionalExampleBuilder
+					.newInstance(this.filter.getProfissionalClassificacao()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("profissionalClassificacao", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addDataClassificacao() {
+		this.addData("dataClassificacao", this.filter.getDataClassificacao());
 	}
 	
 }
