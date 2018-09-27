@@ -22,4 +22,5 @@ public class Operador extends GenericConstant {
 	public static final String MAIOR 				= ">";
 	public static final String IGUAL 				= "=";
 	public static final String DIFERENTE 			= "!=";
+	public static final String EQUIVALENTE 			= "EQUIVALÊNCIA";
 }

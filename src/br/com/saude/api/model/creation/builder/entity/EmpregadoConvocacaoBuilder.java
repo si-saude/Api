@@ -18,7 +18,6 @@ public class EmpregadoConvocacaoBuilder
 	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadEmpregadoAll;
 	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadEmpregado;
 	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadConvocacao;
-	private Function<Map<String,EmpregadoConvocacao>,EmpregadoConvocacao> loadResultadoExames;
 	
 	public static EmpregadoConvocacaoBuilder newInstance(EmpregadoConvocacao empregadoConvocacao) {
 		return new EmpregadoConvocacaoBuilder(empregadoConvocacao);
@@ -84,13 +83,6 @@ public class EmpregadoConvocacaoBuilder
 			}
 			return empregadoConvocacoes.get("destino");
 		};
-		
-		this.loadResultadoExames = empregadoConvocacoes -> {
-			if (empregadoConvocacoes.get("origem").getResultadoExames() != null)
-				empregadoConvocacoes.get("destino").setResultadoExames(ResultadoExameBuilder.newInstance(
-						empregadoConvocacoes.get("origem").getResultadoExames()).loadItemResultadoExames().getEntityList());
-			return empregadoConvocacoes.get("destino");			
-		};
 	}
 	
 	public EmpregadoConvocacaoBuilder loadEmpregadoAll() {
@@ -107,10 +99,6 @@ public class EmpregadoConvocacaoBuilder
 	
 	public EmpregadoConvocacaoBuilder loadExames() {
 		return (EmpregadoConvocacaoBuilder) this.loadProperty(this.loadEmpregadoConvocacaoExames);
-	}
-	
-	public EmpregadoConvocacaoBuilder loadResultadoExames() {
-		return (EmpregadoConvocacaoBuilder) this.loadProperty(this.loadResultadoExames);
 	}
 
 	@Override

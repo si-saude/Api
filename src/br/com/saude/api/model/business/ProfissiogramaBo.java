@@ -26,7 +26,7 @@ public class ProfissiogramaBo
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadGrupoMonitoramentos();
+			return builder.loadGrupoMonitoramentoProfissiogramas();
 		};
 	}
 	
@@ -38,10 +38,10 @@ public class ProfissiogramaBo
 	@Override
 	public Profissiograma save(Profissiograma profissiograma) throws Exception {
 		
-		profissiograma.getGrupoMonitoramentos().forEach(g->
-			g.getGrupoMonitoramentoExames().forEach(e->{
-				e.setGrupoMonitoramento(g);
-			}) 
+		profissiograma.getGrupoMonitoramentoProfissiogramas().forEach(g->
+			g.getGrupoMonitoramentoProfissiogramaExames().forEach(p -> {
+				p.setGrupoMonitoramentoProfissiograma(g);
+			})
 		);
 		
 		return super.save(profissiograma);

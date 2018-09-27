@@ -19,7 +19,7 @@ public class TipoCriterio extends GenericConstant  {
 	public static final String SEXO 					= "SEXO";
 	public static final String IDADE					= "IDADE";
 	public static final String EXAME					= "EXAME";
-	public static final String FUNCAO					= "FUNÇÃO";
-	public static final String CARGO					= "CARGO";
+	public static final String ENFASE					= "ÊNFASE";
 	public static final String EXIGE_RELATORIO_MEDICO	= "EXIGE RELATÓRIO MÉDICO";
+	public static final String PERIODICIDADE			= "PERIODICIDADE";
 }

@@ -38,14 +38,12 @@ public class EmpregadoConvocacaoExameBuilder
 		newEmpregadoConvocacaoExame.setVersion(empregadoConvocacaoExame.getVersion());
 		newEmpregadoConvocacaoExame.setConforme(empregadoConvocacaoExame.isConforme());
 		newEmpregadoConvocacaoExame.setRealizacao(empregadoConvocacaoExame.getRealizacao());
+		newEmpregadoConvocacaoExame.setRecebimento(empregadoConvocacaoExame.getRecebimento());
+		newEmpregadoConvocacaoExame.setAuditoria(empregadoConvocacaoExame.getAuditoria());
 		
 		if(empregadoConvocacaoExame.getExame() != null)
 			newEmpregadoConvocacaoExame.setExame(ExameBuilder
 					.newInstance(empregadoConvocacaoExame.getExame()).getEntity());
-		
-		if(empregadoConvocacaoExame.getRelatorioMedico() != null)
-			newEmpregadoConvocacaoExame.setRelatorioMedico(RelatorioMedicoBuilder
-					.newInstance(empregadoConvocacaoExame.getRelatorioMedico()).getEntity());
 		
 		return newEmpregadoConvocacaoExame;
 	}

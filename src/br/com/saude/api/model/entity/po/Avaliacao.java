@@ -28,6 +28,36 @@ public class Avaliacao {
 	
 	@Version
 	private long version;
-	
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public GrupoMonitoramento getGrupoMonitoramento() {
+		return grupoMonitoramento;
+	}
+
+	public void setGrupoMonitoramento(GrupoMonitoramento grupoMonitoramento) {
+		this.grupoMonitoramento = grupoMonitoramento;
+	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
 }

@@ -13,6 +13,7 @@ public class GrupoMonitoramentoBuilder
 
 	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadTipoGrupoMonitoramento;
 	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadEmpregados;
+	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadAvaliacoes;
 	
 	public static GrupoMonitoramentoBuilder newInstance(GrupoMonitoramento grupoMonitoramento) {
 		return new GrupoMonitoramentoBuilder(grupoMonitoramento);
@@ -49,6 +50,14 @@ public class GrupoMonitoramentoBuilder
 												.getEntityList());
 			return grupoMonitoramentos.get("destino");
 		};
+		
+		this.loadAvaliacoes = grupoMonitoramentos -> {
+			if(grupoMonitoramentos.get("origem").getAvaliacoes() != null)
+				grupoMonitoramentos.get("destino").setAvaliacoes(AvaliacaoBuilder
+												.newInstance(grupoMonitoramentos.get("origem").getAvaliacoes())
+												.getEntityList());
+			return grupoMonitoramentos.get("destino");
+		};
 	}
 
 	@Override
@@ -71,6 +80,10 @@ public class GrupoMonitoramentoBuilder
 	
 	public GrupoMonitoramentoBuilder loadEmpregados() {
 		return (GrupoMonitoramentoBuilder) this.loadProperty(this.loadEmpregados);
+	}
+	
+	public GrupoMonitoramentoBuilder loadAvaliacoes() {
+		return (GrupoMonitoramentoBuilder) this.loadProperty(this.loadAvaliacoes);
 	}
 
 	@Override
