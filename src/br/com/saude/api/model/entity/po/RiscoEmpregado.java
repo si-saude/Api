@@ -15,11 +15,16 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Formula;
+
 @Entity
 public class RiscoEmpregado {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
+	
+	@Formula("(select get_valor_ponderado_risco_empregado_by_id(id))")
+	private double valorPonderado;	
 	
 	private double valor;
 	
@@ -63,6 +68,14 @@ public class RiscoEmpregado {
 
 	public void setValor(double valor) {
 		this.valor = valor;
+	}
+	
+	public double getValorPonderado() {
+		return valorPonderado;
+	}
+
+	public void setValorPonderado(double valorPonderado) {
+		this.valorPonderado = valorPonderado;
 	}
 
 	public RiscoPotencial getRiscoPotencial() {

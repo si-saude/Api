@@ -45,6 +45,8 @@ public abstract class GenericDao<T> {
 			return entityClass.getDeclaredField("version");
 		} catch (NoSuchFieldException e) {
 			return getVersion(entityClass.getSuperclass());
+		} catch (NullPointerException e) {
+			return null;
 		}
 	}
 	
@@ -68,8 +70,10 @@ public abstract class GenericDao<T> {
 				id.set(entity, id.get(entityMerged));
 				
 				Field version = getVersion(entity.getClass());
-				version.setAccessible(true);
-				version.set(entity, version.get(entityMerged));				
+				if(version != null) {
+					version.setAccessible(true);
+					version.set(entity, version.get(entityMerged));				
+				}
 			}
 			
 		}catch(Exception ex) {
