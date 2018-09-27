@@ -69,6 +69,7 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 						.newInstance(riscos.get("origem").getTriagens())
 						.loadAcoes()
 						.loadIndicadorEquipe()
+						.loadAtendimento()
 						.getEntityList());
 			
 			return riscos.get("destino");

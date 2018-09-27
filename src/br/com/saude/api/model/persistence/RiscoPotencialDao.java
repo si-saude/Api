@@ -17,6 +17,7 @@ import br.com.saude.api.model.entity.po.IndicadorAssociadoSast;
 import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.entity.po.Acao;
 import br.com.saude.api.model.entity.po.Acompanhamento;
+import br.com.saude.api.model.entity.po.Atendimento;
 
 public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 
@@ -144,6 +145,9 @@ public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 								});
 							}
 							
+							if(tr.getAtendimento() != null)
+								tr.setAtendimento((Atendimento)Hibernate.unproxy(tr.getAtendimento()));
+							
 							t.add(tr);
 						});
 						r.setTriagens(t);
@@ -179,6 +183,6 @@ public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 	}
 	
 	public PagedList<RiscoPotencial> getListLoadAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
-		return super.getList(exampleBuilder,this.functionLoadAll);
+		return super.getList(exampleBuilder,this.functionLoadAcoes);
 	}
 }
