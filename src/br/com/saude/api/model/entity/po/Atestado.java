@@ -165,6 +165,9 @@ public class Atestado {
 	
 	private Date dataHomologacao;
 	
+	@OneToMany(mappedBy="atestado", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<AuditoriaAtestado> auditoriaAtestados;
+	
 	@Version
 	private long version;
 	
@@ -591,5 +594,12 @@ public class Atestado {
 	public void setDataHomologacao(Date dataHomologacao) {
 		this.dataHomologacao = dataHomologacao;
 	}
-	
+
+	public List<AuditoriaAtestado> getAuditoriaAtestados() {
+		return auditoriaAtestados;
+	}
+
+	public void setAuditoriaAtestados(List<AuditoriaAtestado> auditoriaAtestados) {
+		this.auditoriaAtestados = auditoriaAtestados;
+	}
 }

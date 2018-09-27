@@ -29,9 +29,11 @@ import br.com.saude.api.model.entity.dto.ControleAtestadoDto;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
+import br.com.saude.api.model.entity.filter.ItemAuditoriaAtestadoFilter;
 import br.com.saude.api.model.entity.filter.ProfissiogramaFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
+import br.com.saude.api.model.entity.po.AuditoriaAtestado;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
@@ -39,6 +41,7 @@ import br.com.saude.api.model.entity.po.EmpregadoConvocacaoExame;
 import br.com.saude.api.model.entity.po.Exame;
 import br.com.saude.api.model.entity.po.GerenciaConvocacao;
 import br.com.saude.api.model.entity.po.HistoricoAtestado;
+import br.com.saude.api.model.entity.po.ItemAuditoriaAtestado;
 import br.com.saude.api.model.entity.po.Profissiograma;
 import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.entity.po.Tarefa;
@@ -73,7 +76,7 @@ public class AtestadoBo
 			return builder.loadRegime();
 		};
 		this.functionLoadAll = builder -> {
-			return builder.loadRegime().loadAgendamento().loadExamesConvocacao().loadHistoricoAtestados();
+			return builder.loadRegime().loadAgendamento().loadExamesConvocacao().loadHistoricoAtestados().loadAuditoriaAtestados();
 		};
 	}
 	
@@ -275,6 +278,7 @@ public class AtestadoBo
 		}
 		
 		configureHistoricoAtestado(atestado);
+		configureAuditoriaAtestado(atestado);
 		
 		atestado = definirLimites(atestado);
 		
@@ -305,6 +309,12 @@ public class AtestadoBo
 		historicoAtestado.setProfissional(atestado.getProfissional());
 		
 		atestado.getHistoricoAtestados().add(historicoAtestado);
+	}
+	
+	private void configureAuditoriaAtestado(Atestado atestado) {
+		if (atestado.getAuditoriaAtestados() != null)
+			for(AuditoriaAtestado auditoriaAtestado : atestado.getAuditoriaAtestados() )
+				auditoriaAtestado.setAtestado(atestado);
 	}
 
 	private void criarConvocacao(Atestado atestado, String tipoConvocacao) throws Exception {
@@ -415,7 +425,9 @@ public class AtestadoBo
 		if (atestado.getNumeroDias() >= 5) {
 			atestado.setPresencial(true);
 		}
-
+		
+		generateAuditoriaAtestados(atestado);
+		
 		atestado.setDataSolicitacao(Helper.getToday());
 		atestado.setStatus(StatusAtestado.ANALISE_ADMINISTRATIVA);
 		atestado.setDataSolicitacao(Helper.getToday());
@@ -449,6 +461,24 @@ public class AtestadoBo
 		atestado.setAnexoRelatorioMedico(anexoRelatorioMedico);
 		saveFiles(atestado);
 		return atestado;
+	}
+
+	private void generateAuditoriaAtestados(Atestado atestado) throws Exception {
+		if ( atestado.getAuditoriaAtestados() == null || atestado.getAuditoriaAtestados().size() == 0 ) {
+			atestado.setAuditoriaAtestados(new ArrayList<AuditoriaAtestado>());
+			ItemAuditoriaAtestadoFilter itemAuditoriaAtestadoFilter = new ItemAuditoriaAtestadoFilter();
+			itemAuditoriaAtestadoFilter.setPageNumber(1);
+			itemAuditoriaAtestadoFilter.setPageSize(Integer.MAX_VALUE);
+			ArrayList<ItemAuditoriaAtestado> itemAuditoriaAtestados = 
+					(ArrayList<ItemAuditoriaAtestado>) ItemAuditoriaAtestadoBo.getInstance().getList(
+							itemAuditoriaAtestadoFilter).getList();
+			for( ItemAuditoriaAtestado itemAuditoriaAtestado : itemAuditoriaAtestados ) {
+				AuditoriaAtestado auditoriaAtestado = new AuditoriaAtestado();
+				auditoriaAtestado.setAtestado(atestado);
+				auditoriaAtestado.setItemAuditoriaAtestado(itemAuditoriaAtestado);
+				atestado.getAuditoriaAtestados().add(auditoriaAtestado);
+			}
+		}
 	}
 
 	@SuppressWarnings("static-access")

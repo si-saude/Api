@@ -11,6 +11,7 @@ import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
+import br.com.saude.api.model.entity.po.AuditoriaAtestado;
 import br.com.saude.api.model.entity.po.HistoricoAtestado;
 
 public class AtestadoDao extends GenericDao<Atestado> {
@@ -49,6 +50,7 @@ public class AtestadoDao extends GenericDao<Atestado> {
 			atestado = loadAgendamento(atestado);
 			atestado = loadExamesConvocacao(atestado);
 			atestado = loadHistoricoAtestados(atestado);
+			atestado = loadAuditoriaAtestados(atestado);
 			
 			return atestado;
 		};
@@ -80,6 +82,19 @@ public class AtestadoDao extends GenericDao<Atestado> {
 				historicos.add((HistoricoAtestado)Hibernate.unproxy(h));
 			});
 			atestado.setHistoricoAtestados(historicos);
+		}
+			
+		return atestado;
+	}
+	
+	private Atestado loadAuditoriaAtestados(Atestado atestado) {
+		
+		if (atestado.getAuditoriaAtestados() != null) {
+			List<AuditoriaAtestado> auditoriaAtestados = new ArrayList<AuditoriaAtestado>();
+			atestado.getAuditoriaAtestados().forEach(aa->{
+				auditoriaAtestados.add((AuditoriaAtestado)Hibernate.unproxy(aa));
+			});
+			atestado.setAuditoriaAtestados(auditoriaAtestados);
 		}
 			
 		return atestado;
