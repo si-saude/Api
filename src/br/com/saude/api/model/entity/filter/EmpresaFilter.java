@@ -4,6 +4,7 @@ import br.com.saude.api.generic.GenericFilter;
 
 public class EmpresaFilter extends GenericFilter {
 	private String nome;
+	private EmpresaFilter empresa;
 
 	public String getNome() {
 		return nome;
@@ -11,5 +12,14 @@ public class EmpresaFilter extends GenericFilter {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}	
+	}
+
+	public EmpresaFilter getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(EmpresaFilter empresa) {
+		this.empresa = empresa;
+	}
+	
 }

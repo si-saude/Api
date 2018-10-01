@@ -19,7 +19,7 @@ public class CatExampleBuilder extends GenericExampleBuilder<Cat, CatFilter> {
 	private CatExampleBuilder(CatFilter filter) {
 		super(filter);
 	}
-
+	
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addEmpregado();
@@ -47,6 +47,10 @@ public class CatExampleBuilder extends GenericExampleBuilder<Cat, CatFilter> {
 		addFerimentoGrave();
 		addProfissionalClassificacao();
 		addDataClassificacao();
+		addRegistroSd2000();
+		addCatSd2000();
+		addComunicavelSus();
+		addPendenciaCorrecao();
 	}
 
 	@Override
@@ -113,6 +117,14 @@ public class CatExampleBuilder extends GenericExampleBuilder<Cat, CatFilter> {
 	
 	protected void addOcorrenciaAmbienteTrabalho() {
 		this.entity.setOcorrenciaAmbienteTrabalho(this.addBoolean("ocorrenciaAmbienteTrabalho", this.filter.getOcorrenciaAmbienteTrabalho()));
+	}
+	
+	protected void addComunicavelSus() {
+		this.entity.setComunicavelSus(this.addBoolean("comunicavelSus", this.filter.getComunicavelSus()));
+	}
+	
+	protected void addPendenciaCorrecao() {
+		this.entity.setPendenciaCorrecao(this.addBoolean("pendenciaCorrecao", this.filter.getPendenciaCorrecao()));
 	}
 	
 	protected void addOcorrenciaTrajeto() {
@@ -189,6 +201,14 @@ public class CatExampleBuilder extends GenericExampleBuilder<Cat, CatFilter> {
 	
 	private void addDataClassificacao() {
 		this.addData("dataClassificacao", this.filter.getDataClassificacao());
+	}
+	
+	protected void addRegistroSd2000() {
+		this.entity.setRegistroSd2000(this.addBoolean("registroSd2000", this.filter.getRegistroSd2000()));
+	}
+	
+	protected void addCatSd2000() {
+		this.entity.setCatSd2000(this.addBoolean("catSd2000", this.filter.getCatSd2000()));
 	}
 	
 }

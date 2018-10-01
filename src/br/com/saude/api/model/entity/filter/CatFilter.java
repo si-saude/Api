@@ -31,6 +31,11 @@ public class CatFilter extends GenericFilter {
 	private BooleanFilter ferimentoGrave;
 	private ProfissionalFilter profissionalClassificacao;
 	private DateFilter dataClassificacao;
+	private BooleanFilter registroSd2000;
+	private BooleanFilter catSd2000;
+	private BooleanFilter comunicavelSus;
+	private BooleanFilter pendenciaCorrecao;
+	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
 	}
@@ -180,6 +185,30 @@ public class CatFilter extends GenericFilter {
 	}
 	public void setDataClassificacao(DateFilter dataClassificacao) {
 		this.dataClassificacao = dataClassificacao;
+	}
+	public BooleanFilter getRegistroSd2000() {
+		return registroSd2000;
+	}
+	public void setRegistroSd2000(BooleanFilter registroSd2000) {
+		this.registroSd2000 = registroSd2000;
+	}
+	public BooleanFilter getCatSd2000() {
+		return catSd2000;
+	}
+	public void setCatSd2000(BooleanFilter catSd2000) {
+		this.catSd2000 = catSd2000;
+	}
+	public BooleanFilter getComunicavelSus() {
+		return comunicavelSus;
+	}
+	public void setComunicavelSus(BooleanFilter comunicavelSus) {
+		this.comunicavelSus = comunicavelSus;
+	}
+	public BooleanFilter getPendenciaCorrecao() {
+		return pendenciaCorrecao;
+	}
+	public void setPendenciaCorrecao(BooleanFilter pendenciaCorrecao) {
+		this.pendenciaCorrecao = pendenciaCorrecao;
 	}
 	
 }
