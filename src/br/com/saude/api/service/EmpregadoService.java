@@ -72,7 +72,7 @@ public class EmpregadoService extends GenericServiceImpl<Empregado,EmpregadoFilt
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes( 	MediaType.APPLICATION_JSON)
 	@Path("/list-eq")
 	public Response getListEq(EmpregadoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {

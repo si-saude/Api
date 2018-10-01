@@ -68,6 +68,21 @@ implements GenericService<RiscoEmpregado, RiscoEmpregadoFilter>{
 		return super.getListGeneric(filter);
 	}
 	
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/list-all")
+	public Response getListAll(RiscoEmpregadoFilter filter) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		try {
+			return Response.ok(RiscoEmpregadoBo.getInstance().getListAll(filter).getGenericPagedList()).build();
+		} catch (Exception e) {		
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)

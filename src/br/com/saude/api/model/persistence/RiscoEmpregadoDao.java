@@ -108,6 +108,10 @@ public class RiscoEmpregadoDao extends GenericDao<RiscoEmpregado> {
 		return super.getList(exampleBuilder, this.functionLoad);
 	}
 	
+	public PagedList<RiscoEmpregado> getListAll(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder, this.functionLoadAll);
+	}
+	
 	@Override
 	public RiscoEmpregado getById(Object id) throws Exception {
 		return super.getById(id, this.functionLoad);

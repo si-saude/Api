@@ -143,7 +143,9 @@ public class RiscoPotencialDao extends GenericDao<RiscoPotencial> {
 									}
 										
 								});
-							}
+							}	
+							if(tr.getAtendimento() != null)
+								tr.setAtendimento((Atendimento) Hibernate.unproxy(tr.getAtendimento()));
 							
 							if(tr.getAtendimento() != null)
 								tr.setAtendimento((Atendimento)Hibernate.unproxy(tr.getAtendimento()));
