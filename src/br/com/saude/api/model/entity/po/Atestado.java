@@ -168,6 +168,9 @@ public class Atestado {
 	@OneToMany(mappedBy="atestado", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<AuditoriaAtestado> auditoriaAtestados;
 	
+	@Size(max = 1024, message="Tamanho máximo para Justificativa do Atestado: 1024")
+	private String justificativa;
+	
 	@Version
 	private long version;
 	
@@ -601,5 +604,13 @@ public class Atestado {
 
 	public void setAuditoriaAtestados(List<AuditoriaAtestado> auditoriaAtestados) {
 		this.auditoriaAtestados = auditoriaAtestados;
+	}
+
+	public String getJustificativa() {
+		return justificativa;
+	}
+
+	public void setJustificativa(String justificativa) {
+		this.justificativa = justificativa;
 	}
 }

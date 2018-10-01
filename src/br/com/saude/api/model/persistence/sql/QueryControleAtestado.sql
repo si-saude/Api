@@ -15,7 +15,8 @@ select p.nome, em.matricula,
 	a.atestadofisicorecebido,
 	a.observacao,
 	a.status,
-	ag.inicio
+	ag.inicio,
+	a.justificativa
 from atestado a
 left join empregado em on a.empregado_id = em.id
 inner join gerencia g4 on em.gerencia_id = g4.id

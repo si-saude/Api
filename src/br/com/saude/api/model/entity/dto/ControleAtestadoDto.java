@@ -26,6 +26,7 @@ public class ControleAtestadoDto {
 	private boolean atestadoFisicoRecebido;
 	private String observacao;
 	private String statusAtestado;
+	private String justificativa;
 	
 	public String getNomeEmpregado() {
 		return nomeEmpregado;
@@ -158,5 +159,11 @@ public class ControleAtestadoDto {
 	}
 	public void setStatusAtestado(String statusAtestado) {
 		this.statusAtestado = statusAtestado;
+	}
+	public String getJustificativa() {
+		return justificativa;
+	}
+	public void setJustificativa(String justificativa) {
+		this.justificativa = justificativa;
 	}
 }
