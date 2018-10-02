@@ -583,8 +583,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				switch(atendimento.getTarefa().getServico().getCodigo()) {
 					//ADMISSIONAL
 					case "0001":
-						
-						break;
+						return TipoConvocacao.ADMISSIONAL;
 						
 					//DEMISSIONAL
 					case "0002":
@@ -598,18 +597,15 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 						
 					//RETORNO AO TRABALHO
 					case "0004":
-						
-						break;
+						return TipoConvocacao.RETORNO_AO_TRABALHO;
 						
 					//MUDANÇA DE FUNÇÃO
 					case "0005":
-						
-						break;
+						return TipoConvocacao.MUDANCA_DE_FUNCAO;
 						
 					//ESPECIAL
 					case "0006":
-						
-						break;
+						return TipoConvocacao.ESPECIAL;
 						
 					//PERICIAL
 					case "0007":
