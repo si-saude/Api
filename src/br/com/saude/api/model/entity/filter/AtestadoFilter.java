@@ -20,6 +20,7 @@ public class AtestadoFilter extends GenericFilter {
 	private DateFilter dataAuditoria;
 	private BooleanFilter convocado;
 	private DateFilter dataHomologacao;
+	private String status;
 	
 	public BooleanFilter getAtestadoFisicoRecebido() {
 		return atestadoFisicoRecebido;
@@ -111,5 +112,10 @@ public class AtestadoFilter extends GenericFilter {
 	public void setDataHomologacao(DateFilter dataHomologacao) {
 		this.dataHomologacao = dataHomologacao;
 	}
-	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

@@ -13,7 +13,15 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 	
 	private Function<Map<String,Cat>,Cat> loadProfissionalCaracterizacao;
 	private Function<Map<String,Cat>,Cat> loadProfissionalClassificacao;
-
+	private Function<Map<String,Cat>,Cat> loadAgenteCausador;
+	private Function<Map<String,Cat>,Cat> loadParteCorpoAtingida;
+	private Function<Map<String,Cat>,Cat> loadNaturezaLesao;
+	private Function<Map<String,Cat>,Cat> loadMunicipio;
+	private Function<Map<String,Cat>,Cat> loadInstalacao;
+	private Function<Map<String,Cat>,Cat> loadCnae;
+	private Function<Map<String,Cat>,Cat> loadClassificacaoGravidade;
+	private Function<Map<String,Cat>,Cat> loadDiagnosticoProvavel;
+	
 	public static CatBuilder newInstance(Cat cat) {
 		return new CatBuilder(cat);
 	}
@@ -48,6 +56,69 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 			return cats.get("destino");
 		};
 		
+		this.loadAgenteCausador = cats ->{
+			if(cats.get("origem").getAgenteCausador() != null) {
+				cats.get("destino").setAgenteCausador(
+						AgenteCausadorBuilder.newInstance(cats.get("origem").getAgenteCausador()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadParteCorpoAtingida = cats ->{
+			if(cats.get("origem").getParteCorpoAtingida() != null) {
+				cats.get("destino").setParteCorpoAtingida(
+						ParteCorpoAtingidaBuilder.newInstance(cats.get("origem").getParteCorpoAtingida()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadNaturezaLesao = cats ->{
+			if(cats.get("origem").getNaturezaLesao() != null) {
+				cats.get("destino").setNaturezaLesao(
+						NaturezaLesaoBuilder.newInstance(cats.get("origem").getNaturezaLesao()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadMunicipio = cats ->{
+			if(cats.get("origem").getMunicipio() != null) {
+				cats.get("destino").setMunicipio(
+						CidadeBuilder.newInstance(cats.get("origem").getMunicipio()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadInstalacao = cats ->{
+			if(cats.get("origem").getInstalacao() != null) {
+				cats.get("destino").setInstalacao(
+						InstalacaoBuilder.newInstance(cats.get("origem").getInstalacao()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadCnae = cats ->{
+			if(cats.get("origem").getCnae() != null) {
+				cats.get("destino").setCnae(
+						CnaeBuilder.newInstance(cats.get("origem").getCnae()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadClassificacaoGravidade = cats ->{
+			if(cats.get("origem").getClassificacaoGravidade() != null) {
+				cats.get("destino").setClassificacaoGravidade(
+						ClassificacaoGravidadeBuilder.newInstance(cats.get("origem").getClassificacaoGravidade()).getEntity());
+			}
+			return cats.get("destino");
+		};
+		
+		this.loadDiagnosticoProvavel = cats -> {
+			if(cats.get("origem").getDiagnosticoProvavel() != null) {
+				cats.get("destino").setDiagnosticoProvavel(
+						DiagnosticoBuilder.newInstance(cats.get("origem").getDiagnosticoProvavel()).getEntity());
+			}
+			return cats.get("destino");
+		};
 	}
 
 	@Override
@@ -74,6 +145,28 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 		newCat.setTempoPrevisto(cat.getTempoPrevisto());
 		newCat.setFerimentoGrave(cat.isFerimentoGrave());
 		newCat.setDataClassificacao(cat.getDataClassificacao());
+		newCat.setRemuneracao(cat.getRemuneracao());
+		newCat.setDataObito(cat.getDataObito());
+		newCat.setDataAvaliacaoMedica(cat.getDataAvaliacaoMedica());
+		newCat.setNumeroSisin(cat.getNumeroSisin());
+		newCat.setClassificacaoSisin(cat.getClassificacaoSisin());
+		newCat.setGrauRiscoEmpresa(cat.getGrauRiscoEmpresa());
+		newCat.setRegistroSd2000(cat.isRegistroSd2000());
+		newCat.setRta(cat.getRta());
+		newCat.setCatSd2000(cat.isCatSd2000());
+		newCat.setDataEmissao(cat.getDataEmissao());
+		newCat.setPendenciaCorrecao(cat.isPendenciaCorrecao());
+		newCat.setJustificativaAtrasoEmissaoCat(cat.getJustificativaAtrasoEmissaoCat());
+		newCat.setNumeroCartaMulta(cat.getNumeroCartaMulta());
+		newCat.setTipoAcidente(cat.getTipoAcidente());
+		newCat.setTipoCat(cat.getTipoCat());
+		newCat.setComunicavelSus(cat.isComunicavelSus());
+		newCat.setNumeroCat(cat.getNumeroCat());
+		newCat.setCodigoCartaSindicato(cat.getCodigoCartaSindicato());
+		newCat.setClassificacaoAnomalia(cat.getClassificacaoAnomalia());
+		newCat.setDataComunicacaoSindicato(cat.getDataComunicacaoSindicato());
+		newCat.setJustificativaAtrasoEmissaoCarta(cat.getJustificativaAtrasoEmissaoCarta());
+		
 		newCat.setVersion(cat.getVersion());
 		
 		if ( cat.getEmpregado() != null ) {
@@ -107,6 +200,38 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 	
 	public CatBuilder loadProfissionalClassificacao() {
 		return (CatBuilder) this.loadProperty(this.loadProfissionalClassificacao);
+	}
+	
+	public CatBuilder loadAgenteCausador() {
+		return (CatBuilder) this.loadProperty(this.loadAgenteCausador);
+	}
+	
+	public CatBuilder loadParteCorpoAtingida() {
+		return (CatBuilder) this.loadProperty(this.loadParteCorpoAtingida);
+	}
+	
+	public CatBuilder loadNaturezaLesao() {
+		return (CatBuilder) this.loadProperty(this.loadNaturezaLesao);
+	}
+	
+	public CatBuilder loadMunicipio() {
+		return (CatBuilder) this.loadProperty(this.loadMunicipio);
+	}
+	
+	public CatBuilder loadInstalacao() {
+		return (CatBuilder) this.loadProperty(this.loadInstalacao);
+	}
+	
+	public CatBuilder loadCnae() {
+		return (CatBuilder) this.loadProperty(this.loadCnae);
+	}
+	
+	public CatBuilder loadClassificaoGravidade() {
+		return (CatBuilder) this.loadProperty(this.loadClassificacaoGravidade);
+	}
+	
+	public CatBuilder loadDiagnosticoProvavel() {
+		return (CatBuilder) this.loadProperty(this.loadDiagnosticoProvavel);
 	}
 	
 	@Override

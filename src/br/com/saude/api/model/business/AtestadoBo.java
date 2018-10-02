@@ -172,7 +172,8 @@ public class AtestadoBo
 	@SuppressWarnings("static-access")
 	@Override
 	public Atestado save(Atestado atestado) throws Exception {
-		if ( atestado.getStatus().equals(StatusAtestado.HOMOLOGADO) && !atestado.isAusenciaExames() ) {
+		if ( atestado.getStatus().equals(StatusAtestado.HOMOLOGADO) && !atestado.isAusenciaExames() &&
+				atestado.getNumeroDias() >= 5) {
 			if ( atestado.getExamesConvocacao() == null || atestado.getExamesConvocacao().size() == 0 ) {
 				throw new Exception("Por favor, adicione exames para o atestado ou selecione ausência de exames.");
 			}
@@ -181,7 +182,8 @@ public class AtestadoBo
 		if ( atestado.getStatus().equals(StatusAtestado.ANALISE_TECNICA) && atestado.getDataAuditoria() == null )
 			throw new Exception("É necessário informar a data da auditoria.");
 		
-		if( !atestado.isPresencial() && atestado.getAgendamento() != null && atestado.getAgendamento().getId() > 0) {
+		if( !atestado.isPresencial() && atestado.getAgendamento() != null && atestado.getAgendamento().getId() > 0
+				&& !atestado.getPreviewStatus().equals(StatusAtestado.ANALISE_TECNICA)) {
 			throw new Exception("Não é possível salvar o atestado que não seja presencial e tenha agendamento. "
 					+ "Favor cancelar o agendamento.");
 		}

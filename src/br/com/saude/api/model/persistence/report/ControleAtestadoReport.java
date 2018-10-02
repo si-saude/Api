@@ -181,6 +181,8 @@ public class ControleAtestadoReport {
 						calendar1.get(Calendar.YEAR));
 			}
 			
+			atestado.setJustificativa((String) row[19]);
+			
 			atestados.add(atestado);
 		}
 

@@ -29,12 +29,10 @@ public class Acao {
 	
 	@Size(max = 128, message="Tamanho máximo para Tipo do Contato: 128")
 	private String tipoContato;
-	
-	@Size(max = 2048, message="Tamanho máximo para Detalhe da Ação: 2048")
-	private String detalhe;
-	
-	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL )
-	private Tarefa tarefa;
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar a Ação.")
+	private AcaoIntervencao acaoIntervencao;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@NotNull(message="É necessário informar a Triagem da Ação.")
@@ -78,22 +76,14 @@ public class Acao {
 		this.tipoContato = tipoContato;
 	}
 
-	public String getDetalhe() {
-		return detalhe;
+	public AcaoIntervencao getAcaoIntervencao() {
+		return acaoIntervencao;
 	}
 
-	public void setDetalhe(String detalhe) {
-		this.detalhe = detalhe;
+	public void setAcaoIntervencao(AcaoIntervencao acaoIntervencao) {
+		this.acaoIntervencao = acaoIntervencao;
 	}
-
-	public Tarefa getTarefa() {
-		return tarefa;
-	}
-
-	public void setTarefa(Tarefa tarefa) {
-		this.tarefa = tarefa;
-	}
-
+	
 	public Triagem getTriagem() {
 		return triagem;
 	}

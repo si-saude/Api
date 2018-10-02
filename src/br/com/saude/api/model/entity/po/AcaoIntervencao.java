@@ -11,19 +11,18 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Notificacao {
+public class AcaoIntervencao {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar a Equipe da Notificação.")
-	@ManyToOne(fetch=FetchType.LAZY)
-	private Equipe equipe;
-	
-	@NotNull(message="É necessário informar a Descrição da Notificação.")
-	@Size(max = 1024, message="Tamanho máximo para Descrição: 1024")
+	@Size(max = 512, message="Tamanho máximo para Descrição da Ação: 512")
 	private String descricao;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@NotNull(message="É necessário informar a Equipe.")
+	private Equipe equipe;
 	
 	@Version
 	private long version;
@@ -36,20 +35,20 @@ public class Notificacao {
 		this.id = id;
 	}
 
-	public Equipe getEquipe() {
-		return equipe;
-	}
-
-	public void setEquipe(Equipe equipe) {
-		this.equipe = equipe;
-	}
-
 	public String getDescricao() {
 		return descricao;
 	}
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public Equipe getEquipe() {
+		return equipe;
+	}
+
+	public void setEquipe(Equipe equipe) {
+		this.equipe = equipe;
 	}
 
 	public long getVersion() {

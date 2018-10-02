@@ -20,6 +20,15 @@ public class Helper {
 	private static StringBuilder stringBuilder;
 	
 	public static String filterLike(String str) {
+		str = str.replace("á", "%").replace("é", "%").replace("í", "%").replace("ó", "%").replace("ú", "%")
+				.replace("Á", "%").replace("É", "%").replace("Í", "%").replace("Ó", "%").replace("Ú", "%")
+				.replace("À", "%").replace("à", "%")
+				.replace("ã", "%").replace("õ", "%").replace("Ã", "%").replace("Õ", "%")
+				.replace("â", "%").replace("ê", "%").replace("ô", "%")
+				.replace("Â", "%").replace("Ê", "%").replace("Ô", "%")
+				.replace("ç", "%").replace("Ç", "%");
+				
+		
 		stringBuilder = new StringBuilder("%");
 		stringBuilder.append(str);
 		stringBuilder.append("%");

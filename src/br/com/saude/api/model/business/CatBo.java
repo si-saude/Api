@@ -31,7 +31,9 @@ public class CatBo extends GenericBo<Cat, CatFilter, CatDao, CatBuilder, CatExam
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadProfissionalCaracterizacao().loadProfissionalClassificacao();
+			return builder.loadProfissionalCaracterizacao().loadProfissionalClassificacao().
+					loadMunicipio().loadAgenteCausador().loadNaturezaLesao().loadParteCorpoAtingida()
+					.loadCnae().loadClassificaoGravidade().loadInstalacao().loadDiagnosticoProvavel();
 		};
 	}
 

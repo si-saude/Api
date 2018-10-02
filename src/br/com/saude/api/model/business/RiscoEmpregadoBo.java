@@ -3,6 +3,7 @@ package br.com.saude.api.model.business;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -23,6 +24,8 @@ import br.com.saude.api.util.constant.StatusRiscoPotencial;
 
 public class RiscoEmpregadoBo extends 
 	GenericBo<RiscoEmpregado, RiscoEmpregadoFilter, RiscoEmpregadoDao, RiscoEmpregadoBuilder, RiscoEmpregadoExampleBuilder> {
+	
+	private Function<RiscoEmpregadoBuilder,RiscoEmpregadoBuilder> functionLoadAtendimentoAll;
 	
 	private static RiscoEmpregadoBo instance;
 
@@ -45,13 +48,23 @@ public class RiscoEmpregadoBo extends
 		this.functionLoadAll = builder -> {
 			return builder.loadRiscoPotencial().loadTriagensAll();
 		};
+		
+		this.functionLoadAtendimentoAll = builder -> {
+			return builder.loadRiscoPotencial().loadTriagensAtendimentoAll();
+		};
 	}
 
 	@Override
 	public PagedList<RiscoEmpregado> getList(RiscoEmpregadoFilter filter)
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, Exception {
-		return super.getList(filter, this.functionLoad);
+		return super.getList(filter, this.functionLoadAll);
+	}
+	
+	public PagedList<RiscoEmpregado> getListAll(RiscoEmpregadoFilter filter)
+			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, Exception {
+		return super.getList(getDao().getListAll(getExampleBuilder(filter).example()), this.functionLoadAtendimentoAll);
 	}
 	
 	private boolean bloquerReavaliacao(long riscoPotencialId, long equipeId) throws Exception {
@@ -140,22 +153,10 @@ public class RiscoEmpregadoBo extends
 	@Override
 	public RiscoEmpregado save(RiscoEmpregado riscoEmpregado) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		
-		RiscoPotencial riscoPotencial = RiscoPotencialBo.getInstance()
-				.getById(riscoEmpregado.getRiscoPotencial().getId());
-		
+
 		riscoEmpregado = gerarRisco(riscoEmpregado);
 		
-		riscoPotencial.getRiscoEmpregados().set(
-				riscoPotencial.getRiscoEmpregados().indexOf(riscoEmpregado),riscoEmpregado);
-		
-		riscoPotencial.setRiscosInterdiciplinares(null);
-		riscoPotencial.setEquipeResponsavel(riscoPotencial.getRiscosInterdiciplinares().get(0)
-				.getEquipe());
-		
-		RiscoPotencialBo.getInstance().save(riscoPotencial);
-		
-		return riscoEmpregado;
+		return super.save(riscoEmpregado);
 	}
 
 	public RiscoEmpregado saveReavaliacao(RiscoEmpregado riscoEmpregado) throws Exception {
