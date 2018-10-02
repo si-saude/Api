@@ -38,10 +38,12 @@ public class ProfissiogramaBo
 	@Override
 	public Profissiograma save(Profissiograma profissiograma) throws Exception {
 		
-		profissiograma.getGrupoMonitoramentoProfissiogramas().forEach(g->
+		profissiograma.getGrupoMonitoramentoProfissiogramas().forEach(g->{
+			g.setProfissiograma(profissiograma);
 			g.getGrupoMonitoramentoProfissiogramaExames().forEach(p -> {
 				p.setGrupoMonitoramentoProfissiograma(g);
-			})
+			});
+			}
 		);
 		
 		return super.save(profissiograma);

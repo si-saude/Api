@@ -28,6 +28,8 @@ public class EmpregadoConvocacaoExame {
 	
 	private boolean conforme;
 	
+	private boolean exigeRelatorio;
+	
 	private Date realizacao;
 	
 	private Date recebimento;
@@ -99,6 +101,14 @@ public class EmpregadoConvocacaoExame {
 
 	public void setAuditoria(Date auditoria) {
 		this.auditoria = auditoria;
+	}
+
+	public boolean isExigeRelatorio() {
+		return exigeRelatorio;
+	}
+
+	public void setExigeRelatorio(boolean exigeRelatorio) {
+		this.exigeRelatorio = exigeRelatorio;
 	}
 
 	@Override

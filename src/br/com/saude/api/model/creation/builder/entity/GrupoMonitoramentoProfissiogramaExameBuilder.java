@@ -11,7 +11,6 @@ import br.com.saude.api.model.entity.po.GrupoMonitoramentoProfissiogramaExame;
 public class GrupoMonitoramentoProfissiogramaExameBuilder 
 	extends GenericEntityBuilder<GrupoMonitoramentoProfissiogramaExame, GenericFilter> {
 
-	private Function<Map<String,GrupoMonitoramentoProfissiogramaExame>,GrupoMonitoramentoProfissiogramaExame> loadExame;
 	private Function<Map<String,GrupoMonitoramentoProfissiogramaExame>,GrupoMonitoramentoProfissiogramaExame> loadCriterios;
 	
 	public static GrupoMonitoramentoProfissiogramaExameBuilder 
@@ -34,12 +33,6 @@ public class GrupoMonitoramentoProfissiogramaExameBuilder
 
 	@Override
 	protected void initializeFunctions() {
-		this.loadExame = grupoMonitoramentoProfissiogramaExames -> {
-			if(grupoMonitoramentoProfissiogramaExames.get("origem").getExame() != null)
-				grupoMonitoramentoProfissiogramaExames.get("destino")
-					.setExame(ExameBuilder.newInstance(grupoMonitoramentoProfissiogramaExames.get("origem").getExame()).getEntity());
-			return grupoMonitoramentoProfissiogramaExames.get("destino");
-		};
 		
 		this.loadCriterios = grupoMonitoramentoProfissiogramaExames -> {
 			if(grupoMonitoramentoProfissiogramaExames.get("origem").getCriterios() != null)
@@ -57,11 +50,10 @@ public class GrupoMonitoramentoProfissiogramaExameBuilder
 		newEntity.setOpcional(entity.isOpcional());
 		newEntity.setVersion(entity.getVersion());
 		
+		if(entity.getExame() != null)
+			newEntity.setExame(ExameBuilder.newInstance(entity.getExame()).getEntity());
+		
 		return newEntity;
-	}
-	
-	public GrupoMonitoramentoProfissiogramaExameBuilder loadExame() {
-		return (GrupoMonitoramentoProfissiogramaExameBuilder) this.loadProperty(this.loadExame);
 	}
 	
 	public GrupoMonitoramentoProfissiogramaExameBuilder loadCriterios() {
