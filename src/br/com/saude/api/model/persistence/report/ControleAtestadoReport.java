@@ -150,7 +150,6 @@ public class ControleAtestadoReport {
 						calendar1.get(Calendar.YEAR));
 			}
 			
-			atestado.setHomologadoNoPrazo(true);
 			if(row[9] != null && row[10] != null) {
 				atestado.setPrazoHomologacao(FeriadoBo.getInstance().getDaysBetweenDates(calendar1, calendar2));
 				if ( atestado.getPrazoHomologacao() <= (int) row[11] )
@@ -158,8 +157,9 @@ public class ControleAtestadoReport {
 				else atestado.setHomologadoNoPrazo(false);
 				
 				atestado.setMesHomologacao(Helper.getStringMonth( Integer.parseInt((String) row[12]) - 1 ));
+				
+				atestado.setHomologadoNoPrazo( atestado.getPrazoHomologacao() <= (int) row[11] );
 			}
-			
 			
 			if(row[13] != null)
 				atestado.setAbreviacaoEquipe((String) row[13]);

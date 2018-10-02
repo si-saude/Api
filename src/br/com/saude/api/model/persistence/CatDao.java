@@ -32,6 +32,7 @@ public class CatDao extends GenericDao<Cat> {
 			cat = loadCnae(cat);
 			cat = loadClassificacaoGravidade(cat);
 			cat = loadDiagnosticoProvavel(cat);
+			cat = loadExamesConvocacao(cat);
 			return cat;
 		};
 	}
@@ -97,6 +98,12 @@ public class CatDao extends GenericDao<Cat> {
 	private Cat loadDiagnosticoProvavel(Cat cat) {
 		if(cat.getDiagnosticoProvavel()!=null)
 			Hibernate.initialize(cat.getDiagnosticoProvavel());
+		return cat;
+	}
+	
+	private Cat loadExamesConvocacao(Cat cat) {
+		if (cat.getExamesConvocacao() != null)
+			Hibernate.initialize(cat.getExamesConvocacao());
 		return cat;
 	}
 }

@@ -35,6 +35,9 @@ public class CatFilter extends GenericFilter {
 	private BooleanFilter catSd2000;
 	private BooleanFilter comunicavelSus;
 	private BooleanFilter pendenciaCorrecao;
+	private BooleanFilter catInss;
+	private BooleanFilter convocado;
+	private BooleanFilter ausenciaExames;
 	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
@@ -209,6 +212,24 @@ public class CatFilter extends GenericFilter {
 	}
 	public void setPendenciaCorrecao(BooleanFilter pendenciaCorrecao) {
 		this.pendenciaCorrecao = pendenciaCorrecao;
+	}
+	public BooleanFilter getCatInss() {
+		return catInss;
+	}
+	public void setCatInss(BooleanFilter catInss) {
+		this.catInss = catInss;
+	}
+	public BooleanFilter getConvocado() {
+		return convocado;
+	}
+	public void setConvocado(BooleanFilter convocado) {
+		this.convocado = convocado;
+	}
+	public BooleanFilter getAusenciaExames() {
+		return ausenciaExames;
+	}
+	public void setAusenciaExames(BooleanFilter ausenciaExames) {
+		this.ausenciaExames = ausenciaExames;
 	}
 	
 }

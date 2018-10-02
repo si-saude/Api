@@ -432,7 +432,6 @@ public class AtestadoBo
 		
 		atestado.setDataSolicitacao(Helper.getToday());
 		atestado.setStatus(StatusAtestado.ANALISE_ADMINISTRATIVA);
-		atestado.setDataSolicitacao(Helper.getToday());
 		atestado = definirLimites(atestado);
 
 		String servico = atestado.getTarefa().getServico().getNome();
@@ -506,7 +505,7 @@ public class AtestadoBo
 		return servico;
 	}
 	
-	private Servico servicoRetornoTrabalho() throws Exception {
+	public Servico servicoRetornoTrabalho() throws Exception {
 		ServicoFilter servicoFilter = new ServicoFilter();
 		servicoFilter.setCodigo("0004");
 		servicoFilter.setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
@@ -516,7 +515,7 @@ public class AtestadoBo
 		return servico;
 	}
 	
-	private Servico servicoExamePericial() throws Exception {
+	public Servico servicoExamePericial() throws Exception {
 		ServicoFilter servicoFilter = new ServicoFilter();
 		servicoFilter.setCodigo("0007");
 		servicoFilter.setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);

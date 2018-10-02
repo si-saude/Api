@@ -3,7 +3,6 @@ package br.com.saude.api.model.creation.builder.entity;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.CatFilter;
 import br.com.saude.api.model.entity.po.Cat;
@@ -21,6 +20,7 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 	private Function<Map<String,Cat>,Cat> loadCnae;
 	private Function<Map<String,Cat>,Cat> loadClassificacaoGravidade;
 	private Function<Map<String,Cat>,Cat> loadDiagnosticoProvavel;
+	private Function<Map<String,Cat>,Cat> loadExamesConvocacao;
 	
 	public static CatBuilder newInstance(Cat cat) {
 		return new CatBuilder(cat);
@@ -119,6 +119,14 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 			}
 			return cats.get("destino");
 		};
+		
+		this.loadExamesConvocacao = cats -> {
+			if(cats.get("origem").getExamesConvocacao() != null) {
+				cats.get("destino").setExamesConvocacao(
+						ExameBuilder.newInstance(cats.get("origem").getExamesConvocacao()).getEntityList());
+			}
+			return cats.get("destino");
+		};
 	}
 
 	@Override
@@ -166,7 +174,9 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 		newCat.setClassificacaoAnomalia(cat.getClassificacaoAnomalia());
 		newCat.setDataComunicacaoSindicato(cat.getDataComunicacaoSindicato());
 		newCat.setJustificativaAtrasoEmissaoCarta(cat.getJustificativaAtrasoEmissaoCarta());
-		
+		newCat.setCatInss(cat.isCatInss());
+		newCat.setConvocado(cat.isConvocado());
+		newCat.setAusenciaExames(cat.isAusenciaExames());
 		newCat.setVersion(cat.getVersion());
 		
 		if ( cat.getEmpregado() != null ) {
@@ -232,6 +242,10 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 	
 	public CatBuilder loadDiagnosticoProvavel() {
 		return (CatBuilder) this.loadProperty(this.loadDiagnosticoProvavel);
+	}
+	
+	public CatBuilder loadExamesConvocacao() {
+		return (CatBuilder) this.loadProperty(this.loadExamesConvocacao);
 	}
 	
 	@Override

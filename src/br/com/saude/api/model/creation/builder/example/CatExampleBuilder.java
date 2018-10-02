@@ -51,6 +51,9 @@ public class CatExampleBuilder extends GenericExampleBuilder<Cat, CatFilter> {
 		addCatSd2000();
 		addComunicavelSus();
 		addPendenciaCorrecao();
+		addCatInss();
+		addConvocado();
+		addAusenciaExames();
 	}
 
 	@Override
@@ -209,6 +212,18 @@ public class CatExampleBuilder extends GenericExampleBuilder<Cat, CatFilter> {
 	
 	protected void addCatSd2000() {
 		this.entity.setCatSd2000(this.addBoolean("catSd2000", this.filter.getCatSd2000()));
+	}
+	
+	protected void addCatInss() {
+		this.entity.setCatInss(this.addBoolean("catInss", this.filter.getCatInss()));
+	}
+
+	protected void addConvocado() {
+		this.entity.setConvocado(this.addBoolean("convocado", this.filter.getConvocado()));
+	}
+	
+	protected void addAusenciaExames() {
+		this.entity.setAusenciaExames(this.addBoolean("ausenciaExames", this.filter.getAusenciaExames()));
 	}
 	
 }

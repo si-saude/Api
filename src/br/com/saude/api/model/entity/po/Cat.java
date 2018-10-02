@@ -1,12 +1,17 @@
 package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -79,7 +84,6 @@ public class Cat {
 	private Date dataCaracterizacao;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
-	@NotNull(message="É necessário informar a Classificacao do Afastamento do CAT.")
 	private ClassificacaoAfastamento classificacao;
 	
 	private int tempoPrevisto;
@@ -168,6 +172,18 @@ public class Cat {
 	
 	@Size(max = 1024, message="Tamanho máximo para Justificativa no Atraso da Emissão da Carta do CAT: 1024")
 	private String justificativaAtrasoEmissaoCarta;
+	
+	private boolean catInss;
+	
+	private boolean convocado;
+	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="exame_cat", 
+				joinColumns = {@JoinColumn(name="cat_id")}, 
+				inverseJoinColumns = {@JoinColumn(name="exame_id")})
+	private List<Exame> examesConvocacao;
+	
+	private boolean ausenciaExames;
 	
 	@Version
 	private long version;
@@ -618,6 +634,38 @@ public class Cat {
 
 	public void setJustificativaAtrasoEmissaoCarta(String justificativaAtrasoEmissaoCarta) {
 		this.justificativaAtrasoEmissaoCarta = justificativaAtrasoEmissaoCarta;
+	}
+	
+	public boolean isCatInss() {
+		return catInss;
+	}
+
+	public void setCatInss(boolean catInss) {
+		this.catInss = catInss;
+	}
+
+	public boolean isConvocado() {
+		return convocado;
+	}
+
+	public void setConvocado(boolean convocado) {
+		this.convocado = convocado;
+	}
+
+	public List<Exame> getExamesConvocacao() {
+		return examesConvocacao;
+	}
+
+	public void setExamesConvocacao(List<Exame> examesConvocacao) {
+		this.examesConvocacao = examesConvocacao;
+	}
+
+	public boolean isAusenciaExames() {
+		return ausenciaExames;
+	}
+
+	public void setAusenciaExames(boolean ausenciaExames) {
+		this.ausenciaExames = ausenciaExames;
 	}
 
 	public long getVersion() {
