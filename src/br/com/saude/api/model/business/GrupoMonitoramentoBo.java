@@ -127,4 +127,12 @@ public class GrupoMonitoramentoBo extends
 			return gmonits;
 		return null;
 	}
+	
+	@Override
+	public GrupoMonitoramento save(GrupoMonitoramento grupo) throws Exception {
+		if(grupo.getAvaliacoes() != null)
+			grupo.getAvaliacoes().forEach(a->a.setGrupoMonitoramento(grupo));
+		
+		return super.save(grupo);
+	}
 }

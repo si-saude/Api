@@ -1,6 +1,5 @@
 package br.com.saude.api.model.entity.po;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,7 +19,6 @@ public class Avaliacao {
 	
 	@NotNull(message="É necessário informar o Nome da Avaliação.")
 	@Size(max = 128, message="Tamanho máximo para Nome da Avaliação: 128")
-	@Column(unique=true)
 	private String nome;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
