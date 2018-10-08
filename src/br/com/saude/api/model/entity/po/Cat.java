@@ -2,6 +2,7 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -184,6 +186,35 @@ public class Cat {
 	private List<Exame> examesConvocacao;
 	
 	private boolean ausenciaExames;
+
+	@Size(max = 4096, message="Tamanho máximo para Recomendações do CAT: 2048")
+	private String recomendacoes;
+	
+	@Transient
+	private Map<Integer,Integer> arquivo;
+	
+	@Transient
+	private String arquivoBase64;
+	
+	private int jornadaTrabalho;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato1 do CAT: 512")
+	private String ato1;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato2 do CAT: 512")
+	private String ato2;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato3 do CAT: 512")
+	private String ato3;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato4 do CAT: 512")
+	private String ato4;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato5 do CAT: 512")
+	private String ato5;
+	
+	@Size(max = 2048, message="Tamanho máximo para Justificativa do CAT: 2048")
+	private String justificativa;
 	
 	@Version
 	private long version;
@@ -667,6 +698,30 @@ public class Cat {
 	public void setAusenciaExames(boolean ausenciaExames) {
 		this.ausenciaExames = ausenciaExames;
 	}
+	
+	public String getRecomendacoes() {
+		return recomendacoes;
+	}
+
+	public void setRecomendacoes(String recomendacoes) {
+		this.recomendacoes = recomendacoes;
+	}
+	
+	public Map<Integer, Integer> getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(Map<Integer, Integer> arquivo) {
+		this.arquivo = arquivo;
+	}
+
+	public String getArquivoBase64() {
+		return arquivoBase64;
+	}
+
+	public void setArquivoBase64(String arquivoBase64) {
+		this.arquivoBase64 = arquivoBase64;
+	}
 
 	public long getVersion() {
 		return version;
@@ -674,6 +729,62 @@ public class Cat {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public int getJornadaTrabalho() {
+		return jornadaTrabalho;
+	}
+
+	public void setJornadaTrabalho(int jornadaTrabalho) {
+		this.jornadaTrabalho = jornadaTrabalho;
+	}
+
+	public String getAto1() {
+		return ato1;
+	}
+
+	public void setAto1(String ato1) {
+		this.ato1 = ato1;
+	}
+
+	public String getAto2() {
+		return ato2;
+	}
+
+	public void setAto2(String ato2) {
+		this.ato2 = ato2;
+	}
+
+	public String getAto3() {
+		return ato3;
+	}
+
+	public void setAto3(String ato3) {
+		this.ato3 = ato3;
+	}
+
+	public String getAto4() {
+		return ato4;
+	}
+
+	public void setAto4(String ato4) {
+		this.ato4 = ato4;
+	}
+
+	public String getAto5() {
+		return ato5;
+	}
+
+	public void setAto5(String ato5) {
+		this.ato5 = ato5;
+	}
+
+	public String getJustificativa() {
+		return justificativa;
+	}
+
+	public void setJustificativa(String justificativa) {
+		this.justificativa = justificativa;
 	}
 	
 }

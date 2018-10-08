@@ -59,6 +59,37 @@ public class CatExampleBuilder extends GenericExampleBuilder<Cat, CatFilter> {
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		addEmpregado();
+		addEmpresa();
+		addGerencia();
+		addTelefoneGerente();
+		addFiscalContrato();
+		addTelefoneFiscal();
+		addDataOcorrencia();
+		addLocal();
+		addDescricao();
+		addEmpregadoServicoCompanhia();
+		addOcorrenciaAmbienteTrabalho();
+		addOcorrenciaTrajeto();
+		addResponsavelInformacao();
+		addDataInformacao();
+		addCaracterizacao();
+		addLesaoCorporal();
+		addNexoCausal();
+		addProfissionalCaracterizacao();
+		addDataCaracterizacao();
+		addClassificacao();
+		addTempoPrevisto();
+		addCid();
+		addFerimentoGrave();
+		addProfissionalClassificacao();
+		addDataClassificacao();
+		addRegistroSd2000();
+		addCatSd2000();
+		addComunicavelSus();
+		addPendenciaCorrecao();
+		addCatInss();
+		addConvocado();
+		addAusenciaExames();
 	}
 	
 	private void addEmpregado() throws InstantiationException, IllegalAccessException {

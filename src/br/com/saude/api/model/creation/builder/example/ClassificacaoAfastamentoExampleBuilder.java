@@ -34,7 +34,8 @@ public class ClassificacaoAfastamentoExampleBuilder extends GenericExampleBuilde
 
 	@Override
 	protected void createExampleSelectList() {
-		
+		addDescricao();
+		addGeraAfastamento();
 	}
 
 }
