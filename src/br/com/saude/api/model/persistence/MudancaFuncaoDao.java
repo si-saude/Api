@@ -8,6 +8,7 @@ import org.hibernate.Hibernate;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.po.Instalacao;
 import br.com.saude.api.model.entity.po.MudancaFuncao;
 import br.com.saude.api.model.entity.po.Tarefa;
 
@@ -28,7 +29,8 @@ public class MudancaFuncaoDao extends GenericDao<MudancaFuncao>  {
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = mudancaFuncao -> {
-			mudancaFuncao = loadTarefas(mudancaFuncao);			
+			mudancaFuncao = loadTarefas(mudancaFuncao);		
+			mudancaFuncao = loadInstalacoes(mudancaFuncao);
 			return mudancaFuncao;
 		};
 	
@@ -52,6 +54,18 @@ public class MudancaFuncaoDao extends GenericDao<MudancaFuncao>  {
 				tarefas.add((Tarefa) Hibernate.unproxy(a));				
 			});
 			mudancaFuncao.setTarefas(tarefas);
+		}
+		return mudancaFuncao;
+	}
+	
+	private MudancaFuncao loadInstalacoes(MudancaFuncao mudancaFuncao)
+	{
+		List<Instalacao> instalacoes = new ArrayList<Instalacao>();
+		if(mudancaFuncao.getInstalacoes()!=null) {
+			mudancaFuncao.getInstalacoes().forEach(a->{				
+				instalacoes.add((Instalacao) Hibernate.unproxy(a));				
+			});
+			mudancaFuncao.setInstalacoes(instalacoes);
 		}
 		return mudancaFuncao;
 	}

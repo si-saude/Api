@@ -10,6 +10,7 @@ import br.com.saude.api.model.entity.po.MudancaFuncao;;
 
 public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, MudancaFuncaoFilter> {
 	private Function<Map<String,MudancaFuncao>,MudancaFuncao> loadTarefas;
+	private Function<Map<String,MudancaFuncao>,MudancaFuncao> loadInstalacoes;
 
 	public static MudancaFuncaoBuilder newInstance(MudancaFuncao solicitacao) {
 		return new MudancaFuncaoBuilder(solicitacao);
@@ -36,6 +37,13 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 			}
 			return mundancafuncoes.get("destino");
 		};
+		this.loadInstalacoes = mundancafuncoes ->{
+			if(mundancafuncoes.get("origem").getInstalacoes() != null) {
+				mundancafuncoes.get("destino").setInstalacoes(InstalacaoBuilder.
+						newInstance(mundancafuncoes.get("origem").getInstalacoes()).getEntityList());
+			}
+			return mundancafuncoes.get("destino");
+		};
 	}
 
 	@Override
@@ -45,6 +53,7 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 		
 		newSolicitacao.setId(solicitacao.getId());
 		newSolicitacao.setVersion(solicitacao.getVersion());
+		newSolicitacao.setAtividades(solicitacao.getAtividades());
 		
 		if(solicitacao.getEnfase() != null)
 			newSolicitacao.setEnfase(EnfaseBuilder.newInstance(solicitacao.getEnfase()).getEntity());
@@ -67,7 +76,10 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 	public MudancaFuncaoBuilder loadTarefas() {
 		return (MudancaFuncaoBuilder) this.loadProperty(this.loadTarefas);
 	}
-	
+
+	public MudancaFuncaoBuilder loadInstalacoes() {
+		return (MudancaFuncaoBuilder) this.loadProperty(this.loadInstalacoes);
+	}
 
 	@Override
 	public MudancaFuncao cloneFromFilter(MudancaFuncaoFilter filter) {

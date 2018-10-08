@@ -1,7 +1,7 @@
 package br.com.saude.api.model.creation.builder.example;
 
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
+import org.hibernate.criterion.Restrictions;
 import org.javatuples.Triplet;
 
 import br.com.saude.api.generic.CriteriaExample;

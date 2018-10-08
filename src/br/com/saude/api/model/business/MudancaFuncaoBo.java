@@ -40,7 +40,7 @@ public class MudancaFuncaoBo
 		};
 		
 		this.functionLoadAll = builder -> {
-			return builder.loadTarefas();
+			return builder.loadTarefas().loadInstalacoes();
 		};
 
 	}
@@ -130,7 +130,28 @@ public class MudancaFuncaoBo
 				(empregado.getBase() != null &&  mudancaFuncao.getBase().getId() != empregado.getBase().getId())
 				||(empregado.getBase() == null))			
 			return true;
+		if(modificacaoIntalacoes(mudancaFuncao, empregado)) 
+				return true;
 		
+		return false;
+	}
+	
+	private boolean modificacaoIntalacoes(MudancaFuncao mudancaFuncao, Empregado empregado) {
+		
+		if(mudancaFuncao.getInstalacoes() != null) {
+			for(int x = 0; x < mudancaFuncao.getInstalacoes().size(); x++) {
+				int y = x;
+				if(empregado.getInstalacoes() == null ||empregado.getInstalacoes().stream().filter(i-> i.getId() == mudancaFuncao.getInstalacoes().get(y).getId()).count() == 0)
+					return true;
+			}
+		}
+		if(empregado.getInstalacoes() != null) {
+			for(int x = 0; x < empregado.getInstalacoes().size(); x++) {
+				int y = x;
+				if(mudancaFuncao.getInstalacoes() == null ||mudancaFuncao.getInstalacoes().stream().filter(i-> i.getId() == empregado.getInstalacoes().get(y).getId()).count() == 0)
+					return true;
+			}
+		}
 		return false;
 	}
 	
@@ -152,29 +173,15 @@ public class MudancaFuncaoBo
 			   mudancaFuncao.getCliente().setGerencia(mudancaFuncao.getGerencia());
 			
 			if(mudancaFuncao.getBase() != null)
-			   mudancaFuncao.getCliente().setBase(mudancaFuncao.getBase());
+			   mudancaFuncao.getCliente().setBase(mudancaFuncao.getBase());			
+			
+			mudancaFuncao.getCliente().setInstalacoes(mudancaFuncao.getInstalacoes());
 			
 		}else
 			throw new Exception("As mudanças já foram aplicadas");		
 		 
 		 return EmpregadoBo.getInstance().save(mudancaFuncao.getCliente());
-	}
-	
-	
-	/**
-	 * CRIAR MÉTODO aplicarAltecacoes
-	 * 
-	 * 		
-		//getById NO EMPREGADO
-		
-		//SETAR APENAS GHE, GHEE, BASE (QUANDO DIFERENTE DE NULL)
-		
-		//SALVAR O EMPREGADO
-		  
-		//SETAR A DATA ATUAL NA APLICAÇÃO DA MUDANÇA DE FUNÇÃO, E SALVAR A MUDANÇA DE FUNÇÃO
-	 * 
-	 * */
-	
+	}	
 	
 	@Override
 	public PagedList<MudancaFuncao> getList(MudancaFuncaoFilter filter) throws Exception {
