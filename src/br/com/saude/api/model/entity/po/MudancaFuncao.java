@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.constraints.Size;
 
 
 @Entity
@@ -43,12 +44,22 @@ public class MudancaFuncao {
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Base base;
-		
+	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="mudancaFuncao_instalacao", 
+	joinColumns = {@JoinColumn(name="mudancaFuncao_id")}, 
+	inverseJoinColumns = {@JoinColumn(name="instalacao_id")})
+	private List<Instalacao> instalacoes;
+	
+	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name="mudancaFuncao_tarefa", 
 	joinColumns = {@JoinColumn(name="mudancaFuncao_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="tarefa_id")})
 	private List<Tarefa> tarefas;
+	
+	@Size(max = 16, message="Tamanho máximo para Revisão: 2054")
+	private String atividades;
 	
 	@Transient
 	private String status;
@@ -149,6 +160,14 @@ public class MudancaFuncao {
 	public void setTarefas(List<Tarefa> tarefas) {
 		this.tarefas = tarefas;
 	}
+	
+	public List<Instalacao> getInstalacoes() {
+ 		return instalacoes;
+	}
+
+	public void setInstalacoes(List<Instalacao> instalacoes) {
+		this.instalacoes = instalacoes;
+	}
 
 	public String getStatus() {
 		return status;
@@ -164,6 +183,15 @@ public class MudancaFuncao {
 
 	public void setAbertura(Date abertura) {
 		this.abertura = abertura;
+	}
+	
+	
+	public String getAtividades() {
+		return atividades;
+	}
+
+	public void setAtividades(String atividades) {
+		this.atividades = atividades;
 	}
 
 }

@@ -11,6 +11,9 @@ public class MudancaFuncaoValidator extends GenericValidator<MudancaFuncao> {
 				
 		if(solicitacao.getTarefas() != null)
 			new TarefaValidator().validate(solicitacao.getTarefas());
+		
+		if(solicitacao.getInstalacoes() != null)
+			new InstalacaoValidator().validate(solicitacao.getInstalacoes());
 	}
 
 }

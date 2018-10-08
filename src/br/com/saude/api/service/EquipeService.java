@@ -106,4 +106,20 @@ public class EquipeService extends GenericServiceImpl<Equipe,EquipeFilter,Equipe
 				EquipeExampleBuilder.newInstance(equipeFilter).exampleMedicinaOuOdonto();
 		return Response.ok(EquipeBo.getInstance().getList(geb).getGenericPagedList()).build();
 	}
+	
+	@GET
+	@Path("get-med-hig-erg")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMedHigErg() throws Exception {
+		EquipeFilter equipeFilter = new EquipeFilter();
+		equipeFilter.setPageNumber(1);
+		equipeFilter.setPageSize(Integer.MIN_VALUE);
+		try {
+			GenericExampleBuilder<Equipe, EquipeFilter> geb = 
+			EquipeExampleBuilder.newInstance(equipeFilter).exampleMedOuErgOuHIg();
+			return Response.ok(EquipeBo.getInstance().getList(geb).getGenericPagedList()).build();
+		}catch (Exception e) {			
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 }
