@@ -186,6 +186,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String CIDADE_ALTERAR		 			= "CIDADE_ALTERAR";
 	public static final String CIDADE_REMOVER 					= "CIDADE_REMOVER";
 	public static final String CIDADE_DETALHE 					= "CIDADE_DETALHE";
+	public static final String CLINICA_LISTAR						= "CLINICA_LISTAR";
+	public static final String CLINICA_ADICIONAR 			    	= "CLINICA_ADICIONAR";
+	public static final String CLINICA_ALTERAR		 			= "CLINICA_ALTERAR";
+	public static final String CLINICA_REMOVER 					= "CLINICA_REMOVER";
+	public static final String CLINICA_DETALHE 					= "CLINICA_DETALHE";
 	public static final String CRITERIO_LISTAR						= "CRITERIO_LISTAR";
 	public static final String CRITERIO_ADICIONAR 			    	= "CRITERIO_ADICIONAR";
 	public static final String CRITERIO_ALTERAR		 			= "CRITERIO_ALTERAR";

@@ -36,12 +36,14 @@ import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.generic.StringReplacer;
 import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.ConvocacaoBuilder;
 import br.com.saude.api.model.creation.builder.example.ConvocacaoExampleBuilder;
 import br.com.saude.api.model.creation.factory.entity.AsoFactory;
 import br.com.saude.api.model.creation.factory.entity.ExameFactory;
+import br.com.saude.api.model.entity.filter.ClinicaFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoExameFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
@@ -50,6 +52,7 @@ import br.com.saude.api.model.entity.filter.ExameFilter;
 import br.com.saude.api.model.entity.filter.GerenciaFilter;
 import br.com.saude.api.model.entity.filter.GrupoMonitoramentoFilter;
 import br.com.saude.api.model.entity.po.Aso;
+import br.com.saude.api.model.entity.po.Clinica;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Criterio;
 import br.com.saude.api.model.entity.po.Empregado;
@@ -212,105 +215,127 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			//CARREGAR O EMPREGADO
 			eC.setEmpregado(EmpregadoBo.getInstance().getById(eC.getEmpregado().getId()));
 			
-			//SUBSTITUIR AS VARIÁVEIS
-			StringReplacer stringReplacer = new StringReplacer(html.toString());
-			stringReplacer = stringReplacer
-				.replace("nomeEmpregado", eC.getEmpregado().getPessoa().getNome())
-				.replace("matriculaEmpregado", Objects.toString(eC.getEmpregado().getMatricula(),"---"))
-				.replace("cpfEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getCpf(),"---"))
-				.replace("chaveEmpregado", Objects.toString(eC.getEmpregado().getChave(),"---"))
-				.replace("gerenciaEmpregado", eC.getEmpregado().getGerencia().getCodigoCompleto())
-				.replace("turmaEmpregado", "---")
-				.replace("tipoConvocacao", Objects.toString(convocacao.getTipo(),"---"))
-				.replace("centroCusto", "---")
-				.replace("emailEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getEmail(),"---"))
-				.replace("data", new Date().toLocaleString().substring(0, 10));
+			//GERAR GUIAS SEPARADAS POR CLÍNICA
+			ClinicaFilter cFilter = new ClinicaFilter();
+			cFilter.setPageNumber(1);
+			cFilter.setPageSize(Integer.MAX_VALUE);
+			cFilter.setUf(eC.getEmpregado().getBase().getUf());
+			PagedList<Clinica> clinicas = ClinicaBo.getInstance().getListLoadAll(cFilter);
+			List<EmpregadoConvocacaoExame> empregadoExames = new ArrayList<EmpregadoConvocacaoExame>();
 			
-			if(eC.getEmpregado().getCargo() != null)
-				stringReplacer.replace("cargoEmpregado", Objects.toString(eC.getEmpregado().getCargo().getNome(),"---"));
-			else
-				stringReplacer.replace("cargoEmpregado","---");
-			
-			if(eC.getEmpregado().getPessoa().getDataNascimento() != null)
-				stringReplacer.replace("dataNascimentoEmpregado", eC.getEmpregado().getPessoa().getDataNascimento().toLocaleString().substring(0, 10));
-			else
-				stringReplacer.replace("dataNascimentoEmpregado","---");
-			
-			//OBTER O MÊS DA CONVOCAÇÃO
-			
-			if(convocacao.getFim() != null) {
-				stringReplacer.replace("mesConvocacao", 
-						new SimpleDateFormat("MMMMMMMMMM").format(convocacao.getFim()) +"/"+
-						new SimpleDateFormat("YYYY").format(convocacao.getFim()));
-			} else
-				stringReplacer.replace("mesConvocacao","---");
-			
-			URI logoUri = new URI(Helper.getProjectPath()
-					.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
-			stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath());
-			
-			//EXAMES
-			if(eC.getEmpregadoConvocacaoExames().size() < 26) {
-				int total = eC.getEmpregadoConvocacaoExames().size(); 
-				for(int i=0; i<26; i++) {
-					if(eC.getEmpregadoConvocacaoExames().size() == 26)
-						break;
+			if(clinicas.getTotal() > 0) {
+				for(Clinica clinica : clinicas.getList()) {
 					
-					if( ((i+1)%2 == 0 || (i/2 >= total)) && (total - i)+1+total <= 26 ) {
-						Exame e = ExameFactory.newInstance().descricao("&nbsp;").get();
-						EmpregadoConvocacaoExame eE = new EmpregadoConvocacaoExame();
-						eE.setExame(e);
-						try {
-							eC.getEmpregadoConvocacaoExames().add(i, eE);
-						}catch(IndexOutOfBoundsException ex) {
-							eC.getEmpregadoConvocacaoExames().add(eE);
+					eC.getEmpregadoConvocacaoExames().forEach(e->{
+						if(clinica.getExames().contains(e.getExame())) {
+							EmpregadoConvocacaoExame empregadoExame = new EmpregadoConvocacaoExame();
+							empregadoExame.setExame(e.getExame());
+							empregadoExames.add(empregadoExame);
+						}
+					});
+					
+					//SUBSTITUIR AS VARIÁVEIS
+					StringReplacer stringReplacer = new StringReplacer(html.toString());
+					stringReplacer = stringReplacer
+							.replace("nomeEmpregado", eC.getEmpregado().getPessoa().getNome())
+							.replace("matriculaEmpregado", Objects.toString(eC.getEmpregado().getMatricula(),"---"))
+							.replace("cpfEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getCpf(),"---"))
+							.replace("chaveEmpregado", Objects.toString(eC.getEmpregado().getChave(),"---"))
+							.replace("gerenciaEmpregado", eC.getEmpregado().getGerencia().getCodigoCompleto())
+							.replace("turmaEmpregado", "---")
+							.replace("tipoConvocacao", Objects.toString(convocacao.getTipo(),"---"))
+							.replace("centroCusto", "---")
+							.replace("emailEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getEmail(),"---"))
+							.replace("data", new Date().toLocaleString().substring(0, 10));
+					
+					if(eC.getEmpregado().getCargo() != null)
+						stringReplacer.replace("cargoEmpregado", Objects.toString(eC.getEmpregado().getCargo().getNome(),"---"));
+					else
+						stringReplacer.replace("cargoEmpregado","---");
+					
+					if(eC.getEmpregado().getPessoa().getDataNascimento() != null)
+						stringReplacer.replace("dataNascimentoEmpregado", eC.getEmpregado().getPessoa().getDataNascimento().toLocaleString().substring(0, 10));
+					else
+						stringReplacer.replace("dataNascimentoEmpregado","---");
+					
+					//OBTER O MÊS DA CONVOCAÇÃO
+					
+					if(convocacao.getFim() != null) {
+						stringReplacer.replace("mesConvocacao", 
+								new SimpleDateFormat("MMMMMMMMMM").format(convocacao.getFim()) +"/"+
+										new SimpleDateFormat("YYYY").format(convocacao.getFim()));
+					} else
+						stringReplacer.replace("mesConvocacao","---");
+					
+					URI logoUri = new URI(Helper.getProjectPath()
+							.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
+					stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath());
+					
+					//EXAMES
+					if(empregadoExames.size() < 26) {
+						int total = empregadoExames.size(); 
+						for(int i=0; i<26; i++) {
+							if(empregadoExames.size() == 26)
+								break;
+							
+							if( ((i+1)%2 == 0 || (i/2 >= total)) && (total - i)+1+total <= 26 ) {
+								Exame e = ExameFactory.newInstance().descricao("&nbsp;").get();
+								EmpregadoConvocacaoExame eE = new EmpregadoConvocacaoExame();
+								eE.setExame(e);
+								try {
+									empregadoExames.add(i, eE);
+								}catch(IndexOutOfBoundsException ex) {
+									empregadoExames.add(eE);
+								}
+							}
 						}
 					}
+					
+					String exames = "";
+					String linha = "";
+					int i = 0;
+					boolean exigeRelatorio = false;
+					
+					for(EmpregadoConvocacaoExame e : empregadoExames) {
+						if(i == 0) {
+							linha += "<tr><td>"+e.getExame().getDescricao()+"</td>";
+							i++;
+						}else {
+							linha += "<td>"+e.getExame().getDescricao()+"</td></tr>";
+							exames+= linha;
+							linha = "";
+							i = 0;
+						}
+						
+						if(!exigeRelatorio && e.isExigeRelatorio())
+							exigeRelatorio = true;
+					}
+					
+					if(linha != "") {
+						linha += "<td></td></tr>";
+						exames+= linha;
+					}
+					stringReplacer = stringReplacer.replace("exames", exames);
+					
+					//GERAR PDF
+					pdfUri = new URI(uri.getPath()+"/"+Objects.toString(eC.getEmpregado().getMatricula().trim()+"-","")
+					+"EXAMES_COMPLEMENTARES_"
+					+clinica.getNome()+""
+					+ (exigeRelatorio ? "_exige_relatorio_medico" : "")
+					+".pdf");
+					pdf = new File(pdfUri.getPath());
+					OutputStream stream = new FileOutputStream(pdf);
+					Document doc = new Document();
+					PdfWriter.getInstance(doc, stream);
+					doc.open();
+					
+					HTMLWorker htmlWorker = new HTMLWorker(doc);
+					htmlWorker.parse(new StringReader(stringReplacer.result()));
+					
+					doc.close();
+					stream.close();
 				}
 			}
-			
-			String exames = "";
-			String linha = "";
-			int i = 0;
-			boolean exigeRelatorio = false;
-			
-			for(EmpregadoConvocacaoExame e : eC.getEmpregadoConvocacaoExames()) {
-				if(i == 0) {
-					linha += "<tr><td>"+e.getExame().getDescricao()+"</td>";
-					i++;
-				}else {
-					linha += "<td>"+e.getExame().getDescricao()+"</td></tr>";
-					exames+= linha;
-					linha = "";
-					i = 0;
-				}
-				
-				if(!exigeRelatorio && e.isExigeRelatorio())
-					exigeRelatorio = true;
-			}
-			
-			if(linha != "") {
-				linha += "<td></td></tr>";
-				exames+= linha;
-			}
-			stringReplacer = stringReplacer.replace("exames", exames);
-			
-			//GERAR PDF
-			pdfUri = new URI(uri.getPath()+"/"+Objects.toString(eC.getEmpregado().getMatricula().trim()+"-","")
-			+"EXAMES_COMPLEMENTARES"
-			+ (exigeRelatorio ? "exige_relatorio_medico" : "")
-			+".pdf");
-			pdf = new File(pdfUri.getPath());
-			OutputStream stream = new FileOutputStream(pdf);
-			Document doc = new Document();
-			PdfWriter.getInstance(doc, stream);
-			doc.open();
-			
-			HTMLWorker htmlWorker = new HTMLWorker(doc);
-			htmlWorker.parse(new StringReader(stringReplacer.result()));
-			
-			doc.close();
-			stream.close();
 		}
 		
 		//RETIRAR OS REGISTROS CUJO ID DO EXAME == 0, DEPOIS SALVA CONVOCAÇÃO
