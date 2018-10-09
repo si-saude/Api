@@ -6,6 +6,7 @@ import org.javatuples.Triplet;
 
 import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
 
@@ -36,10 +37,17 @@ public class AtestadoExampleBuilder extends GenericExampleBuilder<Atestado, Ates
 		addAusenciaExames();
 		addDataAuditoria();
 		addConvocado();
+		addDataHomologacao();
+		addStatus();
 	}
 	
 	@Override
 	protected void createExampleSelectList() { }
+	
+	private void addStatus() {
+		if(this.filter.getStatus() != null)
+			this.criterions.add(Restrictions.ilike("status", Helper.filterLike(this.filter.getStatus())));
+	}
 	
 	protected void addAtestadoFisicoRecebido() {
 		this.entity.setAtestadoFisicoRecebido(this.addBoolean("atestadoFisicoRecebido", this.filter.getAtestadoFisicoRecebido()));
@@ -83,6 +91,10 @@ public class AtestadoExampleBuilder extends GenericExampleBuilder<Atestado, Ates
 	
 	protected void addConvocado() {
 		this.entity.setConvocado(this.addBoolean("convocado", this.filter.getConvocado()));
+	}
+	
+	private void addDataHomologacao() {
+		super.addData("dataHomologacao", this.filter.getDataHomologacao());
 	}
 	
 	private void addId() {

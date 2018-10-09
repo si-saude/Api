@@ -163,6 +163,14 @@ public class Atestado {
 	
 	private boolean convocado;
 	
+	private Date dataHomologacao;
+	
+	@OneToMany(mappedBy="atestado", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<AuditoriaAtestado> auditoriaAtestados;
+	
+	@Size(max = 1024, message="Tamanho máximo para Justificativa do Atestado: 1024")
+	private String justificativa;
+	
 	@Version
 	private long version;
 	
@@ -581,5 +589,28 @@ public class Atestado {
 	public void setConvocado(boolean convocado) {
 		this.convocado = convocado;
 	}
-	
+
+	public Date getDataHomologacao() {
+		return dataHomologacao;
+	}
+
+	public void setDataHomologacao(Date dataHomologacao) {
+		this.dataHomologacao = dataHomologacao;
+	}
+
+	public List<AuditoriaAtestado> getAuditoriaAtestados() {
+		return auditoriaAtestados;
+	}
+
+	public void setAuditoriaAtestados(List<AuditoriaAtestado> auditoriaAtestados) {
+		this.auditoriaAtestados = auditoriaAtestados;
+	}
+
+	public String getJustificativa() {
+		return justificativa;
+	}
+
+	public void setJustificativa(String justificativa) {
+		this.justificativa = justificativa;
+	}
 }

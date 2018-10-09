@@ -29,9 +29,11 @@ import br.com.saude.api.model.entity.dto.ControleAtestadoDto;
 import br.com.saude.api.model.entity.filter.AtestadoFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EquipeFilter;
+import br.com.saude.api.model.entity.filter.ItemAuditoriaAtestadoFilter;
 import br.com.saude.api.model.entity.filter.ProfissiogramaFilter;
 import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.po.Atestado;
+import br.com.saude.api.model.entity.po.AuditoriaAtestado;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
@@ -39,6 +41,7 @@ import br.com.saude.api.model.entity.po.EmpregadoConvocacaoExame;
 import br.com.saude.api.model.entity.po.Exame;
 import br.com.saude.api.model.entity.po.GerenciaConvocacao;
 import br.com.saude.api.model.entity.po.HistoricoAtestado;
+import br.com.saude.api.model.entity.po.ItemAuditoriaAtestado;
 import br.com.saude.api.model.entity.po.Profissiograma;
 import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.entity.po.Tarefa;
@@ -73,7 +76,7 @@ public class AtestadoBo
 			return builder.loadRegime();
 		};
 		this.functionLoadAll = builder -> {
-			return builder.loadRegime().loadAgendamento().loadExamesConvocacao().loadHistoricoAtestados();
+			return builder.loadRegime().loadAgendamento().loadExamesConvocacao().loadHistoricoAtestados().loadAuditoriaAtestados();
 		};
 	}
 	
@@ -124,9 +127,8 @@ public class AtestadoBo
 		}else
 			atestado.setDataLimiteAgendamento(null);
 		
-		if ( atestado.getAgendamento() != null && atestado.getAgendamento().getId() > 0 && 
-				atestado.getAgendamento().getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)) {
-			data.setTime(atestado.getAgendamento().getFim());
+		if ( atestado.getDataHomologacao() != null ) {
+			data.setTime(atestado.getDataHomologacao());
 			atestado.setDataLimiteLancar(
 					FeriadoBo.getInstance().getValidDates(data, atestado.getLimiteLancar()).getTime());
 		}else
@@ -149,6 +151,10 @@ public class AtestadoBo
 	public List<ControleAtestadoDto> getAtestados() throws Exception {
 		return ControleAtestadoReport.getInstance().getAtestados();
 	}
+	
+	public List<ControleAtestadoDto> getAtestadosByAno(int ano) throws Exception {
+		return ControleAtestadoReport.getInstance().getAtestadosByAno(ano);
+	}
 
 	public boolean verificarAtrasoAtestado(Atestado atestado) throws Exception {
 		Calendar calendar = Calendar.getInstance();
@@ -166,7 +172,8 @@ public class AtestadoBo
 	@SuppressWarnings("static-access")
 	@Override
 	public Atestado save(Atestado atestado) throws Exception {
-		if ( atestado.getStatus().equals(StatusAtestado.HOMOLOGADO) && !atestado.isAusenciaExames() ) {
+		if ( atestado.getStatus().equals(StatusAtestado.HOMOLOGADO) && !atestado.isAusenciaExames() &&
+				atestado.getNumeroDias() >= 5) {
 			if ( atestado.getExamesConvocacao() == null || atestado.getExamesConvocacao().size() == 0 ) {
 				throw new Exception("Por favor, adicione exames para o atestado ou selecione ausência de exames.");
 			}
@@ -175,7 +182,8 @@ public class AtestadoBo
 		if ( atestado.getStatus().equals(StatusAtestado.ANALISE_TECNICA) && atestado.getDataAuditoria() == null )
 			throw new Exception("É necessário informar a data da auditoria.");
 		
-		if( !atestado.isPresencial() && atestado.getAgendamento() != null && atestado.getAgendamento().getId() > 0) {
+		if( !atestado.isPresencial() && atestado.getAgendamento() != null && atestado.getAgendamento().getId() > 0
+				&& !atestado.getPreviewStatus().equals(StatusAtestado.ANALISE_TECNICA)) {
 			throw new Exception("Não é possível salvar o atestado que não seja presencial e tenha agendamento. "
 					+ "Favor cancelar o agendamento.");
 		}
@@ -216,7 +224,7 @@ public class AtestadoBo
 				equipeFilter.setId(atestado.getTarefa().getEquipe().getId());
 			}
 			
-			if(!atestado.isAusenciaExames()) {
+			if(!atestado.isAusenciaExames() && atestado.getNumeroDias() >= 5) {
 				criarConvocacao(atestado,tipoConvocacao);
 			}
 			else if(atestado.getNumeroDias() >= 5) {
@@ -272,6 +280,7 @@ public class AtestadoBo
 		}
 		
 		configureHistoricoAtestado(atestado);
+		configureAuditoriaAtestado(atestado);
 		
 		atestado = definirLimites(atestado);
 		
@@ -302,6 +311,12 @@ public class AtestadoBo
 		historicoAtestado.setProfissional(atestado.getProfissional());
 		
 		atestado.getHistoricoAtestados().add(historicoAtestado);
+	}
+	
+	private void configureAuditoriaAtestado(Atestado atestado) {
+		if (atestado.getAuditoriaAtestados() != null)
+			for(AuditoriaAtestado auditoriaAtestado : atestado.getAuditoriaAtestados() )
+				auditoriaAtestado.setAtestado(atestado);
 	}
 
 	private void criarConvocacao(Atestado atestado, String tipoConvocacao) throws Exception {
@@ -412,10 +427,11 @@ public class AtestadoBo
 		if (atestado.getNumeroDias() >= 5) {
 			atestado.setPresencial(true);
 		}
-
+		
+		generateAuditoriaAtestados(atestado);
+		
 		atestado.setDataSolicitacao(Helper.getToday());
 		atestado.setStatus(StatusAtestado.ANALISE_ADMINISTRATIVA);
-		atestado.setDataSolicitacao(Helper.getToday());
 		atestado = definirLimites(atestado);
 
 		String servico = atestado.getTarefa().getServico().getNome();
@@ -448,6 +464,24 @@ public class AtestadoBo
 		return atestado;
 	}
 
+	private void generateAuditoriaAtestados(Atestado atestado) throws Exception {
+		if ( atestado.getAuditoriaAtestados() == null || atestado.getAuditoriaAtestados().size() == 0 ) {
+			atestado.setAuditoriaAtestados(new ArrayList<AuditoriaAtestado>());
+			ItemAuditoriaAtestadoFilter itemAuditoriaAtestadoFilter = new ItemAuditoriaAtestadoFilter();
+			itemAuditoriaAtestadoFilter.setPageNumber(1);
+			itemAuditoriaAtestadoFilter.setPageSize(Integer.MAX_VALUE);
+			ArrayList<ItemAuditoriaAtestado> itemAuditoriaAtestados = 
+					(ArrayList<ItemAuditoriaAtestado>) ItemAuditoriaAtestadoBo.getInstance().getList(
+							itemAuditoriaAtestadoFilter).getList();
+			for( ItemAuditoriaAtestado itemAuditoriaAtestado : itemAuditoriaAtestados ) {
+				AuditoriaAtestado auditoriaAtestado = new AuditoriaAtestado();
+				auditoriaAtestado.setAtestado(atestado);
+				auditoriaAtestado.setItemAuditoriaAtestado(itemAuditoriaAtestado);
+				atestado.getAuditoriaAtestados().add(auditoriaAtestado);
+			}
+		}
+	}
+
 	@SuppressWarnings("static-access")
 	public Atestado configureTarefaAtestado(Atestado atestado) throws Exception {
 		Servico servico = servicoHomologacaoAtestado();
@@ -471,7 +505,7 @@ public class AtestadoBo
 		return servico;
 	}
 	
-	private Servico servicoRetornoTrabalho() throws Exception {
+	public Servico servicoRetornoTrabalho() throws Exception {
 		ServicoFilter servicoFilter = new ServicoFilter();
 		servicoFilter.setCodigo("0004");
 		servicoFilter.setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);
@@ -481,7 +515,7 @@ public class AtestadoBo
 		return servico;
 	}
 	
-	private Servico servicoExamePericial() throws Exception {
+	public Servico servicoExamePericial() throws Exception {
 		ServicoFilter servicoFilter = new ServicoFilter();
 		servicoFilter.setCodigo("0007");
 		servicoFilter.setGrupo(GrupoServico.ATENDIMENTO_OCUPACIONAL);

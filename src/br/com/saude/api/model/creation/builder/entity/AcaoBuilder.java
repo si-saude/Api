@@ -48,14 +48,13 @@ public class AcaoBuilder extends GenericEntityBuilder<Acao, AcaoFilter> {
 		
 		Acao newAcao = new Acao();
 		newAcao.setId(acao.getId());
-		newAcao.setDetalhe(acao.getDetalhe());
 		newAcao.setStatus(acao.getStatus());
 		newAcao.setTipo(acao.getTipo());
 		newAcao.setTipoContato(acao.getTipoContato());
 		newAcao.setVersion(acao.getVersion());
 		
-		if ( acao.getTarefa() != null )
-			newAcao.setTarefa(TarefaBuilder.newInstance(acao.getTarefa()).getEntity());
+		if(acao.getAcaoIntervencao()!= null)
+			newAcao.setAcaoIntervencao(AcaoIntervencaoBuilder.newInstance(acao.getAcaoIntervencao()).getEntity());
 		
 		return newAcao;
 	}

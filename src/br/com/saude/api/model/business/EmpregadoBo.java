@@ -32,10 +32,13 @@ import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.business.validate.EmpregadoValidator;
 import br.com.saude.api.model.creation.builder.entity.EmpregadoBuilder;
 import br.com.saude.api.model.creation.builder.example.EmpregadoExampleBuilder;
+import br.com.saude.api.model.creation.builder.example.PessoaExampleBuilder;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
+import br.com.saude.api.model.entity.filter.PessoaFilter;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.persistence.EmpregadoDao;
+import br.com.saude.api.model.persistence.PessoaDao;
 
 public class EmpregadoBo
 		extends GenericBo<Empregado, EmpregadoFilter, EmpregadoDao, EmpregadoBuilder, EmpregadoExampleBuilder> {
@@ -112,6 +115,33 @@ public class EmpregadoBo
 		Empregado newEmpregado = super.save(empregado);
 		saveFiles(empregado, newEmpregado);
 		return newEmpregado;
+	}
+	
+	public Empregado saveAndReturn(Empregado empregado) throws Exception {
+		EmpregadoFilter filter = new EmpregadoFilter();
+		filter.setChave(empregado.getChave());
+		filter.setMatricula(empregado.getMatricula());
+		filter.setPageNumber(1);
+		filter.setPageSize(1);
+		List<Empregado> empregados = getDao().getListFunctionLoadAll(
+				getExampleBuilder(filter).exampleOrChaveMatriculaCpf()).getList();
+		if ( empregados.size() > 0 )
+			throw new Exception("Já existe um empregado cadastrado com os dados informados.");
+		else {
+			PessoaFilter pessoaFilter = new PessoaFilter();
+			pessoaFilter.setCpf(empregado.getPessoa().getCpf());
+			pessoaFilter.setPageNumber(1);
+			pessoaFilter.setPageSize(1);
+			if ( PessoaDao.getInstance().getList(
+					PessoaExampleBuilder.newInstance(pessoaFilter).example()).getList().size() > 0 )
+				throw new Exception("Já existe um empregado cadastrado com os dados informados.");
+		}
+		empregado = this.save(empregado);
+		
+		empregado = getBuilder(
+				getDao().getByIdLoad(empregado.getId())).loadCargo().loadFuncao().loadGerencia().getEntity();
+		
+		return empregado;
 	}
 
 	@SuppressWarnings("resource")

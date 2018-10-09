@@ -62,10 +62,5 @@ public class TriagemExampleBuilder extends GenericExampleBuilder<Triagem, Triage
 					.newInstance(this.filter.getIndicadorSast()).getCriteriaExample();
 			this.criterias.add(new Triplet<String, CriteriaExample, JoinType>("indicadorSast", criteriaExample, JoinType.INNER_JOIN));
 		}
-	}
-	
-	protected void addIgnorarAcoes() {
-		this.entity.setIgnorarAcoes(this.addBoolean("ignorarAcoes", this.filter.isIgnorarAcoes()));
-	}
-	
+	}	
 }

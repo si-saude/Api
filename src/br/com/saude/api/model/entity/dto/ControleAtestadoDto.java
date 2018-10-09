@@ -9,6 +9,7 @@ public class ControleAtestadoDto {
 	private String fimAtestado;
 	private int numeroDias;
 	private String dataRecebimento;
+	private String dataAgendamento;
 	
 	private int prazoRecebimento;
 	private boolean recebidoNoPrazo;
@@ -25,6 +26,7 @@ public class ControleAtestadoDto {
 	private boolean atestadoFisicoRecebido;
 	private String observacao;
 	private String statusAtestado;
+	private String justificativa;
 	
 	public String getNomeEmpregado() {
 		return nomeEmpregado;
@@ -73,6 +75,12 @@ public class ControleAtestadoDto {
 	}
 	public void setDataRecebimento(String dataRecebimento) {
 		this.dataRecebimento = dataRecebimento;
+	}
+	public String getDataAgendamento() {
+		return dataAgendamento;
+	}
+	public void setDataAgendamento(String dataAgendamento) {
+		this.dataAgendamento = dataAgendamento;
 	}
 	public int getPrazoRecebimento() {
 		return prazoRecebimento;
@@ -151,5 +159,11 @@ public class ControleAtestadoDto {
 	}
 	public void setStatusAtestado(String statusAtestado) {
 		this.statusAtestado = statusAtestado;
+	}
+	public String getJustificativa() {
+		return justificativa;
+	}
+	public void setJustificativa(String justificativa) {
+		this.justificativa = justificativa;
 	}
 }

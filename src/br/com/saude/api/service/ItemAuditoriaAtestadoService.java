@@ -14,42 +14,43 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.NotificacaoBo;
-import br.com.saude.api.model.business.validate.NotificacaoValidator;
-import br.com.saude.api.model.entity.filter.NotificacaoFilter;
-import br.com.saude.api.model.entity.po.Notificacao;
+import br.com.saude.api.model.business.ItemAuditoriaAtestadoBo;
+import br.com.saude.api.model.business.validate.ItemAuditoriaAtestadoValidator;
+import br.com.saude.api.model.entity.filter.ItemAuditoriaAtestadoFilter;
+import br.com.saude.api.model.entity.po.ItemAuditoriaAtestado;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("notificacao")
+@Path("item-auditoria-atestado")
 @RequestInterceptor
-public class NotificacaoService extends GenericServiceImpl<Notificacao,NotificacaoFilter,NotificacaoBo>
-							implements GenericService<Notificacao,NotificacaoFilter>{
-	
+public class ItemAuditoriaAtestadoService 
+	extends GenericServiceImpl<ItemAuditoriaAtestado, ItemAuditoriaAtestadoFilter, ItemAuditoriaAtestadoBo>
+		implements GenericService<ItemAuditoriaAtestado, ItemAuditoriaAtestadoFilter> {
+
 	@Override
-	protected NotificacaoBo getBo() {
-		return NotificacaoBo.getInstance();
+	protected ItemAuditoriaAtestadoBo getBo() {
+		return ItemAuditoriaAtestadoBo.getInstance();
 	}
-	
+
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=NotificacaoValidator.class)
+	@CustomValidator(validatorClass = ItemAuditoriaAtestadoValidator.class)
 	@Override
-	public Response save(Notificacao notificacao) {
+	public Response save(ItemAuditoriaAtestado itemAuditoriaAtestado) {
 		try {
-			NotificacaoBo.getInstance().save(notificacao);
+			ItemAuditoriaAtestadoBo.getInstance().save(itemAuditoriaAtestado);
 			return Response.ok("Salvo com sucesso.").build();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
-	
+
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(NotificacaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(ItemAuditoriaAtestadoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -59,7 +60,7 @@ public class NotificacaoService extends GenericServiceImpl<Notificacao,Notificac
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(NotificacaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(ItemAuditoriaAtestadoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
@@ -78,4 +79,5 @@ public class NotificacaoService extends GenericServiceImpl<Notificacao,Notificac
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
+
 }

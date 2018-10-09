@@ -5,7 +5,6 @@ import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class AtestadoFilter extends GenericFilter {
-
 	private BooleanFilter atestadoFisicoRecebido;
 	private BooleanFilter controleLicenca;
 	private BooleanFilter impossibilidadeLocomocao;
@@ -20,6 +19,8 @@ public class AtestadoFilter extends GenericFilter {
 	private BooleanFilter ausenciaExames;
 	private DateFilter dataAuditoria;
 	private BooleanFilter convocado;
+	private DateFilter dataHomologacao;
+	private String status;
 	
 	public BooleanFilter getAtestadoFisicoRecebido() {
 		return atestadoFisicoRecebido;
@@ -105,5 +106,16 @@ public class AtestadoFilter extends GenericFilter {
 	public void setConvocado(BooleanFilter convocado) {
 		this.convocado = convocado;
 	}
-	
+	public DateFilter getDataHomologacao() {
+		return dataHomologacao;
+	}
+	public void setDataHomologacao(DateFilter dataHomologacao) {
+		this.dataHomologacao = dataHomologacao;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

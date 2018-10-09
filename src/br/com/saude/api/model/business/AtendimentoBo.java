@@ -583,8 +583,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				switch(atendimento.getTarefa().getServico().getCodigo()) {
 					//ADMISSIONAL
 					case "0001":
-						
-						break;
+						return TipoConvocacao.ADMISSIONAL;
 						
 					//DEMISSIONAL
 					case "0002":
@@ -598,18 +597,15 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 						
 					//RETORNO AO TRABALHO
 					case "0004":
-						
-						break;
+						return TipoConvocacao.RETORNO_AO_TRABALHO;
 						
 					//MUDANÇA DE FUNÇÃO
 					case "0005":
-						
-						break;
+						return TipoConvocacao.MUDANCA_DE_FUNCAO;
 						
 					//ESPECIAL
 					case "0006":
-						
-						break;
+						return TipoConvocacao.ESPECIAL;
 						
 					//PERICIAL
 					case "0007":
@@ -739,14 +735,6 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	
 	@SuppressWarnings("deprecation")
 	public String registrarSolicitacaoExamePericial(Atendimento atendimento) throws Exception {
-		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO, CUJA DATA INFORMADA ESTÁ NO PERÍODO
-		// DO CRONOGRAMA, CUJO TIPO DA CONVOCAÇÃO CORRESPONDA AO SERVIÇO SELECIONADO
-		EmpregadoConvocacaoFilter empConFilter = configureEmpregadoConvocacaoFilter(atendimento);
-		PagedList<EmpregadoConvocacao> empConList = EmpregadoConvocacaoBo.getInstance().getList(empConFilter);
-
-		if (empConList.getTotal() == 0)
-			throw new Exception("Não foi possível solicitar o serviço, pois não existe "
-					+ "convocação para o empregado cujo cronograma atenda à data informada.");
 		
 		if( atendimento.getTarefa().getEquipe() == null )
 			throw new Exception("Equipe da tarefa do Exame Pericial deve existir.");

@@ -1,29 +1,24 @@
 package br.com.saude.api.model.entity.po;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Notificacao {
-
+public class ClassificacaoAfastamento {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@NotNull(message="É necessário informar a Equipe da Notificação.")
-	@ManyToOne(fetch=FetchType.LAZY)
-	private Equipe equipe;
-	
-	@NotNull(message="É necessário informar a Descrição da Notificação.")
-	@Size(max = 1024, message="Tamanho máximo para Descrição: 1024")
+	@NotNull(message="É necessário informar Descrição da Classificação do Afastamento.")
+	@Size(max = 512, message="Tamanho máximo para Descrição da Classificação do Afastamento: 512")
 	private String descricao;
+	
+	private boolean geraAfastamento;
 	
 	@Version
 	private long version;
@@ -34,14 +29,6 @@ public class Notificacao {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public Equipe getEquipe() {
-		return equipe;
-	}
-
-	public void setEquipe(Equipe equipe) {
-		this.equipe = equipe;
 	}
 
 	public String getDescricao() {
@@ -58,5 +45,13 @@ public class Notificacao {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public boolean isGeraAfastamento() {
+		return geraAfastamento;
+	}
+
+	public void setGeraAfastamento(boolean geraAfastamento) {
+		this.geraAfastamento = geraAfastamento;
 	}
 }

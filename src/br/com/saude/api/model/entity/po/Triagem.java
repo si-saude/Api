@@ -51,8 +51,6 @@ public class Triagem {
 	@OneToMany(mappedBy="triagem", fetch=FetchType.LAZY, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private List<Acao> acoes;
 	
-	private boolean ignorarAcoes;
-	
 	@Version
 	private long version;
 
@@ -150,14 +148,5 @@ public class Triagem {
 
 	public void setAcoes(List<Acao> acoes) {
 		this.acoes = acoes;
-	}
-
-	public boolean isIgnorarAcoes() {
-		return ignorarAcoes;
-	}
-
-	public void setIgnorarAcoes(boolean ignorarAcoes) {
-		this.ignorarAcoes = ignorarAcoes;
-	}
-	
+	}	
 }

@@ -1,14 +1,20 @@
 package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,118 +25,196 @@ public class Cat {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(unique = true)
-	@NotNull(message="É necessário informar o Número do Cat.")
-	@Size(max = 16, message="Tamanho máximo para Número do Cat: 16")
-	private String numero;
-
-	@NotNull(message="É necessário informar a Gerência do Cat.")
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private Gerencia gerencia;
-	
-	@Size(max = 64, message="Tamanho máximo para RTA do Cat: 64")
-	@NotNull(message="É necessário informar o RTA do CAT.")
-	private String rta;
-	
-	@Size(max = 128, message="Tamanho máximo para Instalação do Cat: 128")
-	private String instalacao;
-	
-	private boolean contratado;
-
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar o Empregado do CAT.")
 	private Empregado empregado;
 	
-	@NotNull(message="É necessário informar o Nome do Cat.")
-	@Size(max = 256, message="Tamanho máximo para Nome do Cat: 256")
-	private String nome;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar a Empresa do CAT.")
+	private Empresa empresa;
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar a Gerência do CAT.")
+	private Gerencia gerencia;
 	
-	@NotNull(message="É necessário informar a Data de Nascimento do Cat.")
-	private Date dataNascimento;
+	@Size(max = 128, message="Tamanho máximo para Gerente de Contrato do CAT: 128")
+	private String gerenteContrato;
 	
-	@NotNull(message="É necessário informar o Sexo do Cat.")
-	@Size(max = 16, message="Tamanho máximo para Sexo do Cat: 16")
-	private String sexo;
+	@Size(max = 16, message="Tamanho máximo para Telefone do Gerente do Contrato do CAT: 16")
+	private String telefoneGerente;
 	
-	@NotNull(message="É necessário informar o CPF do Cat.")
-	@Size(max = 11, message="Tamanho máximo para CPF do Cat: 11")
-	private String cpf;
+	@Size(max = 128, message="Tamanho máximo para Fiscal de Contrato do CAT: 128")
+	private String fiscalContrato;
 	
-	@Size(max = 128, message="Tamanho máximo para Cargo do Cat: 128")
-	private String cargo;
+	@Size(max = 16, message="Tamanho máximo para Telefone do Fiscal do Contrato do CAT: 16")
+	private String telefoneFiscal;
+	
+	@NotNull(message="É necessário informar a Data de Ocorrência do CAT.")
+	private Date dataOcorrencia;
+	
+	@Size(max = 512, message="Tamanho máximo para Local do CAT: 512")
+	@NotNull(message="É necessário informar o Local do CAT.")
+	private String local;
+	
+	@Size(max = 4096, message="Tamanho máximo para Descrição do CAT: 4096")
+	@NotNull(message="É necessário informar a Descrição do CAT.")
+	private String descricao;
+	
+	private boolean empregadoServicoCompanhia;
+	
+	private boolean ocorrenciaAmbienteTrabalho;
+	
+	private boolean ocorrenciaTrajeto;
+	
+	@Size(max = 256, message="Tamanho máximo para Responsável pela Informação do CAT: 256")
+	private String responsavelInformacao;
+	
+	private Date dataInformacao;
+	
+	@Size(max = 4096, message="Tamanho máximo para Caracterização do CAT: 4096")
+	@NotNull(message="É necessário informar a Caracterização do CAT.")
+	private String caracterizacao;
+	
+	private boolean lesaoCorporal;
+	
+	@Size(max = 32, message="Tamanho máximo para Nexo Causal do CAT: 32")
+	private String nexoCausal;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	private Fornecedor empresa;
+	private Profissional profissionalCaracterizacao;
 	
-	@Size(max = 32, message="Tamanho máximo para Regime do Cat: 32")
-	private String regime;
+	private Date dataCaracterizacao;
 	
-	private boolean afastamento;
+	@ManyToOne(fetch=FetchType.EAGER)
+	private ClassificacaoAfastamento classificacao;
 	
-	@Size(max = 32, message="Tamanho máximo para Partes do Corpo do Cat: 32")
-	private String partesCorpo;
+	private int tempoPrevisto;
 	
-	@NotNull(message="É necessário informar o Dia/Hora do Acidente do CAT.")
-	private Date diaHoraAcidente;
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Diagnostico cid;
 	
-	@Size(max = 16, message="Tamanho máximo para Número de SISIN do Cat: 16")
+	private boolean ferimentoGrave;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Profissional profissionalClassificacao;
+	
+	private Date dataClassificacao;
+	
+	private double remuneracao;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private AgenteCausador agenteCausador;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private ParteCorpoAtingida parteCorpoAtingida;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private NaturezaLesao naturezaLesao;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Cidade municipio;
+	
+	private Date dataObito;
+
+	@Size(max = 64, message="Tamanho máximo para RTA do CAT: 64")
+	private String rta;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Instalacao instalacao;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Cnae cnae;
+	
+	private int grauRiscoEmpresa;
+	
+	@Size(max = 8, message="Tamanho máximo para Número SISIN do CAT: 8")
 	private String numeroSisin;
 	
 	private int classificacaoSisin;
 	
-	private Date dataEmissaoCat;
-	
-	@Size(max = 32, message="Tamanho máximo para Gravidade do Cat: 32")
-	private String gravidade;
+	@ManyToOne(fetch=FetchType.LAZY)
+	private ClassificacaoGravidade classificacaoGravidade;
 	
 	private Date dataAvaliacaoMedica;
 	
 	private boolean registroSd2000;
 	
 	private boolean catSd2000;
-
-	@Size(max = 16, message="Tamanho máximo para Tipo de Acidente do Cat: 16")
+	
+	private Date dataEmissao;
+	
+	private boolean pendenciaCorrecao;
+	
+	@Size(max = 1024, message="Tamanho máximo para Justificativa do Atraso da Emissão da CAT do CAT: 1024")
+	private String justificativaAtrasoEmissaoCat;
+	
+	@Size(max = 64, message="Tamanho máximo para Número da Carta da Multa do CAT: 64")
+	private String numeroCartaMulta;
+	
+	@Size(max = 16, message="Tamanho máximo para Tipo do Acidente do CAT: 16")
 	private String tipoAcidente;
 	
-	@Size(max = 16, message="Tamanho máximo para Tipo CAT do Cat: 16")
+	@Size(max = 16, message="Tamanho máximo para Tipo da CAT do CAT: 16")
 	private String tipoCat;
-
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private Diagnostico diagnostico;
 	
-	@NotNull(message="É necessário informar a Parte do Corpo Atingida do Cat.")
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private ParteCorpoAtingida parteCorpoAtingida;
-	
-	@NotNull(message="É necessário informar o Agente Causador do Cat.")
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private AgenteCausador agenteCausador;
-	
-	@NotNull(message="É necessário informar a Natureza da Lesão do Cat.")
-	@ManyToOne(fetch=FetchType.LAZY)	
-	private NaturezaLesao naturezaLesao;
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Diagnostico diagnosticoProvavel;
 	
 	private boolean comunicavelSus;
 	
-	private boolean ferimentoGraveConformeAnp;
+	@Size(max = 32, message="Tamanho máximo para Número do CAT do CAT: 32")
+	private String numeroCat;
 	
-	@Size(max = 16, message="Tamanho máximo para Código da Carta do Sindicato do Cat: 16")
+	@Size(max = 16, message="Tamanho máximo para Código da Carta do Sindicato do CAT: 16")
 	private String codigoCartaSindicato;
+	
+	private int classificacaoAnomalia;
 	
 	private Date dataComunicacaoSindicato;
 	
-	private float remuneracao;
+	@Size(max = 1024, message="Tamanho máximo para Justificativa no Atraso da Emissão da Carta do CAT: 1024")
+	private String justificativaAtrasoEmissaoCarta;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
-	private Base base;
+	private boolean catInss;
 	
-	private Date inicioBeneficio;
+	private boolean convocado;
 	
-	private Date ultimoDiaTrabalho;
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="exame_cat", 
+				joinColumns = {@JoinColumn(name="cat_id")}, 
+				inverseJoinColumns = {@JoinColumn(name="exame_id")})
+	private List<Exame> examesConvocacao;
 	
-	private Date retornoTrabalho;
+	private boolean ausenciaExames;
+
+	@Size(max = 4096, message="Tamanho máximo para Recomendações do CAT: 2048")
+	private String recomendacoes;
 	
-	@Size(max = 32, message="Tamanho máximo para Número do Cat: 32")
-	private String numeroBeneficio;
+	@Transient
+	private Map<Integer,Integer> arquivo;
+	
+	@Transient
+	private String arquivoBase64;
+	
+	private int jornadaTrabalho;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato1 do CAT: 512")
+	private String ato1;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato2 do CAT: 512")
+	private String ato2;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato3 do CAT: 512")
+	private String ato3;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato4 do CAT: 512")
+	private String ato4;
+	
+	@Size(max = 512, message="Tamanho máximo para Ato5 do CAT: 512")
+	private String ato5;
+	
+	@Size(max = 2048, message="Tamanho máximo para Justificativa do CAT: 2048")
+	private String justificativa;
 	
 	@Version
 	private long version;
@@ -143,46 +227,6 @@ public class Cat {
 		this.id = id;
 	}
 
-	public String getNumero() {
-		return numero;
-	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
-	
-	public Gerencia getGerencia() {
-		return gerencia;
-	}
-
-	public void setGerencia(Gerencia gerencia) {
-		this.gerencia = gerencia;
-	}
-
-	public String getRta() {
-		return rta;
-	}
-
-	public void setRta(String Rta) {
-		rta = Rta;
-	}
-
-	public String getInstalacao() {
-		return instalacao;
-	}
-
-	public void setInstalacao(String instalacao) {
-		this.instalacao = instalacao;
-	}
-
-	public boolean isContratado() {
-		return contratado;
-	}
-
-	public void setContratado(boolean contratado) {
-		this.contratado = contratado;
-	}
-
 	public Empregado getEmpregado() {
 		return empregado;
 	}
@@ -191,76 +235,284 @@ public class Cat {
 		this.empregado = empregado;
 	}
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public Date getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-
-	public String getSexo() {
-		return sexo;
-	}
-
-	public void setSexo(String sexo) {
-		this.sexo = sexo;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public String getCargo() {
-		return cargo;
-	}
-
-	public void setCargo(String cargo) {
-		this.cargo = cargo;
-	}
-
-	public Fornecedor getEmpresa() {
+	public Empresa getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(Fornecedor empresa) {
+	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
 
-	public String getRegime() {
-		return regime;
+	public Gerencia getGerencia() {
+		return gerencia;
 	}
 
-	public void setRegime(String regime) {
-		this.regime = regime;
+	public void setGerencia(Gerencia gerencia) {
+		this.gerencia = gerencia;
 	}
 
-	public boolean isAfastamento() {
-		return afastamento;
+	public String getGerenteContrato() {
+		return gerenteContrato;
 	}
 
-	public void setAfastamento(boolean afastamento) {
-		this.afastamento = afastamento;
+	public void setGerenteContrato(String gerenteContrato) {
+		this.gerenteContrato = gerenteContrato;
 	}
 
-	public Date getDiaHoraAcidente() {
-		return diaHoraAcidente;
+	public String getTelefoneGerente() {
+		return telefoneGerente;
 	}
 
-	public void setDiaHoraAcidente(Date diaHoraAcidente) {
-		this.diaHoraAcidente = diaHoraAcidente;
+	public void setTelefoneGerente(String telefoneGerente) {
+		this.telefoneGerente = telefoneGerente;
+	}
+
+	public String getFiscalContrato() {
+		return fiscalContrato;
+	}
+
+	public void setFiscalContrato(String fiscalContrato) {
+		this.fiscalContrato = fiscalContrato;
+	}
+
+	public String getTelefoneFiscal() {
+		return telefoneFiscal;
+	}
+
+	public void setTelefoneFiscal(String telefoneFiscal) {
+		this.telefoneFiscal = telefoneFiscal;
+	}
+
+	public Date getDataOcorrencia() {
+		return dataOcorrencia;
+	}
+
+	public void setDataOcorrencia(Date dataOcorrencia) {
+		this.dataOcorrencia = dataOcorrencia;
+	}
+
+	public String getLocal() {
+		return local;
+	}
+
+	public void setLocal(String local) {
+		this.local = local;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public boolean isEmpregadoServicoCompanhia() {
+		return empregadoServicoCompanhia;
+	}
+
+	public void setEmpregadoServicoCompanhia(boolean empregadoServicoCompanhia) {
+		this.empregadoServicoCompanhia = empregadoServicoCompanhia;
+	}
+
+	public boolean isOcorrenciaAmbienteTrabalho() {
+		return ocorrenciaAmbienteTrabalho;
+	}
+
+	public void setOcorrenciaAmbienteTrabalho(boolean ocorrenciaAmbienteTrabalho) {
+		this.ocorrenciaAmbienteTrabalho = ocorrenciaAmbienteTrabalho;
+	}
+
+	public boolean isOcorrenciaTrajeto() {
+		return ocorrenciaTrajeto;
+	}
+
+	public void setOcorrenciaTrajeto(boolean ocorrenciaTrajeto) {
+		this.ocorrenciaTrajeto = ocorrenciaTrajeto;
+	}
+
+	public String getResponsavelInformacao() {
+		return responsavelInformacao;
+	}
+
+	public void setResponsavelInformacao(String responsavelInformacao) {
+		this.responsavelInformacao = responsavelInformacao;
+	}
+
+	public Date getDataInformacao() {
+		return dataInformacao;
+	}
+
+	public void setDataInformacao(Date dataInformacao) {
+		this.dataInformacao = dataInformacao;
+	}
+
+	public String getCaracterizacao() {
+		return caracterizacao;
+	}
+
+	public void setCaracterizacao(String caracterizacao) {
+		this.caracterizacao = caracterizacao;
+	}
+
+	public boolean isLesaoCorporal() {
+		return lesaoCorporal;
+	}
+
+	public void setLesaoCorporal(boolean lesaoCorporal) {
+		this.lesaoCorporal = lesaoCorporal;
+	}
+
+	public String getNexoCausal() {
+		return nexoCausal;
+	}
+
+	public void setNexoCausal(String nexoCausal) {
+		this.nexoCausal = nexoCausal;
+	}
+
+	public Profissional getProfissionalCaracterizacao() {
+		return profissionalCaracterizacao;
+	}
+
+	public void setProfissionalCaracterizacao(Profissional profissionalCaracterizacao) {
+		this.profissionalCaracterizacao = profissionalCaracterizacao;
+	}
+
+	public Date getDataCaracterizacao() {
+		return dataCaracterizacao;
+	}
+
+	public void setDataCaracterizacao(Date dataCaracterizacao) {
+		this.dataCaracterizacao = dataCaracterizacao;
+	}
+
+	public ClassificacaoAfastamento getClassificacao() {
+		return classificacao;
+	}
+
+	public void setClassificacao(ClassificacaoAfastamento classificacao) {
+		this.classificacao = classificacao;
+	}
+
+	public int getTempoPrevisto() {
+		return tempoPrevisto;
+	}
+
+	public void setTempoPrevisto(int tempoPrevisto) {
+		this.tempoPrevisto = tempoPrevisto;
+	}
+
+	public Diagnostico getCid() {
+		return cid;
+	}
+
+	public void setCid(Diagnostico cid) {
+		this.cid = cid;
+	}
+
+	public boolean isFerimentoGrave() {
+		return ferimentoGrave;
+	}
+
+	public void setFerimentoGrave(boolean ferimentoGrave) {
+		this.ferimentoGrave = ferimentoGrave;
+	}
+
+	public Profissional getProfissionalClassificacao() {
+		return profissionalClassificacao;
+	}
+
+	public void setProfissionalClassificacao(Profissional profissionalClassificacao) {
+		this.profissionalClassificacao = profissionalClassificacao;
+	}
+
+	public Date getDataClassificacao() {
+		return dataClassificacao;
+	}
+
+	public void setDataClassificacao(Date dataClassificacao) {
+		this.dataClassificacao = dataClassificacao;
+	}
+	
+	public double getRemuneracao() {
+		return remuneracao;
+	}
+
+	public void setRemuneracao(double remuneracao) {
+		this.remuneracao = remuneracao;
+	}
+
+	public AgenteCausador getAgenteCausador() {
+		return agenteCausador;
+	}
+
+	public void setAgenteCausador(AgenteCausador agenteCausador) {
+		this.agenteCausador = agenteCausador;
+	}
+
+	public ParteCorpoAtingida getParteCorpoAtingida() {
+		return parteCorpoAtingida;
+	}
+
+	public void setParteCorpoAtingida(ParteCorpoAtingida parteCorpoAtingida) {
+		this.parteCorpoAtingida = parteCorpoAtingida;
+	}
+
+	public NaturezaLesao getNaturezaLesao() {
+		return naturezaLesao;
+	}
+
+	public void setNaturezaLesao(NaturezaLesao naturezaLesao) {
+		this.naturezaLesao = naturezaLesao;
+	}
+
+	public Date getDataObito() {
+		return dataObito;
+	}
+
+	public void setDataObito(Date dataObito) {
+		this.dataObito = dataObito;
+	}
+	
+	public Cidade getMunicipio() {
+		return municipio;
+	}
+
+	public void setMunicipio(Cidade municipio) {
+		this.municipio = municipio;
+	}
+	
+	public String getRta() {
+		return rta;
+	}
+
+	public void setRta(String rta) {
+		this.rta = rta;
+	}
+
+	public Instalacao getInstalacao() {
+		return instalacao;
+	}
+
+	public void setInstalacao(Instalacao instalacao) {
+		this.instalacao = instalacao;
+	}
+	
+	public Cnae getCnae() {
+		return cnae;
+	}
+
+	public void setCnae(Cnae cnae) {
+		this.cnae = cnae;
+	}
+
+	public int getGrauRiscoEmpresa() {
+		return grauRiscoEmpresa;
+	}
+
+	public void setGrauRiscoEmpresa(int grauRiscoEmpresa) {
+		this.grauRiscoEmpresa = grauRiscoEmpresa;
 	}
 
 	public String getNumeroSisin() {
@@ -279,20 +531,12 @@ public class Cat {
 		this.classificacaoSisin = classificacaoSisin;
 	}
 
-	public Date getDataEmissaoCat() {
-		return dataEmissaoCat;
+	public ClassificacaoGravidade getClassificacaoGravidade() {
+		return classificacaoGravidade;
 	}
 
-	public void setDataEmissaoCat(Date dataEmissaoCat) {
-		this.dataEmissaoCat = dataEmissaoCat;
-	}
-
-	public String getGravidade() {
-		return gravidade;
-	}
-
-	public void setGravidade(String gravidade) {
-		this.gravidade = gravidade;
+	public void setClassificacaoGravidade(ClassificacaoGravidade classificacaoGravidade) {
+		this.classificacaoGravidade = classificacaoGravidade;
 	}
 
 	public Date getDataAvaliacaoMedica() {
@@ -315,8 +559,40 @@ public class Cat {
 		return catSd2000;
 	}
 
-	public void setCatSd2000(boolean CatSd2000) {
-		this.catSd2000 = CatSd2000;
+	public void setCatSd2000(boolean catSd2000) {
+		this.catSd2000 = catSd2000;
+	}
+
+	public Date getDataEmissao() {
+		return dataEmissao;
+	}
+
+	public void setDataEmissao(Date dataEmissao) {
+		this.dataEmissao = dataEmissao;
+	}
+	
+	public boolean isPendenciaCorrecao() {
+		return pendenciaCorrecao;
+	}
+
+	public void setPendenciaCorrecao(boolean pendenciaCorrecao) {
+		this.pendenciaCorrecao = pendenciaCorrecao;
+	}
+
+	public String getJustificativaAtrasoEmissaoCat() {
+		return justificativaAtrasoEmissaoCat;
+	}
+
+	public void setJustificativaAtrasoEmissaoCat(String justificativaAtrasoEmissaoCat) {
+		this.justificativaAtrasoEmissaoCat = justificativaAtrasoEmissaoCat;
+	}
+
+	public String getNumeroCartaMulta() {
+		return numeroCartaMulta;
+	}
+
+	public void setNumeroCartaMulta(String numeroCartaMulta) {
+		this.numeroCartaMulta = numeroCartaMulta;
 	}
 
 	public String getTipoAcidente() {
@@ -327,12 +603,20 @@ public class Cat {
 		this.tipoAcidente = tipoAcidente;
 	}
 
-	public Diagnostico getDiagnostico() {
-		return diagnostico;
+	public String getTipoCat() {
+		return tipoCat;
 	}
 
-	public void setDiagnostico(Diagnostico diagnostico) {
-		this.diagnostico = diagnostico;
+	public void setTipoCat(String tipoCat) {
+		this.tipoCat = tipoCat;
+	}
+
+	public Diagnostico getDiagnosticoProvavel() {
+		return diagnosticoProvavel;
+	}
+
+	public void setDiagnosticoProvavel(Diagnostico diagnosticoProvavel) {
+		this.diagnosticoProvavel = diagnosticoProvavel;
 	}
 
 	public boolean isComunicavelSus() {
@@ -343,12 +627,12 @@ public class Cat {
 		this.comunicavelSus = comunicavelSus;
 	}
 
-	public boolean isFerimentoGraveConformeAnp() {
-		return ferimentoGraveConformeAnp;
+	public String getNumeroCat() {
+		return numeroCat;
 	}
 
-	public void setFerimentoGraveConformeAnp(boolean ferimentoGraveConformeAnp) {
-		this.ferimentoGraveConformeAnp = ferimentoGraveConformeAnp;
+	public void setNumeroCat(String numeroCat) {
+		this.numeroCat = numeroCat;
 	}
 
 	public String getCodigoCartaSindicato() {
@@ -359,6 +643,14 @@ public class Cat {
 		this.codigoCartaSindicato = codigoCartaSindicato;
 	}
 
+	public int getClassificacaoAnomalia() {
+		return classificacaoAnomalia;
+	}
+
+	public void setClassificacaoAnomalia(int classificacaoAnomalia) {
+		this.classificacaoAnomalia = classificacaoAnomalia;
+	}
+
 	public Date getDataComunicacaoSindicato() {
 		return dataComunicacaoSindicato;
 	}
@@ -367,92 +659,68 @@ public class Cat {
 		this.dataComunicacaoSindicato = dataComunicacaoSindicato;
 	}
 
-	public float getRemuneracao() {
-		return remuneracao;
+	public String getJustificativaAtrasoEmissaoCarta() {
+		return justificativaAtrasoEmissaoCarta;
 	}
 
-	public void setRemuneracao(float remuneracao) {
-		this.remuneracao = remuneracao;
+	public void setJustificativaAtrasoEmissaoCarta(String justificativaAtrasoEmissaoCarta) {
+		this.justificativaAtrasoEmissaoCarta = justificativaAtrasoEmissaoCarta;
 	}
 	
-	public String getPartesCorpo() {
-		return partesCorpo;
+	public boolean isCatInss() {
+		return catInss;
 	}
 
-	public void setPartesCorpo(String partesCorpo) {
-		this.partesCorpo = partesCorpo;
+	public void setCatInss(boolean catInss) {
+		this.catInss = catInss;
 	}
 
-	public String getTipoCat() {
-		return tipoCat;
+	public boolean isConvocado() {
+		return convocado;
 	}
 
-	public void setTipoCat(String tipoCat) {
-		this.tipoCat = tipoCat;
+	public void setConvocado(boolean convocado) {
+		this.convocado = convocado;
+	}
+
+	public List<Exame> getExamesConvocacao() {
+		return examesConvocacao;
+	}
+
+	public void setExamesConvocacao(List<Exame> examesConvocacao) {
+		this.examesConvocacao = examesConvocacao;
+	}
+
+	public boolean isAusenciaExames() {
+		return ausenciaExames;
+	}
+
+	public void setAusenciaExames(boolean ausenciaExames) {
+		this.ausenciaExames = ausenciaExames;
 	}
 	
-	public ParteCorpoAtingida getParteCorpoAtingida() {
-		return parteCorpoAtingida;
+	public String getRecomendacoes() {
+		return recomendacoes;
 	}
 
-	public void setParteCorpoAtingida(ParteCorpoAtingida parteCorpoAtingida) {
-		this.parteCorpoAtingida = parteCorpoAtingida;
-	}
-
-	public AgenteCausador getAgenteCausador() {
-		return agenteCausador;
-	}
-
-	public void setAgenteCausador(AgenteCausador agenteCausador) {
-		this.agenteCausador = agenteCausador;
-	}
-
-	public NaturezaLesao getNaturezaLesao() {
-		return naturezaLesao;
-	}
-
-	public void setNaturezaLesao(NaturezaLesao naturezaLesao) {
-		this.naturezaLesao = naturezaLesao;
+	public void setRecomendacoes(String recomendacoes) {
+		this.recomendacoes = recomendacoes;
 	}
 	
-	public Base getBase() {
-		return base;
+	public Map<Integer, Integer> getArquivo() {
+		return arquivo;
 	}
 
-	public void setBase(Base base) {
-		this.base = base;
+	public void setArquivo(Map<Integer, Integer> arquivo) {
+		this.arquivo = arquivo;
 	}
 
-	public Date getInicioBeneficio() {
-		return inicioBeneficio;
+	public String getArquivoBase64() {
+		return arquivoBase64;
 	}
 
-	public void setInicioBeneficio(Date inicioBeneficio) {
-		this.inicioBeneficio = inicioBeneficio;
-	}
-
-	public Date getUltimoDiaTrabalho() {
-		return ultimoDiaTrabalho;
-	}
-
-	public void setUltimoDiaTrabalho(Date ultimoDiaTrabalho) {
-		this.ultimoDiaTrabalho = ultimoDiaTrabalho;
-	}
-
-	public Date getRetornoTrabalho() {
-		return retornoTrabalho;
-	}
-
-	public void setRetornoTrabalho(Date retornoTrabalho) {
-		this.retornoTrabalho = retornoTrabalho;
-	}
-
-	public String getNumeroBeneficio() {
-		return numeroBeneficio;
-	}
-
-	public void setNumeroBeneficio(String numeroBeneficio) {
-		this.numeroBeneficio = numeroBeneficio;
+	public void setArquivoBase64(String arquivoBase64) {
+		this.arquivoBase64 = arquivoBase64;
 	}
 
 	public long getVersion() {
@@ -461,6 +729,62 @@ public class Cat {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public int getJornadaTrabalho() {
+		return jornadaTrabalho;
+	}
+
+	public void setJornadaTrabalho(int jornadaTrabalho) {
+		this.jornadaTrabalho = jornadaTrabalho;
+	}
+
+	public String getAto1() {
+		return ato1;
+	}
+
+	public void setAto1(String ato1) {
+		this.ato1 = ato1;
+	}
+
+	public String getAto2() {
+		return ato2;
+	}
+
+	public void setAto2(String ato2) {
+		this.ato2 = ato2;
+	}
+
+	public String getAto3() {
+		return ato3;
+	}
+
+	public void setAto3(String ato3) {
+		this.ato3 = ato3;
+	}
+
+	public String getAto4() {
+		return ato4;
+	}
+
+	public void setAto4(String ato4) {
+		this.ato4 = ato4;
+	}
+
+	public String getAto5() {
+		return ato5;
+	}
+
+	public void setAto5(String ato5) {
+		this.ato5 = ato5;
+	}
+
+	public String getJustificativa() {
+		return justificativa;
+	}
+
+	public void setJustificativa(String justificativa) {
+		this.justificativa = justificativa;
 	}
 	
 }

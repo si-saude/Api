@@ -14,12 +14,14 @@ import br.com.saude.api.generic.GenericConstant;
 import br.com.saude.api.util.RequestInterceptor;
 import br.com.saude.api.util.constant.Abrangencia;
 import br.com.saude.api.util.constant.AcaoResultadoExame;
+import br.com.saude.api.util.constant.AplicavelNaoAplicavel;
 import br.com.saude.api.util.constant.AptidaoCardiorrespiratoria;
 import br.com.saude.api.util.constant.AptidaoFisicaBrigadista;
 import br.com.saude.api.util.constant.AtividadeFornecedor;
 import br.com.saude.api.util.constant.AutoavaliacaoHabitosAlimentares;
 import br.com.saude.api.util.constant.AvaliacaoEficacia;
 import br.com.saude.api.util.constant.CategoriaAgenteRisco;
+import br.com.saude.api.util.constant.ConformeNaoConforme;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.DoresCorporaisIntensidade;
 import br.com.saude.api.util.constant.EnsaioVedacao;
@@ -479,4 +481,17 @@ public class UtilService {
 		return Response.ok(getMap(SituacaoEmpregado.getInstance(),filter)).build();
 	}
 	
+	@GET
+	@Path("/conforme-nao-conforme")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getConformeNaoConforme(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(ConformeNaoConforme.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/aplicavel-nao-aplicavel")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAplicavelNaoAplicavel(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(AplicavelNaoAplicavel.getInstance(),filter)).build();
+	}
 }

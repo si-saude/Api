@@ -13,6 +13,7 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 	private Function<Map<String,RiscoEmpregado>,RiscoEmpregado> loadRiscoPotencial;
 	private Function<Map<String,RiscoEmpregado>,RiscoEmpregado> loadTriagens;
 	private Function<Map<String,RiscoEmpregado>,RiscoEmpregado> loadTriagensAll;
+	private Function<Map<String,RiscoEmpregado>,RiscoEmpregado> loadTriagensAtendimentoAll;
 	private Function<Map<String,RiscoEmpregado>,RiscoEmpregado> loadAcoes;
 	
 	public static RiscoEmpregadoBuilder newInstance(RiscoEmpregado riscoEmpregado) {
@@ -62,6 +63,18 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 			return riscos.get("destino");
 		};
 		
+		this.loadTriagensAtendimentoAll = riscos -> {
+			
+			if(riscos.get("origem").getTriagens() != null)
+				riscos.get("destino").setTriagens(TriagemBuilder
+						.newInstance(riscos.get("origem").getTriagens())
+						.loadIndicadorAssociadoSasts()
+						.loadAtendimento()
+						.getEntityList());
+			
+			return riscos.get("destino");
+		};
+		
 		this.loadAcoes = riscos -> {
 			
 			if(riscos.get("origem").getTriagens() != null)
@@ -69,6 +82,7 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 						.newInstance(riscos.get("origem").getTriagens())
 						.loadAcoes()
 						.loadIndicadorEquipe()
+						.loadAtendimento()
 						.getEntityList());
 			
 			return riscos.get("destino");
@@ -86,6 +100,7 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 		cloneRiscoEmpregado.setData(riscoEmpregado.getData());
 		cloneRiscoEmpregado.setStatus(riscoEmpregado.getStatus());
 		cloneRiscoEmpregado.setAtivo(riscoEmpregado.isAtivo());
+		cloneRiscoEmpregado.setValorPonderado(riscoEmpregado.getValorPonderado());
 		
 		if ( riscoEmpregado.getEquipe() != null )
 			cloneRiscoEmpregado.setEquipe(EquipeBuilder.newInstance(riscoEmpregado.getEquipe()).getEntity());
@@ -107,6 +122,10 @@ public class RiscoEmpregadoBuilder extends GenericEntityBuilder<RiscoEmpregado,R
 	
 	public RiscoEmpregadoBuilder loadTriagensAll() {
 		return (RiscoEmpregadoBuilder) loadProperty(this.loadTriagensAll);
+	}
+	
+	public RiscoEmpregadoBuilder loadTriagensAtendimentoAll() {
+		return (RiscoEmpregadoBuilder) loadProperty(this.loadTriagensAtendimentoAll);
 	}
 	
 	public RiscoEmpregadoBuilder loadAcoes() {

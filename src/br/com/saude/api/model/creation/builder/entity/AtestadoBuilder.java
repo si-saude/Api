@@ -14,6 +14,7 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 	private Function<Map<String,Atestado>,Atestado> loadAgendamento;
 	private Function<Map<String,Atestado>,Atestado> loadExamesConvocacao;
 	private Function<Map<String,Atestado>,Atestado> loadHistoricoAtestados;
+	private Function<Map<String,Atestado>,Atestado> loadAuditoriaAtestados;
 
 	public static AtestadoBuilder newInstance(Atestado atestado) {
 		return new AtestadoBuilder(atestado);
@@ -64,6 +65,14 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 			}
 			return atestados.get("destino");
 		};
+		
+		this.loadAuditoriaAtestados = atestados -> {
+			if (atestados.get("origem").getAuditoriaAtestados() != null) {
+				atestados.get("destino").setAuditoriaAtestados(
+						AuditoriaAtestadoBuilder.newInstance(atestados.get("origem").getAuditoriaAtestados()).getEntityList());
+			}
+			return atestados.get("destino");
+		};
 	}
 
 	@Override
@@ -104,6 +113,8 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 		newAtestado.setPreviewStatus(atestado.getPreviewStatus());
 		newAtestado.setDataAuditoria(atestado.getDataAuditoria());
 		newAtestado.setConvocado(atestado.isConvocado());
+		newAtestado.setDataHomologacao(atestado.getDataHomologacao());
+		newAtestado.setJustificativa(atestado.getJustificativa());
 		newAtestado.setVersion(atestado.getVersion());
 		
 		if (atestado.getProfissional() != null) 
@@ -143,5 +154,9 @@ public class AtestadoBuilder extends GenericEntityBuilder<Atestado, AtestadoFilt
 	
 	public AtestadoBuilder loadHistoricoAtestados() {
 		return (AtestadoBuilder) this.loadProperty(this.loadHistoricoAtestados);
+	}
+	
+	public AtestadoBuilder loadAuditoriaAtestados() {
+		return (AtestadoBuilder) this.loadProperty(this.loadAuditoriaAtestados);
 	}
 }

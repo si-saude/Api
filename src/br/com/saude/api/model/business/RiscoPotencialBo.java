@@ -2,31 +2,22 @@ package br.com.saude.api.model.business;
 
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.GenericReportBo;
-import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.RiscoPotencialExampleBuilder;
 import br.com.saude.api.model.entity.dto.RiscoPotencialDto;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
-import br.com.saude.api.model.entity.filter.ServicoFilter;
-import br.com.saude.api.model.entity.po.Notificacao;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
-import br.com.saude.api.model.entity.po.Servico;
-import br.com.saude.api.model.entity.po.Acompanhamento;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
 import br.com.saude.api.model.persistence.report.RiscoPotencialReport;
-import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusRiscoEmpregado;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
-import br.com.saude.api.util.constant.StatusTarefa;
 
 public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFilter, 
 	RiscoPotencialDao, RiscoPotencialBuilder, RiscoPotencialExampleBuilder>
@@ -158,6 +149,7 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	public RiscoPotencial save(RiscoPotencial riscoPotencial) throws Exception {
 		
 		if ( riscoPotencial.getRiscoEmpregados() != null && riscoPotencial.getRiscoEmpregados().size() > 0 ) {
+			
 			riscoPotencial.getRiscoEmpregados().forEach(rE -> {
 				if ( rE.getId() == 0 ) {
 					riscoPotencial.getRiscoEmpregados().stream().
@@ -238,36 +230,27 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	
 	public RiscoPotencial saveAcoes(RiscoPotencial riscoPotencial) throws Exception {
 		
-		if(riscoPotencial.getRiscoEmpregados() != null) {
-			
-			ServicoFilter filter = new ServicoFilter();
-			filter.setPageNumber(1);
-			filter.setPageSize(1);
-			filter.setCodigo("0001");
-			filter.setGrupo(GrupoServico.ATENDIMENTO_PROGRAMA_SAUDE);
-			
-			Servico servico =  ServicoBo.getInstance().getList(filter).getList().get(0);
-			
-			riscoPotencial.getRiscoEmpregados().forEach(r -> {
-				if(r.getTriagens() != null)
-					r.getTriagens().forEach(t -> {
-						if(t.getAcoes() != null)
-							t.getAcoes().forEach(a->{
-								if(a.getTarefa().getId() == 0) {
-									a.getTarefa().setInicio(Helper.getNow());
-									a.getTarefa().setAtualizacao(a.getTarefa().getInicio());
-									a.getTarefa().setCliente(riscoPotencial.getEmpregado());
-									a.getTarefa().setEquipe(t.getEquipeAbordagem());
-									a.getTarefa().setStatus(StatusTarefa.getInstance().ABERTA);
-									a.getTarefa().setServico(servico);
+		if ( riscoPotencial.getRiscoEmpregados() != null && riscoPotencial.getRiscoEmpregados().size() > 0 ) {
+			riscoPotencial.getRiscoEmpregados().forEach(rE -> {				
+				rE.setRiscoPotencial(riscoPotencial);
+				
+				if ( rE.getTriagens() != null && rE.getTriagens().size() > 0 ) {
+					rE.getTriagens().forEach(t -> { 
+						t.setRiscoEmpregado(rE);
+						if ( t.getAcoes() != null && t.getAcoes().size() > 0 ) {
+							t.getAcoes().forEach(a -> { 
+								a.setTriagem(t);
+								if ( a.getAcompanhamentos() != null && a.getAcompanhamentos().size() > 0 ) {
+									a.getAcompanhamentos().forEach( ac -> ac.setAcao(a));
 								}
 							});
+						}
 					});
+				}
+
 			});			
 		}
-		
-		RiscoPotencial risco = save(riscoPotencial);
-		
+		super.save(riscoPotencial);
 		if(riscoPotencial.getAcoesDelete() != null) {
 			riscoPotencial.getAcoesDelete().forEach(a -> {
 				try {
@@ -277,60 +260,10 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 				}
 			});
 		}
-		
-		return risco;
+		return riscoPotencial;
 	}
 	
 	public RiscoPotencial saveAcompanhamentos(RiscoPotencial riscoPotencial) throws Exception {
-		Map<Integer, Boolean> flagAcoes = new HashMap<Integer, Boolean>();
-		
-		if(riscoPotencial.getRiscoEmpregados() != null) {
-			riscoPotencial.getRiscoEmpregados().forEach(r -> {
-				if(r.getTriagens() != null)
-					r.getTriagens().forEach(t -> {
-						if(t.getAcoes() != null)
-							t.getAcoes().forEach(a->{
-								if ( a.getAcompanhamentos() != null ) {
-									a.getAcompanhamentos().forEach(ac -> {
-										Acompanhamento acomp = null;
-										
-										if ( ac.getId() > 0 )
-											try {
-												acomp = AcompanhamentoBo.getInstance().getById(ac.getId());
-											} catch (Exception e1) {
-												e1.printStackTrace();
-											}
-										
-										if ( ( ac.getId() == 0 ) || !ac.getDescricao().equals(acomp.getDescricao()) ) {
-											if ( flagAcoes.containsKey(a.getId()) && flagAcoes.get(a.getId()) ) return;
-											
-											flagAcoes.put(a.getId(), true);
-											
-											Notificacao notificacao = new Notificacao();
-											if ( a.getDetalhe().length() < 151 )
-												notificacao.setDescricao("Houve mudança nos acompanhamentos da seguinte ação: " 
-														+ a.getDetalhe());
-											else notificacao.setDescricao("Houve mudança nos acompanhamentos da seguinte ação: " 
-													+ a.getDetalhe().charAt(147) + "...");
-											
-											if ( riscoPotencial.getProfissional().getEquipe().getId() == 
-													riscoPotencial.getEquipeResponsavel().getId() )
-												notificacao.setEquipe( r.getEquipe() );
-											else notificacao.setEquipe( riscoPotencial.getEquipeResponsavel() );
-											
-											try {
-												NotificacaoBo.getInstance().save(notificacao);
-											} catch (Exception e) {
-												e.printStackTrace();
-											}
-										} 
-									});
-								}
-							});
-					});
-			});			
-		}
-		
 		return save(riscoPotencial);
 	}
 }

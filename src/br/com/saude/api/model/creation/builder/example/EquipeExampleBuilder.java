@@ -29,6 +29,14 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 		return this;
 	}
 	
+	public GenericExampleBuilder<Equipe, EquipeFilter> exampleMedOuErgOuHIg() throws InstantiationException, IllegalAccessException {
+		if(this.filter!=null) {
+			initialize();
+			createExampleMedOuErgOuHig();
+			this.criterions.add(getExample());
+		}
+		return this;
+	}
 	private void addNeId() {
 		if(this.filter.getId() > 0)
 			this.criterions.add(Restrictions.ne("id", (int)this.filter.getId()));
@@ -61,6 +69,11 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 		this.criterions.add(Restrictions.or(Restrictions.eq("abreviacao", "MED"), 
 				Restrictions.eq("abreviacao", "ODO")));
 	}
+	private void addMedOuErgOuHig() {
+		this.criterions.add(Restrictions.or(Restrictions.eq("abreviacao", "MED"), 
+							Restrictions.or(Restrictions.eq("abreviacao", "ERG")),
+											Restrictions.eq("abreviacao", "HIG")));
+	}
 	
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
@@ -84,5 +97,9 @@ public class EquipeExampleBuilder extends GenericExampleBuilder<Equipe,EquipeFil
 		addAbreviacao();
 		addCoordenador();
 		addMedicinaOuOdonto();
+	}
+	
+	protected void createExampleMedOuErgOuHig() throws InstantiationException, IllegalAccessException {
+		addMedOuErgOuHig();
 	}
 }

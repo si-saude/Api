@@ -1,6 +1,8 @@
 package br.com.saude.api.generic;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +22,15 @@ public class Helper {
 	private static StringBuilder stringBuilder;
 	
 	public static String filterLike(String str) {
+		str = str.replace("á", "%").replace("é", "%").replace("í", "%").replace("ó", "%").replace("ú", "%")
+				.replace("Á", "%").replace("É", "%").replace("Í", "%").replace("Ó", "%").replace("Ú", "%")
+				.replace("À", "%").replace("à", "%")
+				.replace("ã", "%").replace("õ", "%").replace("Ã", "%").replace("Õ", "%")
+				.replace("â", "%").replace("ê", "%").replace("ô", "%")
+				.replace("Â", "%").replace("Ê", "%").replace("Ô", "%")
+				.replace("ç", "%").replace("Ç", "%");
+				
+		
 		stringBuilder = new StringBuilder("%");
 		stringBuilder.append(str);
 		stringBuilder.append("%");
@@ -70,6 +81,11 @@ public class Helper {
 				"Outubro", "Novembro", "Dezembro" };
 		return months[month];
 	}
+	
+	public static String getStringDiaSemana(int diaSemana) {
+		String[] dias = { "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado" };
+		return dias[diaSemana];
+	}
 
 	public static Criteria loopCriterias(Criteria criteria, List<Triplet<String,CriteriaExample,JoinType>> criterias) {
 		if(criterias != null)
@@ -115,5 +131,12 @@ public class Helper {
 		if(data != null)
 			return new Date(data.getTime());
 		return data;
+	}
+	
+	public static Period calculateIdade( Date data ) {
+		Period periodo = Period.between(data.toInstant()
+				.atZone(ZoneId.systemDefault()).toLocalDate(), 
+				LocalDate.now());
+		return periodo;
 	}
 }

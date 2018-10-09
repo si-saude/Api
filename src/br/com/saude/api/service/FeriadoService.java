@@ -3,6 +3,7 @@ package br.com.saude.api.service;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -91,6 +92,22 @@ public class FeriadoService extends GenericServiceImpl<Feriado,FeriadoFilter,Fer
 			calendar.setTime(sdf.parse(data));
 			FeriadoBo.getInstance().getValidDates(calendar, dias);
 			return Response.ok(calendar.getTime()).build();	
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/get-days-between-dates")
+	public Response getDaysBetweenDates(@QueryParam("data1") String data1, @QueryParam("data2") String data2) {
+		try {
+			Calendar calendar1 = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss", Locale.ENGLISH);
+			calendar1.setTime(sdf.parse(data1));
+			Calendar calendar2 = Calendar.getInstance();
+			calendar2.setTime(sdf.parse(data2));
+			return Response.ok(FeriadoBo.getInstance().getDaysBetweenDates(calendar1, calendar2)).build();	
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
