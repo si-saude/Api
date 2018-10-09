@@ -58,7 +58,7 @@ public class MudancaFuncao {
 	inverseJoinColumns = {@JoinColumn(name="tarefa_id")})
 	private List<Tarefa> tarefas;
 	
-	@Size(max = 16, message="Tamanho máximo para Revisão: 2054")
+	@Size(max = 2048, message="Tamanho máximo para Revisão: 2048")
 	private String atividades;
 	
 	@Transient

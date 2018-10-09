@@ -4,20 +4,25 @@ import java.util.List;
 
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.MudancaFuncaoBuilder;
 import br.com.saude.api.model.creation.builder.entity.TarefaBuilder;
 import br.com.saude.api.model.creation.builder.example.MudancaFuncaoExampleBuilder;
+import br.com.saude.api.model.entity.dto.MudancaFuncaoDto;
 import br.com.saude.api.model.entity.filter.MudancaFuncaoFilter;
 import br.com.saude.api.model.entity.po.Atividade;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.MudancaFuncao;
 import br.com.saude.api.model.persistence.MudancaFuncaoDao;
+import br.com.saude.api.model.persistence.report.MudancaFuncaoReport;
 import br.com.saude.api.util.constant.StatusTarefa;
+
 public class MudancaFuncaoBo
-		extends GenericBo<MudancaFuncao, MudancaFuncaoFilter, MudancaFuncaoDao, MudancaFuncaoBuilder, MudancaFuncaoExampleBuilder> 
+		extends GenericBo<MudancaFuncao, MudancaFuncaoFilter, MudancaFuncaoDao, MudancaFuncaoBuilder, MudancaFuncaoExampleBuilder>
+		implements GenericReportBo<MudancaFuncaoDto>
 		
 {
 
@@ -240,5 +245,9 @@ public class MudancaFuncaoBo
 
 		return super.save(mudancaFuncao);
 		
+	}
+	
+	public List<MudancaFuncaoDto> getMudancaFuncoes() throws Exception{
+		return MudancaFuncaoReport.getInstance().getMudancaFuncoes();
 	}
 }
