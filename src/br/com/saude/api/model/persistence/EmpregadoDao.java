@@ -291,17 +291,6 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	private Empregado loadGrupoMonitoramentosExames(Empregado empregado) {
 		if(empregado.getGrupoMonitoramentos()!=null) {
 			Hibernate.initialize(empregado.getGrupoMonitoramentos());
-			
-			empregado.getGrupoMonitoramentos().forEach(g->{
-				if(g.getGrupoMonitoramentoExames() != null) {
-					Hibernate.initialize(g.getGrupoMonitoramentoExames());
-					
-					g.getGrupoMonitoramentoExames().forEach(gE->{
-						if(gE.getCriterios() != null)
-							Hibernate.initialize(gE.getCriterios());
-					});
-				}
-			});
 		}
 		return empregado;
 	}

@@ -32,14 +32,11 @@ public class GrupoMonitoramento {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private TipoGrupoMonitoramento tipoGrupoMonitoramento;
 	
-	@OneToMany(mappedBy="grupoMonitoramento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<GrupoMonitoramentoExame> grupoMonitoramentoExames;
-	
-	@ManyToMany(fetch=FetchType.LAZY, mappedBy="grupoMonitoramentos")
-	private List<Profissiograma> profissiogramas;
-	
 	@ManyToMany(fetch=FetchType.LAZY, mappedBy="grupoMonitoramentos")
 	private List<Empregado> empregados;
+	
+	@OneToMany(mappedBy="grupoMonitoramento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<Avaliacao> avaliacoes;
 	
 	private boolean recorrente;
 	
@@ -72,22 +69,6 @@ public class GrupoMonitoramento {
 
 	public void setTipoGrupoMonitoramento(TipoGrupoMonitoramento tipoGrupoMonitoramento) {
 		this.tipoGrupoMonitoramento = tipoGrupoMonitoramento;
-	}
-
-	public List<GrupoMonitoramentoExame> getGrupoMonitoramentoExames() {
-		return grupoMonitoramentoExames;
-	}
-
-	public void setGrupoMonitoramentoExames(List<GrupoMonitoramentoExame> grupoMonitoramentoExames) {
-		this.grupoMonitoramentoExames = grupoMonitoramentoExames;
-	}
-
-	public List<Profissiograma> getProfissiogramas() {
-		return profissiogramas;
-	}
-
-	public void setProfissiogramas(List<Profissiograma> profissiogramas) {
-		this.profissiogramas = profissiogramas;
 	}
 
 	public List<Empregado> getEmpregados() {
@@ -133,5 +114,13 @@ public class GrupoMonitoramento {
 
 	public void setAuditoriaAso(boolean auditoriaAso) {
 		this.auditoriaAso = auditoriaAso;
+	}
+
+	public List<Avaliacao> getAvaliacoes() {
+		return avaliacoes;
+	}
+
+	public void setAvaliacoes(List<Avaliacao> avaliacoes) {
+		this.avaliacoes = avaliacoes;
 	}
 }

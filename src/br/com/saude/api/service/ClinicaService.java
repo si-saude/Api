@@ -14,42 +14,42 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.RelatorioMedicoBo;
-import br.com.saude.api.model.business.validate.RelatorioMedicoValidator;
-import br.com.saude.api.model.entity.filter.RelatorioMedicoFilter;
-import br.com.saude.api.model.entity.po.RelatorioMedico;
+import br.com.saude.api.model.business.ClinicaBo;
+import br.com.saude.api.model.business.validate.ClinicaValidator;
+import br.com.saude.api.model.entity.filter.ClinicaFilter;
+import br.com.saude.api.model.entity.po.Clinica;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("relatorio-medico")
+@Path("clinica")
 @RequestInterceptor
-public class RelatorioMedicoService extends GenericServiceImpl<RelatorioMedico, RelatorioMedicoFilter, RelatorioMedicoBo>
-implements GenericService<RelatorioMedico, RelatorioMedicoFilter>{
-	
+public class ClinicaService extends GenericServiceImpl<Clinica, ClinicaFilter, ClinicaBo>
+							implements GenericService<Clinica, ClinicaFilter>{
+
 	@Override
-	protected RelatorioMedicoBo getBo() {
-		return RelatorioMedicoBo.getInstance();
+	protected ClinicaBo getBo() {
+		return ClinicaBo.getInstance();
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=RelatorioMedicoValidator.class)
+	@CustomValidator(validatorClass=ClinicaValidator.class)
 	@Override
-	public Response save(RelatorioMedico relatorioMedico) {
+	public Response save(Clinica clinica) {
 		try {
-			RelatorioMedicoBo.getInstance().save(relatorioMedico);
+			ClinicaBo.getInstance().save(clinica);
 			return Response.ok("Salvo com sucesso.").build();
-		} catch (Exception e) {
+		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
-	
+
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(RelatorioMedicoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(ClinicaFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -59,7 +59,7 @@ implements GenericService<RelatorioMedico, RelatorioMedicoFilter>{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(RelatorioMedicoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(ClinicaFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
@@ -78,5 +78,4 @@ implements GenericService<RelatorioMedico, RelatorioMedicoFilter>{
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
-
 }

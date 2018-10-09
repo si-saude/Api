@@ -15,7 +15,7 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class GrupoMonitoramentoExame {
+public class GrupoMonitoramentoProfissiogramaExame {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -25,16 +25,13 @@ public class GrupoMonitoramentoExame {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Exame exame;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	private Periodicidade periodicidade;
-	
 	@NotNull(message="É necessário informar o Grupo de Monitoramento do Exame.")
 	@ManyToOne(fetch=FetchType.LAZY)
-	private GrupoMonitoramento grupoMonitoramento;
+	private GrupoMonitoramentoProfissiograma grupoMonitoramentoProfissiograma;
 	
 	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(name="grupomonitoramentoexame_criterio", 
-	joinColumns = {@JoinColumn(name="grupomonitoramentoexame_id")}, 
+	@JoinTable(name="GrupoMonitoramentoProfissiogramaExame_criterio", 
+	joinColumns = {@JoinColumn(name="GrupoMonitoramentoProfissiogramaExame_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="criterio_id")})
 	private List<Criterio> criterios;
 	
@@ -59,12 +56,12 @@ public class GrupoMonitoramentoExame {
 		this.exame = exame;
 	}
 
-	public GrupoMonitoramento getGrupoMonitoramento() {
-		return grupoMonitoramento;
+	public GrupoMonitoramentoProfissiograma getGrupoMonitoramentoProfissiograma() {
+		return grupoMonitoramentoProfissiograma;
 	}
 
-	public void setGrupoMonitoramento(GrupoMonitoramento grupoMonitoramento) {
-		this.grupoMonitoramento = grupoMonitoramento;
+	public void setGrupoMonitoramentoProfissiograma(GrupoMonitoramentoProfissiograma grupoMonitoramentoProfissiograma) {
+		this.grupoMonitoramentoProfissiograma = grupoMonitoramentoProfissiograma;
 	}
 
 	public List<Criterio> getCriterios() {
@@ -75,27 +72,19 @@ public class GrupoMonitoramentoExame {
 		this.criterios = criterios;
 	}
 
-	public long getVersion() {
-		return version;
-	}
-
-	public void setVersion(long version) {
-		this.version = version;
-	}
-
-	public Periodicidade getPeriodicidade() {
-		return periodicidade;
-	}
-
-	public void setPeriodicidade(Periodicidade periodicidade) {
-		this.periodicidade = periodicidade;
-	}
-
 	public boolean isOpcional() {
 		return opcional;
 	}
 
 	public void setOpcional(boolean opcional) {
 		this.opcional = opcional;
+	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
 	}
 }

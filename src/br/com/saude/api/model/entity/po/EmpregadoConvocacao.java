@@ -33,9 +33,6 @@ public class EmpregadoConvocacao {
 	@OneToMany(mappedBy="empregadoConvocacao", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<EmpregadoConvocacaoExame> empregadoConvocacaoExames;
 	
-	@OneToMany(mappedBy="empregadoConvocacao", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<ResultadoExame> resultadoExames;
-	
 	private boolean auditado;
 	
 	private boolean resultadoAuditado;
@@ -114,14 +111,6 @@ public class EmpregadoConvocacao {
 
 	public void setEmpregadoConvocacaoExames(List<EmpregadoConvocacaoExame> empregadoConvocacaoExames) {
 		this.empregadoConvocacaoExames = empregadoConvocacaoExames;
-	}
-
-	public List<ResultadoExame> getResultadoExames() {
-		return resultadoExames;
-	}
-
-	public void setResultadoExames(List<ResultadoExame> resultadoExames) {
-		this.resultadoExames = resultadoExames;
 	}
 
 	public boolean isResultadoAuditado() {
