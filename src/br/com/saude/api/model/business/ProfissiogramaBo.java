@@ -43,8 +43,7 @@ public class ProfissiogramaBo
 			g.getGrupoMonitoramentoProfissiogramaExames().forEach(p -> {
 				p.setGrupoMonitoramentoProfissiograma(g);
 			});
-			}
-		);
+		});
 		
 		return super.save(profissiograma);
 	}
