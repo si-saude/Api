@@ -10,12 +10,15 @@ import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.RiscoPotencialExampleBuilder;
+import br.com.saude.api.model.entity.dto.AcompanhamentoSastDto;
 import br.com.saude.api.model.entity.dto.RiscoPotencialDto;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
+import br.com.saude.api.model.persistence.report.AcompanhamentoSastReport;
 import br.com.saude.api.model.persistence.report.RiscoPotencialReport;
 import br.com.saude.api.util.constant.StatusAcao;
+import br.com.saude.api.util.constant.StatusRPSat;
 import br.com.saude.api.util.constant.StatusRiscoEmpregado;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
 
@@ -265,5 +268,25 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 	
 	public RiscoPotencial saveAcompanhamentos(RiscoPotencial riscoPotencial) throws Exception {
 		return save(riscoPotencial);
+	}
+	
+	public String getStatusRPSat(double valor) {
+		String statusRPSat = "";
+		
+		if ( valor > 0 && valor < 0.57 ) {
+			statusRPSat = StatusRPSat.getInstance().ACEITAVEL;
+		} else if ( valor >= 0.57 && valor < 0.725 ) {
+			statusRPSat = StatusRPSat.getInstance().TOLERAVEL;
+		} else if ( valor >= 0.725 ) {
+			statusRPSat = StatusRPSat.getInstance().INACEITAVEL;
+		}
+		
+		return statusRPSat;
+	}
+	
+	public List<AcompanhamentoSastDto> getAcompanhamentoSasts(
+			String abreviacaoEquipeAcolhimento, int idProfissional, int anoRisco) throws Exception {
+		return AcompanhamentoSastReport.getInstance().getAcompanhamentoSasts(
+				abreviacaoEquipeAcolhimento, idProfissional, anoRisco);
 	}
 }
