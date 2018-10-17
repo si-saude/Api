@@ -1,13 +1,12 @@
 package br.com.saude.api.model.business;
 
-import java.io.IOException;
 import java.util.List;
 
 import br.com.saude.api.generic.GenericReportBo;
-import br.com.saude.api.model.entity.dto.AcompanhamentoSastDto;
+import br.com.saude.api.model.entity.dto.AcompanhamentoSastEmpregadoDto;
 import br.com.saude.api.model.persistence.report.AcompanhamentoSastReport;
 
-public class AcompanhamentoSastBo implements GenericReportBo<AcompanhamentoSastDto> {
+public class AcompanhamentoSastBo implements GenericReportBo<AcompanhamentoSastEmpregadoDto> {
 
 	private static AcompanhamentoSastBo instance;
 
@@ -21,7 +20,7 @@ public class AcompanhamentoSastBo implements GenericReportBo<AcompanhamentoSastD
 		return instance;
 	}
 
-	public List<AcompanhamentoSastDto> getAcompanhamentoSasts(String abreviacaoEquipeAcolhimento, int idProfissional,
+	public List<AcompanhamentoSastEmpregadoDto> getAcompanhamentoSasts(String abreviacaoEquipeAcolhimento, int idProfissional,
 			int anoRisco) throws Exception {
 		return AcompanhamentoSastReport.getInstance().getAcompanhamentoSasts(abreviacaoEquipeAcolhimento,
 				idProfissional, anoRisco);

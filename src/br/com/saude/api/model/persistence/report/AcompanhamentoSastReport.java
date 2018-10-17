@@ -10,8 +10,10 @@ import org.hibernate.Session;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.model.business.RiscoPotencialBo;
-import br.com.saude.api.model.entity.dto.AcaoDto;
-import br.com.saude.api.model.entity.dto.AcompanhamentoSastDto;
+import br.com.saude.api.model.entity.dto.AcompanhamentoSastAcaoDto;
+import br.com.saude.api.model.entity.dto.AcompanhamentoSastEmpregadoDto;
+import br.com.saude.api.model.entity.dto.AcompanhamentoSastEquipeDto;
+import br.com.saude.api.model.entity.dto.AcompanhamentoSastIndicadorDto;
 
 public class AcompanhamentoSastReport {
 	private static AcompanhamentoSastReport instance;
@@ -27,7 +29,7 @@ public class AcompanhamentoSastReport {
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	public List<AcompanhamentoSastDto> getAcompanhamentoSasts(String abreviacaoEquipeAcolhimento, 
+	public List<AcompanhamentoSastEmpregadoDto> getAcompanhamentoSasts(String abreviacaoEquipeAcolhimento, 
 			int idProfissional, int anoRisco) 
 			throws Exception {
 		
@@ -42,15 +44,15 @@ public class AcompanhamentoSastReport {
 		in.close();
 		
 		int index = query.indexOf("[ABREVIACAO_EQUIPE_ACOLHIMENTO]");
-		query.replace(index, index+30, abreviacaoEquipeAcolhimento);
+		query.replace(index, index+31, "'"+abreviacaoEquipeAcolhimento+"'");
 		
 		index = query.indexOf("[ID_PROFISSIONAL]");
-		query.replace(index, index+16, String.valueOf(idProfissional));
+		query.replace(index, index+17, String.valueOf(idProfissional));
 		
 		index = query.indexOf("[ANO_RISCO]");
-		query.replace(index, index+10, String.valueOf(anoRisco));
+		query.replace(index, index+11, String.valueOf(anoRisco));
 		
-		List<AcompanhamentoSastDto> acompanhamentoSasts = new ArrayList<AcompanhamentoSastDto>();
+		List<AcompanhamentoSastEmpregadoDto> acompanhamentoSastEmpregados = new ArrayList<AcompanhamentoSastEmpregadoDto>();
 
 		Session session = HibernateHelper.getSession();
 		List<Object[]> list = new ArrayList<Object[]>();
@@ -63,51 +65,94 @@ public class AcompanhamentoSastReport {
 			HibernateHelper.close(session);
 		}
 		
-		AcompanhamentoSastDto acompanhamentoSast = null;
+		AcompanhamentoSastEmpregadoDto acompanhamentoSastEmpregado = null;
 		
 		for(Object[] row : list) {
 			
-			if ( acompanhamentoSast == null || acompanhamentoSast.getIdTriagem() != (int)row[8]) {
-				acompanhamentoSast = new AcompanhamentoSastDto();
-				acompanhamentoSast.setGerencia((String)row[0]);
-				acompanhamentoSast.setNome((String)row[1]);
-				acompanhamentoSast.setMatricula((String)row[2]);
-				acompanhamentoSast.setStatusRisco((String)row[3]);
-				acompanhamentoSast.setStatusRPSat(RiscoPotencialBo.getInstance().getStatusRPSat((double)row[4]));
-				acompanhamentoSast.setEquipe((String)row[5]);
-				acompanhamentoSast.setIndicador((String)row[6]);
-				acompanhamentoSast.setDiagnostico((String)row[7]);
-				acompanhamentoSast.setIntervencao((String)row[8]);
-				acompanhamentoSast.setIdTriagem((int)row[9]);
-				acompanhamentoSast.setIdAcao((int)row[10]);
-				acompanhamentoSast.setDescricaoAcao((String)row[11]);
-				acompanhamentoSast.setTipoAcao((String)row[12]);
-				acompanhamentoSast.setContatoAcao((String)row[13]);
-				acompanhamentoSast.setDescricaoAcompanhamento((String)row[15]);
-				acompanhamentoSast.setAcoes( new ArrayList<AcaoDto>() );
-				AcaoDto acaoDto = new AcaoDto();
-				acaoDto.setDescricao((String)row[11]);
-				acaoDto.setAcompanhamentos(new ArrayList<String>());
-				acaoDto.getAcompanhamentos().add((String)row[15]);
-				acompanhamentoSast.getAcoes().add(acaoDto);
-			} else {
-				if ( acompanhamentoSast.getIdAcao() != (int)row[10] ) {
-					AcaoDto acaoDto = new AcaoDto();
-					acaoDto.setDescricao((String)row[11]);
-					acaoDto.setAcompanhamentos(new ArrayList<String>());
-					acaoDto.getAcompanhamentos().add((String)row[15]);
-					acaoDto.setStatus((String)row[14]);
-					acompanhamentoSast.getAcoes().add(acaoDto);
-				} else {
-					acompanhamentoSast.getAcoes()
-						.get(acompanhamentoSast.getAcoes().size()-1)
-						.getAcompanhamentos().add((String)row[15]);
-				}
-			}
-			
-			acompanhamentoSasts.add(acompanhamentoSast);
+			if ( acompanhamentoSastEmpregado == null || !acompanhamentoSastEmpregado.getNome().equals((String)row[1])) {
+				acompanhamentoSastEmpregado = new AcompanhamentoSastEmpregadoDto();
+				setAcompanhamentoSastEmpregado(acompanhamentoSastEmpregado, row);
+				acompanhamentoSastEmpregados.add(acompanhamentoSastEmpregado);
+			} else if ( !acompanhamentoSastEmpregado.getEquipes()
+					.stream().reduce((first, second) -> second).get().getNome().equals((String)row[5]) )
+				setAcompanhamentoSastEquipe(acompanhamentoSastEmpregado.getEquipes(), row);
+			else if ( !acompanhamentoSastEmpregado.getEquipes()
+					.stream().reduce((first, second) -> second).get().getIndicadores()
+					.stream().reduce((first, second) -> second).get().getIndicador().
+					equals((String)row[6]) )
+				setAcompanhamentoSastIndicador(acompanhamentoSastEmpregado.getEquipes()
+					.stream().reduce((first, second) -> second).get().getIndicadores(), row);
+			else if ( acompanhamentoSastEmpregado.getEquipes()
+					.stream().reduce((first, second) -> second).get().getIndicadores()
+					.stream().reduce((first, second) -> second).get().getAcoes().size() > 0 &&
+					acompanhamentoSastEmpregado.getEquipes()
+						.stream().reduce((first, second) -> second).get().getIndicadores()
+						.stream().reduce((first, second) -> second).get().getAcoes()
+						.stream().reduce((first, second) -> second).get().getIdAcao() != (int)row[9] )
+				setAcompanhamentoSastAcao(acompanhamentoSastEmpregado.getEquipes()
+					.stream().reduce((first, second) -> second).get().getIndicadores()
+					.stream().reduce((first, second) -> second).get().getAcoes(), row);
+			else if ( acompanhamentoSastEmpregado.getEquipes()
+					.stream().reduce((first, second) -> second).get().getIndicadores()
+					.stream().reduce((first, second) -> second).get().getAcoes().size() > 0 )
+				setAcompanhamentoSastAcompanhamento(acompanhamentoSastEmpregado.getEquipes()
+					.stream().reduce((first, second) -> second).get().getIndicadores()
+					.stream().reduce((first, second) -> second).get().getAcoes()
+					.stream().reduce((first, second) -> second).get().getAcompanhamentos(), row);
 		}
-		
-		return acompanhamentoSasts;
+		 
+		return acompanhamentoSastEmpregados;
+	}
+	
+	public void setAcompanhamentoSastEmpregado(AcompanhamentoSastEmpregadoDto acompanhamentoSastEmpregado, Object[] row) {
+		acompanhamentoSastEmpregado.setGerencia((String)row[0]);
+		acompanhamentoSastEmpregado.setNome((String)row[1]);
+		acompanhamentoSastEmpregado.setMatricula((String)row[2]);
+		acompanhamentoSastEmpregado.setStatusRPSat(RiscoPotencialBo.getInstance().getStatusRPSat((double)row[3]));
+		acompanhamentoSastEmpregado.setStatusRisco((String)row[4]);
+		acompanhamentoSastEmpregado.setEquipes(new ArrayList<AcompanhamentoSastEquipeDto>());
+		setAcompanhamentoSastEquipe(acompanhamentoSastEmpregado.getEquipes(), row);
+	}
+	
+	public void setAcompanhamentoSastEquipe(List<AcompanhamentoSastEquipeDto> acompanhamentoSastEquipes, Object[] row) {
+		if ( (String)row[5] != null ) {
+			AcompanhamentoSastEquipeDto acompanhamentoSastEquipe = new AcompanhamentoSastEquipeDto();
+			acompanhamentoSastEquipe.setNome((String)row[5]);
+			acompanhamentoSastEquipes.add(acompanhamentoSastEquipe);
+			acompanhamentoSastEquipe.setIndicadores(new ArrayList<AcompanhamentoSastIndicadorDto>());
+			setAcompanhamentoSastIndicador(acompanhamentoSastEquipe.getIndicadores(), row);
+		}
+	}
+	
+	public void setAcompanhamentoSastIndicador(List<AcompanhamentoSastIndicadorDto> acompanhamentoSastIndicadores, Object[] row) {
+		if ( (String)row[6] != null ) {
+			AcompanhamentoSastIndicadorDto acompanhamentoSastIndicador = new AcompanhamentoSastIndicadorDto();
+			acompanhamentoSastIndicador.setIndicador((String)row[6]);
+			acompanhamentoSastIndicador.setDiagnostico((String)row[7]);
+			acompanhamentoSastIndicador.setIntervencao((String)row[8]);
+			acompanhamentoSastIndicador.setIdTriagem((int)row[9]);
+			acompanhamentoSastIndicadores.add(acompanhamentoSastIndicador);
+			acompanhamentoSastIndicador.setAcoes(new ArrayList<AcompanhamentoSastAcaoDto>());
+			setAcompanhamentoSastAcao(acompanhamentoSastIndicador.getAcoes(), row);
+		}
+	}
+	
+	public void setAcompanhamentoSastAcao(List<AcompanhamentoSastAcaoDto> acompanhamentoSastAcoes, Object[] row) {
+		if ( (String)row[11] != null ) { 
+			AcompanhamentoSastAcaoDto acompanhamentoSastAcao = new AcompanhamentoSastAcaoDto();
+			acompanhamentoSastAcao.setIdAcao((int)row[10]);
+			acompanhamentoSastAcao.setAcao((String)row[11]);
+			acompanhamentoSastAcao.setTipoAcao((String)row[12]);
+			acompanhamentoSastAcao.setContatoAcao((String)row[13]);
+			acompanhamentoSastAcao.setStatusAcao((String)row[14]);
+			acompanhamentoSastAcoes.add(acompanhamentoSastAcao);
+			acompanhamentoSastAcao.setAcompanhamentos(new ArrayList<String>());
+			setAcompanhamentoSastAcompanhamento(acompanhamentoSastAcao.getAcompanhamentos(), row);
+		}
+	}
+	
+	public void setAcompanhamentoSastAcompanhamento(List<String> acompanhamentos, Object[] row) {
+		if ( (String)row[15] != null )
+			acompanhamentos.add((String)row[15]);
 	}
 }

@@ -10,12 +10,10 @@ import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.RiscoPotencialExampleBuilder;
-import br.com.saude.api.model.entity.dto.AcompanhamentoSastDto;
 import br.com.saude.api.model.entity.dto.RiscoPotencialDto;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
-import br.com.saude.api.model.persistence.report.AcompanhamentoSastReport;
 import br.com.saude.api.model.persistence.report.RiscoPotencialReport;
 import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusRPSat;
@@ -282,11 +280,5 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		}
 		
 		return statusRPSat;
-	}
-	
-	public List<AcompanhamentoSastDto> getAcompanhamentoSasts(
-			String abreviacaoEquipeAcolhimento, int idProfissional, int anoRisco) throws Exception {
-		return AcompanhamentoSastReport.getInstance().getAcompanhamentoSasts(
-				abreviacaoEquipeAcolhimento, idProfissional, anoRisco);
 	}
 }

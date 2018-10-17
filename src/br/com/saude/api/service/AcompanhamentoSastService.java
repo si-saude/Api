@@ -15,13 +15,12 @@ import javax.ws.rs.core.Response.Status;
 
 import br.com.saude.api.generic.GenericReportService;
 import br.com.saude.api.model.business.AcompanhamentoSastBo;
-import br.com.saude.api.model.business.RiscoPotencialBo;
-import br.com.saude.api.model.entity.dto.AcompanhamentoSastDto;
+import br.com.saude.api.model.entity.dto.AcompanhamentoSastEmpregadoDto;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("acompanhamento-sast")
 @RequestInterceptor
-public class AcompanhamentoSastService implements GenericReportService<AcompanhamentoSastDto, AcompanhamentoSastBo>
+public class AcompanhamentoSastService implements GenericReportService<AcompanhamentoSastEmpregadoDto, AcompanhamentoSastBo>
 {
 
 	@GET
@@ -31,7 +30,7 @@ public class AcompanhamentoSastService implements GenericReportService<Acompanha
 			@QueryParam("idProfissional") int idProfissional,
 			@QueryParam("anoRisco") int anoRisco) throws IOException {
 		try {
-			return Response.ok( RiscoPotencialBo.getInstance().getAcompanhamentoSasts(
+			return Response.ok( AcompanhamentoSastBo.getInstance().getAcompanhamentoSasts(
 					abreviacaoEquipeAcolhimento, idProfissional, anoRisco) ).build();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -43,7 +42,7 @@ public class AcompanhamentoSastService implements GenericReportService<Acompanha
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/get-file")
-	public Response getFile(List<AcompanhamentoSastDto> entities) throws IOException {
+	public Response getFile(List<AcompanhamentoSastEmpregadoDto> entities) throws IOException {
 		try {
 			return Response.ok( this.exportXLSXFile(entities) ).build();
 		} catch (Exception e) {

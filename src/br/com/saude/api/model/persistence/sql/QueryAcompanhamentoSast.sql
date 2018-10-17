@@ -1,20 +1,19 @@
 select COALESCE( g1.codigo||'/','')||COALESCE( g2.codigo||'/','')||COALESCE( g3.codigo||'/','')||g4.codigo as gerencia,
 	p.nome as nome,
 	e.matricula as matricula,
+	get_valor_risco_potencial(rp.id) as statusrpsat,
 	rp.status as statusRisco,
-	get_valor_risco_potencial(rp.id),
 	ea.nome as equipe,
-	ei.abreviacao||' - '||t.indice||' - '||i.codigo||' - '||i.nome as indicador,
+	ei.abreviacao||' - '||i.codigo||' - '||i.nome|| ' - ' ||t.indice  as indicador,
 	d.descricao as diagnostico,
 	int.descricao as intervencao,
-	t.id,
-	a.id,
+	t.id as idtriagem,
+	a.id as idacao,
 	ai.descricao as acao,
 	a.tipo as tipoAcao,
 	a.tipoContato as contato,
 	a.status as statusAcao,
 	ac.descricao as acompanhamento
-	
 from riscopotencial rp
 inner join empregado e on e.id = rp.empregado_id
 inner join pessoa p on p.id = e.pessoa_id
