@@ -35,6 +35,7 @@ public class ItemIndicadorConhecimentoAlimentarBuilder extends GenericEntityBuil
 		cloneItemIndicadorConhecimentoAlimentar.setId(itemIndicadorConhecimentoAlimentar.getId());
 		cloneItemIndicadorConhecimentoAlimentar.setVersion(itemIndicadorConhecimentoAlimentar.getVersion());
 		cloneItemIndicadorConhecimentoAlimentar.setDescricao(itemIndicadorConhecimentoAlimentar.getDescricao());
+		cloneItemIndicadorConhecimentoAlimentar.setOrdem(itemIndicadorConhecimentoAlimentar.getOrdem());
 		cloneItemIndicadorConhecimentoAlimentar.setIndicadorConhecimentoAlimentar(
 			IndicadorConhecimentoAlimentarBuilder.newInstance(itemIndicadorConhecimentoAlimentar.getIndicadorConhecimentoAlimentar()).getEntity());
 		

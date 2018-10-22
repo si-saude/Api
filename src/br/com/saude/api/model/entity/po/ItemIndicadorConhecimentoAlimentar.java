@@ -23,6 +23,8 @@ public class ItemIndicadorConhecimentoAlimentar {
 	@Size(max = 1024, message="Tamanho máximo para o Descrição do Item do Indicador de Conhecimento Alimentar: 1024")
 	private String descricao;
 	
+	private int ordem;
+	
 	@Version
 	private long version;
 	
@@ -56,6 +58,14 @@ public class ItemIndicadorConhecimentoAlimentar {
 
 	public void setIndicadorConhecimentoAlimentar(IndicadorConhecimentoAlimentar indicadorConhecimentoAlimentar) {
 		this.indicadorConhecimentoAlimentar = indicadorConhecimentoAlimentar;
+	}
+
+	public int getOrdem() {
+		return ordem;
+	}
+
+	public void setOrdem(int ordem) {
+		this.ordem = ordem;
 	}
 	
 }
