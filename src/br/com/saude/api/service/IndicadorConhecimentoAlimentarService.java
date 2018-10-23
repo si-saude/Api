@@ -2,6 +2,7 @@ package br.com.saude.api.service;
 
 import java.lang.reflect.InvocationTargetException;
 
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,32 +15,32 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.EmpregadoConvocacaoBo;
-import br.com.saude.api.model.business.validate.EmpregadoConvocacaoValidator;
-import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
-import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.business.IndicadorConhecimentoAlimentarBo;
+import br.com.saude.api.model.business.validate.IndicadorConhecimentoAlimentarValidator;
+import br.com.saude.api.model.entity.filter.IndicadorConhecimentoAlimentarFilter;
+import br.com.saude.api.model.entity.po.IndicadorConhecimentoAlimentar;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("empregado-convocacao")
+@Path("indicador-conhecimento-alimentar")
 @RequestInterceptor
-public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConvocacao, EmpregadoConvocacaoFilter, EmpregadoConvocacaoBo>
-							implements GenericService<EmpregadoConvocacao, EmpregadoConvocacaoFilter>{
+public class IndicadorConhecimentoAlimentarService extends GenericServiceImpl<IndicadorConhecimentoAlimentar, IndicadorConhecimentoAlimentarFilter, IndicadorConhecimentoAlimentarBo>
+		implements GenericService<IndicadorConhecimentoAlimentar, IndicadorConhecimentoAlimentarFilter> {
 
 	@Override
-	protected EmpregadoConvocacaoBo getBo() {
-		return EmpregadoConvocacaoBo.getInstance();
+	protected IndicadorConhecimentoAlimentarBo getBo() {
+		return IndicadorConhecimentoAlimentarBo.getInstance();
 	}
-	
+
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass=EmpregadoConvocacaoValidator.class)
+	@CustomValidator(validatorClass = IndicadorConhecimentoAlimentarValidator.class)
 	@Override
-	public Response save(EmpregadoConvocacao empregadoConvocacao) {
+	public Response save(IndicadorConhecimentoAlimentar indicadorConhecimentoAlimentar) {
 		try {
-			EmpregadoConvocacaoBo.getInstance().save(empregadoConvocacao);
+			IndicadorConhecimentoAlimentarBo.getInstance().save(indicadorConhecimentoAlimentar);
 			return Response.ok("Salvo com sucesso.").build();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
@@ -49,7 +50,7 @@ public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConv
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(EmpregadoConvocacaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(IndicadorConhecimentoAlimentarFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
 	}
@@ -59,7 +60,7 @@ public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConv
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(EmpregadoConvocacaoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(IndicadorConhecimentoAlimentarFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
@@ -70,7 +71,7 @@ public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConv
 	public Response get(@QueryParam("id") String id) throws Exception {
 		return super.getGeneric(new Integer(id));
 	}
-	
+
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -78,4 +79,5 @@ public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConv
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
+
 }

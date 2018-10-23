@@ -23,8 +23,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.saude.api.model.business.RiscoEmpregadoBo;
+import br.com.saude.api.model.business.RiscoPotencialBo;
 import br.com.saude.api.model.creation.builder.entity.RiscoEmpregadoBuilder;
-import br.com.saude.api.util.constant.StatusRPSat;
 
 @Entity
 public class RiscoPotencial {
@@ -292,13 +292,7 @@ public class RiscoPotencial {
 	public String getStatusRPSat() throws Exception {
 		this.getValor();
 		
-		if ( this.valor > 0 && this.valor < 0.57 ) {
-			this.statusRPSat = StatusRPSat.getInstance().ACEITAVEL;
-		} else if ( this.valor >= 0.57 && this.valor < 0.725 ) {
-			this.statusRPSat = StatusRPSat.getInstance().TOLERAVEL;
-		} else if ( this.valor >= 0.725 ) {
-			this.statusRPSat = StatusRPSat.getInstance().INACEITAVEL;
-		}
+		statusRPSat = RiscoPotencialBo.getInstance().getStatusRPSat(this.valor);
 		
 		return statusRPSat;
 	}
