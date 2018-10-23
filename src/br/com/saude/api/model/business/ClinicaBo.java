@@ -36,6 +36,6 @@ public class ClinicaBo extends GenericBo<Clinica, ClinicaFilter, ClinicaDao,
 	}
 	
 	public PagedList<Clinica> getListLoadAll(ClinicaFilter filter) throws Exception {
-		return getDao().getListLoadAll(getExampleBuilder(filter).example());
+		return super.getList( getDao().getListLoadAll(getExampleBuilder(filter).example()) ,this.functionLoadAll);
 	}
 }
