@@ -50,6 +50,8 @@ public class ClinicaBuilder extends GenericEntityBuilder<Clinica, ClinicaFilter>
 		newClinica.setId(clinica.getId());
 		newClinica.setNome(clinica.getNome());
 		newClinica.setUf(clinica.getUf());
+		newClinica.setTelefones(clinica.getTelefones());
+		newClinica.setEndereco(clinica.getEndereco());
 		newClinica.setVersion(clinica.getVersion());
 		
 		return newClinica;

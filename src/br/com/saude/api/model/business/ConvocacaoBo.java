@@ -237,6 +237,9 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					//SUBSTITUIR AS VARIÁVEIS
 					StringReplacer stringReplacer = new StringReplacer(html.toString());
 					stringReplacer = stringReplacer
+							.replace("nomeClinica", clinica.getNome())
+							.replace("enderecoClinica", Objects.toString(clinica.getEndereco(),"---"))
+							.replace("telefonesClinica", Objects.toString(clinica.getTelefones(),"---"))
 							.replace("nomeEmpregado", eC.getEmpregado().getPessoa().getNome())
 							.replace("matriculaEmpregado", Objects.toString(eC.getEmpregado().getMatricula(),"---"))
 							.replace("cpfEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getCpf(),"---"))
@@ -320,7 +323,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					//GERAR PDF
 					pdfUri = new URI(uri.getPath()+"/"+Objects.toString(eC.getEmpregado().getMatricula().trim()+"-","")
 					+"EXAMES_COMPLEMENTARES_"
-					+clinica.getNome()+""
+					+clinica.getNome().replace(" ", "_")+""
 					+ (exigeRelatorio ? "_exige_relatorio_medico" : "")
 					+".pdf");
 					pdf = new File(pdfUri.getPath());
