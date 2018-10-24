@@ -13,6 +13,8 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 	private Function<Map<String,Aso>,Aso> loadEmpregado;
 	private Function<Map<String,Aso>,Aso> loadAtendimento;
 	private Function<Map<String,Aso>,Aso> loadAlteracoes;
+	private Function<Map<String,Aso>,Aso> loadAptidoes;
+	private Function<Map<String,Aso>,Aso> loadExamesConvocacao;
 	
 	public static AsoBuilder newInstance(Aso aso) {
 		return new AsoBuilder(aso);
@@ -56,6 +58,24 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 			
 			return asos.get("destino");
 		};
+		
+		this.loadAptidoes = asos -> {
+			if(asos.get("origem").getAptidoes() != null)
+				asos.get("destino").setAptidoes(AptidaoBuilder
+						.newInstance(asos.get("origem").getAptidoes())
+						.loadGrupoMonitoramento()
+						.getEntityList());
+			
+			return asos.get("destino");
+		};
+		
+		this.loadExamesConvocacao = asos -> {
+			if(asos.get("origem").getExamesConvocacao() != null) {
+				asos.get("destino").setExamesConvocacao(
+						ExameBuilder.newInstance(asos.get("origem").getExamesConvocacao()).getEntityList());
+			}
+			return asos.get("destino");
+		};
 	}
 
 	@Override
@@ -69,6 +89,11 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 		newAso.setVersion(aso.getVersion());
 		newAso.setConforme(aso.isConforme());
 		newAso.setNaoConformidades(aso.getNaoConformidades());
+		newAso.setImpressoSd2000(aso.isImpressoSd2000());
+		newAso.setPendente(aso.isPendente());
+		newAso.setAusenciaExames(aso.isAusenciaExames());
+		newAso.setDataRestricao(aso.getDataRestricao());
+		newAso.setConvocado(aso.isConvocado());
 		
 		return newAso;
 	}
@@ -83,6 +108,14 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 	
 	public AsoBuilder loadAlteracoes() {
 		return (AsoBuilder) this.loadProperty(this.loadAlteracoes);
+	}
+	
+	public AsoBuilder loadAptidoes() {
+		return (AsoBuilder) this.loadProperty(this.loadAptidoes);
+	}
+	
+	public AsoBuilder loadExamesConvocacao() {
+		return (AsoBuilder) this.loadProperty(this.loadExamesConvocacao);
 	}
 
 	@Override

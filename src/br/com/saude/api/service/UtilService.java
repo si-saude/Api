@@ -14,6 +14,7 @@ import br.com.saude.api.generic.GenericConstant;
 import br.com.saude.api.util.RequestInterceptor;
 import br.com.saude.api.util.constant.Abrangencia;
 import br.com.saude.api.util.constant.AcaoResultadoExame;
+import br.com.saude.api.util.constant.AptidaoAso;
 import br.com.saude.api.util.constant.AptidaoCardiorrespiratoria;
 import br.com.saude.api.util.constant.AptidaoFisicaBrigadista;
 import br.com.saude.api.util.constant.AtividadeFornecedor;
@@ -79,7 +80,14 @@ public class UtilService {
 		.filter(f-> filter!=null?f.getValue().toLowerCase().contains(filter.toLowerCase()):true)
 		.collect(Collectors.toMap(e->e.getKey(),e->e.getValue()));
 	}
+
 	
+	@GET
+	@Path("/aptidao-aso")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAptidaoAso(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(AptidaoAso.getInstance(),filter)).build();
+	}
 	@GET
 	@Path("/funcionalidade")
 	@Produces(MediaType.APPLICATION_JSON)

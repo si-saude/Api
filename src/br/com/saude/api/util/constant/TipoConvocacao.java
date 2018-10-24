@@ -17,6 +17,7 @@ public class TipoConvocacao extends GenericConstant {
 	}
 	
 	public static final String PERIODICO 				= "PERIÓDICO";
+	public static final String REAVALIACAO_PERIODICO 				= "REAVALIAÇÃO DO PERIÓDICO";
 	public static final String RETORNO_AO_TRABALHO		= "RETORNO AO TRABALHO";
 	public static final String MUDANCA_DE_FUNCAO		= "MUDANÇA DE FUNÇÃO";
 	public static final String DEMISSIONAL				= "DEMISSIONAL";

@@ -35,6 +35,8 @@ public class AsoDao extends GenericDao<Aso> {
 			if(aso.getAsoAlteracoes() != null)
 				Hibernate.initialize(aso.getAsoAlteracoes());
 			
+			aso = loadExamesConvocacao(aso);
+			
 			return aso;
 		};
 		
@@ -83,6 +85,12 @@ public class AsoDao extends GenericDao<Aso> {
 			HibernateHelper.close(session);
 		}
 		
+		return aso;
+	}
+	
+	private Aso loadExamesConvocacao(Aso aso) {
+		if (aso.getExamesConvocacao() != null)
+			Hibernate.initialize(aso.getExamesConvocacao());
 		return aso;
 	}
 }

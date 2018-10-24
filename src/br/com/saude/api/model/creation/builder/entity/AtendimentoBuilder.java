@@ -46,6 +46,9 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 			if(atendimentos.get("origem").getAso() != null)
 				atendimentos.get("destino").setAso(AsoBuilder
 						.newInstance(atendimentos.get("origem").getAso())
+						.loadAptidoes()
+						.loadAlteracoes()
+						.loadExamesConvocacao()
 						.getEntity());
 			return atendimentos.get("destino");
 		};
@@ -65,7 +68,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 		
 		newAtendimento.setId(atendimento.getId());
 		newAtendimento.setVersion(atendimento.getVersion());
-		
+				
 		if(atendimento.getFilaAtendimentoOcupacional() != null) {
 			FilaAtendimentoOcupacionalBuilder filaAtendBuilder = FilaAtendimentoOcupacionalBuilder
 					.newInstance(atendimento.getFilaAtendimentoOcupacional());

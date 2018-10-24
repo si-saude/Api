@@ -37,6 +37,8 @@ public class Atendimento {
 	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private Aso aso;
 	
+	
+	
 	@OneToMany(mappedBy="atendimento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Triagem> triagens;
 	

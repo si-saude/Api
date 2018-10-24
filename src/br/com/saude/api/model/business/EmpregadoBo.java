@@ -44,6 +44,7 @@ public class EmpregadoBo
 		extends GenericBo<Empregado, EmpregadoFilter, EmpregadoDao, EmpregadoBuilder, EmpregadoExampleBuilder> {
 
 	private Function<EmpregadoBuilder, EmpregadoBuilder> functionLoadGrupoMonitoramentos;
+	private Function<EmpregadoBuilder, EmpregadoBuilder> functionLoadTipoGrupoMonitoramentos;
 	private Function<EmpregadoBuilder, EmpregadoBuilder> functionLoadGrupoMonitoramentosExames;
 
 	private static EmpregadoBo instance;
@@ -70,6 +71,10 @@ public class EmpregadoBo
 					.loadTelefones().loadEnfase();
 		};
 
+		this.functionLoadTipoGrupoMonitoramentos = builder -> {
+			return this.functionLoad.apply(builder).loadTipoGrupoMonitoramento();
+		};
+		
 		this.functionLoadGrupoMonitoramentos = builder -> {
 			return this.functionLoad.apply(builder).loadGrupoMonitoramentos();
 		};
@@ -114,6 +119,10 @@ public class EmpregadoBo
 
 	public Empregado getByIdLoadGrupoMonitoramentos(Object id) throws Exception {
 		return getByEntity(getDao().getByIdLoadGrupoMonitoramento(id), this.functionLoadGrupoMonitoramentosExames);
+	}
+	
+	public Empregado getByIdLoadTipoGrupoMonitoramento(Object id) throws Exception {
+		return getByEntity(getDao().getByIdLoadTipoGrupoMonitoramento(id), this.functionLoadTipoGrupoMonitoramentos);
 	}
 
 	@Override

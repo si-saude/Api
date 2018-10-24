@@ -28,6 +28,10 @@ public class AsoExampleBuilder extends GenericExampleBuilder<Aso, AsoFilter> {
 		addAtendimento();
 		addConforme();
 		addNaoConformidades();
+		addAusenciaExames();
+		addImpressoSd2000();
+		addPendente();
+		addConvocado();
 	}
 
 	@Override
@@ -71,5 +75,18 @@ public class AsoExampleBuilder extends GenericExampleBuilder<Aso, AsoFilter> {
 	private void addNaoConformidades() {
 		if(this.filter.getNaoConformidades() != null)
 			this.entity.setNaoConformidades(Helper.filterLike(this.filter.getNaoConformidades()));
+	}
+	
+	protected void addAusenciaExames() {
+		this.entity.setAusenciaExames(this.addBoolean("ausenciaExames", this.filter.getAusenciaExames()));
+	}
+	protected void addImpressoSd2000() {
+		this.entity.setImpressoSd2000(this.addBoolean("impressoSd2000", this.filter.getImpressoSd2000()));
+	}
+	protected void addPendente() {
+		this.entity.setPendente(this.addBoolean("pendente", this.filter.getPendente()));
+	}
+	protected void addConvocado() {
+		this.entity.setConvocado(this.addBoolean("convocado", this.filter.getConvocado()));
 	}
 }

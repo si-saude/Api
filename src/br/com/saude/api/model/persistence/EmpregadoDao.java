@@ -27,6 +27,7 @@ import br.com.saude.api.model.entity.po.HistoricoGrupoMonitoramento;
 public class EmpregadoDao extends GenericDao<Empregado>  {
 	
 	private Function<Empregado,Empregado> functionLoadGrupoMonitoramentos;
+	private Function<Empregado,Empregado> functionLoadTipoGrupoMonitoramento;
 	private Function<Empregado,Empregado> functionLoadGrupoMonitoramentosExames;
 	
 	private static EmpregadoDao instance;
@@ -72,6 +73,12 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 		this.functionLoadGrupoMonitoramentos = empregado -> {
 			empregado = this.functionLoad.apply(empregado);
 			empregado = loadGrupoMonitoramentos(empregado);
+			return empregado;
+		};
+		
+		this.functionLoadTipoGrupoMonitoramento = empregado -> {
+			empregado = this.functionLoad.apply(empregado);
+			empregado = loadGrupoTipoMonitoramento(empregado);
 			return empregado;
 		};
 		
@@ -281,6 +288,20 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			Hibernate.initialize(empregado.getGrupoMonitoramentos());
 		return empregado;
 	}
+
+	private Empregado loadGrupoTipoMonitoramento(Empregado empregado) {
+		if(empregado.getGrupoMonitoramentos()!=null) {
+			Hibernate.initialize(empregado.getGrupoMonitoramentos());
+			
+			empregado.getGrupoMonitoramentos().forEach(g->{
+				if(g.getTipoGrupoMonitoramento() != null) {
+				   Hibernate.initialize(g.getTipoGrupoMonitoramento());
+				}
+			
+			});
+			}
+		return empregado;
+	}
 	
 	private Empregado loadEnfase(Empregado empregado) {
 		if(empregado.getEnfase()!=null)
@@ -324,6 +345,10 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 		return super.getById(id,this.functionLoadGrupoMonitoramentosExames);
 	}
 	
+	public Empregado getByIdLoadTipoGrupoMonitoramento(Object id) throws Exception {
+		return super.getById(id,this.functionLoadTipoGrupoMonitoramento);
+	}
+	
 	public PagedList<Empregado> getListFunctionLoad(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
 		return getList(exampleBuilder,this.functionLoad);
 	}
@@ -333,6 +358,10 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	}
 	
 	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentos(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
+		return getList(exampleBuilder,this.functionLoadGrupoMonitoramentos);
+	}
+	
+	public PagedList<Empregado> getListFunctionLoadTipoGrupoMonitoramento(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
 		return getList(exampleBuilder,this.functionLoadGrupoMonitoramentos);
 	}
 	
