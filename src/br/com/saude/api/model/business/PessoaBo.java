@@ -1,10 +1,7 @@
 package br.com.saude.api.model.business;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
-
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.creation.builder.entity.PessoaBuilder;
 import br.com.saude.api.model.creation.builder.example.PessoaExampleBuilder;
 import br.com.saude.api.model.entity.filter.PessoaFilter;
@@ -32,10 +29,7 @@ public class PessoaBo extends GenericBo<Pessoa, PessoaFilter, PessoaDao, PessoaB
 	
 	public Pessoa loadIdade(Pessoa pessoa) {
 		if(pessoa.getDataNascimento() != null) {
-			Period periodo = Period.between(pessoa.getDataNascimento().toInstant()
-					.atZone(ZoneId.systemDefault()).toLocalDate(), 
-					LocalDate.now());
-			pessoa.setIdade(periodo.getYears());
+			pessoa.setIdade(Helper.calculateIdade(pessoa.getDataNascimento()).getYears());
 		}
 		return pessoa;
 	}

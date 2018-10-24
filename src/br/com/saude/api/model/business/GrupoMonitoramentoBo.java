@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -28,8 +27,6 @@ import br.com.saude.api.model.persistence.GrupoMonitoramentoDao;
 public class GrupoMonitoramentoBo extends
 		GenericBo<GrupoMonitoramento, GrupoMonitoramentoFilter, GrupoMonitoramentoDao, GrupoMonitoramentoBuilder, GrupoMonitoramentoExampleBuilder> {
 
-	private Function<GrupoMonitoramentoBuilder, GrupoMonitoramentoBuilder> functionLoadGrupoMonitoramentoExames;
-
 	private static GrupoMonitoramentoBo instance;
 
 	private GrupoMonitoramentoBo() {
@@ -49,11 +46,7 @@ public class GrupoMonitoramentoBo extends
 		};
 
 		this.functionLoadAll = builder -> {
-			return this.functionLoad.apply(builder).loadGrupoMonitoramentoExames().loadEmpregados();
-		};
-
-		this.functionLoadGrupoMonitoramentoExames = builder -> {
-			return this.functionLoad.apply(builder).loadGrupoMonitoramentoExames();
+			return this.functionLoad.apply(builder).loadEmpregados().loadAvaliacoes();
 		};
 	}
 
@@ -67,24 +60,10 @@ public class GrupoMonitoramentoBo extends
 		return this.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()), this.functionLoad);
 	}
 
-	public PagedList<GrupoMonitoramento> getListLoadGrupoMonitoramentoExames(GrupoMonitoramentoFilter filter)
-			throws Exception {
-		return this.getList(getDao().getListFunctionLoadGrupoMonitoramentoExames(getExampleBuilder(filter).example()),
-				this.functionLoadGrupoMonitoramentoExames);
-	}
-
 	@Override
 	public List<GrupoMonitoramento> getSelectList(GrupoMonitoramentoFilter filter) throws Exception {
 		return this.getSelectList(getDao().getListFunctionLoad(getExampleBuilder(filter).example()).getList(),
 				this.functionLoad);
-	}
-
-	@Override
-	public GrupoMonitoramento save(GrupoMonitoramento grupoMonitoramento) throws Exception {
-
-		grupoMonitoramento.getGrupoMonitoramentoExames().forEach(g -> g.setGrupoMonitoramento(grupoMonitoramento));
-
-		return super.save(grupoMonitoramento);
 	}
 
 	public void importFile(File arquivo) throws IllegalAccessException, IllegalArgumentException,
@@ -147,5 +126,13 @@ public class GrupoMonitoramentoBo extends
 		if ( gmonits != null)
 			return gmonits;
 		return null;
+	}
+	
+	@Override
+	public GrupoMonitoramento save(GrupoMonitoramento grupo) throws Exception {
+		if(grupo.getAvaliacoes() != null)
+			grupo.getAvaliacoes().forEach(a->a.setGrupoMonitoramento(grupo));
+		
+		return super.save(grupo);
 	}
 }

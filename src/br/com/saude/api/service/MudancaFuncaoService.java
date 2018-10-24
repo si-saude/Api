@@ -1,6 +1,8 @@
 package br.com.saude.api.service;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,19 +12,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import br.com.saude.api.generic.CustomValidator;
+import br.com.saude.api.generic.GenericReportService;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
 import br.com.saude.api.model.business.MudancaFuncaoBo;
 import br.com.saude.api.model.business.validate.MudancaFuncaoValidator;
+import br.com.saude.api.model.entity.dto.MudancaFuncaoDto;
 import br.com.saude.api.model.entity.filter.MudancaFuncaoFilter;
 import br.com.saude.api.model.entity.po.MudancaFuncao;
 import br.com.saude.api.util.RequestInterceptor;
 
 @Path("mudanca-funcao")
 public class MudancaFuncaoService extends GenericServiceImpl<MudancaFuncao, MudancaFuncaoFilter, MudancaFuncaoBo>
-		implements GenericService<MudancaFuncao, MudancaFuncaoFilter> 
+		implements GenericReportService<MudancaFuncaoDto, MudancaFuncaoBo>, GenericService<MudancaFuncao, MudancaFuncaoFilter> 
 {
 
 	@Override
@@ -124,4 +129,28 @@ public class MudancaFuncaoService extends GenericServiceImpl<MudancaFuncao, Muda
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/get-mudanca-funcoes")
+	public Response getMudancaFuncoes() throws IOException {
+		try {
+			return Response.ok( MudancaFuncaoBo.getInstance().getMudancaFuncoes() ).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-file")
+	public Response getFile(List<MudancaFuncaoDto> entities) throws IOException {
+		try {
+			return Response.ok( this.exportXLSXFile(entities) ).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
 }

@@ -2,14 +2,12 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
@@ -30,10 +28,13 @@ public class EmpregadoConvocacaoExame {
 	
 	private boolean conforme;
 	
+	private boolean exigeRelatorio;
+	
 	private Date realizacao;
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
-	private RelatorioMedico relatorioMedico;
+	private Date recebimento;
+	
+	private Date auditoria;
 	
 	@Version
 	private long version;
@@ -70,20 +71,6 @@ public class EmpregadoConvocacaoExame {
 		this.conforme = conforme;
 	}
 
-	public RelatorioMedico getRelatorioMedico() {
-		return relatorioMedico;
-	}
-
-	public void setRelatorioMedico(RelatorioMedico relatorioMedico) {
-		this.relatorioMedico = relatorioMedico;
-	}
-	
-	public boolean isPendenteRelatorio() {
-		if(this.relatorioMedico != null && !this.relatorioMedico.isFinalizado())
-			return true;
-		return false;
-	}
-
 	public long getVersion() {
 		return version;
 	}
@@ -100,6 +87,30 @@ public class EmpregadoConvocacaoExame {
 		this.realizacao = realizacao;
 	}
 	
+	public Date getRecebimento() {
+		return recebimento;
+	}
+
+	public void setRecebimento(Date recebimento) {
+		this.recebimento = recebimento;
+	}
+
+	public Date getAuditoria() {
+		return auditoria;
+	}
+
+	public void setAuditoria(Date auditoria) {
+		this.auditoria = auditoria;
+	}
+
+	public boolean isExigeRelatorio() {
+		return exigeRelatorio;
+	}
+
+	public void setExigeRelatorio(boolean exigeRelatorio) {
+		this.exigeRelatorio = exigeRelatorio;
+	}
+
 	@Override
 	public boolean equals(Object e) {
 		return ((EmpregadoConvocacaoExame)e).id == this.id && this.id > 0;

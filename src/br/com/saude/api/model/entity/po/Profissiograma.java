@@ -9,9 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -30,11 +28,8 @@ public class Profissiograma {
 	
 	private boolean concluido;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinTable(name="profissiograma_grupomonitoramento", 
-	joinColumns = {@JoinColumn(name="profissiograma_id")}, 
-	inverseJoinColumns = {@JoinColumn(name="grupomonitoramento_id")})
-	private List<GrupoMonitoramento> grupoMonitoramentos;
+	@OneToMany(mappedBy="profissiograma", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<GrupoMonitoramentoProfissiograma> grupoMonitoramentoProfissiogramas;
 	
 	@Version
 	private long version;
@@ -55,14 +50,6 @@ public class Profissiograma {
 		this.nome = nome;
 	}
 
-	public List<GrupoMonitoramento> getGrupoMonitoramentos() {
-		return grupoMonitoramentos;
-	}
-
-	public void setGrupoMonitoramentos(List<GrupoMonitoramento> grupoMonitoramentos) {
-		this.grupoMonitoramentos = grupoMonitoramentos;
-	}
-
 	public long getVersion() {
 		return version;
 	}
@@ -77,5 +64,14 @@ public class Profissiograma {
 
 	public void setConcluido(boolean concluido) {
 		this.concluido = concluido;
+	}
+
+	public List<GrupoMonitoramentoProfissiograma> getGrupoMonitoramentoProfissiogramas() {
+		return grupoMonitoramentoProfissiogramas;
+	}
+
+	public void setGrupoMonitoramentoProfissiogramas(
+			List<GrupoMonitoramentoProfissiograma> grupoMonitoramentoProfissiogramas) {
+		this.grupoMonitoramentoProfissiogramas = grupoMonitoramentoProfissiogramas;
 	}
 }

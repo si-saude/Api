@@ -119,26 +119,12 @@ public class AsoBo
 			}
 		});
 		
-		empregado.getGrupoMonitoramentos().forEach(g -> {
-			try {
-				g.setGrupoMonitoramentoExames(
-						GrupoMonitoramentoBo.getInstance().getById(g.getId()).getGrupoMonitoramentoExames());
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		});
-		
 		if(eC != null)
 			eC.getEmpregadoConvocacaoExames().forEach(e->{
 				RequisitoAso requisito = new RequisitoAso();
 				requisito.setConteudo(e.getExame().getCodigo()+" - "+e.getExame().getDescricao());
 				
 				//SE O EXAME FOR OPCIONAL PARA O EMPREGADO, ADICIONAR OPCIONAL NO CONTEÚDO DO REQUISITO
-				if ( empregado.getGrupoMonitoramentos().stream().filter(g->{
-					return g.getGrupoMonitoramentoExames().stream().filter(ee->{
-						return ee.getExame().getId() == e.getExame().getId() && !ee.isOpcional();
-					}).count() > 0;
-				}).count() == 0 ) requisito.setConteudo(requisito.getConteudo() + " (OPCIONAL)");;
 				
 				requisitos.add(requisito);
 			});

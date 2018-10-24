@@ -10,7 +10,7 @@ import br.com.saude.api.model.entity.po.Profissiograma;
 
 public class ProfissiogramaBuilder extends GenericEntityBuilder<Profissiograma, ProfissiogramaFilter> {
 
-	private Function<Map<String,Profissiograma>,Profissiograma> loadGrupoMonitoramentos;
+	private Function<Map<String,Profissiograma>,Profissiograma> loadGrupoMonitoramentoProfissiogramas;
 	
 	public static ProfissiogramaBuilder newInstance(Profissiograma profissiograma) {
 		return new ProfissiogramaBuilder(profissiograma);
@@ -30,12 +30,12 @@ public class ProfissiogramaBuilder extends GenericEntityBuilder<Profissiograma, 
 
 	@Override
 	protected void initializeFunctions() {
-		this.loadGrupoMonitoramentos = profissiogramas -> {
-			if(profissiogramas.get("origem").getGrupoMonitoramentos() != null)
-				profissiogramas.get("destino").setGrupoMonitoramentos(
-						GrupoMonitoramentoBuilder
-						.newInstance(profissiogramas.get("origem").getGrupoMonitoramentos())
-						.loadGrupoMonitoramentoExames().loadTipoGrupoMonitoramento()
+		this.loadGrupoMonitoramentoProfissiogramas = profissiogramas -> {
+			if(profissiogramas.get("origem").getGrupoMonitoramentoProfissiogramas() != null)
+				profissiogramas.get("destino").setGrupoMonitoramentoProfissiogramas(
+						GrupoMonitoramentoProfissiogramaBuilder
+						.newInstance(profissiogramas.get("origem").getGrupoMonitoramentoProfissiogramas())
+						.loadGrupoMonitoramentoProfissiogramaExames()
 						.getEntityList());
 			return profissiogramas.get("destino");
 		};
@@ -53,8 +53,8 @@ public class ProfissiogramaBuilder extends GenericEntityBuilder<Profissiograma, 
 		return newProfissiograma;
 	}
 	
-	public ProfissiogramaBuilder loadGrupoMonitoramentos() {
-		return (ProfissiogramaBuilder) this.loadProperty(this.loadGrupoMonitoramentos);
+	public ProfissiogramaBuilder loadGrupoMonitoramentoProfissiogramas() {
+		return (ProfissiogramaBuilder) this.loadProperty(this.loadGrupoMonitoramentoProfissiogramas);
 	}
 
 	@Override

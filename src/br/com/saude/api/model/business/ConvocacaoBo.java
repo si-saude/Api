@@ -15,9 +15,12 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -30,21 +33,26 @@ import com.itextpdf.text.html.simpleparser.HTMLWorker;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import br.com.saude.api.generic.BooleanFilter;
+import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.generic.StringReplacer;
+import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.ConvocacaoBuilder;
 import br.com.saude.api.model.creation.builder.example.ConvocacaoExampleBuilder;
 import br.com.saude.api.model.creation.factory.entity.AsoFactory;
 import br.com.saude.api.model.creation.factory.entity.ExameFactory;
-import br.com.saude.api.model.creation.factory.entity.ResultadoExameFactory;
+import br.com.saude.api.model.entity.filter.ClinicaFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
+import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoExameFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
+import br.com.saude.api.model.entity.filter.ExameFilter;
 import br.com.saude.api.model.entity.filter.GerenciaFilter;
 import br.com.saude.api.model.entity.filter.GrupoMonitoramentoFilter;
-import br.com.saude.api.model.entity.filter.ResultadoExameFilter;
 import br.com.saude.api.model.entity.po.Aso;
+import br.com.saude.api.model.entity.po.Clinica;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Criterio;
 import br.com.saude.api.model.entity.po.Empregado;
@@ -55,8 +63,6 @@ import br.com.saude.api.model.entity.po.Gerencia;
 import br.com.saude.api.model.entity.po.GerenciaConvocacao;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.Profissiograma;
-import br.com.saude.api.model.entity.po.RelatorioMedico;
-import br.com.saude.api.model.entity.po.ResultadoExame;
 import br.com.saude.api.model.persistence.ConvocacaoDao;
 import br.com.saude.api.util.constant.Operador;
 import br.com.saude.api.util.constant.TipoCriterio;
@@ -97,16 +103,11 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		if(empregadoConvocacao.getEmpregadoConvocacaoExames() == null)
 			empregadoConvocacao.setEmpregadoConvocacaoExames(new ArrayList<EmpregadoConvocacaoExame>());
 		
+		//REGISTRAR A EXIGÊNCIA DE RELATÓRIO MÉDICO
 		exames.forEach(e->{
-			//SE O EXAME EXIGIR RELATÓRIO MÉDICO, ADICIONAR O RELATÓRIO
 			EmpregadoConvocacaoExame empregadoConvocacaoExame = new EmpregadoConvocacaoExame();
 			empregadoConvocacaoExame.setExame(e);
-			
-			if(e.isExigeRelatorio()) {
-				RelatorioMedico relatorioMedico = new RelatorioMedico();
-				empregadoConvocacaoExame.setRelatorioMedico(relatorioMedico);
-			}
-			
+			empregadoConvocacaoExame.setExigeRelatorio(e.isExigeRelatorio());
 			empregadoConvocacao.getEmpregadoConvocacaoExames().add(empregadoConvocacaoExame);
 		});
 		
@@ -137,7 +138,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		filter.setPageSize(Integer.MAX_VALUE);
 		
 		List<Empregado> empregados = EmpregadoBo.getInstance()
-									.getListFunctionLoadGrupoMonitoramentosExames(filter).getList();
+									.getListFunctionLoadGrupoMonitoramentos(filter).getList();
 		
 		empregados.forEach(e->{
 			List<Exame> exameList = new ArrayList<Exame>();
@@ -158,15 +159,11 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 				List<EmpregadoConvocacaoExame> empregadoConvocacaoExames = new ArrayList<EmpregadoConvocacaoExame>(); 
 				empregadoConvocacao = new EmpregadoConvocacao();
 				
+				//REGISTRAR A EXIGÊNCIA DE RELATÓRIO MÉDICO
 				exameList.forEach(eE->{
 					EmpregadoConvocacaoExame empregadoConvocacaoExame = new EmpregadoConvocacaoExame();
 					empregadoConvocacaoExame.setExame(eE);
-					
-					if(eE.isExigeRelatorio()) {
-						RelatorioMedico relatorioMedico = new RelatorioMedico();
-						empregadoConvocacaoExame.setRelatorioMedico(relatorioMedico);
-					}
-					
+					empregadoConvocacaoExame.setExigeRelatorio(eE.isExigeRelatorio());
 					empregadoConvocacaoExames.add(empregadoConvocacaoExame);
 				});
 				
@@ -218,99 +215,130 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			//CARREGAR O EMPREGADO
 			eC.setEmpregado(EmpregadoBo.getInstance().getById(eC.getEmpregado().getId()));
 			
-			//SUBSTITUIR AS VARIÁVEIS
-			StringReplacer stringReplacer = new StringReplacer(html.toString());
-			stringReplacer = stringReplacer
-				.replace("nomeEmpregado", eC.getEmpregado().getPessoa().getNome())
-				.replace("matriculaEmpregado", Objects.toString(eC.getEmpregado().getMatricula(),"---"))
-				.replace("cpfEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getCpf(),"---"))
-				.replace("chaveEmpregado", Objects.toString(eC.getEmpregado().getChave(),"---"))
-				.replace("gerenciaEmpregado", eC.getEmpregado().getGerencia().getCodigoCompleto())
-				.replace("turmaEmpregado", "---")
-				.replace("tipoConvocacao", Objects.toString(convocacao.getTipo(),"---"))
-				.replace("centroCusto", "---")
-				.replace("emailEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getEmail(),"---"))
-				.replace("data", new Date().toLocaleString().substring(0, 10));
+			//GERAR GUIAS SEPARADAS POR CLÍNICA
+			ClinicaFilter cFilter = new ClinicaFilter();
+			cFilter.setPageNumber(1);
+			cFilter.setPageSize(Integer.MAX_VALUE);
+			cFilter.setUf(eC.getEmpregado().getBase().getUf());
+			PagedList<Clinica> clinicas = ClinicaBo.getInstance().getListLoadAll(cFilter);
+			List<EmpregadoConvocacaoExame> empregadoExames = new ArrayList<EmpregadoConvocacaoExame>();
 			
-			if(eC.getEmpregado().getCargo() != null)
-				stringReplacer.replace("cargoEmpregado", Objects.toString(eC.getEmpregado().getCargo().getNome(),"---"));
-			else
-				stringReplacer.replace("cargoEmpregado","---");
-			
-			if(eC.getEmpregado().getPessoa().getDataNascimento() != null)
-				stringReplacer.replace("dataNascimentoEmpregado", eC.getEmpregado().getPessoa().getDataNascimento().toLocaleString().substring(0, 10));
-			else
-				stringReplacer.replace("dataNascimentoEmpregado","---");
-			
-			//OBTER O MÊS DA CONVOCAÇÃO
-			
-			if(convocacao.getFim() != null) {
-				stringReplacer.replace("mesConvocacao", 
-						new SimpleDateFormat("MMMMMMMMMM").format(convocacao.getFim()) +"/"+
-						new SimpleDateFormat("YYYY").format(convocacao.getFim()));
-			} else
-				stringReplacer.replace("mesConvocacao","---");
-			
-			URI logoUri = new URI(Helper.getProjectPath()
-					.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
-			stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath());
-			
-			//EXAMES
-			if(eC.getEmpregadoConvocacaoExames().size() < 26) {
-				int total = eC.getEmpregadoConvocacaoExames().size(); 
-				for(int i=0; i<26; i++) {
-					if(eC.getEmpregadoConvocacaoExames().size() == 26)
-						break;
+			if(clinicas.getTotal() > 0) {
+				for(Clinica clinica : clinicas.getList()) {
 					
-					if( ((i+1)%2 == 0 || (i/2 >= total)) && (total - i)+1+total <= 26 ) {
-						Exame e = ExameFactory.newInstance().descricao("&nbsp;").get();
-						EmpregadoConvocacaoExame eE = new EmpregadoConvocacaoExame();
-						eE.setExame(e);
-						try {
-							eC.getEmpregadoConvocacaoExames().add(i, eE);
-						}catch(IndexOutOfBoundsException ex) {
-							eC.getEmpregadoConvocacaoExames().add(eE);
+					eC.getEmpregadoConvocacaoExames().forEach(e->{
+						if(clinica.getExames().contains(e.getExame())) {
+							EmpregadoConvocacaoExame empregadoExame = new EmpregadoConvocacaoExame();
+							empregadoExame.setExame(e.getExame());
+							empregadoExames.add(empregadoExame);
+						}
+					});
+					
+					//SUBSTITUIR AS VARIÁVEIS
+					StringReplacer stringReplacer = new StringReplacer(html.toString());
+					stringReplacer = stringReplacer
+							.replace("nomeClinica", clinica.getNome())
+							.replace("enderecoClinica", Objects.toString(clinica.getEndereco(),"---"))
+							.replace("telefonesClinica", Objects.toString(clinica.getTelefones(),"---"))
+							.replace("nomeEmpregado", eC.getEmpregado().getPessoa().getNome())
+							.replace("matriculaEmpregado", Objects.toString(eC.getEmpregado().getMatricula(),"---"))
+							.replace("cpfEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getCpf(),"---"))
+							.replace("chaveEmpregado", Objects.toString(eC.getEmpregado().getChave(),"---"))
+							.replace("gerenciaEmpregado", eC.getEmpregado().getGerencia().getCodigoCompleto())
+							.replace("turmaEmpregado", "---")
+							.replace("tipoConvocacao", Objects.toString(convocacao.getTipo(),"---"))
+							.replace("centroCusto", "---")
+							.replace("emailEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getEmail(),"---"))
+							.replace("data", new Date().toLocaleString().substring(0, 10));
+					
+					if(eC.getEmpregado().getCargo() != null)
+						stringReplacer.replace("cargoEmpregado", Objects.toString(eC.getEmpregado().getCargo().getNome(),"---"));
+					else
+						stringReplacer.replace("cargoEmpregado","---");
+					
+					if(eC.getEmpregado().getPessoa().getDataNascimento() != null)
+						stringReplacer.replace("dataNascimentoEmpregado", eC.getEmpregado().getPessoa().getDataNascimento().toLocaleString().substring(0, 10));
+					else
+						stringReplacer.replace("dataNascimentoEmpregado","---");
+					
+					//OBTER O MÊS DA CONVOCAÇÃO
+					
+					if(convocacao.getFim() != null) {
+						stringReplacer.replace("mesConvocacao", 
+								new SimpleDateFormat("MMMMMMMMMM").format(convocacao.getFim()) +"/"+
+										new SimpleDateFormat("YYYY").format(convocacao.getFim()));
+					} else
+						stringReplacer.replace("mesConvocacao","---");
+					
+					URI logoUri = new URI(Helper.getProjectPath()
+							.replace("/WEB-INF/classes", "")+"IMAGE/petrobras.png");
+					stringReplacer = stringReplacer.replace("logoPetrobras", logoUri.getPath());
+					
+					//EXAMES
+					if(empregadoExames.size() < 26) {
+						int total = empregadoExames.size(); 
+						for(int i=0; i<26; i++) {
+							if(empregadoExames.size() == 26)
+								break;
+							
+							if( ((i+1)%2 == 0 || (i/2 >= total)) && (total - i)+1+total <= 26 ) {
+								Exame e = ExameFactory.newInstance().descricao("&nbsp;").get();
+								EmpregadoConvocacaoExame eE = new EmpregadoConvocacaoExame();
+								eE.setExame(e);
+								try {
+									empregadoExames.add(i, eE);
+								}catch(IndexOutOfBoundsException ex) {
+									empregadoExames.add(eE);
+								}
+							}
 						}
 					}
+					
+					String exames = "";
+					String linha = "";
+					int i = 0;
+					boolean exigeRelatorio = false;
+					
+					for(EmpregadoConvocacaoExame e : empregadoExames) {
+						if(i == 0) {
+							linha += "<tr><td>"+e.getExame().getDescricao()+"</td>";
+							i++;
+						}else {
+							linha += "<td>"+e.getExame().getDescricao()+"</td></tr>";
+							exames+= linha;
+							linha = "";
+							i = 0;
+						}
+						
+						if(!exigeRelatorio && e.isExigeRelatorio())
+							exigeRelatorio = true;
+					}
+					
+					if(linha != "") {
+						linha += "<td></td></tr>";
+						exames+= linha;
+					}
+					stringReplacer = stringReplacer.replace("exames", exames);
+					
+					//GERAR PDF
+					pdfUri = new URI(uri.getPath()+"/"+Objects.toString(eC.getEmpregado().getMatricula().trim()+"-","")
+					+"EXAMES_COMPLEMENTARES_"
+					+clinica.getNome().replace(" ", "_")+""
+					+ (exigeRelatorio ? "_exige_relatorio_medico" : "")
+					+".pdf");
+					pdf = new File(pdfUri.getPath());
+					OutputStream stream = new FileOutputStream(pdf);
+					Document doc = new Document();
+					PdfWriter.getInstance(doc, stream);
+					doc.open();
+					
+					HTMLWorker htmlWorker = new HTMLWorker(doc);
+					htmlWorker.parse(new StringReader(stringReplacer.result()));
+					
+					doc.close();
+					stream.close();
 				}
 			}
-			
-			String exames = "";
-			String linha = "";
-			int i = 0;
-			
-			for(EmpregadoConvocacaoExame e : eC.getEmpregadoConvocacaoExames()) {
-				if(i == 0) {
-					linha += "<tr><td>"+e.getExame().getDescricao()+"</td>";
-					i++;
-				}else {
-					linha += "<td>"+e.getExame().getDescricao()+"</td></tr>";
-					exames+= linha;
-					linha = "";
-					i = 0;
-				}
-			}
-			
-			if(linha != "") {
-				linha += "<td></td></tr>";
-				exames+= linha;
-			}
-			stringReplacer = stringReplacer.replace("exames", exames);
-			
-			//GERAR PDF
-			pdfUri = new URI(uri.getPath()+"/"+Objects.toString(eC.getEmpregado().getMatricula().trim()+"-","")
-			+"EXAMES_COMPLEMENTARES.pdf");
-			pdf = new File(pdfUri.getPath());
-			OutputStream stream = new FileOutputStream(pdf);
-			Document doc = new Document();
-			PdfWriter.getInstance(doc, stream);
-			doc.open();
-			
-			HTMLWorker htmlWorker = new HTMLWorker(doc);
-			htmlWorker.parse(new StringReader(stringReplacer.result()));
-			
-			doc.close();
-			stream.close();
 		}
 		
 		//RETIRAR OS REGISTROS CUJO ID DO EXAME == 0, DEPOIS SALVA CONVOCAÇÃO
@@ -415,16 +443,10 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 						if(eC.getEmpregadoConvocacaoExames().stream()
 							.filter(eCX->eCX.getExame().equals(e))
 							.count() == 0) {
-							
-							//SE O EXAME EXIGIR RELATÓRIO MÉDICO, ADICIONAR O RELATÓRIO
+							//REGISTRAR A EXIGÊNCIA DE RELATÓRIO MÉDICO
 							EmpregadoConvocacaoExame empregadoConvocacaoExame = new EmpregadoConvocacaoExame();
 							empregadoConvocacaoExame.setExame(e);
-							
-							if(e.isExigeRelatorio()) {
-								RelatorioMedico relatorioMedico = new RelatorioMedico();
-								empregadoConvocacaoExame.setRelatorioMedico(relatorioMedico);
-							}
-							
+							empregadoConvocacaoExame.setExigeRelatorio(e.isExigeRelatorio());
 							eC.getEmpregadoConvocacaoExames().add(empregadoConvocacaoExame);
 						}
 					});
@@ -475,8 +497,6 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 	}
 	
 	private List<Exame> getExames(Empregado empregado, Convocacao convocacao) throws Exception{
-		List<GrupoMonitoramento> grupoMonitoramentosProfissiograma = new ArrayList<GrupoMonitoramento>();
-		List<GrupoMonitoramento> grupoMonitoramentosRecorrentes = new ArrayList<GrupoMonitoramento>();
 		
 		Profissiograma profissiograma = convocacao.getProfissiograma();
 		
@@ -489,167 +509,162 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		filter.setPageSize(Integer.MAX_VALUE);
 		filter.setRecorrente(recorrente);
 		
-		grupoMonitoramentosRecorrentes = GrupoMonitoramentoBo.getInstance()
-											.getListLoadGrupoMonitoramentoExames(filter)
+		List<GrupoMonitoramento> grupoMonitoramentosRecorrentes = GrupoMonitoramentoBo.getInstance()
+											.getList(filter)
 											.getList();
 		
-		profissiograma.getGrupoMonitoramentos().addAll(grupoMonitoramentosRecorrentes);
+		List<Exame> exames = new ArrayList<Exame>();
+		Map<Integer,Integer> equivalencias = new HashMap<Integer,Integer>();
 		
-		
-		
-		//REMOVER GRUPOS DE MONITORAMENTO REPETIDOS
-		profissiograma.getGrupoMonitoramentos().forEach(g->{
-			if(!grupoMonitoramentosProfissiograma.contains(g))
-				grupoMonitoramentosProfissiograma.add(g);
-		});
-		profissiograma.setGrupoMonitoramentos(grupoMonitoramentosProfissiograma);
-		
-		List<GrupoMonitoramento> grupoMonitoramentos = new ArrayList<GrupoMonitoramento>();
-		List<Exame> exames = new ArrayList<Exame>();		
-		
-		profissiograma.getGrupoMonitoramentos().forEach(g->{
-			if(empregado.getGrupoMonitoramentos().contains(g))
-				grupoMonitoramentos.add(g);
-		});
-		
-		grupoMonitoramentos.forEach(g->{
-			g.getGrupoMonitoramentoExames().forEach(gE->{
-				Date dataConvocacao = null;
-				boolean criteriosAtendidos = true;
+		profissiograma.getGrupoMonitoramentoProfissiogramas().forEach(gmp -> {
+			
+			if(empregado.getGrupoMonitoramentos().contains(gmp.getGrupoMonitoramento()) ||
+					grupoMonitoramentosRecorrentes.contains(gmp.getGrupoMonitoramento()) ) {
 				
-				try {
-					dataConvocacao = getDataConvocacao(empregado, convocacao);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-				
-				//VERIFICAÇÃO DO ATENDIMENTO DOS CRITÉRIOS
-				loop:
-				for(Criterio criterio : gE.getCriterios()) {
-					String valor="";
-					
-					switch(criterio.getTipo()) {
-					   case TipoCriterio.IDADE :
-						   LocalDate nascimento = empregado.getPessoa().getDataNascimento().toInstant()
-						   							.atZone(ZoneId.systemDefault()).toLocalDate();
-						   Period periodo = Period.between(nascimento, dataConvocacao != null ? 
-								   								new java.sql.Date(dataConvocacao.getTime()).toLocalDate() : 
-							   											LocalDate.now());
-						   
-						   valor = periodo.getYears()+"";
-						   break;
-					      
-					   case TipoCriterio.SEXO :
-						   valor = empregado.getPessoa().getSexo();
-						   break;
-						      
-					   case TipoCriterio.EXAME :
-						   
-						   break;
-						   
-					   case TipoCriterio.CARGO :
-						   valor = empregado.getCargo().getId()+"";
-						   break;
-						      
-					   case TipoCriterio.FUNCAO :
-						   valor = empregado.getFuncao().getId()+"";   
-						   break;
-						   
-					   case TipoCriterio.EXIGE_RELATORIO_MEDICO :
-						   valor = Objects.toString(true);
-						   break;
-					   
-					   default :
-					}
-					
-					//SE O CRITÉRIO NÃO FOR SATISFEITO, SETAR FALSE NO FLAG E SAIR DA REPETIÇÃO
-					switch(criterio.getOperador()) {
-						
-						case Operador.IGUAL :
-							if(!valor.equals(criterio.getValor())) {
-								criteriosAtendidos = false;								
-								break loop;
-							}
-							break;
-							
-						case Operador.DIFERENTE:
-							if(valor.equals(criterio.getValor())) {
-								criteriosAtendidos = false;								
-								break loop;
-							}
-							break;
-							
-						case Operador.MAIOR:
-							if( !(valor.compareTo(criterio.getValor()) > 0) ) {
-								criteriosAtendidos = false;								
-								break loop;
-							}
-							break;
-							
-						case Operador.MAIOR_IGUAL:
-							if( !(valor.compareTo(criterio.getValor()) >= 0) ) {
-								criteriosAtendidos = false;								
-								break loop;
-							}
-							break;
-							
-						case Operador.MENOR:
-							if( !(valor.compareTo(criterio.getValor()) < 0) ) {
-								criteriosAtendidos = false;								
-								break loop;
-							}
-							break;
-							
-						case Operador.MENOR_IGUAL:
-							if( !(valor.compareTo(criterio.getValor()) <= 0) ) {
-								criteriosAtendidos = false;								
-								break loop;
-							}
-							break;
-						
-						default :
-					}
-				}
-				
-				boolean periodicidadeAtendida = true;
-
-				//VERIFICAÇÃO DA PERIODICIDADE
-				if(gE.getPeriodicidade() != null) {
-					
-					//1 - OBTER O ÚLTIMO RESULTADO DESTE EMPREGADO PARA ESTE EXAME
-					ResultadoExame resultadoExame = ResultadoExameFactory.newInstance()
-							.empregadoConvocacao().empregadoConvocacaoEmpregado(empregado)
-							.exame(gE.getExame()).get();
+				gmp.getGrupoMonitoramentoProfissiogramaExames().forEach(gE -> {
+					Date dataConvocacao = null;
+					boolean criteriosAtendidos = true;
 					
 					try {
-						resultadoExame = ResultadoExameBo.getInstance()
-								.getUltimoByEmpregadoExame(resultadoExame);
+						dataConvocacao = getDataConvocacao(empregado, convocacao);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 					
-					//2 - SE O RETORNO FOR DIFERENTE DE NULO, VERIFICAR SE O EXAME VAI VENCER NO
-					// ANO DO PERIÓDICO
-					if(resultadoExame != null && dataConvocacao != null) {								
-						//VERIFICAR SE O EXAME VAI VENCER NO ANO DO PERIÓDICO
-						if(Date.from(LocalDateTime.ofInstant(resultadoExame.getData().toInstant(), ZoneId.systemDefault())
-									.plusMonths(gE.getPeriodicidade().getMeses())
-									.atZone(ZoneId.systemDefault())
-									.toInstant())
-								.after(dataConvocacao))
-							periodicidadeAtendida = false;
+					//VERIFICAÇÃO DO ATENDIMENTO DOS CRITÉRIOS
+					loop:
+					for(Criterio criterio : gE.getCriterios()) {
+						String valor="";
+						
+						switch(criterio.getTipo()) {
+						   case TipoCriterio.IDADE :
+							   LocalDate nascimento = empregado.getPessoa().getDataNascimento().toInstant()
+							   							.atZone(ZoneId.systemDefault()).toLocalDate();
+							   Period periodo = Period.between(nascimento, dataConvocacao != null ? 
+									   								new java.sql.Date(dataConvocacao.getTime()).toLocalDate() : 
+								   											LocalDate.now());
+							   
+							   valor = periodo.getYears()+"";
+							   break;
+						      
+						   case TipoCriterio.SEXO :
+							   valor = empregado.getPessoa().getSexo();
+							   break;
+							      
+						   case TipoCriterio.EXAME :
+							   
+							   break;
+							      
+						   case TipoCriterio.ENFASE :
+							   valor = empregado.getEnfase().getId()+"";   
+							   break;
+							   
+						   case TipoCriterio.EXIGE_RELATORIO_MEDICO :
+							   valor = Objects.toString(true);
+							   gE.getExame().setExigeRelatorio(true);
+							   break;
+							   
+						   case TipoCriterio.PERIODICIDADE :
+							   //OBTER A QUANTIDADE DE MESES DA PERIODICIDADE
+							   try {
+								   criterio.setValor(									
+										   Objects.toString(PeriodicidadeBo.getInstance().getById(
+												   new Integer(criterio.getValor())).getMeses()));
+								} catch (Exception e1) {
+									e1.printStackTrace();
+								}
+							   
+							   Calendar calendar = Calendar.getInstance();
+							   calendar.setTime(convocacao.getInicio());
+							   calendar.add(Calendar.MONTH, (-1)* new Integer(criterio.getValor()) );
+							   
+							   EmpregadoConvocacaoExameFilter xFilter = new EmpregadoConvocacaoExameFilter();
+							   xFilter.setPageNumber(1);
+							   xFilter.setPageSize(1);
+							   xFilter.setExame(new ExameFilter());
+							   xFilter.getExame().setId(gE.getExame().getId());
+							   xFilter.setEmpregadoConvocacao(new EmpregadoConvocacaoFilter());
+							   xFilter.getEmpregadoConvocacao().setEmpregado(new EmpregadoFilter());
+							   xFilter.getEmpregadoConvocacao().getEmpregado().setId(empregado.getId());
+							   xFilter.setRealizacao(new DateFilter());
+							   xFilter.getRealizacao().setInicio(calendar.getTime());
+							   xFilter.getRealizacao().setTypeFilter(TypeFilter.MAIOR_IGUAL);
+							   
+							   valor = (new Integer(criterio.getValor()) + 1)+"";
+							   
+							   try {
+								   if(EmpregadoConvocacaoExameBo.getInstance().getList(xFilter).getTotal() > 0)
+									   valor = "0";
+							   } catch (Exception e1) {
+								   e1.printStackTrace();
+							   }							   
+							   
+							   criterio.setOperador(Operador.MENOR);
+							   break;
+						   
+						   default :
+						}
+						
+						//SE O CRITÉRIO NÃO FOR SATISFEITO, SETAR FALSE NO FLAG E SAIR DA REPETIÇÃO
+						switch(criterio.getOperador()) {
+							
+							case Operador.IGUAL :
+								if(!valor.equals(criterio.getValor())) {
+									criteriosAtendidos = false;								
+									break loop;
+								}
+								break;
+								
+							case Operador.DIFERENTE:
+								if(valor.equals(criterio.getValor())) {
+									criteriosAtendidos = false;								
+									break loop;
+								}
+								break;
+								
+							case Operador.MAIOR:
+								if( !(valor.compareTo(criterio.getValor()) > 0) ) {
+									criteriosAtendidos = false;								
+									break loop;
+								}
+								break;
+								
+							case Operador.MAIOR_IGUAL:
+								if( !(new Integer(valor)
+										.compareTo(new Integer(criterio.getValor())) >= 0) ) {
+									criteriosAtendidos = false;								
+									break loop;
+								}
+								break;
+								
+							case Operador.MENOR:
+								if( !(new Integer(valor)
+										.compareTo(new Integer(criterio.getValor())) < 0) ) {
+									criteriosAtendidos = false;								
+									break loop;
+								}
+								break;
+								
+							case Operador.MENOR_IGUAL:
+								if( !(valor.compareTo(criterio.getValor()) <= 0) ) {
+									criteriosAtendidos = false;								
+									break loop;
+								}
+								break;
+								
+							case Operador.EQUIVALENTE:
+								equivalencias.put(Integer.parseInt(criterio.getValor()), gE.getExame().getId());
+								break;
+							
+							default :
+						}
 					}
-				}
-				
-				if (criteriosAtendidos && periodicidadeAtendida) {
-					if(gE.getCriterios().stream()
-							.filter(c->c.getTipo().equals(TipoCriterio.EXIGE_RELATORIO_MEDICO))
-							.count() > 0) {
-						gE.getExame().setExigeRelatorio(true);
-					}
-					exames.add(gE.getExame());
-				}
-			});
+					
+					if (criteriosAtendidos)
+						exames.add(gE.getExame());
+					
+				});
+			}
 		});
 		
 		//REMOVER EXAMES REPETIDOS
@@ -658,7 +673,13 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		exames.forEach(e->{
 			if(!examesRetorno.contains(e))
 				examesRetorno.add(e);
-		});		
+		});
+		
+		//REMOVER OS EXAMES EQUIVALENTES
+		equivalencias.forEach((key,value)->{
+			if(examesRetorno.stream().filter(e->e.getId() == value).count() > 0)
+				examesRetorno.removeIf(e-> e.getId() == key);
+		});
 		
 		return examesRetorno;
 	}
@@ -669,26 +690,6 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		convocacao.getEmpregadoConvocacoes().forEach(e->{
 			e.setConvocacao(convocacao);
 			e.getEmpregadoConvocacaoExames().forEach(eC->eC.setEmpregadoConvocacao(e));
-			
-			//CARREGAR OS RESULTADOS DE EXAME
-			if(e.getId() > 0) {
-				ResultadoExameFilter rFilter = new ResultadoExameFilter();
-				rFilter.setPageNumber(1);
-				rFilter.setPageSize(Integer.MAX_VALUE);
-				rFilter.setEmpregadoConvocacao(new EmpregadoConvocacaoFilter());
-				rFilter.getEmpregadoConvocacao().setId(e.getId());
-				
-				try {
-					e.setResultadoExames(ResultadoExameBo.getInstance()
-							.getListLoadItemResultadoExames(rFilter).getList());
-					e.getResultadoExames().forEach(r->{
-						r.setEmpregadoConvocacao(e);
-						r.getItemResultadoExames().forEach(i->i.setResultadoExame(r));
-					});
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
 		});
 		
 		return super.save(convocacao);

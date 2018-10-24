@@ -11,9 +11,9 @@ import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 public class GrupoMonitoramentoBuilder 
 		extends GenericEntityBuilder<GrupoMonitoramento, GrupoMonitoramentoFilter> {
 
-	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadGrupoMonitoramentoExames;
 	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadTipoGrupoMonitoramento;
 	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadEmpregados;
+	private Function<Map<String,GrupoMonitoramento>,GrupoMonitoramento> loadAvaliacoes;
 	
 	public static GrupoMonitoramentoBuilder newInstance(GrupoMonitoramento grupoMonitoramento) {
 		return new GrupoMonitoramentoBuilder(grupoMonitoramento);
@@ -33,14 +33,6 @@ public class GrupoMonitoramentoBuilder
 
 	@Override
 	protected void initializeFunctions() {
-		this.loadGrupoMonitoramentoExames = grupoMonitoramentos -> {
-			if(grupoMonitoramentos.get("origem").getGrupoMonitoramentoExames() != null)
-				grupoMonitoramentos.get("destino").setGrupoMonitoramentoExames(
-						GrupoMonitoramentoExameBuilder
-						.newInstance(grupoMonitoramentos.get("origem").getGrupoMonitoramentoExames())
-						.loadExame().loadPeriodicidade().loadCriterios().getEntityList());
-			return grupoMonitoramentos.get("destino");
-		};
 		
 		this.loadTipoGrupoMonitoramento = grupoMonitoramentos -> {
 			if(grupoMonitoramentos.get("origem").getTipoGrupoMonitoramento() != null)
@@ -55,6 +47,14 @@ public class GrupoMonitoramentoBuilder
 			if(grupoMonitoramentos.get("origem").getEmpregados() != null)
 				grupoMonitoramentos.get("destino").setEmpregados(EmpregadoBuilder
 												.newInstance(grupoMonitoramentos.get("origem").getEmpregados())
+												.getEntityList());
+			return grupoMonitoramentos.get("destino");
+		};
+		
+		this.loadAvaliacoes = grupoMonitoramentos -> {
+			if(grupoMonitoramentos.get("origem").getAvaliacoes() != null)
+				grupoMonitoramentos.get("destino").setAvaliacoes(AvaliacaoBuilder
+												.newInstance(grupoMonitoramentos.get("origem").getAvaliacoes())
 												.getEntityList());
 			return grupoMonitoramentos.get("destino");
 		};
@@ -74,16 +74,16 @@ public class GrupoMonitoramentoBuilder
 		return newGrupoMonitoramento;
 	}
 	
-	public GrupoMonitoramentoBuilder loadGrupoMonitoramentoExames() {
-		return (GrupoMonitoramentoBuilder) this.loadProperty(this.loadGrupoMonitoramentoExames);
-	}
-	
 	public GrupoMonitoramentoBuilder loadTipoGrupoMonitoramento() {
 		return (GrupoMonitoramentoBuilder) this.loadProperty(this.loadTipoGrupoMonitoramento);
 	}
 	
 	public GrupoMonitoramentoBuilder loadEmpregados() {
 		return (GrupoMonitoramentoBuilder) this.loadProperty(this.loadEmpregados);
+	}
+	
+	public GrupoMonitoramentoBuilder loadAvaliacoes() {
+		return (GrupoMonitoramentoBuilder) this.loadProperty(this.loadAvaliacoes);
 	}
 
 	@Override

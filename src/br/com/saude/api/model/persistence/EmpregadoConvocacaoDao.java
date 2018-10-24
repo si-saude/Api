@@ -44,7 +44,6 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 		this.functionLoadAll = eC -> {
 			eC = this.functionLoad.apply(eC);
 			eC = loadEmpregadoConvocacaoExames(eC);
-			eC = loadResultadoExames(eC);
 			return eC;
 		};
 		
@@ -87,17 +86,6 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 		if(eC.getEmpregadoConvocacaoExames() != null)
 			Hibernate.initialize(eC.getEmpregadoConvocacaoExames());
 		
-		return eC;
-	}
-	
-	private EmpregadoConvocacao loadResultadoExames(EmpregadoConvocacao eC) {
-		if (eC.getResultadoExames() != null) {
-			Hibernate.initialize(eC.getResultadoExames());
-			eC.getResultadoExames().forEach(r -> {
-				if ( r.getItemResultadoExames() != null )
-					Hibernate.initialize(r.getItemResultadoExames());
-			});
-		}
 		return eC;
 	}
 	
@@ -153,8 +141,6 @@ public class EmpregadoConvocacaoDao extends GenericDao<EmpregadoConvocacao> {
 				criteria.add(or);
 			}
 		}
-		
-//		criteria.addOrder(Order.desc("id"));
 		
 		return criteria;
 	}

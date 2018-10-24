@@ -35,6 +35,11 @@ public class FeriadoBo extends GenericBo<Feriado, FeriadoFilter, FeriadoDao, Fer
 	// E ADICIONA A DATA NO CALENDARIO
 	public Calendar getValidDates(Calendar calendar, int days) throws Exception {
 		int d = 0;
+		
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		
 		while (d <= days) {
 			PagedList<Feriado> feriados = configureBasicFilter(calendar);
 
@@ -58,8 +63,16 @@ public class FeriadoBo extends GenericBo<Feriado, FeriadoFilter, FeriadoDao, Fer
 	public int getDaysBetweenDates(Calendar dataInicial, Calendar dataFinal) throws Exception {
 		int days = 0;
 		
+		dataInicial.set(Calendar.HOUR, 0);
+		dataInicial.set(Calendar.MINUTE, 0);
+		dataInicial.set(Calendar.SECOND, 0);
+		dataFinal.set(Calendar.HOUR, 0);
+		dataFinal.set(Calendar.MINUTE, 0);
+		dataFinal.set(Calendar.SECOND, 0);
+		
 		if (dataInicial.after(dataFinal))
-			throw new Exception("Data de inicio maior que data do final.");
+			throw new Exception("Por favor, verifique a validade da(s) data(s). "
+					+ "Existe(m) data(s) que não corresponde(m) com a veradicidade do(s) dado(s).");
 		
 		dataInicial.add(Calendar.DATE, 1);
 

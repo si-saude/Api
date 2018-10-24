@@ -103,5 +103,18 @@ public class CatService extends GenericServiceImpl<Cat, CatFilter, CatBo>
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
+	
+	@POST
+	@RequestInterceptor
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/comunicacao-ocorrencia")
+	public Response getDeclaracaoComparecimento(Cat cat) throws Exception {
+		try {
+			return Response.ok(getBo().getComunicadoOcorrencia(cat)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 
 }

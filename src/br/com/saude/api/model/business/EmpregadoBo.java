@@ -61,7 +61,7 @@ public class EmpregadoBo
 
 	@Override
 	protected void initializeFunctions() {
-		this.functionLoad = builder -> {
+	this.functionLoad = builder -> {
 			return builder.loadCargo().loadFuncao().loadGerencia().loadPessoa();
 		};
 
@@ -97,7 +97,7 @@ public class EmpregadoBo
 		return super.getList(getDao().getListFunctionLoadGrupoMonitoramentosExames(getExampleBuilder(filter).example()),
 				this.functionLoadGrupoMonitoramentosExames);
 	}
-
+	
 	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentos(EmpregadoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoadGrupoMonitoramentos(getExampleBuilder(filter).example()),
 				this.functionLoadGrupoMonitoramentos);
@@ -124,7 +124,7 @@ public class EmpregadoBo
 	public Empregado getByIdLoadTipoGrupoMonitoramento(Object id) throws Exception {
 		return getByEntity(getDao().getByIdLoadTipoGrupoMonitoramento(id), this.functionLoadTipoGrupoMonitoramentos);
 	}
-
+	
 	@Override
 	public Empregado save(Empregado empregado) throws Exception {
 

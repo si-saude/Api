@@ -1,6 +1,8 @@
 package br.com.saude.api.generic;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -79,6 +81,11 @@ public class Helper {
 				"Outubro", "Novembro", "Dezembro" };
 		return months[month];
 	}
+	
+	public static String getStringDiaSemana(int diaSemana) {
+		String[] dias = { "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado" };
+		return dias[diaSemana];
+	}
 
 	public static Criteria loopCriterias(Criteria criteria, List<Triplet<String,CriteriaExample,JoinType>> criterias) {
 		if(criterias != null)
@@ -124,5 +131,12 @@ public class Helper {
 		if(data != null)
 			return new Date(data.getTime());
 		return data;
+	}
+	
+	public static Period calculateIdade( Date data ) {
+		Period periodo = Period.between(data.toInstant()
+				.atZone(ZoneId.systemDefault()).toLocalDate(), 
+				LocalDate.now());
+		return periodo;
 	}
 }

@@ -166,7 +166,6 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 			}
 			return empregados.get("destino");
 		};
-		
 		this.loadHistoricoGrupoMonitoramentos = empregados -> {
 			if(empregados.get("origem").getHistoricoGrupoMonitoramentos() != null) {
 				empregados.get("destino").setHistoricoGrupoMonitoramentos(HistoricoGrupoMonitoramentoBuilder

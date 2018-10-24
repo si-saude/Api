@@ -16,6 +16,23 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String INDICADOR_CONHECIMENTO_ALIMENTAR_LISTAR								= "INDICADOR-CONHECIMENTO-ALIMENTAR_LISTAR";
+	public static final String INDICADOR_CONHECIMENTO_ALIMENTAR_ADICIONAR 			    			= "INDICADOR-CONHECIMENTO-ALIMENTAR_ADICIONAR";
+	public static final String INDICADOR_CONHECIMENTO_ALIMENTAR_ALTERAR		 						= "INDICADOR-CONHECIMENTO-ALIMENTAR_ALTERAR";
+	public static final String INDICADOR_CONHECIMENTO_ALIMENTAR_REMOVER 							= "INDICADOR-CONHECIMENTO-ALIMENTAR_REMOVER";
+	public static final String INDICADOR_CONHECIMENTO_ALIMENTAR_DETALHE 							= "INDICADOR-CONHECIMENTO-ALIMENTAR_DETALHE";
+	public static final String MEDIDA_ALIMENTAR_LISTAR								= "MEDIDA-ALIMENTAR_LISTAR";
+	public static final String MEDIDA_ALIMENTAR_ADICIONAR 			    			= "MEDIDA-ALIMENTAR_ADICIONAR";
+	public static final String MEDIDA_ALIMENTAR_ALTERAR		 						= "MEDIDA-ALIMENTAR_ALTERAR";
+	public static final String MEDIDA_ALIMENTAR_REMOVER 							= "MEDIDA-ALIMENTAR_REMOVER";
+	public static final String MEDIDA_ALIMENTAR_DETALHE 							= "MEDIDA-ALIMENTAR_DETALHE";
+	public static final String NUTRICAO_ALIMENTO_LISTAR								= "NUTRICAO-ALIMENTO_LISTAR";
+	public static final String NUTRICAO_ALIMENTO_ADICIONAR 			    			= "NUTRICAO-ALIMENTO_ADICIONAR";
+	public static final String NUTRICAO_ALIMENTO_ALTERAR		 						= "NUTRICAO-ALIMENTO_ALTERAR";
+	public static final String NUTRICAO_ALIMENTO_REMOVER 							= "NUTRICAO-ALIMENTO_REMOVER";
+	public static final String NUTRICAO_ALIMENTO_DETALHE 							= "NUTRICAO-ALIMENTO_DETALHE";
+	public static final String REPORT_ACOMPANHAMENTO_SAST										= "REPORT-ACOMPANHAMENTO-SAST";
+	public static final String REPORT_MUDANCA_FUNCAO										= "REPORT-MUDANCA-FUNCAO";
 	public static final String ACAO_INTERVENCAO_LISTAR								= "ACAO-INTERVENCAO_LISTAR";
 	public static final String ACAO_INTERVENCAO_ADICIONAR 			    			= "ACAO-INTERVENCAO_ADICIONAR";
 	public static final String ACAO_INTERVENCAO_ALTERAR		 						= "ACAO-INTERVENCAO_ALTERAR";
@@ -211,6 +228,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String CIDADE_ALTERAR		 			= "CIDADE_ALTERAR";
 	public static final String CIDADE_REMOVER 					= "CIDADE_REMOVER";
 	public static final String CIDADE_DETALHE 					= "CIDADE_DETALHE";
+	public static final String CLINICA_LISTAR						= "CLINICA_LISTAR";
+	public static final String CLINICA_ADICIONAR 			    	= "CLINICA_ADICIONAR";
+	public static final String CLINICA_ALTERAR		 			= "CLINICA_ALTERAR";
+	public static final String CLINICA_REMOVER 					= "CLINICA_REMOVER";
+	public static final String CLINICA_DETALHE 					= "CLINICA_DETALHE";
 	public static final String CRITERIO_LISTAR						= "CRITERIO_LISTAR";
 	public static final String CRITERIO_ADICIONAR 			    	= "CRITERIO_ADICIONAR";
 	public static final String CRITERIO_ALTERAR		 			= "CRITERIO_ALTERAR";

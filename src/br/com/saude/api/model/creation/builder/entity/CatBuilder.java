@@ -177,6 +177,14 @@ public class CatBuilder extends GenericEntityBuilder<Cat, CatFilter> {
 		newCat.setCatInss(cat.isCatInss());
 		newCat.setConvocado(cat.isConvocado());
 		newCat.setAusenciaExames(cat.isAusenciaExames());
+		newCat.setRecomendacoes(cat.getRecomendacoes());
+		newCat.setJornadaTrabalho(cat.getJornadaTrabalho());
+		newCat.setAto1(cat.getAto1());
+		newCat.setAto2(cat.getAto2());
+		newCat.setAto3(cat.getAto3());
+		newCat.setAto4(cat.getAto4());
+		newCat.setAto5(cat.getAto5());
+		newCat.setJustificativa(cat.getJustificativa());
 		newCat.setVersion(cat.getVersion());
 		
 		if ( cat.getEmpregado() != null ) {

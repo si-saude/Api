@@ -224,7 +224,7 @@ public class AtestadoBo
 				equipeFilter.setId(atestado.getTarefa().getEquipe().getId());
 			}
 			
-			if(!atestado.isAusenciaExames()) {
+			if(!atestado.isAusenciaExames() && atestado.getNumeroDias() >= 5) {
 				criarConvocacao(atestado,tipoConvocacao);
 			}
 			else if(atestado.getNumeroDias() >= 5) {
