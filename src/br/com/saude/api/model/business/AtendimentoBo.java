@@ -462,9 +462,9 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				String tipoConvocacao = TipoConvocacao.REAVALIACAO_PERIODICO;
 				Servico servico = null;
 				
-				atendimento.getAso().setConvocado(true);
+				atendimento.getAso().setConvocado(true);				
 				
-				if(atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().stream().filter(x->x.getPergunta().getCodigo().equals("0019") && (x.getConteudo() == "INSATISFATÓRIO"|| x.getConteudo() == "PENDENTE")).count() > 0) {
+				if(atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().stream().filter(x->x.getPergunta().getCodigo().equals("0019") && (x.getConteudo().equals("INSATISFATÓRIO")|| x.getConteudo().equals("PENDENTE"))).count() > 0) {
 					
 					servico = servicoReavaliacaoFisicaBrigada();
 				}else 
