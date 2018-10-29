@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.proxy.HibernateProxy;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
@@ -15,6 +16,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	private Function<Map<String,Atendimento>,Atendimento> loadTarefa;
 	private Function<Map<String,Atendimento>,Atendimento> loadTriagens;
 	private Function<Map<String,Atendimento>,Atendimento> loadAso;
+	private Function<Map<String,Atendimento>,Atendimento> loadQuestionario;
 	
 	public static AtendimentoBuilder newInstance(Atendimento atendimento) {
 		return new AtendimentoBuilder(atendimento);
@@ -57,6 +59,14 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 						.getEntityList());
 			return atendimentos.get("destino");
 		};
+		
+		this.loadQuestionario = atendimentos -> {
+			if (atendimentos.get("origem").getQuestionario() != null)
+				atendimentos.get("destino").setQuestionario(QuestionarioConhecimentoAlimentarBuilder
+						.newInstance(atendimentos.get("origem").getQuestionario())
+						.getEntity());
+			return atendimentos.get("destino");
+		};
 	}
 
 	@Override
@@ -73,7 +83,10 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 			if(!(atendimento.getFilaAtendimentoOcupacional().getLocalizacao() instanceof HibernateProxy))
 				filaAtendBuilder = filaAtendBuilder.loadLocalizacao();
 			
-			newAtendimento.setFilaAtendimentoOcupacional(filaAtendBuilder.loadAtualizacoes().getEntity());
+			if(!(atendimento.getFilaAtendimentoOcupacional().getAtualizacoes() instanceof PersistentBag))
+				filaAtendBuilder = filaAtendBuilder.loadAtualizacoes();
+			
+			newAtendimento.setFilaAtendimentoOcupacional(filaAtendBuilder.getEntity());
 		}
 		
 		if(atendimento.getFilaEsperaOcupacional() != null) {
@@ -101,6 +114,10 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	
 	public AtendimentoBuilder loadAso() {
 		return (AtendimentoBuilder) this.loadProperty(this.loadAso);
+	}
+	
+	public AtendimentoBuilder loadQuestionario() {
+		return (AtendimentoBuilder) this.loadProperty(this.loadQuestionario);
 	}
 	
 	public AtendimentoBuilder loadTriagens() {

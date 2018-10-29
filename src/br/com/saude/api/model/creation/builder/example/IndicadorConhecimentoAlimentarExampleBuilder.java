@@ -21,6 +21,7 @@ public class IndicadorConhecimentoAlimentarExampleBuilder
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addEnunciado();
+		addInativo();
 	}
 
 	@Override
@@ -31,5 +32,9 @@ public class IndicadorConhecimentoAlimentarExampleBuilder
 	private void addEnunciado() {
 		if(this.filter.getEnunciado() != null)
 			this.criterions.add(Restrictions.ilike("enunciado", Helper.filterLike(this.filter.getEnunciado())));
+	}
+	
+	protected void addInativo() {
+		this.entity.setInativo(this.addBoolean("inativo", this.filter.getInativo()));
 	}
 }

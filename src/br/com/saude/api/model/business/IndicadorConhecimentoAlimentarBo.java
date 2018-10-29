@@ -3,6 +3,7 @@ package br.com.saude.api.model.business;
 import java.lang.reflect.InvocationTargetException;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.IndicadorConhecimentoAlimentarBuilder;
 import br.com.saude.api.model.creation.builder.example.IndicadorConhecimentoAlimentarExampleBuilder;
 import br.com.saude.api.model.entity.filter.IndicadorConhecimentoAlimentarFilter;
@@ -36,6 +37,11 @@ public class IndicadorConhecimentoAlimentarBo
 	public IndicadorConhecimentoAlimentar getById(Object id) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getById(id, functionLoadAll);
+	}
+	
+	@Override
+	public PagedList<IndicadorConhecimentoAlimentar> getList(IndicadorConhecimentoAlimentarFilter filter) throws Exception {
+		return super.getList(filter, functionLoadAll);
 	}
 
 	@Override

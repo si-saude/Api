@@ -34,6 +34,7 @@ import br.com.saude.api.model.entity.po.Localizacao;
 import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.Pessoa;
 import br.com.saude.api.model.entity.po.Profissional;
+import br.com.saude.api.model.entity.po.QuestionarioConhecimentoAlimentar;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Tarefa;
@@ -65,6 +66,10 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 			
 			if(atendimento.getAso() != null)
 				atendimento.setAso((Aso)Hibernate.unproxy(atendimento.getAso()));
+			
+			if(atendimento.getQuestionario() != null)
+				atendimento.setQuestionario(
+						(QuestionarioConhecimentoAlimentar)Hibernate.unproxy(atendimento.getQuestionario()));
 			
 			if(atendimento.getFilaAtendimentoOcupacional().getLocalizacao() != null)
 				atendimento.getFilaAtendimentoOcupacional().setLocalizacao(

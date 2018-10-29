@@ -617,6 +617,7 @@ public class FilaEsperaOcupacionalBo
 			riscos.getList().forEach(r-> {
 				r.setAtual(false);
 				r.getRiscoEmpregados().forEach(rE -> {
+					rE.setRiscoPotencial(r);
 					rE.getTriagens().forEach(t -> {
 						if(t.getAcoes() != null)
 						t.getAcoes().forEach(a -> {

@@ -40,6 +40,9 @@ public class Atendimento {
 	@OneToMany(mappedBy="atendimento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Triagem> triagens;
 	
+	@OneToOne(fetch=FetchType.LAZY)
+	private QuestionarioConhecimentoAlimentar questionario;
+	
 	@Transient
 	private List<Triagem> triagensTodosAtendimentos;
 	
@@ -109,4 +112,13 @@ public class Atendimento {
 	public void setTriagensTodosAtendimentos(List<Triagem> triagensTodosAtendimentos) {
 		this.triagensTodosAtendimentos = triagensTodosAtendimentos;
 	}
+
+	public QuestionarioConhecimentoAlimentar getQuestionario() {
+		return questionario;
+	}
+
+	public void setQuestionario(QuestionarioConhecimentoAlimentar questionario) {
+		this.questionario = questionario;
+	}
+	
 }

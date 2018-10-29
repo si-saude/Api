@@ -13,6 +13,8 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.OrderBy;
+
 @Entity
 public class IndicadorConhecimentoAlimentar {
 	@Id
@@ -25,8 +27,11 @@ public class IndicadorConhecimentoAlimentar {
 	
 	private int ordem;
 	
+	@OrderBy(clause = "ordem")
 	@OneToMany(mappedBy="indicadorConhecimentoAlimentar", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<ItemIndicadorConhecimentoAlimentar> itemIndicadorConhecimentoAlimentares;
+	
+	private boolean inativo;
 	
 	@Version
 	private long version;
@@ -71,4 +76,13 @@ public class IndicadorConhecimentoAlimentar {
 	public void setVersion(long version) {
 		this.version = version;
 	}
+
+	public boolean isInativo() {
+		return inativo;
+	}
+
+	public void setInativo(boolean inativo) {
+		this.inativo = inativo;
+	}
+	
 }
