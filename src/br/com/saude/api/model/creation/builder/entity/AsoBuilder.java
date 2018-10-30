@@ -13,6 +13,7 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 	private Function<Map<String,Aso>,Aso> loadEmpregado;
 	private Function<Map<String,Aso>,Aso> loadAtendimento;
 	private Function<Map<String,Aso>,Aso> loadAlteracoes;
+	private Function<Map<String,Aso>,Aso> loadAvaliacoes;
 	private Function<Map<String,Aso>,Aso> loadAptidoes;
 	private Function<Map<String,Aso>,Aso> loadExamesConvocacao;
 	
@@ -59,6 +60,14 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 			return asos.get("destino");
 		};
 		
+		this.loadAvaliacoes = asos -> {
+			if(asos.get("origem").getAsoAvaliacoes() != null)
+				asos.get("destino").setAsoAvaliacoes(AsoAvaliacaoBuilder
+						.newInstance(asos.get("origem").getAsoAvaliacoes())
+						.getEntityList());
+			
+			return asos.get("destino");
+		};
 		this.loadAptidoes = asos -> {
 			if(asos.get("origem").getAptidoes() != null)
 				asos.get("destino").setAptidoes(AptidaoBuilder
@@ -108,6 +117,10 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 	
 	public AsoBuilder loadAlteracoes() {
 		return (AsoBuilder) this.loadProperty(this.loadAlteracoes);
+	}
+	
+	public AsoBuilder loadAvaliacoes() {
+		return (AsoBuilder) this.loadProperty(this.loadAvaliacoes);
 	}
 	
 	public AsoBuilder loadAptidoes() {

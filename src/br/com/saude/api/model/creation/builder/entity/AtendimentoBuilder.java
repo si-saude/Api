@@ -49,6 +49,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 						.loadAptidoes()
 						.loadAlteracoes()
 						.loadExamesConvocacao()
+						.loadAvaliacoes()
 						.getEntity());
 			return atendimentos.get("destino");
 		};

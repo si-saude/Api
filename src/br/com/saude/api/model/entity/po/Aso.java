@@ -54,6 +54,9 @@ public class Aso {
 	@OneToMany(mappedBy="aso", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Aptidao> aptidoes;
 	
+	@OneToMany(mappedBy="aso", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<AsoAvaliacao> asoAvaliacoes;
+
 	@Size(max = 1024, message="Tamanho máximo para Não Conformidade do ASO: 1024")
 	private String naoConformidades;
 	
@@ -78,6 +81,14 @@ public class Aso {
 	private List<Exame> examesConvocacao;
 	
 	private boolean ausenciaExames;
+	
+	public List<AsoAvaliacao> getAsoAvaliacoes() {
+		return asoAvaliacoes;
+	}
+
+	public void setAsoAvaliacoes(List<AsoAvaliacao> asoAvaliacoes) {
+		this.asoAvaliacoes = asoAvaliacoes;
+	}
 	
 	public boolean isImpressoSd2000() {
 		return impressoSd2000;

@@ -150,7 +150,7 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 			if(empregados.get("origem").getGrupoMonitoramentos() != null) {
 				empregados.get("destino").setGrupoMonitoramentos(GrupoMonitoramentoBuilder
 											.newInstance(empregados.get("origem").getGrupoMonitoramentos())
-											.loadTipoGrupoMonitoramento()
+											.loadTipoGrupoMonitoramento().loadAvaliacoes()
 											.getEntityList());
 			}
 			return empregados.get("destino");

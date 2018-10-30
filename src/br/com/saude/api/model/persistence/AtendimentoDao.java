@@ -46,6 +46,7 @@ import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.AsoAlteracao;
+import br.com.saude.api.model.entity.po.AsoAvaliacao;
 
 public class AtendimentoDao extends GenericDao<Atendimento> {
 
@@ -78,7 +79,18 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 						list.add(asoAlteracoes);
 					});
 					atendimento.getAso().setAsoAlteracoes(list);
-				}				
+				}	
+				
+				if(atendimento.getAso().getAsoAvaliacoes() != null) {
+					List<AsoAvaliacao> list = new ArrayList<AsoAvaliacao>();
+					Hibernate.initialize(atendimento.getAso().getAsoAvaliacoes());					
+					atendimento.getAso().getAsoAvaliacoes().forEach(x->{						
+						AsoAvaliacao asoAvaliacoes = (AsoAvaliacao)Hibernate.unproxy(x);	
+						list.add(asoAvaliacoes);
+					});
+					atendimento.getAso().setAsoAvaliacoes(list);
+				}	
+				
 				if(atendimento.getAso().getExamesConvocacao() != null) {
 					List<Exame> list = new ArrayList<Exame>();
 					Hibernate.initialize(atendimento.getAso().getExamesConvocacao());					

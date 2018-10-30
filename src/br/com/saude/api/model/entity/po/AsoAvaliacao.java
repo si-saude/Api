@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Avaliacao {
+public class AsoAvaliacao {
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -19,33 +19,16 @@ public class Avaliacao {
 	
 	@NotNull(message="É necessário informar o Nome da Avaliação.")
 	@Size(max = 128, message="Tamanho máximo para Nome da Avaliação: 128")
-	private String nome;
+	private String descricao;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	private GrupoMonitoramento grupoMonitoramento;
+	private Aso aso;
+
+	private boolean conforme;
 	
 	@Version
 	private long version;
 	
-	private boolean auditoriaAso;
-	
-	private boolean auditoriaMedico;
-
-	public boolean isAuditoriaAso() {
-		return auditoriaAso;
-	}
-
-	public void setAuditoriaAso(boolean auditoriaAso) {
-		this.auditoriaAso = auditoriaAso;
-	}
-
-	public boolean isAuditoriaMedico() {
-		return auditoriaMedico;
-	}
-
-	public void setAuditoriaMedico(boolean auditoriaMedico) {
-		this.auditoriaMedico = auditoriaMedico;
-	}
 
 	public int getId() {
 		return id;
@@ -55,20 +38,28 @@ public class Avaliacao {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getDescricao() {
+		return descricao;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
-	public GrupoMonitoramento getGrupoMonitoramento() {
-		return grupoMonitoramento;
+	public Aso getAso() {
+		return aso;
 	}
 
-	public void setGrupoMonitoramento(GrupoMonitoramento grupoMonitoramento) {
-		this.grupoMonitoramento = grupoMonitoramento;
+	public void setAso(Aso aso) {
+		this.aso = aso;
+	}
+
+	public boolean isConforme() {
+		return conforme;
+	}
+
+	public void setConforme(boolean conforme) {
+		this.conforme = conforme;
 	}
 
 	public long getVersion() {

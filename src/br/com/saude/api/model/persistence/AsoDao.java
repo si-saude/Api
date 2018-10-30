@@ -35,6 +35,9 @@ public class AsoDao extends GenericDao<Aso> {
 			if(aso.getAsoAlteracoes() != null)
 				Hibernate.initialize(aso.getAsoAlteracoes());
 			
+			if(aso.getAsoAvaliacoes() != null)
+				Hibernate.initialize(aso.getAsoAvaliacoes());
+			
 			aso = loadExamesConvocacao(aso);
 			
 			return aso;

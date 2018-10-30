@@ -38,6 +38,7 @@ import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Aptidao;
 import br.com.saude.api.model.entity.po.Aso;
+import br.com.saude.api.model.entity.po.AsoAvaliacao;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Atividade;
 import br.com.saude.api.model.entity.po.Convocacao;
@@ -224,15 +225,18 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		return atendimento;
 	}
 	
-	public Atendimento gerarAso(Atendimento atendimento) throws Exception {
+
+	public Atendimento gerarAso(Atendimento atendimento) throws Exception {		
+		
+		String tipoAtendimento  = getTipoAtendimento(atendimento); 
 		
 		if(atendimento.getTarefa().getEquipe().getAbreviacao().equals("MED") && 				
-				(getTipoAtendimento(atendimento) == TipoConvocacao.ADMISSIONAL ||
-				 getTipoAtendimento(atendimento) == TipoConvocacao.DEMISSIONAL ||
-				 getTipoAtendimento(atendimento) == TipoConvocacao.PERIODICO ||
-				 getTipoAtendimento(atendimento) == TipoConvocacao.RETORNO_AO_TRABALHO ||
-				 getTipoAtendimento(atendimento) == TipoConvocacao.MUDANCA_DE_FUNCAO ||
-				 getTipoAtendimento(atendimento) == "VALIDAÇÃO DE ASO")) {
+				(tipoAtendimento == TipoConvocacao.ADMISSIONAL ||
+				 tipoAtendimento == TipoConvocacao.DEMISSIONAL ||
+				 tipoAtendimento == TipoConvocacao.PERIODICO ||
+				 tipoAtendimento == TipoConvocacao.RETORNO_AO_TRABALHO ||
+				 tipoAtendimento == TipoConvocacao.MUDANCA_DE_FUNCAO ||
+				 tipoAtendimento == "VALIDAÇÃO DE ASO")) {
 			
 				Aso aso = new Aso();
 				aso.setEmpregado(EmpregadoBo.getInstance().getByIdLoadTipoGrupoMonitoramento(atendimento.getFilaEsperaOcupacional().getEmpregado().getId()));
@@ -242,12 +246,24 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				aso.setStatus(StatusAso.PENDENTE_AUDITORIA);
 				aso.setValidade(getValidadeAso(atendimento, Helper.getNow()));	
 				aso.setAptidoes(new ArrayList<Aptidao>());
+				aso.setAsoAvaliacoes(new ArrayList<AsoAvaliacao>());
 				
-				aso.getEmpregado().getGrupoMonitoramentos().stream().filter(x-> x.getTipoGrupoMonitoramento().getId() == 6).forEach(x->{
+				aso.getEmpregado().getGrupoMonitoramentos().stream().filter(x-> x.getTipoGrupoMonitoramento().getNome().equals("ATIVIDADES CRÍTICAS")).forEach(x->{
 					Aptidao aptidao = new Aptidao();
 					aptidao.setAso(aso);
 					aptidao.setGrupoMonitoramento(x);
-					aso.getAptidoes().add(aptidao);					
+					aso.getAptidoes().add(aptidao);	
+					
+					if(x.getAvaliacoes() != null) {						
+						x.getAvaliacoes().forEach(a->{
+							if(aso.getAsoAvaliacoes().stream().filter(y-> y.getDescricao().equals(a.getNome())).count() == 0 ) {
+								AsoAvaliacao asoAvaliacao = new AsoAvaliacao();
+								asoAvaliacao.setDescricao(a.getNome());	
+								asoAvaliacao.setAso(aso);
+								aso.getAsoAvaliacoes().add(asoAvaliacao);
+							}
+						});
+					}
 				});	
 				
 				atendimento.setAso(aso);
@@ -456,33 +472,34 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				x.setAso(atendimento.getAso());
 			});
 			
+			atendimento.getAso().getAsoAvaliacoes().forEach(x->{
+				x.setAso(atendimento.getAso());
+			});
+			
 			if((!atendimento.getAso().isPendente() && (!atendimento.getAso().isConvocado())) 
 					&& atendimento.getAso().getAptidoes().stream().filter(x->x.getAptidaoAso().equals("INAPTO")).count() > 0) {
 				
-				String tipoConvocacao = TipoConvocacao.REAVALIACAO_PERIODICO;
-				Servico servico = null;
-				
 				atendimento.getAso().setConvocado(true);				
-				
-				if(atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().stream().filter(x->x.getPergunta().getCodigo().equals("0019") && (x.getConteudo().equals("INSATISFATÓRIO")|| x.getConteudo().equals("PENDENTE"))).count() > 0) {
-					
-					servico = servicoReavaliacaoFisicaBrigada();
-				}else 
-					servico = servicoReavaliacaoPeriodico();		
-				
+				String tipoConvocacao = TipoConvocacao.REAVALIACAO_PERIODICO;				
 				
 				if(!atendimento.getAso().isAusenciaExames()) {			
 					criarConvocacao(atendimento, tipoConvocacao);
 				}
-				else{
+				else{					
+					Servico servico = null;					
+					
+					if(atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas().stream().filter(x->x.getPergunta().getCodigo().equals("0019") && (x.getConteudo().equals("INSATISFATÓRIO")|| x.getConteudo().equals("PENDENTE"))).count() > 0) {
+						
+						servico = servicoReavaliacaoFisicaBrigada();
+					}else 
+						servico = servicoReavaliacaoPeriodico();
+					
 					Date inicio = Date.from(atendimento.getAso().getDataRestricao().toInstant());
 					Atendimento atendimentoAux =  new Atendimento();
 					Tarefa tarefa = new Tarefa();
-					tarefa.setAtualizacao(Helper.getNow());
 					tarefa.setCliente(atendimento.getTarefa().getCliente());
     				tarefa.setInicio(inicio);		
 					tarefa.setServico(servico);
-					tarefa.setStatus(StatusTarefa.getInstance().ABERTA);
 					atendimentoAux.setTarefa(tarefa);
 					
 					registrarSolicitacaoReavaliacaoPeriodico(atendimentoAux);
@@ -1082,9 +1099,9 @@ private void criarConvocacao(Atendimento atendimento, String tipoConvocacao) thr
 		   (atendimentoAux.getAso() != null && atendimentoAux.getAso().getId() > 0 && (!atendimentoAux.getAso().isConvocado()))) {
 			atendimentoAux = gerarAso(atendimentoAux);
 			atendimentoAux.getAso().getAptidoes().forEach(x->x.setAso(null));
+			atendimentoAux.getAso().getAsoAvaliacoes().forEach(x->x.setAso(null));
 		}
 		atendimentoAux.getFilaAtendimentoOcupacional().setStatus(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
-//		atendimentoAux.getFilaEsperaOcupacional().setStatus(StatusFilaEsperaOcupacional.getInstance().EM_ATENDIMENTO);
 		
 		if(atendimentoAux.getTriagens() == null)
 			atendimentoAux.setTriagens(new ArrayList<Triagem>());

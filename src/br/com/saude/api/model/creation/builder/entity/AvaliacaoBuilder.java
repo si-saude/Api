@@ -36,6 +36,8 @@ public class AvaliacaoBuilder extends GenericEntityBuilder<Avaliacao, GenericFil
 		newAvaliacao.setId(avaliacao.getId());
 		newAvaliacao.setNome(avaliacao.getNome());
 		newAvaliacao.setVersion(avaliacao.getVersion());
+		newAvaliacao.setAuditoriaAso((avaliacao.isAuditoriaAso()));
+		newAvaliacao.setAuditoriaMedico((avaliacao.isAuditoriaMedico()));
 		
 		return newAvaliacao;
 	}
