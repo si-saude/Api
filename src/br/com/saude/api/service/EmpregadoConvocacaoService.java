@@ -70,7 +70,7 @@ public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConv
 	public Response get(@QueryParam("id") String id) throws Exception {
 		return super.getGeneric(new Integer(id));
 	}
-
+	
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

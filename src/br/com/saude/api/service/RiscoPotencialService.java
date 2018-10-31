@@ -179,4 +179,5 @@ public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,Ris
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
+	
 }

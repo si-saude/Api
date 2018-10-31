@@ -44,7 +44,7 @@ public class AsoBo
 		};
 		
 		this.functionLoadAll = builder -> {
-			return this.functionLoad.apply(builder).loadAlteracoes();
+			return this.functionLoad.apply(builder).loadAlteracoes().loadAvaliacoes().loadAptidoes().loadExamesConvocacao();
 		};
 	}
 

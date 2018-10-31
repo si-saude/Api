@@ -40,7 +40,7 @@ public class AtendimentoExampleBuilder extends GenericExampleBuilder<Atendimento
 		addTarefaStatusNaoConcluidoCancelado();
 		addFilaEsperaOcupacional();
 		addFilaAtendimentoOcupacional();
-		addAso();
+		addAso();		
 	}
 
 	@Override

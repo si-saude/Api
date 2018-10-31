@@ -8,7 +8,7 @@ public class AtendimentoFilter extends GenericFilter {
 	private FilaEsperaOcupacionalFilter filaEsperaOcupacional;
 	private TarefaFilter tarefa;
 	private AsoFilter aso;
-	
+		
 	public FilaAtendimentoOcupacionalFilter getFilaAtendimentoOcupacional() {
 		return filaAtendimentoOcupacional;
 	}

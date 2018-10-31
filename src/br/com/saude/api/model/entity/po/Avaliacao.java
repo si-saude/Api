@@ -26,6 +26,26 @@ public class Avaliacao {
 	
 	@Version
 	private long version;
+	
+	private boolean auditoriaAso;
+	
+	private boolean auditoriaMedico;
+
+	public boolean isAuditoriaAso() {
+		return auditoriaAso;
+	}
+
+	public void setAuditoriaAso(boolean auditoriaAso) {
+		this.auditoriaAso = auditoriaAso;
+	}
+
+	public boolean isAuditoriaMedico() {
+		return auditoriaMedico;
+	}
+
+	public void setAuditoriaMedico(boolean auditoriaMedico) {
+		this.auditoriaMedico = auditoriaMedico;
+	}
 
 	public int getId() {
 		return id;
