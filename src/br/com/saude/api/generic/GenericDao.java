@@ -22,6 +22,7 @@ public abstract class GenericDao<T> {
 	protected Function<T,T> functionLoad;
 	protected Function<T,T> functionLoadAll;
 	protected Function<Pair<T,Session>,T> functionBeforeSave;
+	protected Function<Pair<T,Session>,T> functionAfterSave;
 	
 	@SuppressWarnings("unchecked")
 	protected GenericDao(){
@@ -61,7 +62,6 @@ public abstract class GenericDao<T> {
 				entity = this.functionBeforeSave.apply(new Pair<T,Session>(entity,session));
 			
 			T entityMerged = (T) session.merge(entity);
-			transaction.commit();
 			
 			Field id = getId(entity.getClass());
 			id.setAccessible(true);
@@ -76,6 +76,10 @@ public abstract class GenericDao<T> {
 				}
 			}
 			
+			if(this.functionAfterSave != null)
+				entity = this.functionAfterSave.apply(new Pair<T,Session>(entity,session));
+			
+			transaction.commit();
 		}catch(Exception ex) {
 			throw ex;
 		}finally {

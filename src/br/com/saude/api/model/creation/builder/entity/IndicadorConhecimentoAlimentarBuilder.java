@@ -33,7 +33,9 @@ public class IndicadorConhecimentoAlimentarBuilder extends GenericEntityBuilder<
 		this.loadItemIndicadorConhecimentoAlimentares = indicadorConhecimentoAlimentar -> {
 			if(indicadorConhecimentoAlimentar.get("origem").getItemIndicadorConhecimentoAlimentares() != null)
 				indicadorConhecimentoAlimentar.get("destino").setItemIndicadorConhecimentoAlimentares(
-						ItemIndicadorConhecimentoAlimentarBuilder.newInstance(indicadorConhecimentoAlimentar.get("origem").getItemIndicadorConhecimentoAlimentares()).getEntityList());
+					ItemIndicadorConhecimentoAlimentarBuilder.newInstance(
+						indicadorConhecimentoAlimentar.get("origem").getItemIndicadorConhecimentoAlimentares())
+					.getEntityList());
 			return indicadorConhecimentoAlimentar.get("destino");
 		};
 	}
@@ -45,6 +47,7 @@ public class IndicadorConhecimentoAlimentarBuilder extends GenericEntityBuilder<
 		newIndicadorConhecimentoAlimentar.setId(indicadorConhecimentoAlimentar.getId());
 		newIndicadorConhecimentoAlimentar.setEnunciado(indicadorConhecimentoAlimentar.getEnunciado());
 		newIndicadorConhecimentoAlimentar.setOrdem(indicadorConhecimentoAlimentar.getOrdem());
+		newIndicadorConhecimentoAlimentar.setInativo(indicadorConhecimentoAlimentar.isInativo());
 		newIndicadorConhecimentoAlimentar.setVersion(indicadorConhecimentoAlimentar.getVersion());
 		
 		return newIndicadorConhecimentoAlimentar;
