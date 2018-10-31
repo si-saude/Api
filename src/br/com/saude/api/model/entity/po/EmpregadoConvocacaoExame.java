@@ -30,6 +30,8 @@ public class EmpregadoConvocacaoExame {
 	
 	private boolean exigeRelatorio;
 	
+	private boolean opcional;
+	
 	private Date realizacao;
 	
 	private Date recebimento;
@@ -109,6 +111,14 @@ public class EmpregadoConvocacaoExame {
 
 	public void setExigeRelatorio(boolean exigeRelatorio) {
 		this.exigeRelatorio = exigeRelatorio;
+	}
+
+	public boolean isOpcional() {
+		return opcional;
+	}
+
+	public void setOpcional(boolean opcional) {
+		this.opcional = opcional;
 	}
 
 	@Override

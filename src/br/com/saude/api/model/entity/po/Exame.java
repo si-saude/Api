@@ -42,6 +42,8 @@ public class Exame {
 	@Transient
 	private boolean exigeRelatorio;
 	
+	private boolean opcional;
+	
 	public int getId() {
 		return id;
 	}
@@ -83,6 +85,13 @@ public class Exame {
 	}
 	public void setCampoExames(List<CampoExame> campoExames) {
 		this.campoExames = campoExames;
+	}
+	
+	public boolean isOpcional() {
+		return opcional;
+	}
+	public void setOpcional(boolean opcional) {
+		this.opcional = opcional;
 	}
 	@Override
 	public boolean equals(Object exame) {

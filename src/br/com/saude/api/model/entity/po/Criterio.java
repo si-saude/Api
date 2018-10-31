@@ -23,7 +23,7 @@ public class Criterio {
 	@Size(max = 64, message="Tamanho máximo para Tipo do Critério: 64")
 	private String tipo;
 	
-	@Size(max = 4, message="Tamanho máximo para Operador do Critério: 4")
+	@Size(max = 16, message="Tamanho máximo para Operador do Critério: 16")
 	private String operador;
 	
 	@NotNull(message="É necessário informar Valor do Critério.")
