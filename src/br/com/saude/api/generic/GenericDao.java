@@ -62,7 +62,6 @@ public abstract class GenericDao<T> {
 				entity = this.functionBeforeSave.apply(new Pair<T,Session>(entity,session));
 			
 			T entityMerged = (T) session.merge(entity);
-			transaction.commit();
 			
 			Field id = getId(entity.getClass());
 			id.setAccessible(true);
@@ -77,12 +76,10 @@ public abstract class GenericDao<T> {
 				}
 			}
 			
-			if(this.functionAfterSave != null) {
+			if(this.functionAfterSave != null)
 				entity = this.functionAfterSave.apply(new Pair<T,Session>(entity,session));
-				transaction = session.beginTransaction();
-				transaction.commit();
-			}
 			
+			transaction.commit();
 		}catch(Exception ex) {
 			throw ex;
 		}finally {
