@@ -28,6 +28,7 @@ public class EmpregadoConvocacaoExameExampleBuilder
 		addAuditoria();
 		addExigeRelatorio();
 		addConforme();
+		addOpcional();
 	}
 
 	@Override
@@ -69,5 +70,9 @@ public class EmpregadoConvocacaoExameExampleBuilder
 	
 	private void addConforme() {
 		this.entity.setConforme(this.addBoolean("inativo", this.filter.getConforme()));
+	}
+	
+	private void addOpcional() {
+		this.entity.setOpcional(this.addBoolean("opcional", this.filter.getOpcional()));
 	}
 }

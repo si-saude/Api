@@ -39,6 +39,7 @@ public class EmpregadoConvocacaoExameBuilder
 		newEmpregadoConvocacaoExame.setExigeRelatorio(empregadoConvocacaoExame.isExigeRelatorio());
 		newEmpregadoConvocacaoExame.setRealizacao(empregadoConvocacaoExame.getRealizacao());
 		newEmpregadoConvocacaoExame.setRecebimento(empregadoConvocacaoExame.getRecebimento());
+		newEmpregadoConvocacaoExame.setOpcional(empregadoConvocacaoExame.isOpcional());
 		newEmpregadoConvocacaoExame.setAuditoria(empregadoConvocacaoExame.getAuditoria());
 		newEmpregadoConvocacaoExame.setVersion(empregadoConvocacaoExame.getVersion());
 		
