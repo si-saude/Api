@@ -37,6 +37,7 @@ import br.com.saude.api.model.entity.po.Pessoa;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.QuestionarioConhecimentoAlimentar;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
+import br.com.saude.api.model.entity.po.RespostaQuestionarioConhecimentoAlimentar;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.Exame;
@@ -48,6 +49,7 @@ import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.AsoAlteracao;
 import br.com.saude.api.model.entity.po.AsoAvaliacao;
+import br.com.saude.api.model.entity.po.ItemIndicadorConhecimentoAlimentar;
 
 public class AtendimentoDao extends GenericDao<Atendimento> {
 
@@ -114,9 +116,25 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				}
 			}
 			
-			if(atendimento.getQuestionario() != null)
+			if(atendimento.getQuestionario() != null) {
 				atendimento.setQuestionario(
-						(QuestionarioConhecimentoAlimentar)Hibernate.unproxy(atendimento.getQuestionario()));
+					(QuestionarioConhecimentoAlimentar)Hibernate.unproxy(atendimento.getQuestionario()));
+				if ( atendimento.getQuestionario().getRespostas() != null ) {
+					List<RespostaQuestionarioConhecimentoAlimentar> respostas = new ArrayList<RespostaQuestionarioConhecimentoAlimentar>();
+					atendimento.getQuestionario().getRespostas().forEach(r -> {
+						Hibernate.initialize(r);
+						if ( r.getIndicador().getItemIndicadorConhecimentoAlimentares() != null ) {
+							List<ItemIndicadorConhecimentoAlimentar> itens = new ArrayList<ItemIndicadorConhecimentoAlimentar>();
+							r.getIndicador().getItemIndicadorConhecimentoAlimentares().forEach(i -> {
+								itens.add((ItemIndicadorConhecimentoAlimentar)Hibernate.unproxy(i));
+							});
+							r.getIndicador().setItemIndicadorConhecimentoAlimentares(itens);
+						}
+						respostas.add(r);
+					});
+					atendimento.getQuestionario().setRespostas(respostas);
+				}
+			}
 			
 			if(atendimento.getFilaAtendimentoOcupacional().getLocalizacao() != null)
 				atendimento.getFilaAtendimentoOcupacional().setLocalizacao(

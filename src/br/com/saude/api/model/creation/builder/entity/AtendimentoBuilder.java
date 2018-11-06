@@ -67,7 +67,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 		this.loadQuestionario = atendimentos -> {
 			if (atendimentos.get("origem").getQuestionario() != null)
 				atendimentos.get("destino").setQuestionario(QuestionarioConhecimentoAlimentarBuilder
-						.newInstance(atendimentos.get("origem").getQuestionario())
+						.newInstance(atendimentos.get("origem").getQuestionario()).loadRespostas()
 						.getEntity());
 			return atendimentos.get("destino");
 		};

@@ -21,6 +21,7 @@ public class ItemIndicadorConhecimentoAlimentarExampleBuilder
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
 		addDescricao();
+		addCerto();
 	}
 
 	@Override
@@ -31,6 +32,10 @@ public class ItemIndicadorConhecimentoAlimentarExampleBuilder
 	private void addDescricao() {
 		if(this.filter.getDescricao()!=null)
 			this.criterions.add(Restrictions.ilike("descricao", Helper.filterLike(this.filter.getDescricao())));
+	}
+	
+	protected void addCerto() {
+		this.entity.setCerto(this.addBoolean("certo", this.filter.getCerto()));
 	}
 
 }

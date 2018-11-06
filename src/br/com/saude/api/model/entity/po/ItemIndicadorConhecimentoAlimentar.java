@@ -25,6 +25,8 @@ public class ItemIndicadorConhecimentoAlimentar {
 	
 	private int ordem;
 	
+	private boolean certo;
+	
 	@Version
 	private long version;
 	
@@ -66,6 +68,14 @@ public class ItemIndicadorConhecimentoAlimentar {
 
 	public void setOrdem(int ordem) {
 		this.ordem = ordem;
+	}
+
+	public boolean isCerto() {
+		return certo;
+	}
+
+	public void setCerto(boolean certo) {
+		this.certo = certo;
 	}
 	
 }
