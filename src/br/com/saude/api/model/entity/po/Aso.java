@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -57,6 +58,10 @@ public class Aso {
 	@OneToMany(mappedBy="aso", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<AsoAvaliacao> asoAvaliacoes;
 
+	@OneToMany(mappedBy="aso", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	@OrderBy(value="ordem,descricao")
+	private List<ItemAuditoriaAso> itemAuditoriaAsos;
+
 	@Size(max = 1024, message="Tamanho máximo para Não Conformidade do ASO: 1024")
 	private String naoConformidades;
 	
@@ -88,6 +93,14 @@ public class Aso {
 
 	public void setAsoAvaliacoes(List<AsoAvaliacao> asoAvaliacoes) {
 		this.asoAvaliacoes = asoAvaliacoes;
+	}
+	
+	public List<ItemAuditoriaAso> getItemAuditoriaAsos() {
+		return itemAuditoriaAsos;
+	}
+
+	public void setItemAuditoriaAsos(List<ItemAuditoriaAso> itemAuditoriaAsos) {
+		this.itemAuditoriaAsos = itemAuditoriaAsos;
 	}
 	
 	public boolean isImpressoSd2000() {

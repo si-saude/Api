@@ -87,7 +87,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadTarefa().loadTriagens().loadQuestionario();
+			return builder.loadTarefa().loadTriagens().loadQuestionario().loadAso();
 		};
 	}
 	
@@ -264,8 +264,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 							}
 						});
 					}
-				});	
-				
+				});				
 				atendimento.setAso(aso);
 		}
 		return atendimento;
@@ -468,13 +467,15 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 			atendimento.getAso().setAtendimento(atendimento);
 			atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional().getEmpregado());
 			
+			atendimento.setAso(AsoBo.getInstance().getItensAuditoriaAso(atendimento.getAso()));
+			
 			atendimento.getAso().getAptidoes().forEach(x->{
 				x.setAso(atendimento.getAso());
 			});
 			
 			atendimento.getAso().getAsoAvaliacoes().forEach(x->{
 				x.setAso(atendimento.getAso());
-			});
+			});			
 			
 			if((!atendimento.getAso().isPendente() && (!atendimento.getAso().isConvocado())) 
 					&& atendimento.getAso().getAptidoes().stream().filter(x->x.getAptidaoAso().equals("INAPTO")).count() > 0) {
@@ -831,7 +832,7 @@ private void criarConvocacao(Atendimento atendimento, String tipoConvocacao) thr
 		return tarefas.getTotal() <= 0;
 	}
 	
-	private String getTipoAtendimento(Atendimento atendimento) {
+	public String getTipoAtendimento(Atendimento atendimento) {
 		switch(atendimento.getTarefa().getServico().getGrupo()) {
 			case GrupoServico.ATENDIMENTO_OCUPACIONAL:
 			
@@ -1197,12 +1198,12 @@ private void criarConvocacao(Atendimento atendimento, String tipoConvocacao) thr
 							risco.setAtual(true);
 							risco.setStatus(StatusRiscoPotencial.getInstance().ABERTO);
 							risco.setAbreviacaoEquipeAcolhimento(tarefaAcolhimento.getEquipe().getAbreviacao());
-							atendimentoAux.getFilaEsperaOcupacional().setRiscoPotencial(risco);
 							
 							//ATUALIZAR RISCOS ANTIGOS
 							FilaEsperaOcupacionalBo.getInstance().atualizarRiscosAntigos(
 									atendimentoAux.getFilaEsperaOcupacional().getEmpregado());
 						}
+						atendimentoAux.getFilaEsperaOcupacional().setRiscoPotencial(risco);
 					}
 				}
 				

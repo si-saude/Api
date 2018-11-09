@@ -1,23 +1,27 @@
 package br.com.saude.api.model.business;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.AsoBuilder;
 import br.com.saude.api.model.creation.builder.example.AsoExampleBuilder;
 import br.com.saude.api.model.entity.filter.AsoFilter;
+import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
+import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.filter.RequisitoAsoFilter;
 import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.AsoAlteracao;
-import br.com.saude.api.model.entity.po.Atendimento;
-import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.entity.po.EmpregadoConvocacaoExame;
 import br.com.saude.api.model.entity.po.Ghe;
 import br.com.saude.api.model.entity.po.GrupoMonitoramento;
+import br.com.saude.api.model.entity.po.ItemAuditoriaAso;
 import br.com.saude.api.model.entity.po.RequisitoAso;
 import br.com.saude.api.model.persistence.AsoDao;
 import br.com.saude.api.util.constant.StatusAso;
@@ -44,7 +48,7 @@ public class AsoBo
 		};
 		
 		this.functionLoadAll = builder -> {
-			return this.functionLoad.apply(builder).loadAlteracoes().loadAvaliacoes().loadAptidoes().loadExamesConvocacao();
+			return this.functionLoad.apply(builder).loadAlteracoes().loadAvaliacoes().loadAptidoes().loadExamesConvocacao().loadItemsAuditoriaAso();
 		};
 	}
 
@@ -67,102 +71,125 @@ public class AsoBo
 				this.functionLoadAll);
 	}
 	
-	public List<RequisitoAso> getExamesConvocacao(Aso aso) throws Exception {
-		Atendimento atendimento = AtendimentoBo.getInstance().getById(aso.getAtendimento().getId());	
-		EmpregadoConvocacaoFilter empConFilter = 
-				AtendimentoBo.getInstance().configureEmpregadoConvocacaoFilter(atendimento);
+	public Aso getItensAuditoriaAso(Aso aso) throws Exception {
+			
 		
+		EmpregadoConvocacaoFilter empConFilter = new EmpregadoConvocacaoFilter();
+		empConFilter.setPageNumber(1);
+		empConFilter.setPageSize(Integer.MAX_VALUE);
+		empConFilter.setEmpregado(new EmpregadoFilter());
+		empConFilter.getEmpregado().setId(aso.getEmpregado().getId());
+		empConFilter.setConvocacao(new ConvocacaoFilter());
+		empConFilter.getConvocacao().setTipo(AtendimentoBo.getInstance().getTipoAtendimento(aso.getAtendimento()));
+
 		//ALTERAR PARA LISTALL
-		PagedList<EmpregadoConvocacao> pagedList = 
-				EmpregadoConvocacaoBo.getInstance().getListLoadAll(empConFilter);
+		
+		PagedList<EmpregadoConvocacao> pagedList= EmpregadoConvocacaoBo.getInstance().getListLoadAll(empConFilter);
+		List<EmpregadoConvocacao> list =  new ArrayList<EmpregadoConvocacao>();
+		EmpregadoConvocacao empregadoConvocacao = null;
+		if(pagedList.getTotal() > 0 ) {
+			list = pagedList.getList().stream().filter(x-> x.getDataConvocacao() != null).collect(Collectors.toList());
+		}
+		if(list.size() > 0)
+		empregadoConvocacao = Collections.max(list,Comparator.comparing(s -> s.getDataConvocacao()));
+		
+		aso.setEmpregado(EmpregadoBo.getInstance().getById(
+				aso.getEmpregado().getId()));
+		
+		
+		if(aso.getItemAuditoriaAsos() == null)
+			aso.setItemAuditoriaAsos(new ArrayList<ItemAuditoriaAso>());
+		
+		if(empregadoConvocacao != null) {
+			for(EmpregadoConvocacaoExame e : empregadoConvocacao.getEmpregadoConvocacaoExames()) {
+				if(e.isOpcional() == false) {
+					ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
+					itemAuditoriaAso.setDescricao(e.getExame().getCodigo()+" - "+e.getExame().getDescricao());
+					itemAuditoriaAso.setAso(aso);
+					itemAuditoriaAso.setOrdem(2);
+					aso.getItemAuditoriaAsos().add(itemAuditoriaAso);
+				}
+			}
+		}
+		
+		aso = getRequisitosAso(aso, empregadoConvocacao);
+		
+		if(aso.getEmpregado().getGrupoMonitoramentos() != null) {
+
+				for(GrupoMonitoramento g : aso.getEmpregado().getGrupoMonitoramentos()) {
+					
+					if(aso.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(g.getNome())).count() == 0){
+					    ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
+						itemAuditoriaAso.setDescricao(g.getNome());
+						itemAuditoriaAso.setAso(aso);
+						itemAuditoriaAso.setOrdem(3);
+						aso.getItemAuditoriaAsos().add(itemAuditoriaAso);
+					}	
+				}
+				List<GrupoMonitoramento> gruposMonitoramentoAtividadeCritica = new ArrayList<GrupoMonitoramento>();
+				if(aso.getEmpregado().getGrupoMonitoramentos().stream().count() > 0) {
+					gruposMonitoramentoAtividadeCritica = aso.getEmpregado().getGrupoMonitoramentos().stream().filter(x->x.getTipoGrupoMonitoramento().getNome().equals("ATIVIDADES CRÍTICAS")).collect(Collectors.toList());
+				}
+				if(gruposMonitoramentoAtividadeCritica != null) {	
+					
+					for(GrupoMonitoramento gAt : gruposMonitoramentoAtividadeCritica) {
+						Aso asoAux = aso;
+						gAt.getAvaliacoes().forEach(a->{
+							if(asoAux.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(a.getNome())).count() == 0) {
+								 	ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
+									itemAuditoriaAso.setDescricao(a.getNome());
+									itemAuditoriaAso.setAso(asoAux);
+									itemAuditoriaAso.setOrdem(4);
+									asoAux.getItemAuditoriaAsos().add(itemAuditoriaAso);
+									
+							}							
+						});
+					}
+					
+				}
+		}
+		return aso;
+	}
+	
+	private Aso getRequisitosAso(Aso aso,EmpregadoConvocacao eCc) throws Exception {
 		
 		RequisitoAsoFilter reqFilter = new RequisitoAsoFilter();
 		reqFilter.setPageNumber(1);
 		reqFilter.setPageSize(Integer.MAX_VALUE);
-		
-		Empregado empregado = EmpregadoBo.getInstance().getById(
-				atendimento.getFilaEsperaOcupacional().getEmpregado().getId());
-		
 		List<RequisitoAso> requisitos = RequisitoAsoBo.getInstance().getList(reqFilter).getList();
 		
-		EmpregadoConvocacao eC = null;
-		
-		//ADD EXAMES
-		if(pagedList.getTotal() > 0)
-			eC = pagedList.getList().get(0);
-		
-		EmpregadoConvocacao eCc = eC;
-		//SUBSTITUIR AS VARIÁVEIS
-		requisitos.forEach(r -> {			
+		requisitos.forEach(r -> {		
+			ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
+			itemAuditoriaAso.setOrdem(1);
 			if(r.getConteudo().contains("[NOME]")) {
-				r.setConteudo(r.getConteudo().replace("[NOME]", ": "+empregado.getPessoa().getNome()));
+				itemAuditoriaAso.setDescricao(r.getConteudo().replace("[NOME]", ": "+aso.getEmpregado().getPessoa().getNome()));
 			}else if(r.getConteudo().contains("[CARGO]")) {
-				r.setConteudo(r.getConteudo().replace("[CARGO]", ": "+empregado.getCargo().getNome()));
+				itemAuditoriaAso.setDescricao(r.getConteudo().replace("[CARGO]", ": "+aso.getEmpregado().getCargo().getNome()));
 			}else if(r.getConteudo().contains("[GERENCIA]")) {
-				if(empregado.getGerencia() != null)
-					r.setConteudo(r.getConteudo().replace("[GERENCIA]", 
-							": "+empregado.getGerencia().getCodigoCompleto()));
+				if(aso.getEmpregado().getGerencia() != null)
+					itemAuditoriaAso.setDescricao(r.getConteudo().replace("[GERENCIA]", 
+							": "+aso.getEmpregado().getGerencia().getCodigoCompleto()));
 			}else if(r.getConteudo().contains("[TIPO_CONVOCACAO]")) {
 				if(eCc != null)
-					r.setConteudo(r.getConteudo().replace("[TIPO_CONVOCACAO]", 
+					itemAuditoriaAso.setDescricao(r.getConteudo().replace("[TIPO_CONVOCACAO]", 
 							": "+eCc.getConvocacao().getTipo()));
 			}else if(r.getConteudo().contains("[RISCOS_GHE]")) {
-				if(empregado.getGhe() != null) {
+				if(aso.getEmpregado().getGhe() != null) {
 					try {
-						Ghe ghe = GheBo.getInstance().getById(empregado.getGhe());
-						r.setConteudo(r.getConteudo().replace("[RISCOS_GHE]", 
+						Ghe ghe = GheBo.getInstance().getById(aso.getEmpregado().getGhe());
+						itemAuditoriaAso.setDescricao(r.getConteudo().replace("[RISCOS_GHE]", 
 								": "+ghe.getDescricao()));					
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 				}
 			}
-		});
-		
-		if(eC != null)
-			eC.getEmpregadoConvocacaoExames().forEach(e->{
-				RequisitoAso requisito = new RequisitoAso();
-				requisito.setConteudo(e.getExame().getCodigo()+" - "+e.getExame().getDescricao());
-				
-				//SE O EXAME FOR OPCIONAL PARA O EMPREGADO, ADICIONAR OPCIONAL NO CONTEÚDO DO REQUISITO
-				
-				requisitos.add(requisito);
-			});
-		
-		//GRUPOS DE MONITORAMENTO
-		boolean pssicossocial = false;
-		boolean usoDeMascara = false;
-		
-		if(empregado.getGrupoMonitoramentos() != null) {
-			for(GrupoMonitoramento g : empregado.getGrupoMonitoramentos()) {
-				RequisitoAso requisito = null;
-				
-				//VERIFICAR SE É NR
-				if(g.getNome().contains("(NR")) {
-					requisito = new RequisitoAso();
-					requisito.setConteudo(g.getNome());
-					requisitos.add(requisito);
-				}
-				
-				//VERIFICAR SE ENTRA AVALIAÇÃO BIOPSSICOSSOCIAL
-				if(g.isAuditoriaAso() && (!pssicossocial)) {
-					requisito = new RequisitoAso();
-					requisito.setConteudo("Avaliação Biopsicossocial");
-					requisitos.add(requisito);
-					pssicossocial = true;
-				}
-				
-				//VERIFICAR SE ENTRA AVALIAÇÃO P/ USO DE MÁSCARA
-				if((g.getNome().contains("(NR 33)") || g.getNome().contains("(NR 20)")) && (!usoDeMascara)) {
-					requisito = new RequisitoAso();
-					requisito.setConteudo("Avaliação para uso de máscara");
-					requisitos.add(requisito);
-					usoDeMascara = true;
-				}
+			if(itemAuditoriaAso.getDescricao() != null && aso.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(itemAuditoriaAso.getDescricao())).count() == 0) {
+				itemAuditoriaAso.setAso(aso);
+				aso.getItemAuditoriaAsos().add(itemAuditoriaAso);
 			}
-		}
-
-		return requisitos;
+		});
+		return aso;
 	}
 	
 	@Override
@@ -208,6 +235,9 @@ public class AsoBo
 		aso.getAsoAlteracoes().add(asoAlteracao);
 		aso.getAsoAlteracoes().forEach(aA->aA.setAso(aso));		
 		
+		aso.getAptidoes().forEach(a->a.setAso(aso));
+		aso.getAsoAvaliacoes().forEach(av->av.setAso(aso));
+		aso.getItemAuditoriaAsos().forEach(i->i.setAso(aso));
 		return super.save(aso);
 	}
 }

@@ -42,6 +42,7 @@ public class Exame {
 	@Transient
 	private boolean exigeRelatorio;
 	
+	@Transient
 	private boolean opcional;
 	
 	public int getId() {
