@@ -48,7 +48,7 @@ public class NutricaoAlimentoBuilder extends GenericEntityBuilder<NutricaoAlimen
 		NutricaoAlimento newNutricaoAlimento = new NutricaoAlimento();
 		newNutricaoAlimento.setId(nutricaoAlimento.getId());
 		newNutricaoAlimento.setVersion(nutricaoAlimento.getVersion());
-		newNutricaoAlimento.setAlimento(nutricaoAlimento.getAlimento());
+		newNutricaoAlimento.setNome(nutricaoAlimento.getNome());
 		newNutricaoAlimento.setTipo(nutricaoAlimento.getTipo());
 		newNutricaoAlimento.setPadrao(nutricaoAlimento.getPadrao());
 		newNutricaoAlimento.setEnergia(nutricaoAlimento.getEnergia());

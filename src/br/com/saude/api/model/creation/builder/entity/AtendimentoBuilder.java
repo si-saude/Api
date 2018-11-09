@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.proxy.HibernateProxy;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
@@ -17,6 +16,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	private Function<Map<String,Atendimento>,Atendimento> loadTriagens;
 	private Function<Map<String,Atendimento>,Atendimento> loadAso;
 	private Function<Map<String,Atendimento>,Atendimento> loadQuestionario;
+	private Function<Map<String,Atendimento>,Atendimento> loadRecordatorio;
 	
 	public static AtendimentoBuilder newInstance(Atendimento atendimento) {
 		return new AtendimentoBuilder(atendimento);
@@ -71,6 +71,14 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 						.getEntity());
 			return atendimentos.get("destino");
 		};
+		
+		this.loadRecordatorio = atendimentos -> {
+			if (atendimentos.get("origem").getRecordatorio() != null)
+				atendimentos.get("destino").setRecordatorio(RecordatorioBuilder
+						.newInstance(atendimentos.get("origem").getRecordatorio()).loadRefeicoes()
+						.getEntity());
+			return atendimentos.get("destino");
+		};
 	}
 
 	@Override
@@ -86,9 +94,6 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 			
 			if(!(atendimento.getFilaAtendimentoOcupacional().getLocalizacao() instanceof HibernateProxy))
 				filaAtendBuilder = filaAtendBuilder.loadLocalizacao();
-			
-			if(!(atendimento.getFilaAtendimentoOcupacional().getAtualizacoes() instanceof PersistentBag))
-				filaAtendBuilder = filaAtendBuilder.loadAtualizacoes();
 			
 			newAtendimento.setFilaAtendimentoOcupacional(filaAtendBuilder.getEntity());
 		}
@@ -122,6 +127,10 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	
 	public AtendimentoBuilder loadQuestionario() {
 		return (AtendimentoBuilder) this.loadProperty(this.loadQuestionario);
+	}
+	
+	public AtendimentoBuilder loadRecordatorio() {
+		return (AtendimentoBuilder) this.loadProperty(this.loadRecordatorio);
 	}
 	
 	public AtendimentoBuilder loadTriagens() {

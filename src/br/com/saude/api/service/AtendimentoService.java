@@ -211,7 +211,8 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 	@Path("/atualizar")
 	public Response atualizar(Atendimento atendimento) {
 		try {
-			return Response.ok(FilaAtendimentoOcupacionalBo.getInstance().atualizar(atendimento)).build();
+			Atendimento a = FilaAtendimentoOcupacionalBo.getInstance().atualizar(atendimento);
+			return Response.ok(a).build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}

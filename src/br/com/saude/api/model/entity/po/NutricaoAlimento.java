@@ -18,8 +18,8 @@ public class NutricaoAlimento {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@Size(max = 256, message="Tamanho máximo para o Alimento do Alimento: 256")
-	private String alimento;
+	@Size(max = 256, message="Tamanho máximo para o Nome do Alimento: 256")
+	private String nome;
 	
 	@OneToMany(mappedBy="nutricaoAlimento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<NutricaoAlimentoMedidaAlimentar> nutricaoAlimentoMedidaAlimentares;
@@ -65,11 +65,11 @@ public class NutricaoAlimento {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getAlimento() {
-		return alimento;
+	public String getNome() {
+		return nome;
 	}
-	public void setAlimento(String alimento) {
-		this.alimento = alimento;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 	public String getTipo() {
 		return tipo;

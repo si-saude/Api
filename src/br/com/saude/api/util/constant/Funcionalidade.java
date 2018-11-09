@@ -16,6 +16,11 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String RECORDATORIO_LISTAR								= "RECORDATORIO_LISTAR";
+	public static final String RECORDATORIO_ADICIONAR 			    			= "RECORDATORIO_ADICIONAR";
+	public static final String RECORDATORIO_ALTERAR		 						= "RECORDATORIO_ALTERAR";
+	public static final String RECORDATORIO_REMOVER 							= "RECORDATORIO_REMOVER";
+	public static final String RECORDATORIO_DETALHE 							= "RECORDATORIO_DETALHE";
 	public static final String QUESTIONARIO_CONHECIMENTO_ALIMENTAR_LISTAR								= "QUESTIONARIO-CONHECIMENTO-ALIMENTAR_LISTAR";
 	public static final String QUESTIONARIO_CONHECIMENTO_ALIMENTAR_ADICIONAR 			    			= "QUESTIONARIO-CONHECIMENTO-ALIMENTAR_ADICIONAR";
 	public static final String QUESTIONARIO_CONHECIMENTO_ALIMENTAR_ALTERAR		 						= "QUESTIONARIO-CONHECIMENTO-ALIMENTAR_ALTERAR";
