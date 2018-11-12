@@ -42,6 +42,8 @@ public class EmpregadoConvocacaoExame {
 	
 	private Date auditoria;
 	
+	private boolean resultadoConforme;
+	
 	@Version
 	private long version;
 
@@ -54,6 +56,14 @@ public class EmpregadoConvocacaoExame {
 		this.id = id;
 	}
 	
+	public boolean isResultadoConforme() {
+		return resultadoConforme;
+	}
+
+	public void setResultadoConforme(boolean resultadoConforme) {
+		this.resultadoConforme = resultadoConforme;
+	}
+
 	public String getResultado() {
 		return resultado;
 	}
