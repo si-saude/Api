@@ -419,12 +419,12 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
 		
 		atendimento.getFilaEsperaOcupacional().setStatus(StatusFilaEsperaOcupacional.getInstance()
-				.AUSENTE);
+				.EM_ATENDIMENTO);
 		
 		atendimento = addAtualizacao(finalizar(atendimento, new Date(atendimento.getTarefa().getInicio().getTime())));
 		
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
-				StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO_AUTOMATICAMENTE);
+				StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO_AUTOMATICAMENTE);	
 		
 		atendimento = tratarAtendimento(atendimento);
 		atendimento = carregarAso(atendimento);
@@ -1099,8 +1099,10 @@ private void criarConvocacao(Atendimento atendimento, String tipoConvocacao) thr
 		if((atendimentoAux.getAso() == null || atendimentoAux.getAso().getId() == 0) ||
 		   (atendimentoAux.getAso() != null && atendimentoAux.getAso().getId() > 0 && (!atendimentoAux.getAso().isConvocado()))) {
 			atendimentoAux = gerarAso(atendimentoAux);
-			atendimentoAux.getAso().getAptidoes().forEach(x->x.setAso(null));
-			atendimentoAux.getAso().getAsoAvaliacoes().forEach(x->x.setAso(null));
+			if(atendimentoAux.getAso() != null) {
+				atendimentoAux.getAso().getAptidoes().forEach(x->x.setAso(null));
+				atendimentoAux.getAso().getAsoAvaliacoes().forEach(x->x.setAso(null));
+			}
 		}
 		atendimentoAux.getFilaAtendimentoOcupacional().setStatus(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
 		
