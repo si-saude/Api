@@ -27,7 +27,7 @@ public class EmpregadoConvocacaoExame {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Exame exame;	
 	
-	@Size(max = 256, message="Tamanho máximo para Laboratório da Vacina: 256")
+	@Size(max = 1048, message="Tamanho máximo para Laboratório da Vacina: 1048")
 	private String resultado;
 	
 	private boolean conforme;
