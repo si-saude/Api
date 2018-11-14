@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Pair;
@@ -172,7 +173,15 @@ public abstract class GenericDao<T> {
 					criteria.add(criterion);
 			
 			criteria = Helper.loopCriterias(criteria, exampleBuilder.getCriterias());			
-			criteria = finishCriteria(criteria,exampleBuilder);			
+			criteria = finishCriteria(criteria,exampleBuilder);	
+			
+			if(exampleBuilder.getFilter().getOrder() != null) {
+				Order order = exampleBuilder.getFilter().getOrder().isDesc() ?
+							Order.desc(exampleBuilder.getFilter().getOrder().getProperty()):
+							Order.asc(exampleBuilder.getFilter().getOrder().getProperty());
+				criteria.addOrder(order);
+			}
+			
 			list = criteria.list();
 			
 			if(function != null)
