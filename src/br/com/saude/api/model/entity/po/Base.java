@@ -22,7 +22,7 @@ public class Base {
 	private String nome;
 	
 	@NotNull(message="É necessário informar UF da Base.")
-	@Size(max = 3, message="Tamanho máximo para UF da Base: 2")
+	@Size(max = 3, message="Tamanho máximo para UF da Base: 3")
 	private String uf;
 	
 	@Version
