@@ -66,7 +66,7 @@ public class EmpregadoBo
 
 		this.functionLoadAll = builder -> {
 			return this.functionLoad.apply(builder).loadBase().loadRegime().loadGhe().loadGhee().loadInstalacoes()
-					.loadEmpregadoVacinas().loadGrupoMonitoramentos().loadHistoricoGrupoMonitoramentos().loadEndereco()
+					.loadEmpregadoVacinas().loadTipoGrupoMonitoramento().loadHistoricoGrupoMonitoramentos().loadEndereco()
 					.loadTelefones().loadEnfase();
 		};
 

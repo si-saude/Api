@@ -68,7 +68,7 @@ public class UsuarioService extends GenericServiceImpl<Usuario,UsuarioFilter,Usu
 	@Path("/list")
 	public Response getList(UsuarioFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
-		return super.getListGeneric(filter);
+		return Response.ok(getBo().getListLoadPessoa(filter).getGenericPagedList()).build();
 	}
 
 	@Override

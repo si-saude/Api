@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class EmpregadoConvocacaoExame {
@@ -24,7 +25,10 @@ public class EmpregadoConvocacaoExame {
 	
 	@NotNull(message="É necessário informar o Exame do Empregado.")
 	@ManyToOne(fetch=FetchType.EAGER)
-	private Exame exame;
+	private Exame exame;	
+	
+	@Size(max = 1048, message="Tamanho máximo para Laboratório da Vacina: 1048")
+	private String resultado;
 	
 	private boolean conforme;
 	
@@ -38,8 +42,11 @@ public class EmpregadoConvocacaoExame {
 	
 	private Date auditoria;
 	
+	private boolean resultadoConforme;
+	
 	@Version
 	private long version;
+
 
 	public int getId() {
 		return id;
@@ -47,6 +54,22 @@ public class EmpregadoConvocacaoExame {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public boolean isResultadoConforme() {
+		return resultadoConforme;
+	}
+
+	public void setResultadoConforme(boolean resultadoConforme) {
+		this.resultadoConforme = resultadoConforme;
+	}
+
+	public String getResultado() {
+		return resultado;
+	}
+	
+	public void setResultado(String resultado) {
+		this.resultado = resultado;
 	}
 
 	public EmpregadoConvocacao getEmpregadoConvocacao() {

@@ -15,6 +15,7 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 	private Function<Map<String,Aso>,Aso> loadAlteracoes;
 	private Function<Map<String,Aso>,Aso> loadAvaliacoes;
 	private Function<Map<String,Aso>,Aso> loadAptidoes;
+	private Function<Map<String,Aso>,Aso> loadItemAuditoriaAsos;
 	private Function<Map<String,Aso>,Aso> loadExamesConvocacao;
 	
 	public static AsoBuilder newInstance(Aso aso) {
@@ -35,6 +36,13 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 
 	@Override
 	protected void initializeFunctions() {
+		this.loadItemAuditoriaAsos = asos -> {
+			if(asos.get("origem").getItemAuditoriaAsos() != null)
+				asos.get("destino").setItemAuditoriaAsos(ItemAuditoriaAsoBuilder
+						.newInstance(asos.get("origem").getItemAuditoriaAsos()).getEntityList());
+			return asos.get("destino");
+		};
+		
 		this.loadEmpregado = asos -> {
 			if(asos.get("origem").getEmpregado() != null)
 				asos.get("destino").setEmpregado(EmpregadoBuilder
@@ -129,6 +137,10 @@ public class AsoBuilder extends GenericEntityBuilder<Aso, AsoFilter> {
 	
 	public AsoBuilder loadExamesConvocacao() {
 		return (AsoBuilder) this.loadProperty(this.loadExamesConvocacao);
+	}
+	
+	public AsoBuilder loadItemsAuditoriaAso() {
+		return (AsoBuilder) this.loadProperty(this.loadItemAuditoriaAsos);
 	}
 
 	@Override

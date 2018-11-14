@@ -61,7 +61,7 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 			empregado = loadRegime(empregado);
 			empregado = loadInstalacoes(empregado);
 			empregado = loadEmpregadoVacinas(empregado);
-			empregado = loadGrupoMonitoramentos(empregado);
+			empregado = loadGrupoTipoMonitoramento(empregado);
 			empregado = loadHistoricoGrupoMonitoramentos(empregado);
 			empregado = loadEndereco(empregado);
 			empregado = loadTelefones(empregado);
