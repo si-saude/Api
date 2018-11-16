@@ -248,15 +248,11 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				aso.setAptidoes(new ArrayList<Aptidao>());
 				aso.setAsoAvaliacoes(new ArrayList<AsoAvaliacao>());
 				
-				aso.getEmpregado().getGrupoMonitoramentos().stream().filter(x-> x.getTipoGrupoMonitoramento().getNome().equals("ATIVIDADES CRÍTICAS")).forEach(x->{
-					Aptidao aptidao = new Aptidao();
-					aptidao.setAso(aso);
-					aptidao.setGrupoMonitoramento(x);
-					aso.getAptidoes().add(aptidao);	
+				aso.getEmpregado().getGrupoMonitoramentos().stream().forEach(x->{
 					
 					if(x.getAvaliacoes() != null) {						
 						x.getAvaliacoes().forEach(a->{
-							if(aso.getAsoAvaliacoes().stream().filter(y-> y.getDescricao().equals(a.getNome())).count() == 0 ) {
+							if(aso.getAsoAvaliacoes().stream().filter(y-> y.getDescricao().equals(a.getNome())).count() == 0 && a.isAuditoriaMedico() ) {
 								AsoAvaliacao asoAvaliacao = new AsoAvaliacao();
 								asoAvaliacao.setDescricao(a.getNome());	
 								asoAvaliacao.setAso(aso);
@@ -264,6 +260,13 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 							}
 						});
 					}
+					
+					if(x.getTipoGrupoMonitoramento().getNome().equals("ATIVIDADES CRÍTICAS")) {
+							Aptidao aptidao = new Aptidao();
+							aptidao.setAso(aso);
+							aptidao.setGrupoMonitoramento(x);
+							aso.getAptidoes().add(aptidao);	
+					}				
 				});				
 				atendimento.setAso(aso);
 		}
@@ -427,7 +430,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				StatusFilaAtendimentoOcupacional.getInstance().ENCERRADO_AUTOMATICAMENTE);	
 		
 		atendimento = tratarAtendimento(atendimento);
-		atendimento = carregarAso(atendimento);
+		atendimento = criarAso(atendimento);
 		Atendimento aux = atendimento;
 		if(aux.getFilaEsperaOcupacional().getRiscoPotencial() != null && aux.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados() != null) {
 			Optional<RiscoEmpregado> riscoEmpregado = aux.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados().stream().filter(r -> 
@@ -462,12 +465,12 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		return servico;
 	}
 	
-	public Atendimento carregarAso(Atendimento atendimento) throws Exception {		
+	public Atendimento criarAso(Atendimento atendimento) throws Exception {		
 		if(atendimento.getAso() != null) {
 			atendimento.getAso().setAtendimento(atendimento);
 			atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional().getEmpregado());
 			
-			atendimento.setAso(AsoBo.getInstance().getItensAuditoriaAso(atendimento.getAso()));
+			atendimento.setAso(AsoBo.getInstance().criarItensAuditoriaAso(atendimento.getAso()));
 			
 			atendimento.getAso().getAptidoes().forEach(x->{
 				x.setAso(atendimento.getAso());
@@ -633,7 +636,7 @@ private void criarConvocacao(Atendimento atendimento, String tipoConvocacao) thr
 		atendimento = merge(atendimento);
 		atendimento = addAtualizacao(finalizar(atendimento,Helper.getNow()));
 		atendimento.getTarefa().setFim(Helper.getNow());
-		atendimento = carregarAso(atendimento);
+		atendimento = criarAso(atendimento);
 		return save(atendimento);
 	}
 	
@@ -644,7 +647,7 @@ private void criarConvocacao(Atendimento atendimento, String tipoConvocacao) thr
 		atendimento.getFilaAtendimentoOcupacional().setStatus(
 				StatusFilaAtendimentoOcupacional.getInstance().INDISPONIVEL);
 		atendimento.getTarefa().setFim(Helper.getNow());
-		atendimento = carregarAso(atendimento);
+		atendimento = criarAso(atendimento);
 		
 		return save(atendimento);
 	}

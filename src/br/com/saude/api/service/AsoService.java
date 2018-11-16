@@ -60,7 +60,7 @@ public class AsoService extends GenericServiceImpl<Aso, AsoFilter, AsoBo>
 	@Path("/list-requisito-exame")
 	public Response getListRequisitoExame(Aso aso) throws Exception {
 		try {
-			return Response.ok(getBo().getItensAuditoriaAso(aso)).build();
+			return Response.ok(getBo().criarItensAuditoriaAso(aso)).build();
 		}catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}

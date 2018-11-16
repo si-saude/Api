@@ -1,13 +1,14 @@
 package br.com.saude.api.model.business;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
+import br.com.saude.api.generic.OrderFilter;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.AsoBuilder;
 import br.com.saude.api.model.creation.builder.example.AsoExampleBuilder;
 import br.com.saude.api.model.entity.filter.AsoFilter;
@@ -71,27 +72,28 @@ public class AsoBo
 				this.functionLoadAll);
 	}
 	
-	public Aso getItensAuditoriaAso(Aso aso) throws Exception {
+	public Aso criarItensAuditoriaAso(Aso aso) throws Exception {
 			
-		
 		EmpregadoConvocacaoFilter empConFilter = new EmpregadoConvocacaoFilter();
 		empConFilter.setPageNumber(1);
-		empConFilter.setPageSize(Integer.MAX_VALUE);
+		empConFilter.setPageSize(1);
 		empConFilter.setEmpregado(new EmpregadoFilter());
 		empConFilter.getEmpregado().setId(aso.getEmpregado().getId());
 		empConFilter.setConvocacao(new ConvocacaoFilter());
 		empConFilter.getConvocacao().setTipo(AtendimentoBo.getInstance().getTipoAtendimento(aso.getAtendimento()));
-
+		empConFilter.setDataConvocacao(new DateFilter());
+		empConFilter.getDataConvocacao().setTypeFilter(TypeFilter.MENOR_IGUAL);
+		empConFilter.getDataConvocacao().setInicio(Helper.getNow());
+		empConFilter.setOrder(new OrderFilter());
+		empConFilter.getOrder().setDesc(true);
+		empConFilter.getOrder().setProperty("dataConvocacao");
 		//ALTERAR PARA LISTALL
 		
 		PagedList<EmpregadoConvocacao> pagedList= EmpregadoConvocacaoBo.getInstance().getListLoadAll(empConFilter);
-		List<EmpregadoConvocacao> list =  new ArrayList<EmpregadoConvocacao>();
 		EmpregadoConvocacao empregadoConvocacao = null;
-		if(pagedList.getTotal() > 0 ) {
-			list = pagedList.getList().stream().filter(x-> x.getDataConvocacao() != null).collect(Collectors.toList());
-		}
-		if(list.size() > 0)
-		empregadoConvocacao = Collections.max(list,Comparator.comparing(s -> s.getDataConvocacao()));
+		
+		if(pagedList.getTotal() > 0 && pagedList.getList().get(0).getDataConvocacao() != null)
+			empregadoConvocacao = pagedList.getList().get(0);
 		
 		aso.setEmpregado(EmpregadoBo.getInstance().getById(
 				aso.getEmpregado().getId()));
@@ -115,38 +117,33 @@ public class AsoBo
 		aso = getRequisitosAso(aso, empregadoConvocacao);
 		
 		if(aso.getEmpregado().getGrupoMonitoramentos() != null) {
-
-				for(GrupoMonitoramento g : aso.getEmpregado().getGrupoMonitoramentos()) {
+							
+			for(GrupoMonitoramento gAt : aso.getEmpregado().getGrupoMonitoramentos()) {
+				Aso asoAux = aso;
+				
+				if(gAt.getTipoGrupoMonitoramento().getNome().equals("ATIVIDADES CRÍTICAS")) {
 					
-					if(aso.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(g.getNome())).count() == 0){
+					if(aso.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(gAt.getNome())).count() == 0){
 					    ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
-						itemAuditoriaAso.setDescricao(g.getNome());
+						itemAuditoriaAso.setDescricao(gAt.getNome());
 						itemAuditoriaAso.setAso(aso);
 						itemAuditoriaAso.setOrdem(3);
 						aso.getItemAuditoriaAsos().add(itemAuditoriaAso);
-					}	
+					}					
 				}
-				List<GrupoMonitoramento> gruposMonitoramentoAtividadeCritica = new ArrayList<GrupoMonitoramento>();
-				if(aso.getEmpregado().getGrupoMonitoramentos().stream().count() > 0) {
-					gruposMonitoramentoAtividadeCritica = aso.getEmpregado().getGrupoMonitoramentos().stream().filter(x->x.getTipoGrupoMonitoramento().getNome().equals("ATIVIDADES CRÍTICAS")).collect(Collectors.toList());
-				}
-				if(gruposMonitoramentoAtividadeCritica != null) {	
+				
+				gAt.getAvaliacoes().forEach(a->{
+					if(asoAux.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(a.getNome())).count() == 0 && a.isAuditoriaAso()) {
+						 	ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
+							itemAuditoriaAso.setDescricao(a.getNome());
+							itemAuditoriaAso.setAso(asoAux);
+							itemAuditoriaAso.setOrdem(4);
+							asoAux.getItemAuditoriaAsos().add(itemAuditoriaAso);
+							
+					}							
+				});
+			}
 					
-					for(GrupoMonitoramento gAt : gruposMonitoramentoAtividadeCritica) {
-						Aso asoAux = aso;
-						gAt.getAvaliacoes().forEach(a->{
-							if(asoAux.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(a.getNome())).count() == 0) {
-								 	ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
-									itemAuditoriaAso.setDescricao(a.getNome());
-									itemAuditoriaAso.setAso(asoAux);
-									itemAuditoriaAso.setOrdem(4);
-									asoAux.getItemAuditoriaAsos().add(itemAuditoriaAso);
-									
-							}							
-						});
-					}
-					
-				}
 		}
 		return aso;
 	}
