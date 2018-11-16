@@ -71,9 +71,8 @@ public class AsoBo
 				this.functionLoadAll);
 	}
 	
-	public Aso getItensAuditoriaAso(Aso aso) throws Exception {
+	public Aso criarItensAuditoriaAso(Aso aso) throws Exception {
 			
-		
 		EmpregadoConvocacaoFilter empConFilter = new EmpregadoConvocacaoFilter();
 		empConFilter.setPageNumber(1);
 		empConFilter.setPageSize(Integer.MAX_VALUE);
@@ -115,38 +114,33 @@ public class AsoBo
 		aso = getRequisitosAso(aso, empregadoConvocacao);
 		
 		if(aso.getEmpregado().getGrupoMonitoramentos() != null) {
-
-				for(GrupoMonitoramento g : aso.getEmpregado().getGrupoMonitoramentos()) {
+							
+			for(GrupoMonitoramento gAt : aso.getEmpregado().getGrupoMonitoramentos()) {
+				Aso asoAux = aso;
+				
+				if(gAt.getTipoGrupoMonitoramento().getNome().equals("ATIVIDADES CRÍTICAS")) {
 					
-					if(aso.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(g.getNome())).count() == 0){
+					if(aso.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(gAt.getNome())).count() == 0){
 					    ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
-						itemAuditoriaAso.setDescricao(g.getNome());
+						itemAuditoriaAso.setDescricao(gAt.getNome());
 						itemAuditoriaAso.setAso(aso);
 						itemAuditoriaAso.setOrdem(3);
 						aso.getItemAuditoriaAsos().add(itemAuditoriaAso);
-					}	
+					}					
 				}
-				List<GrupoMonitoramento> gruposMonitoramentoAtividadeCritica = new ArrayList<GrupoMonitoramento>();
-				if(aso.getEmpregado().getGrupoMonitoramentos().stream().count() > 0) {
-					gruposMonitoramentoAtividadeCritica = aso.getEmpregado().getGrupoMonitoramentos().stream().filter(x->x.getTipoGrupoMonitoramento().getNome().equals("ATIVIDADES CRÍTICAS")).collect(Collectors.toList());
-				}
-				if(gruposMonitoramentoAtividadeCritica != null) {	
+				
+				gAt.getAvaliacoes().forEach(a->{
+					if(asoAux.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(a.getNome())).count() == 0 && a.isAuditoriaAso()) {
+						 	ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
+							itemAuditoriaAso.setDescricao(a.getNome());
+							itemAuditoriaAso.setAso(asoAux);
+							itemAuditoriaAso.setOrdem(4);
+							asoAux.getItemAuditoriaAsos().add(itemAuditoriaAso);
+							
+					}							
+				});
+			}
 					
-					for(GrupoMonitoramento gAt : gruposMonitoramentoAtividadeCritica) {
-						Aso asoAux = aso;
-						gAt.getAvaliacoes().forEach(a->{
-							if(asoAux.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(a.getNome())).count() == 0) {
-								 	ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
-									itemAuditoriaAso.setDescricao(a.getNome());
-									itemAuditoriaAso.setAso(asoAux);
-									itemAuditoriaAso.setOrdem(4);
-									asoAux.getItemAuditoriaAsos().add(itemAuditoriaAso);
-									
-							}							
-						});
-					}
-					
-				}
 		}
 		return aso;
 	}
