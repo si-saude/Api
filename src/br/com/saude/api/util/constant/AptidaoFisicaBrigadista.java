@@ -19,7 +19,6 @@ public class AptidaoFisicaBrigadista extends GenericConstant {
 	public final String SATISFATORIO 				= "SATISFATÓRIO";
 	public final String INSATISFATORIO		= "INSATISFATÓRIO";
 	public final String PENDENTE		= "PENDENTES";
-	public final String NAO_AVALIADO		= "NÃO AVALIADO";
 	public final String NAO_APLICAVEL		= "NÃO APLICÁVEL";
 
 }
