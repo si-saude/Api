@@ -1,6 +1,7 @@
 package br.com.saude.api.model.entity.filter;
 
 import br.com.saude.api.generic.BooleanFilter;
+import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class EmpregadoConvocacaoFilter extends GenericFilter{
@@ -11,6 +12,7 @@ public class EmpregadoConvocacaoFilter extends GenericFilter{
 	private BooleanFilter auditado;
 	private BooleanFilter resultadoAuditado;
 	private BooleanFilter auditadoSd2000;
+	private DateFilter dataConvocacao;
 	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
@@ -48,4 +50,11 @@ public class EmpregadoConvocacaoFilter extends GenericFilter{
 	public void setAuditadoSd2000(BooleanFilter auditadoSd2000) {
 		this.auditadoSd2000 = auditadoSd2000;
 	}
+	public DateFilter getDataConvocacao() {
+		return dataConvocacao;
+	}
+	public void setDataConvocacao(DateFilter dataConvocacao) {
+		this.dataConvocacao = dataConvocacao;
+	}
+	
 }

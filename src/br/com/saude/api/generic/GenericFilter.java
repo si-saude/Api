@@ -4,6 +4,7 @@ public abstract class GenericFilter {
 	protected long id;
 	protected int pageNumber;
 	protected int pageSize;
+	protected OrderFilter order;
 	
 	public int getPageNumber() {
 		return pageNumber;
@@ -23,4 +24,11 @@ public abstract class GenericFilter {
 	public void setId(long id) {
 		this.id = id;
 	}
+	public OrderFilter getOrder() {
+		return order;
+	}
+	public void setOrder(OrderFilter order) {
+		this.order = order;
+	}
+	
 }
