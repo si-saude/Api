@@ -31,6 +31,10 @@ public class Profissiograma {
 	@OneToMany(mappedBy="profissiograma", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<GrupoMonitoramentoProfissiograma> grupoMonitoramentoProfissiogramas;
 	
+	@Size(max = 32, message="Tamanho máximo para Vínculo de Profissiograma: 32")
+	@NotNull(message="É necessário informar o Vínculo de Profissiograma.")
+	private String vinculo;
+	
 	@Version
 	private long version;
 
@@ -42,6 +46,13 @@ public class Profissiograma {
 		this.id = id;
 	}
 
+	public String getVinculo() {
+		return vinculo;
+	}
+	public void setVinculo(String vinculo) {
+		this.vinculo = vinculo;
+	}
+	
 	public String getNome() {
 		return nome;
 	}

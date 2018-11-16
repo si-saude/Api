@@ -7,6 +7,7 @@ public class ProfissiogramaFilter extends GenericFilter {
 
 	private String nome;
 	private BooleanFilter concluido;
+	private String vinculo;
 
 	public String getNome() {
 		return nome;
@@ -14,6 +15,13 @@ public class ProfissiogramaFilter extends GenericFilter {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public String getVinculo() {
+		return vinculo;
+	}
+	public void setVinculo(String vinculo) {
+		this.vinculo = vinculo;
 	}
 
 	public BooleanFilter getConcluido() {
