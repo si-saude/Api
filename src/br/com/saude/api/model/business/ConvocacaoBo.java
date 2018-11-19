@@ -65,6 +65,7 @@ import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.Profissiograma;
 import br.com.saude.api.model.persistence.ConvocacaoDao;
 import br.com.saude.api.util.constant.Operador;
+import br.com.saude.api.util.constant.StatusEmpregado;
 import br.com.saude.api.util.constant.TipoCriterio;
 
 @SuppressWarnings("deprecation")
@@ -135,6 +136,8 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		EmpregadoFilter filter = new EmpregadoFilter();
 		filter.setGerencia(new GerenciaFilter());
 		filter.getGerencia().setId(gerenciaConvocacao.getGerencia().getId());
+		filter.setStatus(StatusEmpregado.getInstance().ATIVO);
+		filter.setVinculo(convocacao.getProfissiograma().getVinculo());
 		filter.setPageNumber(1);
 		filter.setPageSize(Integer.MAX_VALUE);
 		
