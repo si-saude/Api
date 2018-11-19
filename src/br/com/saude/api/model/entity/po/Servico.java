@@ -39,6 +39,8 @@ public class Servico {
 	
 	private boolean publico;
 	
+	private boolean inativo;
+
 	@OneToMany(mappedBy="servico", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Atividade> atividades;
 
@@ -64,6 +66,14 @@ public class Servico {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public boolean isInativo() {
+		return inativo;
+	}
+
+	public void setInativo(boolean inativo) {
+		this.inativo = inativo;
 	}
 
 	public String getCodigo() {
