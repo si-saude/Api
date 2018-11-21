@@ -92,4 +92,17 @@ public class EmpregadoConvocacaoService extends GenericServiceImpl<EmpregadoConv
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
+	
+	@POST
+	@Path("/import-txt")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response importFileTxt(File arquivo) {
+		try {
+			getBo().importFileTxt(arquivo);
+			return Response.ok("Salvo com sucesso.").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 }

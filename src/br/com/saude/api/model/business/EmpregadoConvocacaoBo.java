@@ -1,7 +1,11 @@
 package br.com.saude.api.model.business;
 
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,8 +28,13 @@ import br.com.saude.api.model.creation.builder.example.EmpregadoConvocacaoExampl
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
+import br.com.saude.api.model.entity.filter.ExameFilter;
+import br.com.saude.api.model.entity.po.CampoExame;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
+import br.com.saude.api.model.entity.po.EmpregadoConvocacaoExame;
+import br.com.saude.api.model.entity.po.Exame;
 import br.com.saude.api.model.persistence.EmpregadoConvocacaoDao;
+import br.com.saude.api.util.constant.TipoConvocacao;
 
 public class EmpregadoConvocacaoBo 
 	extends GenericBo<EmpregadoConvocacao, EmpregadoConvocacaoFilter, 
@@ -238,4 +247,137 @@ public class EmpregadoConvocacaoBo
 		}
 		return null;
 	}
+	
+	
+	public void importFileTxt(File arquivo) throws Exception {
+		
+		List<EmpregadoConvocacao> empregadoConvocacoes = new ArrayList<EmpregadoConvocacao>();
+		
+		String matricula = "";
+		String codigoExame = "";
+		String campoExame = "";
+		String informacao = "";
+		Date data = null;
+		BufferedReader br = null;
+		FileReader fr = null;
+		SimpleDateFormat originalFormat = new SimpleDateFormat("yyyyMMdd");
+		EmpregadoConvocacaoFilter filter;
+		ExameFilter exameFilter;
+		EmpregadoConvocacao empregadoConvocacao = null;
+		EmpregadoConvocacaoExame empregadoConvocacaoExame = null;
+		Exame exameAux = null;
+		
+		try {
+			fr = new FileReader(arquivo);
+			br = new BufferedReader(fr);
+
+			String currentLine;
+
+			while ( (currentLine = br.readLine()) != null ) {
+				if (! String.valueOf(currentLine.charAt(0)).equals("D") ) continue;					
+				matricula = currentLine.substring(16, 38).trim();
+				data = originalFormat.parse(currentLine.substring(38, 46).trim());
+				codigoExame = currentLine.substring(46, 53).trim();
+				campoExame = currentLine.substring(53, 56).trim();		
+				informacao = currentLine.substring(58).trim();		
+				empregadoConvocacaoExame = new EmpregadoConvocacaoExame();
+				String  matriculaAux = matricula;	
+				String  codigoExameAux = codigoExame;	
+				String campoExameAux = campoExame;
+				String informacaoAux = informacao;				
+				
+				List<EmpregadoConvocacao> empAux = empregadoConvocacoes.stream().filter(x-> x.getEmpregado().getMatricula( ).equals(matriculaAux)).collect(Collectors.toList());
+				
+				if(empAux.stream().count() > 0) {
+					empregadoConvocacao = empAux.get(0);
+				}else
+					empregadoConvocacao = null;
+								
+				if(empregadoConvocacao == null) {				
+					filter = new EmpregadoConvocacaoFilter(); 
+					filter.setEmpregado(new EmpregadoFilter());
+					filter.getEmpregado().setMatricula(matriculaAux);	
+					filter.setDataConvocacao(new DateFilter());
+					filter.getDataConvocacao().setTypeFilter(TypeFilter.ENTRE);
+					filter.getDataConvocacao().setInicio(Helper.cloneDate(data));
+					filter.getDataConvocacao().setFim(Helper.cloneDate(data));
+					filter.setConvocacao(new ConvocacaoFilter());
+					filter.getConvocacao().setTipo(TipoConvocacao.PERIODICO);
+					filter.setPageNumber(1);
+					filter.setPageSize(1);
+					
+				   PagedList<EmpregadoConvocacao> empConvocacoes = EmpregadoConvocacaoBo.getInstance().getListLoadAll(filter);
+					
+				   if(empConvocacoes.getTotal() > 0) {
+					   empregadoConvocacao = empConvocacoes.getList().get(0);
+					   empregadoConvocacoes.add(empregadoConvocacao);
+				   }
+				}
+				
+				if(empregadoConvocacao != null) {
+					
+					if(empregadoConvocacao.getEmpregadoConvocacaoExames() == null) 
+						empregadoConvocacao.setEmpregadoConvocacaoExames(new ArrayList<EmpregadoConvocacaoExame>());
+					  
+						List<Exame> exAux = empregadoConvocacao.getEmpregadoConvocacaoExames().stream().map(x -> x.getExame()).filter(ex-> ex.getCodigo().equals(codigoExameAux)).collect(Collectors.toList());
+						
+						if(exAux.size() == 0){
+							
+							exameFilter = new ExameFilter(); 
+							exameFilter.setCodigo(codigoExameAux);	
+							exameFilter.setPageNumber(1);
+							exameFilter.setPageSize(1);
+							
+							PagedList<Exame> exaAux = ExameBo.getInstance().getList(exameFilter);
+								
+						    if(exaAux.getTotal() > 0) {
+						    	exameAux = exaAux.getList().get(0);
+						    	empregadoConvocacaoExame.setEmpregadoConvocacao(empregadoConvocacao);
+						    	empregadoConvocacaoExame.setExame(exameAux);					    	
+						    	empregadoConvocacao.getEmpregadoConvocacaoExames().add(empregadoConvocacaoExame);
+						    }						
+						}	
+
+						empregadoConvocacao.getEmpregadoConvocacaoExames().forEach(eCE->{
+							
+							if(eCE.getExame().getCodigo().equals(codigoExameAux)) {
+								
+								try {
+									eCE.setExame(ExameBo.getInstance().getById((eCE.getExame().getId())));
+								} catch (Exception e) {
+									
+									e.printStackTrace();
+								}	
+								List<CampoExame> campoExamesAux= eCE.getExame().getCampoExames().stream().filter(x->x.getCodigo().equals(campoExameAux)).collect(Collectors.toList());
+								
+								if(campoExamesAux != null && campoExamesAux.size() > 0) {
+									String s ="";
+									if(!eCE.isResultadoInicializado()) {
+										eCE.setResultadoInicializado(true);
+										eCE.setResultado("");							
+									}else
+										s=" / ";						
+									
+									
+							
+									eCE.setResultado(eCE.getResultado()+ s + informacaoAux);
+								}
+							}
+						});
+				}
+						
+			}
+		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(empregadoConvocacoes != null && empregadoConvocacoes.size() > 0) {
+			empregadoConvocacoes.forEach(e->{
+				e.getEmpregadoConvocacaoExames().forEach(eCE -> eCE.setEmpregadoConvocacao(e));
+			});
+			
+			saveList(empregadoConvocacoes);
+		}
+	}	
 }

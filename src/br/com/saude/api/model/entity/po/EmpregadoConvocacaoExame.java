@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -43,6 +44,9 @@ public class EmpregadoConvocacaoExame {
 	private Date auditoria;
 	
 	private boolean resultadoConforme;
+	
+	@Transient
+	private boolean resultadoInicializado;
 	
 	@Version
 	private long version;
@@ -147,5 +151,13 @@ public class EmpregadoConvocacaoExame {
 	@Override
 	public boolean equals(Object e) {
 		return ((EmpregadoConvocacaoExame)e).id == this.id && this.id > 0;
+	}
+
+	public boolean isResultadoInicializado() {
+		return resultadoInicializado;
+	}
+
+	public void setResultadoInicializado(boolean resultadoInicializado) {
+		this.resultadoInicializado = resultadoInicializado;
 	}
 }
