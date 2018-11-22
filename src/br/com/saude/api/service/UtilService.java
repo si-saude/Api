@@ -33,6 +33,7 @@ import br.com.saude.api.util.constant.ExposicaoRiscosAmbientaisCategoria;
 import br.com.saude.api.util.constant.Flexibilidade;
 import br.com.saude.api.util.constant.ForcaAbdominal;
 import br.com.saude.api.util.constant.ForcaPreensaoManual;
+import br.com.saude.api.util.constant.Fuma;
 import br.com.saude.api.util.constant.FumaClassificacao;
 import br.com.saude.api.util.constant.Funcionalidade;
 import br.com.saude.api.util.constant.Gravidade;
@@ -172,6 +173,13 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFumaClassificacao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(FumaClassificacao.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/fuma")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFuma(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Fuma.getInstance(),filter)).build();
 	}
 	
 	@GET
