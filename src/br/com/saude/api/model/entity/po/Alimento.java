@@ -13,7 +13,7 @@ import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 @Entity
-public class NutricaoAlimento {
+public class Alimento {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
@@ -21,8 +21,8 @@ public class NutricaoAlimento {
 	@Size(max = 256, message="Tamanho máximo para o Nome do Alimento: 256")
 	private String nome;
 	
-	@OneToMany(mappedBy="nutricaoAlimento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<NutricaoAlimentoMedidaAlimentar> nutricaoAlimentoMedidaAlimentares;
+	@OneToMany(mappedBy="alimento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<AlimentoMedidaAlimentar> alimentoMedidaAlimentares;
 	
 	@Size(max = 64, message="Tamanho máximo para o Tipo do Alimento: 64")
 	private String tipo;
@@ -266,12 +266,12 @@ public class NutricaoAlimento {
 	public void setInativo(boolean inativo) {
 		this.inativo = inativo;
 	}
-	public List<NutricaoAlimentoMedidaAlimentar> getNutricaoAlimentoMedidaAlimentares() {
-		return nutricaoAlimentoMedidaAlimentares;
+	public List<AlimentoMedidaAlimentar> getAlimentoMedidaAlimentares() {
+		return alimentoMedidaAlimentares;
 	}
-	public void setNutricaoAlimentoMedidaAlimentares(
-			List<NutricaoAlimentoMedidaAlimentar> nutricaoAlimentoMedidaAlimentares) {
-		this.nutricaoAlimentoMedidaAlimentares = nutricaoAlimentoMedidaAlimentares;
+	public void setAlimentoMedidaAlimentares(
+			List<AlimentoMedidaAlimentar> alimentoMedidaAlimentares) {
+		this.alimentoMedidaAlimentares = alimentoMedidaAlimentares;
 	}
 	
 }

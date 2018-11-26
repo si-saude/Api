@@ -4,16 +4,16 @@ import org.hibernate.criterion.Restrictions;
 
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.Helper;
-import br.com.saude.api.model.entity.filter.NutricaoAlimentoFilter;
-import br.com.saude.api.model.entity.po.NutricaoAlimento;
+import br.com.saude.api.model.entity.filter.AlimentoFilter;
+import br.com.saude.api.model.entity.po.Alimento;
 
-public class NutricaoAlimentoExampleBuilder extends GenericExampleBuilder<NutricaoAlimento, NutricaoAlimentoFilter> {
+public class AlimentoExampleBuilder extends GenericExampleBuilder<Alimento, AlimentoFilter> {
 
-	public static NutricaoAlimentoExampleBuilder newInstance(NutricaoAlimentoFilter filter) {
-		return new NutricaoAlimentoExampleBuilder(filter);
+	public static AlimentoExampleBuilder newInstance(AlimentoFilter filter) {
+		return new AlimentoExampleBuilder(filter);
 	}
 
-	private NutricaoAlimentoExampleBuilder(NutricaoAlimentoFilter filter) {
+	private AlimentoExampleBuilder(AlimentoFilter filter) {
 		super(filter);
 	}
 

@@ -35,13 +35,12 @@ public class ItemRefeicaoBuilder extends GenericEntityBuilder<ItemRefeicao, Item
 		
 		cloneItemRefeicao.setId(itemRefeicao.getId());
 		cloneItemRefeicao.setVersion(itemRefeicao.getVersion());
-		cloneItemRefeicao.setNe(itemRefeicao.getNe());
 		cloneItemRefeicao.setVe(itemRefeicao.getVe());
 		cloneItemRefeicao.setQuantidade(itemRefeicao.getQuantidade());
 		
 		if ( itemRefeicao.getAlimento() != null )
 			cloneItemRefeicao.setAlimento(
-					NutricaoAlimentoBuilder.newInstance(itemRefeicao.getAlimento()).getEntity());
+					AlimentoBuilder.newInstance(itemRefeicao.getAlimento()).getEntity());
 		if ( itemRefeicao.getAlimento() != null )
 			cloneItemRefeicao.setMedidaCaseira(
 					MedidaAlimentarBuilder.newInstance(itemRefeicao.getMedidaCaseira()).getEntity());

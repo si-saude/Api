@@ -1,7 +1,6 @@
 package br.com.saude.api.model.business;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,9 +17,8 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+
+import org.apache.commons.io.FileUtils;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.html.simpleparser.HTMLWorker;
@@ -175,32 +173,34 @@ public class CatBo extends GenericBo<Cat, CatFilter, CatDao, CatBuilder, CatExam
 			File file = new File(uri.getPath());
 			file.getParentFile().mkdirs();
 			
-			FileInputStream in;
-			ZipInputStream zipIn = new ZipInputStream(new ByteArrayInputStream(arquivoArray));
-			FileOutputStream stream = new FileOutputStream(file);
-			ZipOutputStream zipOut = new ZipOutputStream(stream);
-			ZipEntry entry = null;
+			FileUtils.writeByteArrayToFile(file, arquivoArray);
 			
-			while ((entry = zipIn.getNextEntry()) != null) {
-				entry = new ZipEntry( entry.getName() );
-				zipOut.putNextEntry(entry);
-
-				in = new FileInputStream( entry.getName() );
-				
-			    byte[] byteBuff = new byte[4096];
-			    int bytesRead = 0;
-			    while ((bytesRead = in.read(byteBuff)) != -1)
-			    {
-			        zipOut.write(byteBuff, 0, bytesRead);
-			    }
-
-			    in.close();
-			    zipOut.closeEntry();    
-			    zipIn.closeEntry();
-			}
-			
-			zipOut.close();
-			zipIn.close(); 
+//			FileInputStream in;
+//			ZipInputStream zipIn = new ZipInputStream(new ByteArrayInputStream(arquivoArray));
+//			FileOutputStream stream = new FileOutputStream(file);
+//			ZipOutputStream zipOut = new ZipOutputStream(stream);
+//			ZipEntry entry = null;
+//			
+//			while ((entry = zipIn.getNextEntry()) != null) {
+//				entry = new ZipEntry( entry.getName() );
+//				zipOut.putNextEntry(entry);
+//
+//				in = new FileInputStream( entry.getName() );
+//				
+//			    byte[] byteBuff = new byte[4096];
+//			    int bytesRead = 0;
+//			    while ((bytesRead = zipIn.read(byteBuff)) != -1)
+//			    {
+//			        zipOut.write(byteBuff, 0, bytesRead);
+//			    }
+//
+//			    in.close();
+//			    zipOut.closeEntry();    
+//			    zipIn.closeEntry();
+//			}
+//			
+//			zipOut.close();
+//			zipIn.close(); 
 		}
 	}
 	

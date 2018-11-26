@@ -14,30 +14,30 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.NutricaoAlimentoBo;
-import br.com.saude.api.model.business.validate.NutricaoAlimentoValidator;
-import br.com.saude.api.model.entity.filter.NutricaoAlimentoFilter;
-import br.com.saude.api.model.entity.po.NutricaoAlimento;
+import br.com.saude.api.model.business.AlimentoBo;
+import br.com.saude.api.model.business.validate.AlimentoValidator;
+import br.com.saude.api.model.entity.filter.AlimentoFilter;
+import br.com.saude.api.model.entity.po.Alimento;
 import br.com.saude.api.util.RequestInterceptor;
 
-@Path("nutricao-alimento")
+@Path("alimento")
 @RequestInterceptor
-public class NutricaoAlimentoService extends GenericServiceImpl<NutricaoAlimento, NutricaoAlimentoFilter, NutricaoAlimentoBo>
-		implements GenericService<NutricaoAlimento, NutricaoAlimentoFilter> {
+public class AlimentoService extends GenericServiceImpl<Alimento, AlimentoFilter, AlimentoBo>
+		implements GenericService<Alimento, AlimentoFilter> {
 
 	@Override
-	protected NutricaoAlimentoBo getBo() {
-		return NutricaoAlimentoBo.getInstance();
+	protected AlimentoBo getBo() {
+		return AlimentoBo.getInstance();
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass = NutricaoAlimentoValidator.class)
+	@CustomValidator(validatorClass = AlimentoValidator.class)
 	@Override
-	public Response save(NutricaoAlimento nutricaoAlimento) {
+	public Response save(Alimento alimento) {
 		try {
-			NutricaoAlimentoBo.getInstance().save(nutricaoAlimento);
+			AlimentoBo.getInstance().save(alimento);
 			return Response.ok("Salvo com sucesso.").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -49,9 +49,18 @@ public class NutricaoAlimentoService extends GenericServiceImpl<NutricaoAlimento
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
-	public Response getList(NutricaoAlimentoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getList(AlimentoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-list-all")
+	public Response getListAll(AlimentoFilter filter) throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
+		return Response.ok(getBo().getListAll(filter).getGenericPagedList()).build();
 	}
 
 	@Override
@@ -59,7 +68,7 @@ public class NutricaoAlimentoService extends GenericServiceImpl<NutricaoAlimento
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
-	public Response getSelectList(NutricaoAlimentoFilter filter) throws InstantiationException, IllegalAccessException,
+	public Response getSelectList(AlimentoFilter filter) throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
 	}
@@ -70,7 +79,7 @@ public class NutricaoAlimentoService extends GenericServiceImpl<NutricaoAlimento
 	public Response get(@QueryParam("id") String id) throws Exception {
 		return super.getGeneric(new Integer(id));
 	}
-
+	
 	@Override
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

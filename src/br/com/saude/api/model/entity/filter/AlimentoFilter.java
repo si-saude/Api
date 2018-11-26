@@ -3,7 +3,7 @@ package br.com.saude.api.model.entity.filter;
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericFilter;
 
-public class NutricaoAlimentoFilter extends GenericFilter {
+public class AlimentoFilter extends GenericFilter {
 
 	private BooleanFilter inativo;
 	private String nome;

@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Formula;
+
 @Entity
 public class ItemRefeicao {
 	@Id
@@ -16,7 +18,7 @@ public class ItemRefeicao {
 	private int id;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
-	private NutricaoAlimento alimento;
+	private Alimento alimento;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private MedidaAlimentar medidaCaseira;
@@ -27,8 +29,7 @@ public class ItemRefeicao {
 	
 	private int quantidade;
 	
-	private float ne;
-	
+	@Formula("(select get_ve(id))")
 	private float ve;
 
 	@Version
@@ -42,11 +43,11 @@ public class ItemRefeicao {
 		this.id = id;
 	}
 
-	public NutricaoAlimento getAlimento() {
+	public Alimento getAlimento() {
 		return alimento;
 	}
 
-	public void setAlimento(NutricaoAlimento alimento) {
+	public void setAlimento(Alimento alimento) {
 		this.alimento = alimento;
 	}
 
@@ -66,16 +67,8 @@ public class ItemRefeicao {
 		this.quantidade = quantidade;
 	}
 
-	public float getNe() {
-		return ne;
-	}
-
-	public void setNe(float ne) {
-		this.ne = ne;
-	}
-
 	public float getVe() {
-		return ve;
+		return this.ve;
 	}
 
 	public void setVe(float ve) {

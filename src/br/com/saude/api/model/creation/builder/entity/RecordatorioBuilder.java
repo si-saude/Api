@@ -45,6 +45,8 @@ public class RecordatorioBuilder extends GenericEntityBuilder<Recordatorio, Reco
 		
 		cloneRecordatorio.setId(recordatorio.getId());
 		cloneRecordatorio.setVersion(recordatorio.getVersion());
+		cloneRecordatorio.setNe(recordatorio.getNe());
+		cloneRecordatorio.setTmb(recordatorio.getTmb());
 		
 		if ( recordatorio.getAtendimento() != null ) {
 			recordatorio.getAtendimento().setFilaAtendimentoOcupacional(null);

@@ -44,6 +44,19 @@ public class RecordatorioService extends
 	}
 
 	@POST
+	@Path("/get-ne")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@CustomValidator(validatorClass = RecordatorioValidator.class)
+	public Response getNe(Recordatorio recordatorio) {
+		try {
+			return Response.ok(RecordatorioBo.getInstance().getNe(recordatorio)).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")

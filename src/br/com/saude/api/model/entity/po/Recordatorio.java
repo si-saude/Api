@@ -26,6 +26,10 @@ public class Recordatorio {
 	@JoinColumn(name = "atendimento_id")
 	private Atendimento atendimento;
 	
+	private float ne;
+	
+	private float tmb;
+	
 	@Version
 	private long version;
 
@@ -60,5 +64,20 @@ public class Recordatorio {
 	public void setVersion(long version) {
 		this.version = version;
 	}
-	
+
+	public float getNe() {
+		return ne;
+	}
+
+	public void setNe(float ne) {
+		this.ne = ne;
+	}
+
+	public float getTmb() {
+		return tmb;
+	}
+
+	public void setTmb(float tmb) {
+		this.tmb = tmb;
+	}
 }
