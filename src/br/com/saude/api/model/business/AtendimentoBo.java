@@ -238,7 +238,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 				 tipoAtendimento == TipoConvocacao.MUDANCA_DE_FUNCAO ||
 				 tipoAtendimento == "VALIDAÇÃO DE ASO")) {
 			
-				Aso aso = new Aso();
+				Aso aso = atendimento.getAso() != null && atendimento.getAso().getId() > 0 ? atendimento.getAso() : new Aso();
 				aso.setEmpregado(EmpregadoBo.getInstance().getByIdLoadTipoGrupoMonitoramento(atendimento.getFilaEsperaOcupacional().getEmpregado().getId()));
 				aso.setAtendimento(new Atendimento());
 				aso.getAtendimento().setId(atendimento.getId());
@@ -434,7 +434,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 		Atendimento aux = atendimento;
 		if(aux.getFilaEsperaOcupacional().getRiscoPotencial() != null && aux.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados() != null) {
 			Optional<RiscoEmpregado> riscoEmpregado = aux.getFilaEsperaOcupacional().getRiscoPotencial().getRiscoEmpregados().stream().filter(r -> 
-				r.getEquipe().getId() == aux.getTarefa().getEquipe().getId()).findFirst();
+				r.getEquipe().getId() == aux.getTarefa().getEquipe().getId() && r.isAtivo()).findFirst();
 			
 			if(riscoEmpregado != null && riscoEmpregado.isPresent()) {
 				riscoEmpregado.get().setAtivo(false);
