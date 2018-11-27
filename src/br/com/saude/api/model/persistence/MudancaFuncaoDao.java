@@ -8,6 +8,7 @@ import org.hibernate.Hibernate;
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
+import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.Instalacao;
 import br.com.saude.api.model.entity.po.MudancaFuncao;
 import br.com.saude.api.model.entity.po.Tarefa;
@@ -31,6 +32,7 @@ public class MudancaFuncaoDao extends GenericDao<MudancaFuncao>  {
 		this.functionLoad = mudancaFuncao -> {
 			mudancaFuncao = loadTarefas(mudancaFuncao);		
 			mudancaFuncao = loadInstalacoes(mudancaFuncao);
+			mudancaFuncao = loadGruposMonitoramento(mudancaFuncao);
 			return mudancaFuncao;
 		};
 	
@@ -68,6 +70,27 @@ public class MudancaFuncaoDao extends GenericDao<MudancaFuncao>  {
 			mudancaFuncao.setInstalacoes(instalacoes);
 		}
 		return mudancaFuncao;
+	}
+	
+	private MudancaFuncao loadGruposMonitoramento(MudancaFuncao mudancaFuncao)
+	{
+		List<GrupoMonitoramento> gruposMonitoramento = new ArrayList<GrupoMonitoramento>();
+		if(mudancaFuncao.getGrupoMonitoramentos() !=null) {
+			mudancaFuncao.getGrupoMonitoramentos().forEach(a->{				
+				gruposMonitoramento.add((GrupoMonitoramento) Hibernate.unproxy(a));		
+				
+			});
+			gruposMonitoramento.forEach(a-> {				
+				if(a.getTipoGrupoMonitoramento() != null) 
+					   Hibernate.initialize(a.getTipoGrupoMonitoramento());				
+			
+				if(a.getAvaliacoes() != null)
+					   Hibernate.initialize(a.getAvaliacoes());		
+			});
+						
+			mudancaFuncao.setGrupoMonitoramentos(gruposMonitoramento);
+		}
+		return mudancaFuncao;		
 	}
 	
 }

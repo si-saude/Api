@@ -45,7 +45,7 @@ public class MudancaFuncaoBo
 		};
 		
 		this.functionLoadAll = builder -> {
-			return builder.loadTarefas().loadInstalacoes();
+			return builder.loadTarefas().loadInstalacoes().loadLoadMonitoramentos();
 		};
 
 	}
@@ -136,7 +136,9 @@ public class MudancaFuncaoBo
 				||(empregado.getBase() == null))			
 			return true;
 		if(modificacaoIntalacoes(mudancaFuncao, empregado)) 
-				return true;
+			return true;
+		if(modificacaoGruposMonitoramento(mudancaFuncao, empregado))
+			return true;
 		
 		return false;
 	}
@@ -154,6 +156,25 @@ public class MudancaFuncaoBo
 			for(int x = 0; x < empregado.getInstalacoes().size(); x++) {
 				int y = x;
 				if(mudancaFuncao.getInstalacoes() == null ||mudancaFuncao.getInstalacoes().stream().filter(i-> i.getId() == empregado.getInstalacoes().get(y).getId()).count() == 0)
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean modificacaoGruposMonitoramento(MudancaFuncao mudancaFuncao, Empregado empregado) {
+		
+		if(mudancaFuncao.getGrupoMonitoramentos() != null) {
+			for(int x = 0; x < mudancaFuncao.getGrupoMonitoramentos().size(); x++) {
+				int y = x;
+				if(empregado.getGrupoMonitoramentos() == null ||empregado.getGrupoMonitoramentos().stream().filter(i-> i.getId() == mudancaFuncao.getGrupoMonitoramentos().get(y).getId()).count() == 0)
+					return true;
+			}
+		}
+		if(empregado.getGrupoMonitoramentos() != null) {
+			for(int x = 0; x < empregado.getGrupoMonitoramentos().size(); x++) {
+				int y = x;
+				if(mudancaFuncao.getGrupoMonitoramentos() == null ||mudancaFuncao.getGrupoMonitoramentos().stream().filter(i-> i.getId() == empregado.getGrupoMonitoramentos().get(y).getId()).count() == 0)
 					return true;
 			}
 		}
@@ -181,6 +202,8 @@ public class MudancaFuncaoBo
 			   mudancaFuncao.getCliente().setBase(mudancaFuncao.getBase());			
 			
 			mudancaFuncao.getCliente().setInstalacoes(mudancaFuncao.getInstalacoes());
+			
+			mudancaFuncao.getCliente().setGrupoMonitoramentos(mudancaFuncao.getGrupoMonitoramentos());
 			
 		}else
 			throw new Exception("As mudanças já foram aplicadas");		

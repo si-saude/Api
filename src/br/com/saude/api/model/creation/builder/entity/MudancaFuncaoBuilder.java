@@ -6,11 +6,12 @@ import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.MudancaFuncaoFilter;
-import br.com.saude.api.model.entity.po.MudancaFuncao;;
+import br.com.saude.api.model.entity.po.MudancaFuncao;
 
 public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, MudancaFuncaoFilter> {
 	private Function<Map<String,MudancaFuncao>,MudancaFuncao> loadTarefas;
 	private Function<Map<String,MudancaFuncao>,MudancaFuncao> loadInstalacoes;
+	private Function<Map<String,MudancaFuncao>,MudancaFuncao> loadGruposMonitorametos;
 
 	public static MudancaFuncaoBuilder newInstance(MudancaFuncao solicitacao) {
 		return new MudancaFuncaoBuilder(solicitacao);
@@ -41,6 +42,14 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 			if(mundancafuncoes.get("origem").getInstalacoes() != null) {
 				mundancafuncoes.get("destino").setInstalacoes(InstalacaoBuilder.
 						newInstance(mundancafuncoes.get("origem").getInstalacoes()).getEntityList());
+			}
+			return mundancafuncoes.get("destino");
+		};
+		this.loadGruposMonitorametos = mundancafuncoes ->{
+			if(mundancafuncoes.get("origem").getGrupoMonitoramentos() != null) {
+				mundancafuncoes.get("destino").setGrupoMonitoramentos(GrupoMonitoramentoBuilder.
+						newInstance(mundancafuncoes.get("origem").getGrupoMonitoramentos())
+						.loadTipoGrupoMonitoramento().loadAvaliacoes().getEntityList());
 			}
 			return mundancafuncoes.get("destino");
 		};
@@ -80,6 +89,11 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 	public MudancaFuncaoBuilder loadInstalacoes() {
 		return (MudancaFuncaoBuilder) this.loadProperty(this.loadInstalacoes);
 	}
+	
+	public MudancaFuncaoBuilder loadLoadMonitoramentos() {
+		return (MudancaFuncaoBuilder) this.loadProperty(this.loadGruposMonitorametos);
+	}
+
 
 	@Override
 	public MudancaFuncao cloneFromFilter(MudancaFuncaoFilter filter) {

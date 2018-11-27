@@ -51,6 +51,12 @@ public class MudancaFuncao {
 	inverseJoinColumns = {@JoinColumn(name="instalacao_id")})
 	private List<Instalacao> instalacoes;
 	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="mudancaFuncao_grupomonitoramento", 
+				joinColumns = {@JoinColumn(name="mudancaFuncao_id")}, 
+				inverseJoinColumns = {@JoinColumn(name="grupomonitoramento_id")})
+	private List<GrupoMonitoramento> grupoMonitoramentos;
+	
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name="mudancaFuncao_tarefa", 
@@ -167,6 +173,14 @@ public class MudancaFuncao {
 
 	public void setInstalacoes(List<Instalacao> instalacoes) {
 		this.instalacoes = instalacoes;
+	}
+	
+	public List<GrupoMonitoramento> getGrupoMonitoramentos() {
+		return grupoMonitoramentos;
+	}
+	
+	public void setGrupoMonitoramentos(List<GrupoMonitoramento> grupoMonitoramentos) {
+		this.grupoMonitoramentos = grupoMonitoramentos;
 	}
 
 	public String getStatus() {
