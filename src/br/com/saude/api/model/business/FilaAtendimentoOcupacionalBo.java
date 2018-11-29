@@ -486,9 +486,13 @@ public class FilaAtendimentoOcupacionalBo
 							atendimento.getFilaEsperaOcupacional().getFichaColeta());					
 				}
 				
-				if(atendimento.getQuestionario() != null &&
-						atendimento.getQuestionario().getId() > 0 )
-					atendimentoAux.setQuestionario(atendimento.getQuestionario());
+				if(atendimentoAux.getQuestionario() != null &&
+						atendimentoAux.getQuestionario().getId() > 0 )
+					atendimento.setQuestionario(atendimentoAux.getQuestionario());
+				
+				if(atendimentoAux.getRecordatorio() != null &&
+						atendimentoAux.getRecordatorio().getId() > 0 )
+					atendimento.setRecordatorio(atendimentoAux.getRecordatorio());
 					
 				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null
 						&& atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId() > 0) {
