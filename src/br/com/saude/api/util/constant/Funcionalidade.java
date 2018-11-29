@@ -16,6 +16,12 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String REPORT_SUGESTAO_AGENDAMENTO						= "REPORT-SUGESTAO-AGENDAMENTO";
+	public static final String RECORDATORIO_LISTAR								= "RECORDATORIO_LISTAR";
+	public static final String RECORDATORIO_ADICIONAR 			    			= "RECORDATORIO_ADICIONAR";
+	public static final String RECORDATORIO_ALTERAR		 						= "RECORDATORIO_ALTERAR";
+	public static final String RECORDATORIO_REMOVER 							= "RECORDATORIO_REMOVER";
+	public static final String RECORDATORIO_DETALHE 							= "RECORDATORIO_DETALHE";
 	public static final String QUESTIONARIO_CONHECIMENTO_ALIMENTAR_LISTAR								= "QUESTIONARIO-CONHECIMENTO-ALIMENTAR_LISTAR";
 	public static final String QUESTIONARIO_CONHECIMENTO_ALIMENTAR_ADICIONAR 			    			= "QUESTIONARIO-CONHECIMENTO-ALIMENTAR_ADICIONAR";
 	public static final String QUESTIONARIO_CONHECIMENTO_ALIMENTAR_ALTERAR		 						= "QUESTIONARIO-CONHECIMENTO-ALIMENTAR_ALTERAR";
@@ -31,11 +37,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String MEDIDA_ALIMENTAR_ALTERAR		 						= "MEDIDA-ALIMENTAR_ALTERAR";
 	public static final String MEDIDA_ALIMENTAR_REMOVER 							= "MEDIDA-ALIMENTAR_REMOVER";
 	public static final String MEDIDA_ALIMENTAR_DETALHE 							= "MEDIDA-ALIMENTAR_DETALHE";
-	public static final String NUTRICAO_ALIMENTO_LISTAR								= "NUTRICAO-ALIMENTO_LISTAR";
-	public static final String NUTRICAO_ALIMENTO_ADICIONAR 			    			= "NUTRICAO-ALIMENTO_ADICIONAR";
-	public static final String NUTRICAO_ALIMENTO_ALTERAR		 						= "NUTRICAO-ALIMENTO_ALTERAR";
-	public static final String NUTRICAO_ALIMENTO_REMOVER 							= "NUTRICAO-ALIMENTO_REMOVER";
-	public static final String NUTRICAO_ALIMENTO_DETALHE 							= "NUTRICAO-ALIMENTO_DETALHE";
+	public static final String ALIMENTO_LISTAR								= "ALIMENTO_LISTAR";
+	public static final String ALIMENTO_ADICIONAR 			    			= "ALIMENTO_ADICIONAR";
+	public static final String ALIMENTO_ALTERAR		 						= "ALIMENTO_ALTERAR";
+	public static final String ALIMENTO_REMOVER 							= "ALIMENTO_REMOVER";
+	public static final String ALIMENTO_DETALHE 							= "ALIMENTO_DETALHE";
 	public static final String REPORT_ACOMPANHAMENTO_SAST										= "REPORT-ACOMPANHAMENTO-SAST";
 	public static final String REPORT_MUDANCA_FUNCAO										= "REPORT-MUDANCA-FUNCAO";
 	public static final String ACAO_INTERVENCAO_LISTAR								= "ACAO-INTERVENCAO_LISTAR";

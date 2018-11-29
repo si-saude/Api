@@ -87,7 +87,7 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadTarefa().loadTriagens().loadQuestionario().loadAso();
+			return builder.loadTarefa().loadTriagens().loadQuestionario().loadRecordatorio();
 		};
 	}
 	

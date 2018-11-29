@@ -163,8 +163,8 @@ public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,Ris
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get-risco-potenciais")
-	public Response getRiscoPotenciais(@QueryParam("uf") String uf) throws IOException {
-		return Response.ok(RiscoPotencialBo.getInstance().getRiscoPotenciais(uf)).build();
+	public Response getRiscoPotenciais(@QueryParam("uf") String uf, @QueryParam("equipeId") String equipeId) throws IOException {
+		return Response.ok(RiscoPotencialBo.getInstance().getRiscoPotenciais(uf, Integer.parseInt(equipeId))).build();
 	}
 	
 	@POST

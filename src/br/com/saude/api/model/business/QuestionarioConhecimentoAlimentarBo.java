@@ -46,7 +46,8 @@ public class QuestionarioConhecimentoAlimentarBo
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, Exception {
 	
-		entity.getRespostas().forEach(r -> r.setQuestionario(entity));
+		if ( entity.getRespostas() != null )
+			entity.getRespostas().forEach(r -> r.setQuestionario(entity));
 		
 		return super.save(entity);
 	}

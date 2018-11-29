@@ -17,4 +17,5 @@ public class UF extends GenericConstant {
 	
 	public final String ES 				= "ES";
 	public final String BA			= "BA";
+	public final String N_A			= "N/A";
 }

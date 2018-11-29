@@ -78,8 +78,8 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		return riscos;
 	}
 	
-	public List<RiscoPotencialDto> getRiscoPotenciais(String uf) throws IOException{
-		return RiscoPotencialReport.getInstance().getRiscoPotenciais(uf);
+	public List<RiscoPotencialDto> getRiscoPotenciais(String uf, int equipeId) throws IOException{
+		return RiscoPotencialReport.getInstance().getRiscoPotenciais(uf, equipeId);
 	}
 	
 	public RiscoPotencial criarPlano(RiscoPotencial riscoPotencial) throws Exception {
