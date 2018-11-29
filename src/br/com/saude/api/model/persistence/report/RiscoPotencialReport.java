@@ -28,7 +28,7 @@ private static RiscoPotencialReport instance;
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	public List<RiscoPotencialDto> getRiscoPotenciais(String uf) throws IOException {
+	public List<RiscoPotencialDto> getRiscoPotenciais(String uf, int equipeId) throws IOException {
 		
 		BufferedReader in = new BufferedReader(new FileReader(Helper.getProjectPath().replace("file:/", "")
 				+"br/com/saude/api/model/persistence/sql/QueryRiscoPotencial.sql"));
@@ -41,6 +41,10 @@ private static RiscoPotencialReport instance;
 		
 		int indexReplace = query.indexOf("[BASE_ID]");
 		query.replace(indexReplace, indexReplace+9, String.valueOf("'"+uf+"'"));
+		indexReplace = query.indexOf("[EQUIPE_ID]");
+		query.replace(indexReplace, indexReplace+11, String.valueOf(equipeId));
+		indexReplace = query.indexOf("[EQUIPE_ID]");
+		query.replace(indexReplace, indexReplace+11, String.valueOf(equipeId));
 		
 		List<RiscoPotencialDto> riscoPotenciais = new ArrayList<RiscoPotencialDto>();
 
@@ -76,6 +80,9 @@ private static RiscoPotencialReport instance;
 			riscoPotencial.setData((String)row[4]);
 			riscoPotencial.setStatus((String)row[5]);
 			riscoPotencial.setAbreviacaoEquipeAcolhimento((String)row[6]);
+			riscoPotencial.setPendenciaEncerramento((boolean)row[7]);
+			riscoPotencial.setPendenciaValidacao((boolean)row[8]);
+			riscoPotencial.setPendenciaReavaliacao((boolean)row[9]);
 				
 			riscoPotenciais.add(riscoPotencial);
 		}
