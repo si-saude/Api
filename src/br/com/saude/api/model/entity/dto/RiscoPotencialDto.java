@@ -9,6 +9,9 @@ public class RiscoPotencialDto {
 	private String data;
 	private String status;
 	private String abreviacaoEquipeAcolhimento;
+	private boolean pendenciaEncerramento;
+	private boolean pendenciaValidacao;
+	private boolean pendenciaReavaliacao;
 	
 	public int getId() {
 		return id;
@@ -57,6 +60,24 @@ public class RiscoPotencialDto {
 	}
 	public void setAbreviacaoEquipeAcolhimento(String abreviacaoEquipeAcolhimento) {
 		this.abreviacaoEquipeAcolhimento = abreviacaoEquipeAcolhimento;
+	}
+	public boolean isPendenciaEncerramento() {
+		return pendenciaEncerramento;
+	}
+	public void setPendenciaEncerramento(boolean pendenciaEncerramento) {
+		this.pendenciaEncerramento = pendenciaEncerramento;
+	}
+	public boolean isPendenciaValidacao() {
+		return pendenciaValidacao;
+	}
+	public void setPendenciaValidacao(boolean pendenciaValidacao) {
+		this.pendenciaValidacao = pendenciaValidacao;
+	}
+	public boolean isPendenciaReavaliacao() {
+		return pendenciaReavaliacao;
+	}
+	public void setPendenciaReavaliacao(boolean pendenciaReavaliacao) {
+		this.pendenciaReavaliacao = pendenciaReavaliacao;
 	}
 	
 }

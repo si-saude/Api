@@ -5,37 +5,37 @@ import java.util.Map;
 import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
-import br.com.saude.api.model.entity.filter.NutricaoAlimentoFilter;
-import br.com.saude.api.model.entity.po.NutricaoAlimento;
+import br.com.saude.api.model.entity.filter.AlimentoFilter;
+import br.com.saude.api.model.entity.po.Alimento;
 
-public class NutricaoAlimentoBuilder extends GenericEntityBuilder<NutricaoAlimento, NutricaoAlimentoFilter> {
+public class AlimentoBuilder extends GenericEntityBuilder<Alimento, AlimentoFilter> {
 
-	private Function<Map<String,NutricaoAlimento>,NutricaoAlimento> loadNutricaoAlimentoMedidaAlimentares;
+	private Function<Map<String,Alimento>,Alimento> loadNutricaoAlimentoMedidaAlimentares;
 
 	
-	private NutricaoAlimentoBuilder(List<NutricaoAlimento> nutricaoAlimentos) {
+	private AlimentoBuilder(List<Alimento> nutricaoAlimentos) {
 		super(nutricaoAlimentos);
 	}
 
-	private NutricaoAlimentoBuilder(NutricaoAlimento nutricaoAlimento) {
+	private AlimentoBuilder(Alimento nutricaoAlimento) {
 		super(nutricaoAlimento);
 	}
 
-	public static NutricaoAlimentoBuilder newInstance(NutricaoAlimento nutricaoAlimento) {
-		return new NutricaoAlimentoBuilder(nutricaoAlimento);
+	public static AlimentoBuilder newInstance(Alimento nutricaoAlimento) {
+		return new AlimentoBuilder(nutricaoAlimento);
 	}
 	
-	public static NutricaoAlimentoBuilder newInstance(List<NutricaoAlimento> nutricaoAlimentos) {
-		return new NutricaoAlimentoBuilder(nutricaoAlimentos);
+	public static AlimentoBuilder newInstance(List<Alimento> nutricaoAlimentos) {
+		return new AlimentoBuilder(nutricaoAlimentos);
 	}
 
 	@Override
 	protected void initializeFunctions() {
 		loadNutricaoAlimentoMedidaAlimentares  = nutricaoAlimentos -> {
-			if(nutricaoAlimentos.get("origem").getNutricaoAlimentoMedidaAlimentares() != null)
-				nutricaoAlimentos.get("destino").setNutricaoAlimentoMedidaAlimentares(
-						NutricaoAlimentoMedidaAlimentarBuilder
-						.newInstance(nutricaoAlimentos.get("origem").getNutricaoAlimentoMedidaAlimentares())
+			if(nutricaoAlimentos.get("origem").getAlimentoMedidaAlimentares() != null)
+				nutricaoAlimentos.get("destino").setAlimentoMedidaAlimentares(
+						AlimentoMedidaAlimentarBuilder
+						.newInstance(nutricaoAlimentos.get("origem").getAlimentoMedidaAlimentares())
 						.loadMedidaAlimentar()
 						.getEntityList());
 			return nutricaoAlimentos.get("destino");
@@ -43,12 +43,12 @@ public class NutricaoAlimentoBuilder extends GenericEntityBuilder<NutricaoAlimen
 	}
 	
 	@Override
-	protected NutricaoAlimento clone(NutricaoAlimento nutricaoAlimento) {
+	protected Alimento clone(Alimento nutricaoAlimento) {
 		
-		NutricaoAlimento newNutricaoAlimento = new NutricaoAlimento();
+		Alimento newNutricaoAlimento = new Alimento();
 		newNutricaoAlimento.setId(nutricaoAlimento.getId());
 		newNutricaoAlimento.setVersion(nutricaoAlimento.getVersion());
-		newNutricaoAlimento.setAlimento(nutricaoAlimento.getAlimento());
+		newNutricaoAlimento.setNome(nutricaoAlimento.getNome());
 		newNutricaoAlimento.setTipo(nutricaoAlimento.getTipo());
 		newNutricaoAlimento.setPadrao(nutricaoAlimento.getPadrao());
 		newNutricaoAlimento.setEnergia(nutricaoAlimento.getEnergia());
@@ -85,11 +85,11 @@ public class NutricaoAlimentoBuilder extends GenericEntityBuilder<NutricaoAlimen
 	}
 
 	@Override
-	public NutricaoAlimento cloneFromFilter(NutricaoAlimentoFilter filter) {
+	public Alimento cloneFromFilter(AlimentoFilter filter) {
 		return null;
 	}
 	
-	public NutricaoAlimentoBuilder loadNutricaoAlimentoMedidaAlimentar() {
-		return (NutricaoAlimentoBuilder) this.loadProperty(this.loadNutricaoAlimentoMedidaAlimentares);
+	public AlimentoBuilder loadNutricaoAlimentoMedidaAlimentar() {
+		return (AlimentoBuilder) this.loadProperty(this.loadNutricaoAlimentoMedidaAlimentares);
 	}
 }

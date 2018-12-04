@@ -10,14 +10,14 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class NutricaoAlimentoMedidaAlimentar {
+public class AlimentoMedidaAlimentar {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
 	@NotNull(message="É necessário informar o Alimento do Alimento Medida Alimentar.")
 	@ManyToOne(fetch=FetchType.EAGER)
-	private NutricaoAlimento nutricaoAlimento;
+	private Alimento alimento;
 	
 	@NotNull(message="É necessário informar a Medida Alimentar do Alimento Medida Alimentar.")
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -41,11 +41,11 @@ public class NutricaoAlimentoMedidaAlimentar {
 	public void setVersion(long version) {
 		this.version = version;
 	}
-	public NutricaoAlimento getNutricaoAlimento() {
-		return nutricaoAlimento;
+	public Alimento getAlimento() {
+		return alimento;
 	}
-	public void setNutricaoAlimento(NutricaoAlimento nutricaoAlimento) {
-		this.nutricaoAlimento = nutricaoAlimento;
+	public void setAlimento(Alimento alimento) {
+		this.alimento = alimento;
 	}
 	public MedidaAlimentar getMedidaAlimentar() {
 		return medidaAlimentar;

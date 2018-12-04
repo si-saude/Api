@@ -5,17 +5,15 @@ import org.javatuples.Triplet;
 
 import br.com.saude.api.generic.CriteriaExample;
 import br.com.saude.api.generic.GenericExampleBuilder;
-import br.com.saude.api.model.entity.filter.QuestionarioConhecimentoAlimentarFilter;
-import br.com.saude.api.model.entity.po.QuestionarioConhecimentoAlimentar;
+import br.com.saude.api.model.entity.filter.RecordatorioFilter;
+import br.com.saude.api.model.entity.po.Recordatorio;
 
-public class QuestionarioConhecimentoAlimentarExampleBuilder extends 
-	GenericExampleBuilder<QuestionarioConhecimentoAlimentar,QuestionarioConhecimentoAlimentarFilter> {
-	
-	public static QuestionarioConhecimentoAlimentarExampleBuilder newInstance(QuestionarioConhecimentoAlimentarFilter filter) {
-		return new QuestionarioConhecimentoAlimentarExampleBuilder(filter);
+public class RecordatorioExampleBuilder  extends GenericExampleBuilder<Recordatorio,RecordatorioFilter> {
+	public static RecordatorioExampleBuilder newInstance(RecordatorioFilter filter) {
+		return new RecordatorioExampleBuilder(filter);
 	}
 	
-	protected QuestionarioConhecimentoAlimentarExampleBuilder(QuestionarioConhecimentoAlimentarFilter filter) {
+	protected RecordatorioExampleBuilder(RecordatorioFilter filter) {
 		super(filter);
 	}
 
@@ -28,7 +26,7 @@ public class QuestionarioConhecimentoAlimentarExampleBuilder extends
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		addAtendimento();
 	}
-
+	
 	private void addAtendimento() throws InstantiationException, IllegalAccessException {
 		if(this.filter.getAtendimento()!=null) {
 			CriteriaExample criteriaExample = AtendimentoExampleBuilder
@@ -36,4 +34,5 @@ public class QuestionarioConhecimentoAlimentarExampleBuilder extends
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("atendimento", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
+
 }
