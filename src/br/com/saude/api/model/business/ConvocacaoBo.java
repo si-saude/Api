@@ -731,6 +731,12 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			if(examesRetorno.stream().filter(e->e.getId() == key).count() > 0)
 				examesRetorno.removeIf(e-> e.getId() == value);
 		});
+		examesRetorno.sort(new Comparator<Exame>(){
+			@Override
+			public int compare(Exame e1, Exame e2) {
+				return e1.getOrdem() > e2.getOrdem() ? 1 :(e1.getOrdem() < e2.getOrdem() ? -1 : 0);
+			}
+		});
 		
 		return examesRetorno;
 	}
