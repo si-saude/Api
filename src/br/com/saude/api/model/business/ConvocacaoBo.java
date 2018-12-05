@@ -239,6 +239,14 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 						}
 					});
 					
+					empregadoExames.sort(new Comparator<EmpregadoConvocacaoExame>() {
+						@Override
+						public int compare(EmpregadoConvocacaoExame e1, EmpregadoConvocacaoExame e2) {
+							return e1.getExame().getOrdem() > e2.getExame().getOrdem() ? 1 :(e1.getExame().getOrdem() < e2.getExame().getOrdem() ? -1 : 0);
+						}
+						
+					});
+					
 					//SUBSTITUIR AS VARIÁVEIS
 					StringReplacer stringReplacer = new StringReplacer(html.toString());
 					stringReplacer = stringReplacer
@@ -730,12 +738,6 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		equivalencias.forEach((key,value)->{
 			if(examesRetorno.stream().filter(e->e.getId() == key).count() > 0)
 				examesRetorno.removeIf(e-> e.getId() == value);
-		});
-		examesRetorno.sort(new Comparator<Exame>(){
-			@Override
-			public int compare(Exame e1, Exame e2) {
-				return e1.getOrdem() > e2.getOrdem() ? 1 :(e1.getOrdem() < e2.getOrdem() ? -1 : 0);
-			}
 		});
 		
 		return examesRetorno;
