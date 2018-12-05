@@ -86,6 +86,8 @@ public class AsoDao extends GenericDao<Aso> {
 					.add(Restrictions.eq("empregado.id", aso.getEmpregado().getId()))
 					.add(Restrictions.eq("conforme", true))
 					.addOrder(Order.desc("validade"))
+					.setFirstResult(0)
+					.setMaxResults(1)
 					.uniqueResult();
 		}catch (Exception ex) {
 			throw ex;
