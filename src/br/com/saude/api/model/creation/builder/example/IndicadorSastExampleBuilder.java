@@ -39,6 +39,10 @@ public class IndicadorSastExampleBuilder  extends GenericExampleBuilder<Indicado
 
 	@Override
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
+		
+		addObrigatorio();
+		addInativo();
+		addAusenteCalculoInterdisciplinar();		
 	}
 	
 	private void addNome() {
