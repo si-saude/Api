@@ -171,11 +171,11 @@ public class AsoBo
 					itemAuditoriaAso.setDescricao(r.getConteudo().replace("[TIPO_CONVOCACAO]", 
 							": "+eCc.getConvocacao().getTipo()));
 			}else if(r.getConteudo().contains("[RISCOS_GHE]")) {
-				if(aso.getEmpregado().getGhe() != null) {
+				if(aso.getEmpregado().getGhe() != null) { 	
 					try {
-						Ghe ghe = GheBo.getInstance().getById(aso.getEmpregado().getGhe());
+						Ghe ghe = GheBo.getInstance().getById(aso.getEmpregado().getGhe().getId());
 						itemAuditoriaAso.setDescricao(r.getConteudo().replace("[RISCOS_GHE]", 
-								": "+ghe.getDescricao()));					
+								": "+ghe.getNome()));					
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
