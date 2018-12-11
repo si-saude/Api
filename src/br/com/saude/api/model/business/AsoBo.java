@@ -5,12 +5,14 @@ import java.util.List;
 
 import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.OrderFilter;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.generic.TypeFilter;
 import br.com.saude.api.model.creation.builder.entity.AsoBuilder;
 import br.com.saude.api.model.creation.builder.example.AsoExampleBuilder;
+import br.com.saude.api.model.entity.dto.ConformidadeAsoDto;
 import br.com.saude.api.model.entity.filter.AsoFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
@@ -25,10 +27,12 @@ import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.ItemAuditoriaAso;
 import br.com.saude.api.model.entity.po.RequisitoAso;
 import br.com.saude.api.model.persistence.AsoDao;
+import br.com.saude.api.model.persistence.report.ConformidadeAsoReport;
 import br.com.saude.api.util.constant.StatusAso;
 
 public class AsoBo 
-	extends GenericBo<Aso, AsoFilter, AsoDao, AsoBuilder, AsoExampleBuilder> {
+	extends GenericBo<Aso, AsoFilter, AsoDao, AsoBuilder, AsoExampleBuilder> 
+		implements GenericReportBo<ConformidadeAsoDto> {
 	
 	private static AsoBo instance;
 	
@@ -55,6 +59,10 @@ public class AsoBo
 
 	public Aso getUltimoByEmpregado(Aso aso) throws Exception{
 		return getDao().getUltimoByEmpregado(aso);
+	}
+	
+	public List<ConformidadeAsoDto> getAsosByAno(int ano) throws Exception {
+		return ConformidadeAsoReport.getInstance().getAsosByAno(ano);
 	}
 	
 	@Override
