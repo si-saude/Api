@@ -33,6 +33,7 @@ public class MudancaFuncaoDao extends GenericDao<MudancaFuncao>  {
 			mudancaFuncao = loadTarefas(mudancaFuncao);		
 			mudancaFuncao = loadInstalacoes(mudancaFuncao);
 			mudancaFuncao = loadGruposMonitoramento(mudancaFuncao);
+			mudancaFuncao = loadGhe(mudancaFuncao);
 			return mudancaFuncao;
 		};
 	
@@ -91,6 +92,14 @@ public class MudancaFuncaoDao extends GenericDao<MudancaFuncao>  {
 			mudancaFuncao.setGrupoMonitoramentos(gruposMonitoramento);
 		}
 		return mudancaFuncao;		
-	}
+	}	
 	
+	private MudancaFuncao loadGhe(MudancaFuncao mudancaFuncao)
+	{
+		if(mudancaFuncao.getGhe() != null) {
+			if(mudancaFuncao.getGhe().getRisco() != null)
+				Hibernate.initialize(mudancaFuncao.getGhe().getRisco());
+		}	
+		return mudancaFuncao;		
+	}	
 }

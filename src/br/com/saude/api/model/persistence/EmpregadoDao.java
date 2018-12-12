@@ -225,8 +225,12 @@ public class EmpregadoDao extends GenericDao<Empregado>  {
 	}
 	
 	private Empregado loadGhe(Empregado empregado) {
-		if(empregado.getGhe() != null)
+		if(empregado.getGhe() != null) {
 			Hibernate.initialize(empregado.getGhe());
+			
+			if(empregado.getGhe().getRisco() != null)
+				Hibernate.initialize(empregado.getGhe().getRisco());
+		}
 		return empregado;
 	}
 	

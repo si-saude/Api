@@ -38,6 +38,7 @@ public class MudancaFuncaoExampleBuilder extends GenericExampleBuilder<MudancaFu
 		addGerencia();
 		addBase();
 		addEmpregado();
+		addDataTranferencia();
 	}
 
 	@Override
@@ -113,5 +114,9 @@ public class MudancaFuncaoExampleBuilder extends GenericExampleBuilder<MudancaFu
 			auxCriteria = Helper.loopCriterias(auxCriteria, criterias);
 			this.criterions.add(Subqueries.exists(auxCriteria.setProjection(Projections.property("tarefas.id"))));
 		}
+	}
+	
+	private void addDataTranferencia() {
+		this.addData("dataTransferencia", this.filter.getDataTransferencia());
 	}
 }

@@ -108,7 +108,7 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 		
 		this.loadGhe = empregados -> {
 			if(empregados.get("origem").getGhe() != null) {
-				empregados.get("destino").setGhe(GheBuilder.newInstance(empregados.get("origem").getGhe()).getEntity());
+				empregados.get("destino").setGhe(GheBuilder.newInstance(empregados.get("origem").getGhe()).loadAll().getEntity());
 			}
 			return empregados.get("destino");
 		};

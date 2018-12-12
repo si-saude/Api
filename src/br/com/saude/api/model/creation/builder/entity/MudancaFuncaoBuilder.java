@@ -12,6 +12,7 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 	private Function<Map<String,MudancaFuncao>,MudancaFuncao> loadTarefas;
 	private Function<Map<String,MudancaFuncao>,MudancaFuncao> loadInstalacoes;
 	private Function<Map<String,MudancaFuncao>,MudancaFuncao> loadGruposMonitorametos;
+	private Function<Map<String,MudancaFuncao>,MudancaFuncao> loadGhe;
 
 	public static MudancaFuncaoBuilder newInstance(MudancaFuncao solicitacao) {
 		return new MudancaFuncaoBuilder(solicitacao);
@@ -53,6 +54,14 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 			}
 			return mundancafuncoes.get("destino");
 		};
+		
+		this.loadGhe = mundancafuncoes -> {			
+			if(mundancafuncoes.get("origem").getGhe() != null)
+				mundancafuncoes.get("destino").setGhe(GheBuilder.
+			    newInstance(mundancafuncoes.get("origem").getGhe()).loadAll().getEntity());
+			
+			return mundancafuncoes.get("destino");
+		};
 	}
 
 	@Override
@@ -63,6 +72,7 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 		newSolicitacao.setId(solicitacao.getId());
 		newSolicitacao.setVersion(solicitacao.getVersion());
 		newSolicitacao.setAtividades(solicitacao.getAtividades());
+		newSolicitacao.setDataTransferencia(solicitacao.getDataTransferencia());
 		
 		if(solicitacao.getEnfase() != null)
 			newSolicitacao.setEnfase(EnfaseBuilder.newInstance(solicitacao.getEnfase()).getEntity());
@@ -92,6 +102,9 @@ public class MudancaFuncaoBuilder extends GenericEntityBuilder<MudancaFuncao, Mu
 	
 	public MudancaFuncaoBuilder loadLoadMonitoramentos() {
 		return (MudancaFuncaoBuilder) this.loadProperty(this.loadGruposMonitorametos);
+	}
+	public MudancaFuncaoBuilder loadLoadGhe() {
+		return (MudancaFuncaoBuilder) this.loadProperty(this.loadGhe);
 	}
 
 

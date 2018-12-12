@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -75,6 +76,9 @@ public class MudancaFuncao {
 	
 	@Transient
 	private Date abertura;
+	
+	@NotNull(message="É necessário informar a Data de Tranferência.")
+	private Date dataTransferencia;
 	
 	@Version
 	private long version;
@@ -189,6 +193,14 @@ public class MudancaFuncao {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public Date getDataTransferencia() {
+		return dataTransferencia;
+	}
+
+	public void setDataTransferencia(Date dataTransferencia) {
+		this.dataTransferencia = dataTransferencia;
 	}
 
 	public Date getAbertura() {

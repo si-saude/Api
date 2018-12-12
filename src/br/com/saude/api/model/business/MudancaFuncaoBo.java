@@ -45,7 +45,7 @@ public class MudancaFuncaoBo
 		};
 		
 		this.functionLoadAll = builder -> {
-			return builder.loadTarefas().loadInstalacoes().loadLoadMonitoramentos();
+			return builder.loadTarefas().loadInstalacoes().loadLoadMonitoramentos().loadLoadGhe();
 		};
 
 	}
@@ -74,25 +74,12 @@ public class MudancaFuncaoBo
 				}
 					
 				tarefa.setFim(Helper.getNow());
-				qtdAlteracaoData++;
-				
-				
-				if(tarefa.getEquipe().getAbreviacao().equals("ERG") &&  mudancaFuncao.getGhee() != null) {
-					mudancaFuncao.getCliente().setGhee(mudancaFuncao.getGhee());				
-				}
-				
-				if(tarefa.getEquipe().getAbreviacao().equals("HIG") &&  mudancaFuncao.getGhe() != null) {
-					mudancaFuncao.getCliente().setGhe(mudancaFuncao.getGhe());	
-				}
 			}
 			
 			if(!(tarefa.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)))
 				tarefa.setFim(null);
 		}		
 		
-		if(temMudanca) {
-			EmpregadoBo.getInstance().save(mudancaFuncao.getCliente());
-		}
 		return super.save(mudancaFuncao);
 	}
 	
@@ -199,7 +186,13 @@ public class MudancaFuncaoBo
 			   mudancaFuncao.getCliente().setGerencia(mudancaFuncao.getGerencia());
 			
 			if(mudancaFuncao.getBase() != null)
-			   mudancaFuncao.getCliente().setBase(mudancaFuncao.getBase());			
+			   mudancaFuncao.getCliente().setBase(mudancaFuncao.getBase());		
+			
+			if( mudancaFuncao.getGhee() != null) 
+				mudancaFuncao.getCliente().setGhee(mudancaFuncao.getGhee());	
+			
+			if( mudancaFuncao.getGhe() != null) 
+				mudancaFuncao.getCliente().setGhe(mudancaFuncao.getGhe());	
 			
 			mudancaFuncao.getCliente().setInstalacoes(mudancaFuncao.getInstalacoes());
 			
