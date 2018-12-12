@@ -21,6 +21,7 @@ import java.util.function.Function;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.Helper;
+import br.com.saude.api.generic.OrderFilter;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.AtestadoBuilder;
 import br.com.saude.api.model.creation.builder.example.AtestadoExampleBuilder;
@@ -142,6 +143,14 @@ public class AtestadoBo
 			atestado.setDataLimiteHomologar(null);
 		
 		return atestado;
+	}
+	
+	@Override
+	public PagedList<Atestado> getList(AtestadoFilter filter) throws Exception {
+		filter.setOrder(new OrderFilter());
+		filter.getOrder().setDesc(false);
+		filter.getOrder().setProperty("inicio");
+		return super.getList(filter);
 	}
 	
 	public PagedList<Atestado> getListAll(AtestadoFilter filter) throws Exception {

@@ -22,6 +22,7 @@ import br.com.saude.api.util.constant.AtividadeFornecedor;
 import br.com.saude.api.util.constant.AutoavaliacaoHabitosAlimentares;
 import br.com.saude.api.util.constant.AvaliacaoEficacia;
 import br.com.saude.api.util.constant.CategoriaAgenteRisco;
+import br.com.saude.api.util.constant.ClassificacaoAtividade;
 import br.com.saude.api.util.constant.ConformeNaoConforme;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.DentroForaPrazo;
@@ -524,5 +525,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDentroForaPrazo(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(DentroForaPrazo.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/classificacao-atividade")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getClassificacaoAtividade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(ClassificacaoAtividade.getInstance(),filter)).build();
 	}
 }
