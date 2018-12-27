@@ -297,16 +297,19 @@ public class EmpregadoConvocacaoBo
 					filter = new EmpregadoConvocacaoFilter(); 
 					filter.setEmpregado(new EmpregadoFilter());
 					filter.getEmpregado().setMatricula(matriculaAux);	
-					filter.setDataConvocacao(new DateFilter());
-					filter.getDataConvocacao().setTypeFilter(TypeFilter.ENTRE);
-					filter.getDataConvocacao().setInicio(Helper.cloneDate(data));
-					filter.getDataConvocacao().setFim(Helper.cloneDate(data));
 					filter.setConvocacao(new ConvocacaoFilter());
 					filter.getConvocacao().setTipo(TipoConvocacao.PERIODICO);
+					filter.getConvocacao().setInicio(new DateFilter());
+					filter.getConvocacao().getInicio().setTypeFilter(TypeFilter.ENTRE);
+					filter.getConvocacao().getInicio().setInicio(Helper.cloneDate(data));
+					filter.getConvocacao().getInicio().setFim(Helper.cloneDate(data));
+					filter.setOrder(new OrderFilter());
+					filter.getOrder().setDesc(true);
+					filter.getOrder().setProperty("dataConvocacao");
 					filter.setPageNumber(1);
 					filter.setPageSize(1);
 					
-				   PagedList<EmpregadoConvocacao> empConvocacoes = EmpregadoConvocacaoBo.getInstance().getListLoadAll(filter);
+				    PagedList<EmpregadoConvocacao> empConvocacoes = getListLoadAll(filter);
 					
 				   if(empConvocacoes.getTotal() > 0) {
 					   empregadoConvocacao = empConvocacoes.getList().get(0);
@@ -350,7 +353,7 @@ public class EmpregadoConvocacaoBo
 								}	
 								List<CampoExame> campoExamesAux= eCE.getExame().getCampoExames().stream().filter(x->x.getCodigo().equals(campoExameAux)).collect(Collectors.toList());
 								
-								if(campoExamesAux != null && campoExamesAux.size() > 0) {
+								if((!campoExameAux.equals("010")) && campoExamesAux != null && campoExamesAux.size() > 0) {
 									String s ="";
 									if(!eCE.isResultadoInicializado()) {
 										eCE.setResultadoInicializado(true);
