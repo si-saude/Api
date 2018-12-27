@@ -16,11 +16,10 @@ public class ForcaPreensaoManual extends GenericConstant {
 		return instance;
 	}
 	
-	public final String PENDENTE 				= "PENDENTE";
 	public final String FRACO 				= "FRACO";
 	public final String REGULAR		= "REGULAR";
 	public final String MEDIO		= "MÉDIO";
-	public final String BOA		= "BOA";
+	public final String BOM		= "BOM";
 	public final String EXCELENTE		= "EXCELENTE";
 
 }

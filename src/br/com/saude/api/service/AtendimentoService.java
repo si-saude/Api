@@ -269,6 +269,19 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
+	
+	@RequestInterceptor
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/calcular-composicao-corporal")
+	public Response calcularComposicaoCorporal(Atendimento atendimento) {
+		try {
+			return Response.ok(AtendimentoBo.getInstance().calcularComposicaoCorporal(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 
 	@RequestInterceptor
 	@Override

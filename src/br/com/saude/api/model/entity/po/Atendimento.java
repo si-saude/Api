@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Atendimento {
-
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
@@ -45,6 +44,9 @@ public class Atendimento {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	private Recordatorio recordatorio;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	private AvaliacaoFisica avaliacaoFisica;
 	
 	@Transient
 	private List<Triagem> triagensTodosAtendimentos;
@@ -132,4 +134,11 @@ public class Atendimento {
 		this.recordatorio = recordatorio;
 	}
 	
+	public AvaliacaoFisica getAvaliacaoFisica() {
+		return avaliacaoFisica;
+	}
+
+	public void setAvaliacaoFisica(AvaliacaoFisica avaliacaoFisica) {
+		this.avaliacaoFisica = avaliacaoFisica;
+	}
 }

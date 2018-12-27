@@ -1,6 +1,9 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
+
 import br.com.saude.api.generic.GenericExampleBuilder;
+import br.com.saude.api.generic.Helper;
 import br.com.saude.api.model.entity.filter.AtividadeFisicaFilter;
 import br.com.saude.api.model.entity.po.AtividadeFisica;
 
@@ -12,46 +15,18 @@ public class AtividadeFisicaExampleBuilder extends GenericExampleBuilder<Ativida
 	private AtividadeFisicaExampleBuilder(AtividadeFisicaFilter filter) {
 		super(filter);
 	}
-
+	
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
-		addDomingo();
-		addSegunda();
-		addTerca();
-		addQuarta();
-		addQuinta();
-		addSexta();
-		addSabado();
+		addDescricao();
 	}
 	
 	@Override
 	protected void createExampleSelectList() { }
 	
-	protected void addDomingo() {
-		this.entity.setDomingo(this.addBoolean("domingo", this.filter.getDomingo()));
+	public void addDescricao() {
+		if(this.filter.getDescricao()!=null)
+			this.criterions.add(Restrictions.ilike("descricao", Helper.filterLike(this.filter.getDescricao())));
 	}
-	
-	protected void addSegunda() {
-		this.entity.setSegunda(this.addBoolean("segunda", this.filter.getSegunda()));
-	}
-	
-	protected void addTerca() {
-		this.entity.setTerca(this.addBoolean("terca", this.filter.getTerca()));
-	}
-	
-	protected void addQuarta() {
-		this.entity.setQuarta(this.addBoolean("quarta", this.filter.getQuarta()));
-	}
-	
-	protected void addQuinta() {
-		this.entity.setQuinta(this.addBoolean("quinta", this.filter.getQuinta()));
-	}
-	
-	protected void addSexta() {
-		this.entity.setSexta(this.addBoolean("sexta", this.filter.getSexta()));
-	}
-	
-	protected void addSabado() {
-		this.entity.setSabado(this.addBoolean("sabado", this.filter.getSabado()));
-	}
+
 }

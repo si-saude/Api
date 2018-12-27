@@ -26,6 +26,7 @@ import br.com.saude.api.util.constant.ClassificacaoAtividade;
 import br.com.saude.api.util.constant.ConformeNaoConforme;
 import br.com.saude.api.util.constant.Conformidade;
 import br.com.saude.api.util.constant.DentroForaPrazo;
+import br.com.saude.api.util.constant.DireitoEsquerdo;
 import br.com.saude.api.util.constant.DoresCorporaisIntensidade;
 import br.com.saude.api.util.constant.EnsaioVedacao;
 import br.com.saude.api.util.constant.Escolaridade;
@@ -35,12 +36,14 @@ import br.com.saude.api.util.constant.ExposicaoRiscosAmbientaisCategoria;
 import br.com.saude.api.util.constant.Flexibilidade;
 import br.com.saude.api.util.constant.ForcaAbdominal;
 import br.com.saude.api.util.constant.ForcaPreensaoManual;
+import br.com.saude.api.util.constant.Frequencia;
 import br.com.saude.api.util.constant.Fuma;
 import br.com.saude.api.util.constant.FumaClassificacao;
 import br.com.saude.api.util.constant.Funcionalidade;
 import br.com.saude.api.util.constant.Gravidade;
 import br.com.saude.api.util.constant.GrupoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.GrupoServico;
+import br.com.saude.api.util.constant.Intensidade;
 import br.com.saude.api.util.constant.MedidaControle;
 import br.com.saude.api.util.constant.MeioPropagacao;
 import br.com.saude.api.util.constant.NivelAtividadeFisica;
@@ -532,5 +535,26 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getClassificacaoAtividade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(ClassificacaoAtividade.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/direito-esquerdo")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDireitoEsquerdo(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(DireitoEsquerdo.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/intensidade")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getIntensidade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Intensidade.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/frequencia")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFrequencia(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Frequencia.getInstance(),filter)).build();
 	}
 }

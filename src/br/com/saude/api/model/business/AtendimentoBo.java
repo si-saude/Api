@@ -59,6 +59,7 @@ import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.AtendimentoDao;
 import br.com.saude.api.util.constant.GrupoServico;
+import br.com.saude.api.util.constant.Sexo;
 import br.com.saude.api.util.constant.StatusAso;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
@@ -66,6 +67,7 @@ import br.com.saude.api.util.constant.StatusRiscoEmpregado;
 import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusTarefa;
 import br.com.saude.api.util.constant.TipoConvocacao;
+import br.com.saude.api.util.constant.GrupoPerguntaFichaColeta;
 
 public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, AtendimentoDao, 
 	AtendimentoBuilder, AtendimentoExampleBuilder> {
@@ -1227,6 +1229,41 @@ private void criarConvocacao(Atendimento atendimento, String tipoConvocacao) thr
 		}
 		
 		return atendimentoAux;
+	}
+	
+	public Atendimento calcularComposicaoCorporal( Atendimento atendimento ) {
+		double sum7Dobras = 0;
+		double dc = 0;
+		
+		@SuppressWarnings("unchecked")
+		List<RespostaFichaColeta> respostas = (List<RespostaFichaColeta>) atendimento.getFilaEsperaOcupacional()
+				.getFichaColeta().getRespostaFichaColetas().stream().filter(r -> 
+				r.getPergunta().getGrupo().equals(GrupoPerguntaFichaColeta.EXAME_FISICO));
+		if ( atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getSexo().equals(Sexo.getInstance().MASCULINO) ) {
+			 sum7Dobras = Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0020"))
+					 	.collect(Collectors.toList()).get(0).getConteudo()) + 
+					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0021"))
+							 .collect(Collectors.toList()).get(0).getConteudo()) + 
+					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0022"))
+							 .collect(Collectors.toList()).get(0).getConteudo()) + 
+					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0023"))
+							 .collect(Collectors.toList()).get(0).getConteudo()) + 
+					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0024"))
+							 .collect(Collectors.toList()).get(0).getConteudo()) + 
+					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0025"))
+							 .collect(Collectors.toList()).get(0).getConteudo()) +
+					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0026"))
+							 .collect(Collectors.toList()).get(0).getConteudo());
+		}
+		dc = 1.1120-(0.00043499*sum7Dobras)+(0.00000055*Math.pow(sum7Dobras, 2))-
+				(0.00028826*atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getIdade());
+		atendimento.getAvaliacaoFisica().setPercentualGordura((4.95/dc-4.50)*100);
+		atendimento.getAvaliacaoFisica().setPesoExcesso(
+				atendimento.getAvaliacaoFisica().getPercentualGordura()-
+				((atendimento.getAvaliacaoFisica().getPercentualGordura()/100)*
+					Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+						 .collect(Collectors.toList()).get(0).getConteudo())));
+		return atendimento;
 	}
 	
 }

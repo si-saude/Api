@@ -33,18 +33,7 @@ public class AtividadeFisicaBuilder extends GenericEntityBuilder<AtividadeFisica
 		
 		newAtividadeFisica.setId(atividadeFisica.getId());
 		newAtividadeFisica.setVersion(atividadeFisica.getVersion());
-		newAtividadeFisica.setClassificacao(atividadeFisica.getClassificacao());
 		newAtividadeFisica.setDescricao(atividadeFisica.getDescricao());
-		newAtividadeFisica.setDomingo(atividadeFisica.isDomingo());
-		newAtividadeFisica.setMinuto(atividadeFisica.getMinuto());
-		newAtividadeFisica.setObservacao(atividadeFisica.getObservacao());
-		newAtividadeFisica.setQuarta(atividadeFisica.isQuarta());
-		newAtividadeFisica.setQuinta(atividadeFisica.isQuinta());
-		newAtividadeFisica.setSabado(atividadeFisica.isSabado());
-		newAtividadeFisica.setSegunda(atividadeFisica.isSegunda());
-		newAtividadeFisica.setSexta(atividadeFisica.isSexta());
-		newAtividadeFisica.setTerca(atividadeFisica.isTerca());
-		newAtividadeFisica.setTotalMinuto(atividadeFisica.getTotalMinuto());
 		
 		return newAtividadeFisica;
 	}

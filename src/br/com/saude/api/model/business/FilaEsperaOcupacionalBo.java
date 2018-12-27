@@ -67,6 +67,8 @@ import br.com.saude.api.model.entity.po.Servico;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.Triagem;
 import br.com.saude.api.model.persistence.FilaEsperaOcupacionalDao;
+import br.com.saude.api.util.constant.AptidaoFisicaBrigadista;
+import br.com.saude.api.util.constant.GrupoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
@@ -652,6 +654,13 @@ public class FilaEsperaOcupacionalBo
 				fila.getFichaColeta().getRespostaFichaColetas().add(resposta);
 			}
 		}
+		
+		fila.getFichaColeta().getRespostaFichaColetas().stream().filter(rfc -> {
+			if ( rfc.getPergunta().getGrupo().equals(GrupoPerguntaFichaColeta.EXAME_FISICO) &&
+					rfc.getPergunta().getCodigo().equals("0019"))
+				return true;
+			return false;
+		}).findFirst().get().setConteudo(AptidaoFisicaBrigadista.getInstance().PENDENTE);
 		
 		return fila;
 	}
