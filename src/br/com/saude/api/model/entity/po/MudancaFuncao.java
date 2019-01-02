@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -51,6 +52,12 @@ public class MudancaFuncao {
 	inverseJoinColumns = {@JoinColumn(name="instalacao_id")})
 	private List<Instalacao> instalacoes;
 	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="mudancaFuncao_grupomonitoramento", 
+				joinColumns = {@JoinColumn(name="mudancaFuncao_id")}, 
+				inverseJoinColumns = {@JoinColumn(name="grupomonitoramento_id")})
+	private List<GrupoMonitoramento> grupoMonitoramentos;
+	
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name="mudancaFuncao_tarefa", 
@@ -58,7 +65,7 @@ public class MudancaFuncao {
 	inverseJoinColumns = {@JoinColumn(name="tarefa_id")})
 	private List<Tarefa> tarefas;
 	
-	@Size(max = 16, message="Tamanho máximo para Revisão: 2054")
+	@Size(max = 2048, message="Tamanho máximo para Revisão: 2048")
 	private String atividades;
 	
 	@Transient
@@ -69,6 +76,9 @@ public class MudancaFuncao {
 	
 	@Transient
 	private Date abertura;
+	
+	@NotNull(message="É necessário informar a Data de Tranferência.")
+	private Date dataTransferencia;
 	
 	@Version
 	private long version;
@@ -168,6 +178,14 @@ public class MudancaFuncao {
 	public void setInstalacoes(List<Instalacao> instalacoes) {
 		this.instalacoes = instalacoes;
 	}
+	
+	public List<GrupoMonitoramento> getGrupoMonitoramentos() {
+		return grupoMonitoramentos;
+	}
+	
+	public void setGrupoMonitoramentos(List<GrupoMonitoramento> grupoMonitoramentos) {
+		this.grupoMonitoramentos = grupoMonitoramentos;
+	}
 
 	public String getStatus() {
 		return status;
@@ -175,6 +193,14 @@ public class MudancaFuncao {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public Date getDataTransferencia() {
+		return dataTransferencia;
+	}
+
+	public void setDataTransferencia(Date dataTransferencia) {
+		this.dataTransferencia = dataTransferencia;
 	}
 
 	public Date getAbertura() {

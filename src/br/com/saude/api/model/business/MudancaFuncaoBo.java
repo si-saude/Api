@@ -4,20 +4,25 @@ import java.util.List;
 
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.GenericReportBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.MudancaFuncaoBuilder;
 import br.com.saude.api.model.creation.builder.entity.TarefaBuilder;
 import br.com.saude.api.model.creation.builder.example.MudancaFuncaoExampleBuilder;
+import br.com.saude.api.model.entity.dto.MudancaFuncaoDto;
 import br.com.saude.api.model.entity.filter.MudancaFuncaoFilter;
 import br.com.saude.api.model.entity.po.Atividade;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.Tarefa;
 import br.com.saude.api.model.entity.po.MudancaFuncao;
 import br.com.saude.api.model.persistence.MudancaFuncaoDao;
+import br.com.saude.api.model.persistence.report.MudancaFuncaoReport;
 import br.com.saude.api.util.constant.StatusTarefa;
+
 public class MudancaFuncaoBo
-		extends GenericBo<MudancaFuncao, MudancaFuncaoFilter, MudancaFuncaoDao, MudancaFuncaoBuilder, MudancaFuncaoExampleBuilder> 
+		extends GenericBo<MudancaFuncao, MudancaFuncaoFilter, MudancaFuncaoDao, MudancaFuncaoBuilder, MudancaFuncaoExampleBuilder>
+		implements GenericReportBo<MudancaFuncaoDto>
 		
 {
 
@@ -40,7 +45,7 @@ public class MudancaFuncaoBo
 		};
 		
 		this.functionLoadAll = builder -> {
-			return builder.loadTarefas().loadInstalacoes();
+			return builder.loadTarefas().loadInstalacoes().loadLoadMonitoramentos().loadLoadGhe();
 		};
 
 	}
@@ -69,25 +74,12 @@ public class MudancaFuncaoBo
 				}
 					
 				tarefa.setFim(Helper.getNow());
-				qtdAlteracaoData++;
-				
-				
-				if(tarefa.getEquipe().getAbreviacao().equals("ERG") &&  mudancaFuncao.getGhee() != null) {
-					mudancaFuncao.getCliente().setGhee(mudancaFuncao.getGhee());				
-				}
-				
-				if(tarefa.getEquipe().getAbreviacao().equals("HIG") &&  mudancaFuncao.getGhe() != null) {
-					mudancaFuncao.getCliente().setGhe(mudancaFuncao.getGhe());	
-				}
 			}
 			
 			if(!(tarefa.getStatus().equals(StatusTarefa.getInstance().CONCLUIDA)))
 				tarefa.setFim(null);
 		}		
 		
-		if(temMudanca) {
-			EmpregadoBo.getInstance().save(mudancaFuncao.getCliente());
-		}
 		return super.save(mudancaFuncao);
 	}
 	
@@ -131,7 +123,9 @@ public class MudancaFuncaoBo
 				||(empregado.getBase() == null))			
 			return true;
 		if(modificacaoIntalacoes(mudancaFuncao, empregado)) 
-				return true;
+			return true;
+		if(modificacaoGruposMonitoramento(mudancaFuncao, empregado))
+			return true;
 		
 		return false;
 	}
@@ -149,6 +143,25 @@ public class MudancaFuncaoBo
 			for(int x = 0; x < empregado.getInstalacoes().size(); x++) {
 				int y = x;
 				if(mudancaFuncao.getInstalacoes() == null ||mudancaFuncao.getInstalacoes().stream().filter(i-> i.getId() == empregado.getInstalacoes().get(y).getId()).count() == 0)
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean modificacaoGruposMonitoramento(MudancaFuncao mudancaFuncao, Empregado empregado) {
+		
+		if(mudancaFuncao.getGrupoMonitoramentos() != null) {
+			for(int x = 0; x < mudancaFuncao.getGrupoMonitoramentos().size(); x++) {
+				int y = x;
+				if(empregado.getGrupoMonitoramentos() == null ||empregado.getGrupoMonitoramentos().stream().filter(i-> i.getId() == mudancaFuncao.getGrupoMonitoramentos().get(y).getId()).count() == 0)
+					return true;
+			}
+		}
+		if(empregado.getGrupoMonitoramentos() != null) {
+			for(int x = 0; x < empregado.getGrupoMonitoramentos().size(); x++) {
+				int y = x;
+				if(mudancaFuncao.getGrupoMonitoramentos() == null ||mudancaFuncao.getGrupoMonitoramentos().stream().filter(i-> i.getId() == empregado.getGrupoMonitoramentos().get(y).getId()).count() == 0)
 					return true;
 			}
 		}
@@ -173,9 +186,17 @@ public class MudancaFuncaoBo
 			   mudancaFuncao.getCliente().setGerencia(mudancaFuncao.getGerencia());
 			
 			if(mudancaFuncao.getBase() != null)
-			   mudancaFuncao.getCliente().setBase(mudancaFuncao.getBase());			
+			   mudancaFuncao.getCliente().setBase(mudancaFuncao.getBase());		
+			
+			if( mudancaFuncao.getGhee() != null) 
+				mudancaFuncao.getCliente().setGhee(mudancaFuncao.getGhee());	
+			
+			if( mudancaFuncao.getGhe() != null) 
+				mudancaFuncao.getCliente().setGhe(mudancaFuncao.getGhe());	
 			
 			mudancaFuncao.getCliente().setInstalacoes(mudancaFuncao.getInstalacoes());
+			
+			mudancaFuncao.getCliente().setGrupoMonitoramentos(mudancaFuncao.getGrupoMonitoramentos());
 			
 		}else
 			throw new Exception("As mudanças já foram aplicadas");		
@@ -240,5 +261,9 @@ public class MudancaFuncaoBo
 
 		return super.save(mudancaFuncao);
 		
+	}
+	
+	public List<MudancaFuncaoDto> getMudancaFuncoes() throws Exception{
+		return MudancaFuncaoReport.getInstance().getMudancaFuncoes();
 	}
 }

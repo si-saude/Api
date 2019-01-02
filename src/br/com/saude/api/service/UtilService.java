@@ -14,6 +14,7 @@ import br.com.saude.api.generic.GenericConstant;
 import br.com.saude.api.util.RequestInterceptor;
 import br.com.saude.api.util.constant.Abrangencia;
 import br.com.saude.api.util.constant.AcaoResultadoExame;
+import br.com.saude.api.util.constant.AptidaoAso;
 import br.com.saude.api.util.constant.AplicavelNaoAplicavel;
 import br.com.saude.api.util.constant.AptidaoCardiorrespiratoria;
 import br.com.saude.api.util.constant.AptidaoFisicaBrigadista;
@@ -21,8 +22,10 @@ import br.com.saude.api.util.constant.AtividadeFornecedor;
 import br.com.saude.api.util.constant.AutoavaliacaoHabitosAlimentares;
 import br.com.saude.api.util.constant.AvaliacaoEficacia;
 import br.com.saude.api.util.constant.CategoriaAgenteRisco;
+import br.com.saude.api.util.constant.ClassificacaoAtividade;
 import br.com.saude.api.util.constant.ConformeNaoConforme;
 import br.com.saude.api.util.constant.Conformidade;
+import br.com.saude.api.util.constant.DentroForaPrazo;
 import br.com.saude.api.util.constant.DoresCorporaisIntensidade;
 import br.com.saude.api.util.constant.EnsaioVedacao;
 import br.com.saude.api.util.constant.Escolaridade;
@@ -32,6 +35,7 @@ import br.com.saude.api.util.constant.ExposicaoRiscosAmbientaisCategoria;
 import br.com.saude.api.util.constant.Flexibilidade;
 import br.com.saude.api.util.constant.ForcaAbdominal;
 import br.com.saude.api.util.constant.ForcaPreensaoManual;
+import br.com.saude.api.util.constant.Fuma;
 import br.com.saude.api.util.constant.FumaClassificacao;
 import br.com.saude.api.util.constant.Funcionalidade;
 import br.com.saude.api.util.constant.Gravidade;
@@ -62,6 +66,7 @@ import br.com.saude.api.util.constant.TempoAnos;
 import br.com.saude.api.util.constant.TempoMeses;
 import br.com.saude.api.util.constant.TipoAcao;
 import br.com.saude.api.util.constant.TipoAcidente;
+import br.com.saude.api.util.constant.TipoAlimento;
 import br.com.saude.api.util.constant.TipoCat;
 import br.com.saude.api.util.constant.TipoContato;
 import br.com.saude.api.util.constant.TipoConvocacao;
@@ -82,6 +87,12 @@ public class UtilService {
 		.collect(Collectors.toMap(e->e.getKey(),e->e.getValue()));
 	}
 	
+	@GET
+	@Path("/aptidao-aso")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAptidaoAso(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(AptidaoAso.getInstance(),filter)).build();
+	}
 	@GET
 	@Path("/funcionalidade")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -164,6 +175,13 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFumaClassificacao(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(FumaClassificacao.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/fuma")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFuma(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Fuma.getInstance(),filter)).build();
 	}
 	
 	@GET
@@ -493,5 +511,26 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAplicavelNaoAplicavel(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(AplicavelNaoAplicavel.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/tipo-alimento")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTipoAlimento(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TipoAlimento.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/dentro-fora-prazo")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDentroForaPrazo(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(DentroForaPrazo.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/classificacao-atividade")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getClassificacaoAtividade(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(ClassificacaoAtividade.getInstance(),filter)).build();
 	}
 }

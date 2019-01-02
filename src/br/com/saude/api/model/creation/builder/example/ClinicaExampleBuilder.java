@@ -22,6 +22,8 @@ public class ClinicaExampleBuilder extends GenericExampleBuilder<Clinica, Clinic
 		addId();
 		addNome();
 		addUf();
+		addEndereco();
+		addTelefones();
 	}
 
 	@Override
@@ -42,5 +44,15 @@ public class ClinicaExampleBuilder extends GenericExampleBuilder<Clinica, Clinic
 	private void addUf() {
 		if(this.filter.getUf() != null)
 			this.entity.setUf(Helper.filterLike(this.filter.getUf()));
+	}
+	
+	private void addEndereco() {
+		if(this.filter.getEndereco() != null)
+			this.entity.setEndereco(Helper.filterLike(this.filter.getEndereco()));
+	}
+	
+	private void addTelefones() {
+		if(this.filter.getTelefones() != null)
+			this.entity.setTelefones(Helper.filterLike(this.filter.getTelefones()));
 	}
 }

@@ -38,6 +38,7 @@ public class GrupoMonitoramentoProfissiogramaBuilder
 				grupoMonitoramentoProfissiogramas.get("destino").setGrupoMonitoramentoProfissiogramaExames(
 						GrupoMonitoramentoProfissiogramaExameBuilder
 						.newInstance(grupoMonitoramentoProfissiogramas.get("origem").getGrupoMonitoramentoProfissiogramaExames())
+						.loadCriterios()
 						.getEntityList());
 			return grupoMonitoramentoProfissiogramas.get("destino");
 		};

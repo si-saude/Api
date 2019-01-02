@@ -60,6 +60,11 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 			this.entity.setStatus(Helper.filterLike(this.filter.getStatus()));
 	}
 	
+	private void addVinculo() {
+		if(this.filter.getVinculo()!= null)
+			this.entity.setVinculo(Helper.filterLike(this.filter.getVinculo()));
+	}
+	
 	private void addPis() {
 		if(this.filter.getPis()!= null)
 			this.entity.setPis(Helper.filterLike(this.filter.getPis()));
@@ -172,6 +177,7 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 		addRegime();
 		addPis();
 		addDataAdmissao();
+		addVinculo();
 	}
 	
 	@Override
@@ -192,6 +198,7 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 		addRegime();
 		addPis();
 		addDataAdmissao();
+		addVinculo();
 	}
 
 	@Override
@@ -210,6 +217,7 @@ public class EmpregadoExampleBuilder extends GenericExampleBuilder<Empregado,Emp
 		addGhe();
 		addGhee();
 		addRegime();
+		addVinculo();
 	}
 	
 	protected void createExampleOrChaveMatriculaCpf() throws InstantiationException, IllegalAccessException {

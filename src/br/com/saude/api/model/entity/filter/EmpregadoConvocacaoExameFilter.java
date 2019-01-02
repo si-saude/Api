@@ -10,15 +10,25 @@ public class EmpregadoConvocacaoExameFilter extends GenericFilter {
 	private EmpregadoConvocacaoFilter empregadoConvocacao;
 	private BooleanFilter exigeRelatorio;
 	private BooleanFilter conforme;
+	private BooleanFilter opcional;
+	private BooleanFilter resultadoConforme;
 	private DateFilter realizacao;
 	private DateFilter recebimento;
 	private DateFilter auditoria;
+	private String resultado;
 	
 	public ExameFilter getExame() {
 		return exame;
 	}
 	public void setExame(ExameFilter exame) {
 		this.exame = exame;
+	}
+	
+	public String getResultado() {
+		return resultado;
+	}
+	public void setResultado(String resultado) {
+		this.resultado = resultado;
 	}
 	public EmpregadoConvocacaoFilter getEmpregadoConvocacao() {
 		return empregadoConvocacao;
@@ -44,6 +54,13 @@ public class EmpregadoConvocacaoExameFilter extends GenericFilter {
 	public void setConforme(BooleanFilter conforme) {
 		this.conforme = conforme;
 	}
+	
+	public BooleanFilter getResultadoConforme() {
+		return resultadoConforme;
+	}
+	public void setResultadoConforme(BooleanFilter resultadoConforme) {
+		this.resultadoConforme = resultadoConforme;
+	}
 	public DateFilter getRecebimento() {
 		return recebimento;
 	}
@@ -55,6 +72,12 @@ public class EmpregadoConvocacaoExameFilter extends GenericFilter {
 	}
 	public void setAuditoria(DateFilter auditoria) {
 		this.auditoria = auditoria;
+	}
+	public BooleanFilter getOpcional() {
+		return opcional;
+	}
+	public void setOpcional(BooleanFilter opcional) {
+		this.opcional = opcional;
 	}
 	
 }

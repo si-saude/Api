@@ -129,10 +129,16 @@ public class ControleAtestadoReport {
 					calendar2.get(Calendar.YEAR));
 			
 			calendar1.setTimeInMillis((long) ((Timestamp)row[4]).getTime());
-			atestado.setPrazoRecebimento(FeriadoBo.getInstance().getDaysBetweenDates(calendar1, calendar2));
-			if ( atestado.getPrazoRecebimento() <= 3 )
-				atestado.setRecebidoNoPrazo(true);
-			else atestado.setRecebidoNoPrazo(false);
+			
+			try { 
+				atestado.setPrazoRecebimento(FeriadoBo.getInstance().getDaysBetweenDates(calendar1, calendar2));
+				if ( atestado.getPrazoRecebimento() <= 3 )
+					atestado.setRecebidoNoPrazo(true);
+				else atestado.setRecebidoNoPrazo(false);
+			} catch (Exception e) {
+				e.printStackTrace();
+				atestado.setRecebidoNoPrazo(false);
+			}
 			
 			atestado.setMesRecebimento(Helper.getStringMonth( Integer.parseInt((String) row[8]) - 1 ));
 			
@@ -151,14 +157,20 @@ public class ControleAtestadoReport {
 			}
 			
 			if(row[9] != null && row[10] != null) {
-				atestado.setPrazoHomologacao(FeriadoBo.getInstance().getDaysBetweenDates(calendar1, calendar2));
-				if ( atestado.getPrazoHomologacao() <= (int) row[11] )
-					atestado.setHomologadoNoPrazo(true);
-				else atestado.setHomologadoNoPrazo(false);
-				
-				atestado.setMesHomologacao(Helper.getStringMonth( Integer.parseInt((String) row[12]) - 1 ));
-				
-				atestado.setHomologadoNoPrazo( atestado.getPrazoHomologacao() <= (int) row[11] );
+				try {
+					atestado.setPrazoHomologacao(FeriadoBo.getInstance().getDaysBetweenDates(calendar1, calendar2));
+					if ( atestado.getPrazoHomologacao() <= (int) row[11] )
+						atestado.setHomologadoNoPrazo(true);
+					else atestado.setHomologadoNoPrazo(false);
+					
+					atestado.setMesHomologacao(Helper.getStringMonth( Integer.parseInt((String) row[12]) - 1 ));
+					
+					atestado.setHomologadoNoPrazo( atestado.getPrazoHomologacao() <= (int) row[11] );
+				} catch (Exception e) {
+					e.printStackTrace();
+					atestado.setMesHomologacao("");
+					atestado.setHomologadoNoPrazo(false);
+				}
 			}
 			
 			if(row[13] != null)

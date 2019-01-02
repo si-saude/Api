@@ -15,6 +15,8 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	private Function<Map<String,Atendimento>,Atendimento> loadTarefa;
 	private Function<Map<String,Atendimento>,Atendimento> loadTriagens;
 	private Function<Map<String,Atendimento>,Atendimento> loadAso;
+	private Function<Map<String,Atendimento>,Atendimento> loadQuestionario;
+	private Function<Map<String,Atendimento>,Atendimento> loadRecordatorio;
 	
 	public static AtendimentoBuilder newInstance(Atendimento atendimento) {
 		return new AtendimentoBuilder(atendimento);
@@ -46,6 +48,10 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 			if(atendimentos.get("origem").getAso() != null)
 				atendimentos.get("destino").setAso(AsoBuilder
 						.newInstance(atendimentos.get("origem").getAso())
+						.loadAptidoes()
+						.loadAlteracoes()
+						.loadExamesConvocacao()
+						.loadAvaliacoes()
 						.getEntity());
 			return atendimentos.get("destino");
 		};
@@ -57,6 +63,22 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 						.getEntityList());
 			return atendimentos.get("destino");
 		};
+		
+		this.loadQuestionario = atendimentos -> {
+			if (atendimentos.get("origem").getQuestionario() != null)
+				atendimentos.get("destino").setQuestionario(QuestionarioConhecimentoAlimentarBuilder
+						.newInstance(atendimentos.get("origem").getQuestionario()).loadRespostas()
+						.getEntity());
+			return atendimentos.get("destino");
+		};
+		
+		this.loadRecordatorio = atendimentos -> {
+			if (atendimentos.get("origem").getRecordatorio() != null)
+				atendimentos.get("destino").setRecordatorio(RecordatorioBuilder
+						.newInstance(atendimentos.get("origem").getRecordatorio()).loadRefeicoes()
+						.getEntity());
+			return atendimentos.get("destino");
+		};
 	}
 
 	@Override
@@ -65,7 +87,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 		
 		newAtendimento.setId(atendimento.getId());
 		newAtendimento.setVersion(atendimento.getVersion());
-		
+				
 		if(atendimento.getFilaAtendimentoOcupacional() != null) {
 			FilaAtendimentoOcupacionalBuilder filaAtendBuilder = FilaAtendimentoOcupacionalBuilder
 					.newInstance(atendimento.getFilaAtendimentoOcupacional());
@@ -73,7 +95,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 			if(!(atendimento.getFilaAtendimentoOcupacional().getLocalizacao() instanceof HibernateProxy))
 				filaAtendBuilder = filaAtendBuilder.loadLocalizacao();
 			
-			newAtendimento.setFilaAtendimentoOcupacional(filaAtendBuilder.loadAtualizacoes().getEntity());
+			newAtendimento.setFilaAtendimentoOcupacional(filaAtendBuilder.getEntity());
 		}
 		
 		if(atendimento.getFilaEsperaOcupacional() != null) {
@@ -101,6 +123,14 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	
 	public AtendimentoBuilder loadAso() {
 		return (AtendimentoBuilder) this.loadProperty(this.loadAso);
+	}
+	
+	public AtendimentoBuilder loadQuestionario() {
+		return (AtendimentoBuilder) this.loadProperty(this.loadQuestionario);
+	}
+	
+	public AtendimentoBuilder loadRecordatorio() {
+		return (AtendimentoBuilder) this.loadProperty(this.loadRecordatorio);
 	}
 	
 	public AtendimentoBuilder loadTriagens() {

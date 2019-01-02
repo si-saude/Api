@@ -44,6 +44,7 @@ public class EmpregadoBo
 		extends GenericBo<Empregado, EmpregadoFilter, EmpregadoDao, EmpregadoBuilder, EmpregadoExampleBuilder> {
 
 	private Function<EmpregadoBuilder, EmpregadoBuilder> functionLoadGrupoMonitoramentos;
+	private Function<EmpregadoBuilder, EmpregadoBuilder> functionLoadTipoGrupoMonitoramentos;
 
 	private static EmpregadoBo instance;
 
@@ -59,16 +60,20 @@ public class EmpregadoBo
 
 	@Override
 	protected void initializeFunctions() {
-		this.functionLoad = builder -> {
+	this.functionLoad = builder -> {
 			return builder.loadCargo().loadFuncao().loadGerencia().loadPessoa();
 		};
 
 		this.functionLoadAll = builder -> {
 			return this.functionLoad.apply(builder).loadBase().loadRegime().loadGhe().loadGhee().loadInstalacoes()
-					.loadEmpregadoVacinas().loadGrupoMonitoramentos().loadHistoricoGrupoMonitoramentos().loadEndereco()
+					.loadEmpregadoVacinas().loadTipoGrupoMonitoramento().loadHistoricoGrupoMonitoramentos().loadEndereco()
 					.loadTelefones().loadEnfase();
 		};
 
+		this.functionLoadTipoGrupoMonitoramentos = builder -> {
+			return this.functionLoad.apply(builder).loadTipoGrupoMonitoramento();
+		};
+		
 		this.functionLoadGrupoMonitoramentos = builder -> {
 			return this.functionLoad.apply(builder).loadGrupoMonitoramentos();
 		};
@@ -82,7 +87,7 @@ public class EmpregadoBo
 	public PagedList<Empregado> getListEq(EmpregadoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoad(getExampleBuilder(filter).exampleEq()), this.functionLoad);
 	}
-
+	
 	public PagedList<Empregado> getListFunctionLoadGrupoMonitoramentos(EmpregadoFilter filter) throws Exception {
 		return super.getList(getDao().getListFunctionLoadGrupoMonitoramentos(getExampleBuilder(filter).example()),
 				this.functionLoadGrupoMonitoramentos);
@@ -105,7 +110,11 @@ public class EmpregadoBo
 	public Empregado getByIdLoadGrupoMonitoramentos(Object id) throws Exception {
 		return getByEntity(getDao().getByIdLoadGrupoMonitoramento(id), this.functionLoadGrupoMonitoramentos);
 	}
-
+	
+	public Empregado getByIdLoadTipoGrupoMonitoramento(Object id) throws Exception {
+		return getByEntity(getDao().getByIdLoadTipoGrupoMonitoramento(id), this.functionLoadTipoGrupoMonitoramentos);
+	}
+	
 	@Override
 	public Empregado save(Empregado empregado) throws Exception {
 

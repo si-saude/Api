@@ -1,5 +1,7 @@
 package br.com.saude.api.model.business;
 
+import java.util.List;
+
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.PagedList;
@@ -29,12 +31,22 @@ public class IndicadorSastBo extends
 		this.functionLoadAll = builder -> {
 			return builder.loadEquipe().loadIndicadorAssociadoSasts();
 		};
+		this.functionLoad = builder -> {
+			return builder.loadEquipe();
+		};
 	}
 
 	@Override
 	public IndicadorSast getById(Object id) throws Exception {
 		return getByEntity(getDao().getByIdLoadAll(id), this.functionLoadAll);
+	}	
+	@Override
+	public List<IndicadorSast> getSelectList(IndicadorSastFilter filter) throws Exception {
+		return super.getSelectList(
+				this.getDao().getListLoadEquipe(this.getExampleBuilder(filter).exampleSelectList()).getList(),
+				this.functionLoad);
 	}
+	
 
 	@Override
 	public IndicadorSast save(IndicadorSast indicadorSast) throws Exception {

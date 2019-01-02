@@ -35,6 +35,13 @@ public class Profissional {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Equipe equipe;
 	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="profissional_equipe", 
+	joinColumns = {@JoinColumn(name="profissional_id")}, 
+	inverseJoinColumns = {@JoinColumn(name="equipe_id")})
+	private List<Equipe> equipes;
+	
+	
 	@Size(max = 12, message="Tamanho máximo para MI do Profissional: 12")
 	private String mi;
 	
@@ -59,6 +66,14 @@ public class Profissional {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public List<Equipe> getEquipes() {
+		return equipes;
+	}
+
+	public void setEquipes(List<Equipe> equipes) {
+		this.equipes = equipes;
 	}
 	
 	public Empregado getEmpregado() {

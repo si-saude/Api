@@ -25,6 +25,11 @@ public class UsuarioDao extends GenericDao<Usuario> {
 	
 	@Override
 	protected void initializeFunctions() {
+		this.functionLoad = usuario->{
+			usuario = loadPessoa(usuario);	
+			
+			return usuario;
+		};
 		this.functionLoadAll = usuario -> {
 			usuario = loadPessoa(usuario);
 			usuario = loadPermissao(usuario); // faz tb load de perfis
@@ -79,6 +84,10 @@ public class UsuarioDao extends GenericDao<Usuario> {
 	
 	public PagedList<Usuario> getListLoadAll(GenericExampleBuilder<?, ?> usuarioExampleBuilder) throws Exception{
 		return this.getList(usuarioExampleBuilder, this.functionLoadAll);
+	}
+	
+	public PagedList<Usuario> getListLoadPessoa(GenericExampleBuilder<?, ?> exampleBuilder) throws Exception {
+		return super.getList(exampleBuilder,this.functionLoad);
 	}
 	
 	private Usuario loadPerfil(Usuario usuario) {

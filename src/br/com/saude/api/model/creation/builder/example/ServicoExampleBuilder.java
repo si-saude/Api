@@ -25,6 +25,7 @@ public class ServicoExampleBuilder extends GenericExampleBuilder<Servico, Servic
 		addNome();
 		addPublico();
 		addIntervalo();
+		addInativo();
 		addQuantidadeSolicitacaoIntervalo();
 	}
 
@@ -32,6 +33,7 @@ public class ServicoExampleBuilder extends GenericExampleBuilder<Servico, Servic
 	protected void createExampleSelectList() throws InstantiationException, IllegalAccessException {
 		addPublico();
 		addGrupo();
+		addInativo();
 	}
 	
 	private void addId() {
@@ -56,8 +58,11 @@ public class ServicoExampleBuilder extends GenericExampleBuilder<Servico, Servic
 	
 	private void addPublico() {
 		this.entity.setPublico(this.addBoolean("publico", this.filter.getPublico()));
-	}
+	}	
 	
+	private void addInativo() {
+		this.entity.setInativo(this.addBoolean("inativo", this.filter.getInativo()));
+	}	
 	private void addIntervalo() {
 		if(this.filter.getIntervalo() > 0)
 			this.entity.setIntervalo(this.filter.getIntervalo());

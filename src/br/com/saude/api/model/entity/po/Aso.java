@@ -10,9 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -49,14 +52,72 @@ public class Aso {
 	
 	private boolean conforme;
 	
+	@OneToMany(mappedBy="aso", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<Aptidao> aptidoes;
+	
+	@OneToMany(mappedBy="aso", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<AsoAvaliacao> asoAvaliacoes;
+
+	@OneToMany(mappedBy="aso", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	@OrderBy(value="ordem,descricao")
+	private List<ItemAuditoriaAso> itemAuditoriaAsos;
+
 	@Size(max = 1024, message="Tamanho máximo para Não Conformidade do ASO: 1024")
 	private String naoConformidades;
-
+	
 	@Version
 	private long version;
 	
 	@Transient
 	private Usuario usuario;
+	
+	private boolean impressoSd2000;
+	
+	private boolean pendente;
+	
+	private boolean convocado;
+	
+	private Date dataRestricao;
+	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="exame_aso", 
+				joinColumns = {@JoinColumn(name="aso_id")}, 
+				inverseJoinColumns = {@JoinColumn(name="exame_id")})
+	private List<Exame> examesConvocacao;
+	
+	private boolean ausenciaExames;
+	
+	public List<AsoAvaliacao> getAsoAvaliacoes() {
+		return asoAvaliacoes;
+	}
+
+	public void setAsoAvaliacoes(List<AsoAvaliacao> asoAvaliacoes) {
+		this.asoAvaliacoes = asoAvaliacoes;
+	}
+	
+	public List<ItemAuditoriaAso> getItemAuditoriaAsos() {
+		return itemAuditoriaAsos;
+	}
+
+	public void setItemAuditoriaAsos(List<ItemAuditoriaAso> itemAuditoriaAsos) {
+		this.itemAuditoriaAsos = itemAuditoriaAsos;
+	}
+	
+	public boolean isImpressoSd2000() {
+		return impressoSd2000;
+	}
+
+	public void setImpressoSd2000(boolean impressoSd2000) {
+		this.impressoSd2000 = impressoSd2000;
+	}
+
+	public boolean isPendente() {
+		return pendente;
+	}
+
+	public void setPendente(boolean pendente) {
+		this.pendente = pendente;
+	}
 
 	public int getId() {
 		return id;
@@ -66,6 +127,14 @@ public class Aso {
 		this.id = id;
 	}
 
+	public List<Aptidao> getAptidoes() {
+		return aptidoes;
+	}
+
+	public void setAptidoes(List<Aptidao> aptidoes) {
+		this.aptidoes = aptidoes;
+	}
+	
 	public Empregado getEmpregado() {
 		return empregado;
 	}
@@ -145,4 +214,37 @@ public class Aso {
 	public void setNaoConformidades(String naoConformidades) {
 		this.naoConformidades = naoConformidades;
 	}
+	public List<Exame> getExamesConvocacao() {
+		return examesConvocacao;
+	}
+
+	public void setExamesConvocacao(List<Exame> examesConvocacao) {
+		this.examesConvocacao = examesConvocacao;
+	}
+
+	public boolean isAusenciaExames() {
+		return ausenciaExames;
+	}
+
+	public void setAusenciaExames(boolean ausenciaExames) {
+		this.ausenciaExames = ausenciaExames;
+	}
+	
+	public Date getDataRestricao() {
+		return dataRestricao;
+	}
+
+	public void setDataRestricao(Date dataRestricao) {
+		this.dataRestricao = dataRestricao;
+	}
+	
+	public boolean isConvocado() {
+		return convocado;
+	}
+
+	public void setConvocado(boolean convocado) {
+		this.convocado = convocado;
+	}
 }
+
+

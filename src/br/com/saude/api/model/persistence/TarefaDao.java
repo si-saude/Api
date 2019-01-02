@@ -56,6 +56,7 @@ public class TarefaDao extends GenericDao<Tarefa> {
 			queryBuilder.append(" WHERE t.servico_id = s.id ");
 			queryBuilder.append(" and t.status = '"+StatusTarefa.getInstance().ABERTA+"' ");
 			queryBuilder.append(" and s.grupo = '"+GrupoServico.ATENDIMENTO_OCUPACIONAL+"' ");
+			queryBuilder.append(" and s.codigo = '0003' ");
 			queryBuilder.append(" and t.inicio < date_trunc('day', now()) ");
 			queryBuilder.append(" and not exists (select 1 from filaesperaocupacional fe " + 
 					"		  where fe.empregado_id = t.cliente_id " + 

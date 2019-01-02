@@ -11,6 +11,7 @@ public class ServicoFilter extends GenericFilter {
 	private int intervalo;
 	private int quantidadeSolicitacaoIntervalo;
 	private BooleanFilter publico;
+	private BooleanFilter inativo;
 	
 	public String getNome() {
 		return nome;
@@ -47,6 +48,12 @@ public class ServicoFilter extends GenericFilter {
 	}
 	public void setQuantidadeSolicitacaoIntervalo(int quantidadeSolicitacaoIntervalo) {
 		this.quantidadeSolicitacaoIntervalo = quantidadeSolicitacaoIntervalo;
+	}
+	public BooleanFilter getInativo() {
+		return inativo;
+	}
+	public void setInativo(BooleanFilter inativo) {
+		this.inativo = inativo;
 	}
 	
 }

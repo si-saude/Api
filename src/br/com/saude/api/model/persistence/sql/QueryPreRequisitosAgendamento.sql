@@ -10,7 +10,7 @@ select *,
 	ELSE null END as datas_preclinico,
 
 	CASE WHEN coalesce(tab.exame_ids,'') != ''
-	THEN (select string_agg(distinct ex.descricao, '</br>')
+	THEN (select string_agg(distinct ex.descricao, '  /  ')
 		from empregadoconvocacaoexame x
 		inner join exame ex on x.exame_id = ex.id
 		where x.id in (select CAST(regexp_split_to_table(tab.exame_ids, ',') AS INTEGER))

@@ -13,7 +13,7 @@ import br.com.saude.api.model.entity.dto.AgendaPeriodicoDto;
 
 public class AgendaPeriodicoReport {
 
-private static AgendaPeriodicoReport instance;
+	private static AgendaPeriodicoReport instance;
 	
 	private AgendaPeriodicoReport() {
 		

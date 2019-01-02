@@ -1,5 +1,6 @@
 package br.com.saude.api.model.entity.filter;
 
+import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class MudancaFuncaoFilter extends GenericFilter { 
@@ -12,6 +13,7 @@ public class MudancaFuncaoFilter extends GenericFilter {
 	private GerenciaFilter gerencia;	
 	private BaseFilter base;
 	private TarefaFilter tarefa;
+	private DateFilter dataTransferencia;
 	
 	public CargoFilter getCargo() {
 		return cargo;
@@ -61,4 +63,11 @@ public class MudancaFuncaoFilter extends GenericFilter {
 	public void setTarefa(TarefaFilter tarefa) {
 		this.tarefa = tarefa;
 	}
+	public DateFilter getDataTransferencia() {
+		return dataTransferencia;
+	}
+	public void setDataTransferencia(DateFilter dataTransferencia) {
+		this.dataTransferencia = dataTransferencia;
+	}
+	
 }

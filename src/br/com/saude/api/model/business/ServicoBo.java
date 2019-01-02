@@ -31,6 +31,9 @@ public class ServicoBo extends GenericBo<Servico, ServicoFilter,
 		this.functionLoadAll = builder -> {
 			return builder.loadAtividades();
 		};
+		this.functionLoad = builder -> {
+			return builder.loadAtividades();
+		};
 	}
 	
 	@Override
@@ -43,6 +46,11 @@ public class ServicoBo extends GenericBo<Servico, ServicoFilter,
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, InstantiationException, Exception {
 		return super.getList(exampleBuilder);
+	}
+	
+	public PagedList<Servico> getListLoadAll(ServicoFilter filter) throws Exception {
+		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), 
+				this.functionLoadAll);
 	}
 
 	@Override

@@ -392,7 +392,7 @@ public class FilaEsperaOcupacionalBo
 	}
 	
 	public String checkIn(FilaEsperaOcupacional fila) throws Exception {
-		return checkIn(fila,Helper.getToday());
+		return checkIn(fila,Helper.getNow());
 	}
 	
 	public String checkInRetroativo(FilaEsperaOcupacionalFilter filter) throws Exception {
@@ -449,18 +449,17 @@ public class FilaEsperaOcupacionalBo
 		// CONCLUÍDO E CANCELADO, E A DATA DA TAREFA ESTÁ ENTRE O DIA ATUAL E O SEGUINTE
 		RiscoPotencial risco = null;
 		FichaColeta ficha = null;
-		Tarefa tarefa = checkPendecia(fila.getEmpregado(),Helper.getToday()); 
-		if(tarefa == null) {
-			
-			PagedList<Tarefa> tarefas = obterTarefasAbertas(fila.getEmpregado(), data);
-			
-			if(tarefas.getTotal() == 0)
+		Tarefa tarefa = null;
+		PagedList<Tarefa> tarefas = obterTarefasAbertas(fila.getEmpregado(), data);
+		
+		if(tarefas.getTotal() > 0) {
+			tarefa = getTarefaEquipeAcolhimento(tarefas);
+		}else {
+			tarefa = checkPendecia(fila.getEmpregado(),Helper.getToday());
+		
+			if(tarefa == null)
 				throw new Exception("Não há agendamento para este Empregado.");
 			
-			//OBTER A EQUIPE DE ACOLHIMENTO
-			tarefa = getTarefaEquipeAcolhimento(tarefas);
-			
-		}else {
 			//OBTER O RISCO ATIVO DO EMPREGADO
 			RiscoPotencialFilter riscoFilter = new RiscoPotencialFilter();
 			riscoFilter.setPageNumber(1);
@@ -617,6 +616,7 @@ public class FilaEsperaOcupacionalBo
 			riscos.getList().forEach(r-> {
 				r.setAtual(false);
 				r.getRiscoEmpregados().forEach(rE -> {
+					rE.setRiscoPotencial(r);
 					rE.getTriagens().forEach(t -> {
 						if(t.getAcoes() != null)
 						t.getAcoes().forEach(a -> {

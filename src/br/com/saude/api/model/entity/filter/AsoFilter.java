@@ -13,7 +13,29 @@ public class AsoFilter extends GenericFilter {
 	private BooleanFilter conforme;
 	private String naoConformidades;
 	private String status;
+	private BooleanFilter ausenciaExames;
+	private BooleanFilter impressoSd2000;
+	private BooleanFilter pendente;
+	private BooleanFilter convocado;
 	
+	public BooleanFilter getAusenciaExames() {
+		return ausenciaExames;
+	}
+	public void setAusenciaExames(BooleanFilter ausenciaExames) {
+		this.ausenciaExames = ausenciaExames;
+	}
+	public BooleanFilter getImpressoSd2000() {
+		return impressoSd2000;
+	}
+	public void setImpressoSd2000(BooleanFilter impressoSd2000) {
+		this.impressoSd2000 = impressoSd2000;
+	}
+	public BooleanFilter getPendente() {
+		return pendente;
+	}
+	public void setPendente(BooleanFilter pendente) {
+		this.pendente = pendente;
+	}
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
 	}
@@ -55,5 +77,11 @@ public class AsoFilter extends GenericFilter {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public BooleanFilter getConvocado() {
+		return convocado;
+	}
+	public void setConvocado(BooleanFilter convocado) {
+		this.convocado = convocado;
 	}
 }

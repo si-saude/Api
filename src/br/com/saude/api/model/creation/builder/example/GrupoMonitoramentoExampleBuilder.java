@@ -1,5 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
@@ -36,7 +37,7 @@ public class GrupoMonitoramentoExampleBuilder
 
 	private void addNome() {
 		if(this.filter.getNome() != null)
-			this.entity.setNome(Helper.filterLike(this.filter.getNome()));
+			this.criterions.add(Restrictions.ilike("nome", Helper.filterLike(this.filter.getNome())));
 	}
 	
 	private void addTipoGrupoMonitoramento() throws InstantiationException, IllegalAccessException {

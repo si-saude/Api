@@ -65,6 +65,7 @@ import br.com.saude.api.model.entity.po.GrupoMonitoramento;
 import br.com.saude.api.model.entity.po.Profissiograma;
 import br.com.saude.api.model.persistence.ConvocacaoDao;
 import br.com.saude.api.util.constant.Operador;
+import br.com.saude.api.util.constant.StatusEmpregado;
 import br.com.saude.api.util.constant.TipoCriterio;
 
 @SuppressWarnings("deprecation")
@@ -108,6 +109,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 			EmpregadoConvocacaoExame empregadoConvocacaoExame = new EmpregadoConvocacaoExame();
 			empregadoConvocacaoExame.setExame(e);
 			empregadoConvocacaoExame.setExigeRelatorio(e.isExigeRelatorio());
+			empregadoConvocacaoExame.setOpcional(e.isOpcional());
 			empregadoConvocacao.getEmpregadoConvocacaoExames().add(empregadoConvocacaoExame);
 		});
 		
@@ -134,6 +136,8 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 		EmpregadoFilter filter = new EmpregadoFilter();
 		filter.setGerencia(new GerenciaFilter());
 		filter.getGerencia().setId(gerenciaConvocacao.getGerencia().getId());
+		filter.setStatus(StatusEmpregado.getInstance().ATIVO);
+		filter.setVinculo(convocacao.getProfissiograma().getVinculo());
 		filter.setPageNumber(1);
 		filter.setPageSize(Integer.MAX_VALUE);
 		
@@ -164,6 +168,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					EmpregadoConvocacaoExame empregadoConvocacaoExame = new EmpregadoConvocacaoExame();
 					empregadoConvocacaoExame.setExame(eE);
 					empregadoConvocacaoExame.setExigeRelatorio(eE.isExigeRelatorio());
+					empregadoConvocacaoExame.setOpcional(eE.isOpcional());
 					empregadoConvocacaoExames.add(empregadoConvocacaoExame);
 				});
 				
@@ -234,9 +239,20 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 						}
 					});
 					
+					empregadoExames.sort(new Comparator<EmpregadoConvocacaoExame>() {
+						@Override
+						public int compare(EmpregadoConvocacaoExame e1, EmpregadoConvocacaoExame e2) {
+							return e1.getExame().getOrdem() > e2.getExame().getOrdem() ? 1 :(e1.getExame().getOrdem() < e2.getExame().getOrdem() ? -1 : 0);
+						}
+						
+					});
+					
 					//SUBSTITUIR AS VARIÁVEIS
 					StringReplacer stringReplacer = new StringReplacer(html.toString());
 					stringReplacer = stringReplacer
+							.replace("nomeClinica", clinica.getNome())
+							.replace("enderecoClinica", Objects.toString(clinica.getEndereco(),"---"))
+							.replace("telefonesClinica", Objects.toString(clinica.getTelefones(),"---"))
 							.replace("nomeEmpregado", eC.getEmpregado().getPessoa().getNome())
 							.replace("matriculaEmpregado", Objects.toString(eC.getEmpregado().getMatricula(),"---"))
 							.replace("cpfEmpregado", Objects.toString(eC.getEmpregado().getPessoa().getCpf(),"---"))
@@ -320,7 +336,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					//GERAR PDF
 					pdfUri = new URI(uri.getPath()+"/"+Objects.toString(eC.getEmpregado().getMatricula().trim()+"-","")
 					+"EXAMES_COMPLEMENTARES_"
-					+clinica.getNome()+""
+					+clinica.getNome().replace(" ", "_")+""
 					+ (exigeRelatorio ? "_exige_relatorio_medico" : "")
 					+".pdf");
 					pdf = new File(pdfUri.getPath());
@@ -444,6 +460,7 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 							EmpregadoConvocacaoExame empregadoConvocacaoExame = new EmpregadoConvocacaoExame();
 							empregadoConvocacaoExame.setExame(e);
 							empregadoConvocacaoExame.setExigeRelatorio(e.isExigeRelatorio());
+							empregadoConvocacaoExame.setOpcional(e.isOpcional());
 							eC.getEmpregadoConvocacaoExames().add(empregadoConvocacaoExame);
 						}
 					});
@@ -522,6 +539,8 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 					Date dataConvocacao = null;
 					boolean criteriosAtendidos = true;
 					
+					gE.getExame().setOpcional(gE.isOpcional());
+					
 					try {
 						dataConvocacao = getDataConvocacao(empregado, convocacao);
 					} catch (Exception e1) {
@@ -551,9 +570,14 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 						   case TipoCriterio.EXAME :
 							   
 							   break;
+							   
+						   case TipoCriterio.CARGO :
+							   valor = empregado.getCargo().getNome() +"";  
+							   break;
 							      
 						   case TipoCriterio.ENFASE :
-							   valor = empregado.getEnfase().getId()+"";   
+							   if(empregado.getEnfase() != null)
+								   valor = empregado.getEnfase().getId()+"";   
 							   break;
 							   
 						   case TipoCriterio.EXIGE_RELATORIO_MEDICO :
@@ -596,7 +620,6 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 								   e1.printStackTrace();
 							   }							   
 							   
-							   criterio.setOperador(Operador.MENOR);
 							   break;
 						   
 						   default :
@@ -620,7 +643,8 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 								break;
 								
 							case Operador.MAIOR:
-								if( !(valor.compareTo(criterio.getValor()) > 0) ) {
+								if( !(new Integer(valor)
+										.compareTo(new Integer(criterio.getValor())) > 0) ) {
 									criteriosAtendidos = false;								
 									break loop;
 								}
@@ -648,6 +672,39 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 									break loop;
 								}
 								break;
+							
+							case Operador.NUNCA_REALIZADO:
+								EmpregadoConvocacaoExameFilter f = new EmpregadoConvocacaoExameFilter();
+								f.setPageNumber(1);
+								f.setPageSize(Integer.MAX_VALUE);
+								f.setEmpregadoConvocacao(new EmpregadoConvocacaoFilter());
+								f.getEmpregadoConvocacao().setEmpregado(new EmpregadoFilter());
+								f.getEmpregadoConvocacao().getEmpregado().setId(empregado.getId());
+								f.setExame(new ExameFilter());
+								f.getExame().setId(gE.getExame().getId());
+								
+								try {
+									PagedList<EmpregadoConvocacaoExame> pagedList = EmpregadoConvocacaoExameBo.getInstance()
+											.getList(f);
+									
+									if(pagedList.getTotal() > 0) {
+										criteriosAtendidos = false;								
+										break loop;
+									}
+								} catch (Exception e1) {
+									
+								}
+								
+								break;
+								
+							case Operador.CONTEM :
+								for(String val : criterio.getNome().split("%")) {
+									if(!valor.contains(val)) {
+										criteriosAtendidos = false;								
+										break loop;
+									}
+								}
+								break;
 								
 							case Operador.EQUIVALENTE:
 								equivalencias.put(Integer.parseInt(criterio.getValor()), gE.getExame().getId());
@@ -672,10 +729,15 @@ public class ConvocacaoBo extends GenericBo<Convocacao, ConvocacaoFilter, Convoc
 				examesRetorno.add(e);
 		});
 		
+		//DEFINIR AS OBRIGATORIEDADES
+		examesRetorno.forEach(e->{
+			e.setOpcional(exames.stream().filter(ee->ee.equals(e) && !ee.isOpcional()).count() == 0);
+		});
+		
 		//REMOVER OS EXAMES EQUIVALENTES
 		equivalencias.forEach((key,value)->{
-			if(examesRetorno.stream().filter(e->e.getId() == value).count() > 0)
-				examesRetorno.removeIf(e-> e.getId() == key);
+			if(examesRetorno.stream().filter(e->e.getId() == key).count() > 0)
+				examesRetorno.removeIf(e-> e.getId() == value);
 		});
 		
 		return examesRetorno;

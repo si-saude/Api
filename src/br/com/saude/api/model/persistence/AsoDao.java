@@ -35,6 +35,17 @@ public class AsoDao extends GenericDao<Aso> {
 			if(aso.getAsoAlteracoes() != null)
 				Hibernate.initialize(aso.getAsoAlteracoes());
 			
+			if(aso.getAsoAvaliacoes() != null)
+				Hibernate.initialize(aso.getAsoAvaliacoes());
+			
+			if(aso.getAptidoes() != null)
+				Hibernate.initialize(aso.getAptidoes());
+			
+			if(aso.getItemAuditoriaAsos() != null)
+				Hibernate.initialize(aso.getItemAuditoriaAsos());
+			
+			aso = loadExamesConvocacao(aso);
+			
 			return aso;
 		};
 		
@@ -75,6 +86,8 @@ public class AsoDao extends GenericDao<Aso> {
 					.add(Restrictions.eq("empregado.id", aso.getEmpregado().getId()))
 					.add(Restrictions.eq("conforme", true))
 					.addOrder(Order.desc("validade"))
+					.setFirstResult(0)
+					.setMaxResults(1)
 					.uniqueResult();
 		}catch (Exception ex) {
 			throw ex;
@@ -83,6 +96,12 @@ public class AsoDao extends GenericDao<Aso> {
 			HibernateHelper.close(session);
 		}
 		
+		return aso;
+	}
+	
+	private Aso loadExamesConvocacao(Aso aso) {
+		if (aso.getExamesConvocacao() != null)
+			Hibernate.initialize(aso.getExamesConvocacao());
 		return aso;
 	}
 }

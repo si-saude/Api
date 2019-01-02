@@ -31,7 +31,9 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 		this.functionLoadPermissoes = builder -> {
 			return builder.loadPerfis().loadPermissoes();
 		};
-
+		this.functionLoad = builder -> {
+			return builder.loadPessoa();
+		};
 		this.functionLoadAll = builder -> {
 			return this.functionLoadPermissoes.apply(builder).loadPessoa();
 		};
@@ -49,6 +51,10 @@ public class UsuarioBo extends GenericBo<Usuario, UsuarioFilter, UsuarioDao, Usu
 	
 	public PagedList<Usuario> getListLoadAll(UsuarioFilter filter) throws Exception{
 		return getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), functionLoadAll);
+	}
+	
+	public PagedList<Usuario> getListLoadPessoa(UsuarioFilter filter) throws Exception{
+		return getList(getDao().getListLoadPessoa(getExampleBuilder(filter).example()), functionLoad);
 	}
 	
 	public Usuario getByIdLoadPermissoes(Object id) throws Exception {

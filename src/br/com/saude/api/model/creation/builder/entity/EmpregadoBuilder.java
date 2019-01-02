@@ -24,7 +24,8 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	private Function<Map<String,Empregado>,Empregado> loadEmpregadoVacinas;
 	private Function<Map<String,Empregado>,Empregado> loadGrupoMonitoramentos;
 	private Function<Map<String,Empregado>,Empregado> loadHistoricoGrupoMonitoramentos;
-	private Function<Map<String,Empregado>,Empregado> loadEnfase;
+	private Function<Map<String,Empregado>,Empregado> loadEnfase; 
+	private Function<Map<String,Empregado>,Empregado> loadTipoGrupoMonitoramento;
 	
 	public static EmpregadoBuilder newInstance(Empregado empregado) {
 		return new EmpregadoBuilder(empregado);
@@ -107,7 +108,7 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 		
 		this.loadGhe = empregados -> {
 			if(empregados.get("origem").getGhe() != null) {
-				empregados.get("destino").setGhe(GheBuilder.newInstance(empregados.get("origem").getGhe()).getEntity());
+				empregados.get("destino").setGhe(GheBuilder.newInstance(empregados.get("origem").getGhe()).loadAll().getEntity());
 			}
 			return empregados.get("destino");
 		};
@@ -140,6 +141,16 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 			if(empregados.get("origem").getGrupoMonitoramentos() != null) {
 				empregados.get("destino").setGrupoMonitoramentos(GrupoMonitoramentoBuilder
 											.newInstance(empregados.get("origem").getGrupoMonitoramentos())
+											.getEntityList());
+			}
+			return empregados.get("destino");
+		};
+		
+		this.loadTipoGrupoMonitoramento = empregados -> {
+			if(empregados.get("origem").getGrupoMonitoramentos() != null) {
+				empregados.get("destino").setGrupoMonitoramentos(GrupoMonitoramentoBuilder
+											.newInstance(empregados.get("origem").getGrupoMonitoramentos())
+											.loadTipoGrupoMonitoramento().loadAvaliacoes()
 											.getEntityList());
 			}
 			return empregados.get("destino");
@@ -237,6 +248,10 @@ public class EmpregadoBuilder extends GenericEntityBuilder<Empregado,EmpregadoFi
 	
 	public EmpregadoBuilder loadGrupoMonitoramentos() {
 		return (EmpregadoBuilder) this.loadProperty(this.loadGrupoMonitoramentos);
+	}
+	
+	public EmpregadoBuilder loadTipoGrupoMonitoramento() {
+		return (EmpregadoBuilder) this.loadProperty(this.loadTipoGrupoMonitoramento);
 	}
 	
 	public EmpregadoBuilder loadHistoricoGrupoMonitoramentos() {

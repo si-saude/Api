@@ -29,6 +29,7 @@ public class EmpregadoConvocacaoExampleBuilder
 		addAuditadoSd2000();
 		addConvocado();
 		addResultadoAuditado();
+		addDataConvocacao();
 	}
 
 	@Override
@@ -71,5 +72,9 @@ public class EmpregadoConvocacaoExampleBuilder
 	
 	protected void addResultadoAuditado() {
 		this.entity.setResultadoAuditado(this.addBoolean("resultadoAuditado", this.filter.getResultadoAuditado()));
+	}
+	
+	private void addDataConvocacao() {
+		addData("dataConvocacao", this.filter.getDataConvocacao());
 	}
 }
