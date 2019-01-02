@@ -626,9 +626,9 @@ public class AtendimentoBo extends GenericBo<Atendimento, AtendimentoFilter, Ate
 	public EmpregadoConvocacaoFilter configureEmpregadoConvocacaoFilter(Atendimento atendimento) {
 		String tipoAtendimento = getTipoAtendimento(atendimento);
 		
-		Date primeiroDiaAno = Helper.getToday();
-		primeiroDiaAno.setDate(1);
-		primeiroDiaAno.setMonth(0);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Helper.getToday().getYear(),1,1,0,0,0);
+		Date primeiroDiaAno = cal.getTime();
 		
 		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO
 		EmpregadoConvocacaoFilter empConFilter = new EmpregadoConvocacaoFilter();
