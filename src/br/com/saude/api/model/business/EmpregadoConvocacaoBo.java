@@ -153,7 +153,7 @@ public class EmpregadoConvocacaoBo
 				
 				if(eC != null) {
 					//VERIFICAR EXAMES
-					for(int i=0;i <= 27;i++) {
+					for(int i=0;i <= 41;i++) {
 						String value = sheet.getRow(row).getCell(i+5).getStringCellValue();
 						
 						if(value != null && (value.contains("x") || value.contains("X"))) {
@@ -244,6 +244,8 @@ public class EmpregadoConvocacaoBo
 			return new String[]{"EEA0051"};
 		case 27:
 			return new String[]{"ERA0021"};
+		case 41:
+			return new String[]{"EEA0045"};
 		}
 		return null;
 	}
