@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.html.simpleparser.HTMLWorker;
@@ -655,13 +656,23 @@ public class FilaEsperaOcupacionalBo
 			}
 		}
 		
-		fila.getFichaColeta().getRespostaFichaColetas().stream().filter(rfc -> {
+		//Caso empregado não possui grupo monitoramento de brigada de incendio
+		Stream<RespostaFichaColeta> sRfc = (Stream<RespostaFichaColeta>) fila.getFichaColeta().getRespostaFichaColetas().
+				stream().filter(rfc -> {
 			if ( rfc.getPergunta().getGrupo().equals(GrupoPerguntaFichaColeta.EXAME_FISICO) &&
-					rfc.getPergunta().getCodigo().equals("0019"))
+					rfc.getPergunta().getCodigo().equals("0019") )
 				return true;
 			return false;
-		}).findFirst().get().setConteudo(AptidaoFisicaBrigadista.getInstance().PENDENTE);
-		
+		});
+		Empregado empregado = EmpregadoBo.getInstance().getByIdLoadGrupoMonitoramentos(fila.getEmpregado().getId());
+		if ( empregado.getGrupoMonitoramentos().stream().noneMatch(gm -> 
+				gm.getNome().equals("BRIGADA DE INCÊNDIO (NR 20)")) )
+				sRfc.findFirst().get().setConteudo(AptidaoFisicaBrigadista.getInstance().NAO_APLICAVEL);
+		else {
+			//Caso Apt. Cardio., ou Força Abdominal ou Força de Preensão Manual não informado,
+			//definir Aptidao Fisica do Brigadista como Pendente
+			sRfc.findFirst().get().setConteudo(AptidaoFisicaBrigadista.getInstance().PENDENTE);
+		}
 		return fila;
 	}
 	

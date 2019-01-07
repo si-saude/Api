@@ -35,7 +35,7 @@ public class BaseExampleBuilder extends GenericExampleBuilder<Base, BaseFilter> 
 	
 	private void addUf() {
 		if(this.filter.getUf() != null)
-			this.entity.setUf(Helper.filterLike(this.filter.getUf()));
+			this.criterions.add(Restrictions.ilike("uf", Helper.filterLike(this.filter.getUf())));
 	}
 
 }

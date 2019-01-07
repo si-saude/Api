@@ -58,10 +58,26 @@ public class AvaliacaoFisica {
 	private double pesoNegociado;
 	private double pesoExcessoNegociado;
 	private String observacoes;
-	private double aptidaoCardiorespiratoria;
-	private double forcaAbdominal;
-	private double flexibilidade;
-	private double forcaPreensaoManual;
+	private double aptidaoCardiorrespiratoriaValor;
+	@Size(max = 32, message="Tamanho máximo para o Classificação da Aptidão Cardiorespiratória da Avaliação Física: 32")
+	private String aptidaoCardiorrespiratoriaClassificacao;
+	@Size(max = 2048, message="Tamanho máximo para o Observação da Aptidão Cardiorespiratória da Avaliação Física: 2048")
+	private String aptidaoCardiorrespiratoriaObservacao;
+	private double forcaAbdominalValor;
+	@Size(max = 32, message="Tamanho máximo para o Classificação da Força Abdominal da Avaliação Física: 32")
+	private String forcaAbdominalClassificacao;
+	@Size(max = 2048, message="Tamanho máximo para o Observação da Força Abdominal da Avaliação Física: 2048")
+	private String forcaAbdominalObservacao;
+	private double flexibilidadeValor;
+	@Size(max = 32, message="Tamanho máximo para o Classificação da Flexibilidade da Avaliação Física: 32")
+	private String flexibilidadeClassificacao;
+	@Size(max = 2048, message="Tamanho máximo para o Observação da Flexibilidade da Avaliação Física: 2048")
+	private String flexibilidadeObservacao;
+	private double forcaPreensaoManualValor;
+	@Size(max = 32, message="Tamanho máximo para o Classificação da Força de Preensão Manual da Avaliação Física: 32")
+	private String forcaPreensaoManualClassificacao;
+	@Size(max = 2048, message="Tamanho máximo para o Observação da Força de Preensão Manual da Avaliação Física: 2048")
+	private String forcaPreensaoManualObservacao;
 	
 	@Version
 	private long version;
@@ -216,30 +232,6 @@ public class AvaliacaoFisica {
 	public void setObservacoes(String observacoes) {
 		this.observacoes = observacoes;
 	}
-	public double getAptidaoCardiorespiratoria() {
-		return aptidaoCardiorespiratoria;
-	}
-	public void setAptidaoCardiorespiratoria(double aptidaoCardiorespiratoria) {
-		this.aptidaoCardiorespiratoria = aptidaoCardiorespiratoria;
-	}
-	public double getForcaAbdominal() {
-		return forcaAbdominal;
-	}
-	public void setForcaAbdominal(double forcaAbdominal) {
-		this.forcaAbdominal = forcaAbdominal;
-	}
-	public double getFlexibilidade() {
-		return flexibilidade;
-	}
-	public void setFlexibilidade(double flexibilidade) {
-		this.flexibilidade = flexibilidade;
-	}
-	public double getForcaPreensaoManual() {
-		return forcaPreensaoManual;
-	}
-	public void setForcaPreensaoManual(double forcaPreensaoManual) {
-		this.forcaPreensaoManual = forcaPreensaoManual;
-	}
 	public int getId() {
 		return id;
 	}
@@ -269,5 +261,77 @@ public class AvaliacaoFisica {
 	}
 	public void setPercentualMassaMagraNegociada(double percentualMassaMagraNegociada) {
 		this.percentualMassaMagraNegociada = percentualMassaMagraNegociada;
+	}
+	public double getAptidaoCardiorrespiratoriaValor() {
+		return aptidaoCardiorrespiratoriaValor;
+	}
+	public void setAptidaoCardiorrespiratoriaValor(double aptidaoCardiorespiratoriaValor) {
+		this.aptidaoCardiorrespiratoriaValor = aptidaoCardiorespiratoriaValor;
+	}
+	public String getAptidaoCardiorrespiratoriaClassificacao() {
+		return aptidaoCardiorrespiratoriaClassificacao;
+	}
+	public void setAptidaoCardiorrespiratoriaClassificacao(String aptidaoCardiorespiratoriaClassificacao) {
+		this.aptidaoCardiorrespiratoriaClassificacao = aptidaoCardiorespiratoriaClassificacao;
+	}
+	public String getAptidaoCardiorrespiratoriaObservacao() {
+		return aptidaoCardiorrespiratoriaObservacao;
+	}
+	public void setAptidaoCardiorrespiratoriaObservacao(String aptidaoCardiorespiratoriaObservacao) {
+		this.aptidaoCardiorrespiratoriaObservacao = aptidaoCardiorespiratoriaObservacao;
+	}
+	public double getForcaAbdominalValor() {
+		return forcaAbdominalValor;
+	}
+	public void setForcaAbdominalValor(double forcaAbdominalValor) {
+		this.forcaAbdominalValor = forcaAbdominalValor;
+	}
+	public String getForcaAbdominalClassificacao() {
+		return forcaAbdominalClassificacao;
+	}
+	public void setForcaAbdominalClassificacao(String forcaAbdominalClassificacao) {
+		this.forcaAbdominalClassificacao = forcaAbdominalClassificacao;
+	}
+	public String getForcaAbdominalObservacao() {
+		return forcaAbdominalObservacao;
+	}
+	public void setForcaAbdominalObservacao(String forcaAbdominalObservacao) {
+		this.forcaAbdominalObservacao = forcaAbdominalObservacao;
+	}
+	public double getFlexibilidadeValor() {
+		return flexibilidadeValor;
+	}
+	public void setFlexibilidadeValor(double flexibilidadeValor) {
+		this.flexibilidadeValor = flexibilidadeValor;
+	}
+	public String getFlexibilidadeClassificacao() {
+		return flexibilidadeClassificacao;
+	}
+	public void setFlexibilidadeClassificacao(String flexibilidadeClassificacao) {
+		this.flexibilidadeClassificacao = flexibilidadeClassificacao;
+	}
+	public String getFlexibilidadeObservacao() {
+		return flexibilidadeObservacao;
+	}
+	public void setFlexibilidadeObservacao(String flexibilidadeObservacao) {
+		this.flexibilidadeObservacao = flexibilidadeObservacao;
+	}
+	public double getForcaPreensaoManualValor() {
+		return forcaPreensaoManualValor;
+	}
+	public void setForcaPreensaoManualValor(double forcaPreensaoManualValor) {
+		this.forcaPreensaoManualValor = forcaPreensaoManualValor;
+	}
+	public String getForcaPreensaoManualClassificacao() {
+		return forcaPreensaoManualClassificacao;
+	}
+	public void setForcaPreensaoManualClassificacao(String forcaPreensaoManualClassificacao) {
+		this.forcaPreensaoManualClassificacao = forcaPreensaoManualClassificacao;
+	}
+	public String getForcaPreensaoManualObservacao() {
+		return forcaPreensaoManualObservacao;
+	}
+	public void setForcaPreensaoManualObservacao(String forcaPreensaoManualObservacao) {
+		this.forcaPreensaoManualObservacao = forcaPreensaoManualObservacao;
 	}
 }

@@ -2,6 +2,8 @@ package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
 
+import javax.validation.constraints.Size;
+
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.AvaliacaoFisicaFilter;
 import br.com.saude.api.model.entity.po.AvaliacaoFisica;
@@ -35,12 +37,8 @@ public class AvaliacaoFisicaBuilder extends GenericEntityBuilder<AvaliacaoFisica
 		newAvaliacao.setId(entity.getId());
 		newAvaliacao.setVersion(entity.getVersion());
 		newAvaliacao.setAcaoIniciarExercicioFisico(entity.isAcaoIniciarExercicioFisico());
-		newAvaliacao.setAptidaoCardiorespiratoria(entity.getAptidaoCardiorespiratoria());
 		newAvaliacao.setCarenciaMuscular(entity.getCarenciaMuscular());
 		newAvaliacao.setFcRepouso(entity.getFcRepouso());
-		newAvaliacao.setFlexibilidade(entity.getFlexibilidade());
-		newAvaliacao.setForcaAbdominal(entity.getForcaAbdominal());
-		newAvaliacao.setForcaPreensaoManual(entity.getForcaPreensaoManual());
 		newAvaliacao.setGorduraAbsoluta(entity.getGorduraAbsoluta());
 		newAvaliacao.setImc(entity.getImc());
 		newAvaliacao.setInteresseProgramaFisico(entity.isInteresseProgramaFisico());
@@ -64,6 +62,18 @@ public class AvaliacaoFisicaBuilder extends GenericEntityBuilder<AvaliacaoFisica
 		newAvaliacao.setRazaoCinturaEstatura(entity.getRazaoCinturaEstatura());
 		newAvaliacao.setTipoAtendimento(entity.getTipoAtendimento());
 		newAvaliacao.setObservacaoEstagioContemplacao(entity.getObservacaoEstagioContemplacao());
+		newAvaliacao.setAptidaoCardiorrespiratoriaValor(entity.getAptidaoCardiorrespiratoriaValor());
+		newAvaliacao.setAptidaoCardiorrespiratoriaClassificacao(entity.getAptidaoCardiorrespiratoriaClassificacao());
+		newAvaliacao.setAptidaoCardiorrespiratoriaObservacao(entity.getAptidaoCardiorrespiratoriaObservacao());
+		newAvaliacao.setForcaAbdominalValor(entity.getForcaAbdominalValor());
+		newAvaliacao.setForcaAbdominalClassificacao(entity.getForcaAbdominalClassificacao());
+		newAvaliacao.setForcaAbdominalObservacao(entity.getForcaAbdominalObservacao());
+		newAvaliacao.setFlexibilidadeValor(entity.getFlexibilidadeValor());
+		newAvaliacao.setFlexibilidadeClassificacao(entity.getFlexibilidadeClassificacao());
+		newAvaliacao.setFlexibilidadeObservacao(entity.getFlexibilidadeObservacao());
+		newAvaliacao.setForcaPreensaoManualValor(entity.getForcaPreensaoManualValor());
+		newAvaliacao.setForcaPreensaoManualClassificacao(entity.getForcaPreensaoManualClassificacao());
+		newAvaliacao.setForcaPreensaoManualObservacao(entity.getForcaPreensaoManualObservacao());
 		
 		return newAvaliacao;
 	}

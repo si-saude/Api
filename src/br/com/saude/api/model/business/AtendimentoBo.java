@@ -1235,35 +1235,124 @@ private void criarConvocacao(Atendimento atendimento, String tipoConvocacao) thr
 		double sum7Dobras = 0;
 		double dc = 0;
 		
-		@SuppressWarnings("unchecked")
 		List<RespostaFichaColeta> respostas = (List<RespostaFichaColeta>) atendimento.getFilaEsperaOcupacional()
 				.getFichaColeta().getRespostaFichaColetas().stream().filter(r -> 
-				r.getPergunta().getGrupo().equals(GrupoPerguntaFichaColeta.EXAME_FISICO));
+				r.getPergunta().getGrupo().equals(GrupoPerguntaFichaColeta.EXAME_FISICO)).collect(Collectors.toList());
+		//peso dividido pela altura ao quadrado (altura em metros)
+		atendimento.getAvaliacaoFisica().setImc(Double.parseDouble(
+				respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+				.collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) / 
+				Math.pow((Double.parseDouble(
+					respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0002"))
+					.collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", "."))/100), 2.0));
+		
+		atendimento.getAvaliacaoFisica().setRazaoCinturaEstatura(Double.parseDouble(
+				respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0010"))
+				.collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) / 
+				Double.parseDouble(
+					respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0002"))
+					.collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")));
+		
+		sum7Dobras = getSumDobras(respostas);
+		
 		if ( atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getSexo().equals(Sexo.getInstance().MASCULINO) ) {
-			 sum7Dobras = Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0020"))
-					 	.collect(Collectors.toList()).get(0).getConteudo()) + 
-					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0021"))
-							 .collect(Collectors.toList()).get(0).getConteudo()) + 
-					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0022"))
-							 .collect(Collectors.toList()).get(0).getConteudo()) + 
-					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0023"))
-							 .collect(Collectors.toList()).get(0).getConteudo()) + 
-					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0024"))
-							 .collect(Collectors.toList()).get(0).getConteudo()) + 
-					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0025"))
-							 .collect(Collectors.toList()).get(0).getConteudo()) +
-					 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0026"))
-							 .collect(Collectors.toList()).get(0).getConteudo());
+			dc = 1.1120-(0.00043499*sum7Dobras)+(0.00000055*Math.pow(sum7Dobras, 2))-
+					(0.00028826*atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getIdade());
+			atendimento.getAvaliacaoFisica().setPercentualGordura((4.95/dc-4.50)*100);
 		}
-		dc = 1.1120-(0.00043499*sum7Dobras)+(0.00000055*Math.pow(sum7Dobras, 2))-
-				(0.00028826*atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getIdade());
-		atendimento.getAvaliacaoFisica().setPercentualGordura((4.95/dc-4.50)*100);
+		
+		atendimento.getAvaliacaoFisica().setPercentualMassaMagra(100 - atendimento.getAvaliacaoFisica().getPercentualGordura());
+		
+		atendimento.getAvaliacaoFisica().setGorduraAbsoluta((atendimento.getAvaliacaoFisica().getPercentualGordura()/100)*Double.parseDouble(
+				respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))	
+				.collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")));
+		
+		atendimento.getAvaliacaoFisica().setMassaMagra(Double.parseDouble(
+				respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+				.collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) - 
+				atendimento.getAvaliacaoFisica().getGorduraAbsoluta());
+		
+		atendimento.getAvaliacaoFisica().setPercentualGorduraIdeal(this.getPercentualGorduraIdeal(
+				atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getIdade(),
+				atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getSexo()));
+		
+		atendimento.getAvaliacaoFisica().setPercentualMassaMagraIdeal(100 - 
+				atendimento.getAvaliacaoFisica().getPercentualGorduraIdeal());
+		
+		atendimento.getAvaliacaoFisica().setCarenciaMuscular(
+				(atendimento.getAvaliacaoFisica().getPercentualMassaMagraIdeal() - 
+				atendimento.getAvaliacaoFisica().getPercentualMassaMagra()) * 
+				(Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+						 .collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", "."))/100));
+		
+		atendimento.getAvaliacaoFisica().setPesoIdeal((atendimento.getAvaliacaoFisica().getMassaMagra()/
+				(1-(atendimento.getAvaliacaoFisica().getPercentualGorduraIdeal()/100)) + 
+				atendimento.getAvaliacaoFisica().getCarenciaMuscular()));
+		
 		atendimento.getAvaliacaoFisica().setPesoExcesso(
-				atendimento.getAvaliacaoFisica().getPercentualGordura()-
-				((atendimento.getAvaliacaoFisica().getPercentualGordura()/100)*
-					Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
-						 .collect(Collectors.toList()).get(0).getConteudo())));
+				Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+					.collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) - 
+				atendimento.getAvaliacaoFisica().getPesoIdeal());
+		
+		atendimento.getAvaliacaoFisica().setPercentualMassaMagraNegociada(100 - 
+				atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada());
+		
+		atendimento.getAvaliacaoFisica().setPesoNegociado(atendimento.getAvaliacaoFisica().getMassaMagra()/
+				(1-(atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada()/100)) + 
+				atendimento.getAvaliacaoFisica().getCarenciaMuscular());
+		
+		atendimento.getAvaliacaoFisica().setPesoExcessoNegociado(
+				Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+				 .collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) - 
+				atendimento.getAvaliacaoFisica().getPesoNegociado());
+		
 		return atendimento;
+	}
+
+	private double getSumDobras(List<RespostaFichaColeta> respostas) {
+		return Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0020"))
+			 	.collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) + 
+			 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0021"))
+					 .collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) + 
+			 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0022"))
+					 .collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) + 
+			 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0023"))
+					 .collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) + 
+			 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0024"))
+					 .collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) + 
+			 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0025"))
+					 .collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", ".")) +
+			 Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0026"))
+					 .collect(Collectors.toList()).get(0).getConteudo().replace(".","").replace(",", "."));
+	}
+	
+	private int getPercentualGorduraIdeal(int idade, String sexo) { 
+		if ( sexo == Sexo.getInstance().MASCULINO ) {
+			if ( idade >= 18 && idade <= 29 ) {
+				return 14;
+			} else if ( idade >= 30 && idade <= 39) {
+				return 16;
+			} else if ( idade >= 40 && idade <= 49 ) {
+				return 17;
+			} else if ( idade >= 50 && idade <= 59 ) {
+				return 18;
+			} else if ( idade >= 60 ) {
+				return 21;
+			}
+		} else {
+			if ( idade >= 18 && idade <= 29 ) {
+				return 19;
+			} else if ( idade >= 30 && idade <= 39) {
+				return 21;
+			} else if ( idade >= 40 && idade <= 49 ) {
+				return 22;
+			} else if ( idade >= 50 && idade <= 59 ) {
+				return 23;
+			} else if ( idade >= 60 ) {
+				return 26;
+			}
+		}
+		return 0;
 	}
 	
 }
