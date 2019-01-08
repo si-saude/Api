@@ -3,6 +3,7 @@ package br.com.saude.api.model.business;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -884,13 +885,17 @@ private void criarConvocacao(Atendimento atendimento, String tipoConvocacao) thr
 		return "***";
 	}
 	
-	@SuppressWarnings("deprecation")
 	public EmpregadoConvocacaoFilter configureEmpregadoConvocacaoFilter(Atendimento atendimento) {
 		String tipoAtendimento = getTipoAtendimento(atendimento);
 		
+		Date primeiroDiaAno = null;
 		Calendar cal = Calendar.getInstance();
-		cal.set(Helper.getToday().getYear(),1,1,0,0,0);
-		Date primeiroDiaAno = cal.getTime();
+		cal.set(LocalDate.now().getYear(),0,1,0,0,0);
+		primeiroDiaAno = cal.getTime();
+		long time = primeiroDiaAno.getTime();
+		//Remove os milisegundos da data
+		primeiroDiaAno.setTime((time/1000)*1000);
+		
 		
 		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO
 		EmpregadoConvocacaoFilter empConFilter = new EmpregadoConvocacaoFilter();
