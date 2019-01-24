@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Atendimento {
@@ -50,6 +51,9 @@ public class Atendimento {
 	
 	@Transient
 	private List<Triagem> triagensTodosAtendimentos;
+	
+	@Size(max = 128, message="Tamanho máximo para o Tipo do Atendimento: 128")
+	private String tipo;
 	
 	@Version
 	private long version;
@@ -140,5 +144,13 @@ public class Atendimento {
 
 	public void setAvaliacaoFisica(AvaliacaoFisica avaliacaoFisica) {
 		this.avaliacaoFisica = avaliacaoFisica;
+	}
+	
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 }

@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Formula;
+
 @Entity
 public class AvaliacaoFisica {
 	@Id
@@ -24,13 +26,11 @@ public class AvaliacaoFisica {
 	@JoinColumn(name = "atendimento_id")
 	private Atendimento atendimento;
 	
-	@Size(max = 128, message="Tamanho máximo para o Tipo do Atendimento da Avaliação Física: 128")
-	private String tipoAtendimento;
-	
 	private int pass;
 	private int pad;
 	private double fcRepouso;
 	
+	@Formula("(select get_ipaq_atendimento(id))")
 	@Size(max = 128, message="Tamanho máximo para o IPAQ Anterior da Avaliação Física: 128")
 	private String ipaqAnterior;
 	
@@ -78,6 +78,16 @@ public class AvaliacaoFisica {
 	private String forcaPreensaoManualClassificacao;
 	@Size(max = 2048, message="Tamanho máximo para o Observação da Força de Preensão Manual da Avaliação Física: 2048")
 	private String forcaPreensaoManualObservacao;
+	private double dobraTricipital;
+	private double dobraSubscapular;
+	private double dobraToracica;
+	private double dobraAuxiliarMedia;
+	private double dobraSupraIliaca;
+	private double dobraAbdominal;
+	private double dobraCoxaMedial;
+	private double pressaoArterialSistolica;
+	private double pressaoArterialDiastolica;
+	private double frequenciaCardiaca;
 	
 	@Version
 	private long version;
@@ -87,12 +97,6 @@ public class AvaliacaoFisica {
 	}
 	public void setAtendimento(Atendimento atendimento) {
 		this.atendimento = atendimento;
-	}
-	public String getTipoAtendimento() {
-		return tipoAtendimento;
-	}
-	public void setTipoAtendimento(String tipoAtendimento) {
-		this.tipoAtendimento = tipoAtendimento;
 	}
 	public int getPass() {
 		return pass;
@@ -333,5 +337,65 @@ public class AvaliacaoFisica {
 	}
 	public void setForcaPreensaoManualObservacao(String forcaPreensaoManualObservacao) {
 		this.forcaPreensaoManualObservacao = forcaPreensaoManualObservacao;
+	}
+	public double getDobraTricipital() {
+		return dobraTricipital;
+	}
+	public void setDobraTricipital(double dobraTricipital) {
+		this.dobraTricipital = dobraTricipital;
+	}
+	public double getDobraSubscapular() {
+		return dobraSubscapular;
+	}
+	public void setDobraSubscapular(double dobraSubscapular) {
+		this.dobraSubscapular = dobraSubscapular;
+	}
+	public double getDobraToracica() {
+		return dobraToracica;
+	}
+	public void setDobraToracica(double dobraToracica) {
+		this.dobraToracica = dobraToracica;
+	}
+	public double getDobraAuxiliarMedia() {
+		return dobraAuxiliarMedia;
+	}
+	public void setDobraAuxiliarMedia(double dobraAuxiliarMedia) {
+		this.dobraAuxiliarMedia = dobraAuxiliarMedia;
+	}
+	public double getDobraSupraIliaca() {
+		return dobraSupraIliaca;
+	}
+	public void setDobraSupraIliaca(double dobraSupraIliaca) {
+		this.dobraSupraIliaca = dobraSupraIliaca;
+	}
+	public double getDobraAbdominal() {
+		return dobraAbdominal;
+	}
+	public void setDobraAbdominal(double dobraAbdominal) {
+		this.dobraAbdominal = dobraAbdominal;
+	}
+	public double getDobraCoxaMedial() {
+		return dobraCoxaMedial;
+	}
+	public void setDobraCoxaMedial(double dobraCoxaMedial) {
+		this.dobraCoxaMedial = dobraCoxaMedial;
+	}
+	public double getPressaoArterialSistolica() {
+		return pressaoArterialSistolica;
+	}
+	public void setPressaoArterialSistolica(double pressaoArterialSistolica) {
+		this.pressaoArterialSistolica = pressaoArterialSistolica;
+	}
+	public double getPressaoArterialDiastolica() {
+		return pressaoArterialDiastolica;
+	}
+	public void setPressaoArterialDiastolica(double pressaoArterialDiastolica) {
+		this.pressaoArterialDiastolica = pressaoArterialDiastolica;
+	}
+	public double getFrequenciaCardiaca() {
+		return frequenciaCardiaca;
+	}
+	public void setFrequenciaCardiaca(double frequenciaCardiaca) {
+		this.frequenciaCardiaca = frequenciaCardiaca;
 	}
 }

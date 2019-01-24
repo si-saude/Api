@@ -15,6 +15,7 @@ public class FilaAtendimentoOcupacionalBuilder
 
 	private Function<Map<String,FilaAtendimentoOcupacional>,FilaAtendimentoOcupacional> loadLocalizacao;
 	private Function<Map<String,FilaAtendimentoOcupacional>,FilaAtendimentoOcupacional> loadAtualizacoes;
+	private Function<Map<String,FilaAtendimentoOcupacional>,FilaAtendimentoOcupacional> loadAll;
 	
 	public static FilaAtendimentoOcupacionalBuilder newInstance(FilaAtendimentoOcupacional fila) {
 		return new FilaAtendimentoOcupacionalBuilder(fila);
@@ -45,6 +46,16 @@ public class FilaAtendimentoOcupacionalBuilder
 			if(filas.get("origem").getAtualizacoes() != null)
 				filas.get("destino").setAtualizacoes(FilaAtendimentoOcupacionalAtualizacaoBuilder
 						.newInstance(filas.get("origem").getAtualizacoes()).getEntityList());
+			return filas.get("destino");
+		};
+		
+		this.loadAll = filas -> {
+			if(filas.get("origem").getAtualizacoes() != null)
+				filas.get("destino").setAtualizacoes(FilaAtendimentoOcupacionalAtualizacaoBuilder
+						.newInstance(filas.get("origem").getAtualizacoes()).getEntityList());
+			if(filas.get("origem").getLocalizacao() != null)
+				filas.get("destino").setLocalizacao(LocalizacaoBuilder
+						.newInstance(filas.get("origem").getLocalizacao()).getEntity());
 			return filas.get("destino");
 		};
 	}
@@ -87,5 +98,9 @@ public class FilaAtendimentoOcupacionalBuilder
 	
 	public FilaAtendimentoOcupacionalBuilder loadAtualizacoes() {
 		return (FilaAtendimentoOcupacionalBuilder) this.loadProperty(this.loadAtualizacoes);
+	}
+	
+	public FilaAtendimentoOcupacionalBuilder loadAll() {
+		return (FilaAtendimentoOcupacionalBuilder) this.loadProperty(this.loadAll);
 	}
 }

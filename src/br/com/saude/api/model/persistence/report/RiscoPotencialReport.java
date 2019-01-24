@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.model.entity.dto.RiscoPotencialDto;
+import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.util.constant.StatusRPSat;
 
 public class RiscoPotencialReport {
@@ -28,8 +29,8 @@ private static RiscoPotencialReport instance;
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	public List<RiscoPotencialDto> getRiscoPotenciais(String uf, int equipeId) throws IOException {
-		
+	public List<RiscoPotencialDto> getRiscoPotenciais(String uf, Profissional profissional) throws IOException {
+		int equipeId = profissional.getEquipe().getId();
 		BufferedReader in = new BufferedReader(new FileReader(Helper.getProjectPath().replace("file:/", "")
 				+"br/com/saude/api/model/persistence/sql/QueryRiscoPotencial.sql"));
 		String str;

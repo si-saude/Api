@@ -499,11 +499,7 @@ public class FilaAtendimentoOcupacionalBo
 					
 					atendimentoAux.getFilaEsperaOcupacional().setRiscoPotencial(
 							atendimento.getFilaEsperaOcupacional().getRiscoPotencial());
-				}
-				
-				if(atendimento.getFilaEsperaOcupacional().getRiscoPotencial() != null
-						&& atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId() > 0) {
-					
+			
 					RiscoPotencial r = RiscoPotencialBuilder
 						.newInstance(atendimento.getFilaEsperaOcupacional().getRiscoPotencial())
 						.loadEquipes().getEntity();

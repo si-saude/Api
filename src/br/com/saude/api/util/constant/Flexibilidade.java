@@ -16,11 +16,9 @@ public class Flexibilidade extends GenericConstant {
 		return instance;
 	}
 	
-	public final String NAO_AVALIADO 				= "NÃO AVALIADO";
-	public final String PENDENTE 				= "PENDENTE";
-	public final String FRACO 				= "FRACO";
-	public final String REGULAR		= "REGULAR";
-	public final String MEDIO		= "MÉDIO";
-	public final String BOA		= "BOA";
-	public final String EXCELENTE		= "EXCELENTE";
+	public final String EXCELENTE 				= "EXCELENTE";
+	public final String ACIMA_DA_MEDIA 				= "ACIMA DA MÉDIA";
+	public final String MEDIA 				= "MÉDIA";
+	public final String ABAIXO_DA_MEDIA		= "ABAIXO DA MÉDIA";
+	public final String RUIM		= "RUIM";
 }

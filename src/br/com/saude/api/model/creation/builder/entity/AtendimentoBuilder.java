@@ -17,6 +17,8 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	private Function<Map<String,Atendimento>,Atendimento> loadAso;
 	private Function<Map<String,Atendimento>,Atendimento> loadQuestionario;
 	private Function<Map<String,Atendimento>,Atendimento> loadRecordatorio;
+	private Function<Map<String,Atendimento>,Atendimento> loadFilaAtendimentoOcupacional;
+	private Function<Map<String,Atendimento>,Atendimento> loadAvaliacaoFisica;
 	
 	public static AtendimentoBuilder newInstance(Atendimento atendimento) {
 		return new AtendimentoBuilder(atendimento);
@@ -79,6 +81,22 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 						.getEntity());
 			return atendimentos.get("destino");
 		};
+		
+		this.loadFilaAtendimentoOcupacional = atendimentos -> {
+			if (atendimentos.get("origem").getFilaAtendimentoOcupacional() != null)
+				atendimentos.get("destino").setFilaAtendimentoOcupacional(FilaAtendimentoOcupacionalBuilder
+						.newInstance(atendimentos.get("origem").getFilaAtendimentoOcupacional()).loadAll()
+						.getEntity());
+			return atendimentos.get("destino");
+		};
+		
+		this.loadAvaliacaoFisica = atendimentos -> {
+			if (atendimentos.get("origem").getAvaliacaoFisica() != null)
+				atendimentos.get("destino").setAvaliacaoFisica(AvaliacaoFisicaBuilder
+						.newInstance(atendimentos.get("origem").getAvaliacaoFisica()).getEntity());
+			return atendimentos.get("destino");
+		};
+	
 	}
 
 	@Override
@@ -87,6 +105,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 		
 		newAtendimento.setId(atendimento.getId());
 		newAtendimento.setVersion(atendimento.getVersion());
+		newAtendimento.setTipo(atendimento.getTipo());
 				
 		if(atendimento.getFilaAtendimentoOcupacional() != null) {
 			FilaAtendimentoOcupacionalBuilder filaAtendBuilder = FilaAtendimentoOcupacionalBuilder
@@ -136,7 +155,15 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	public AtendimentoBuilder loadTriagens() {
 		return (AtendimentoBuilder) this.loadProperty(this.loadTriagens);
 	}
-
+	
+	public AtendimentoBuilder loadFilaAtendimentoOcupacional() {
+		return (AtendimentoBuilder) this.loadProperty(this.loadFilaAtendimentoOcupacional);
+	}
+	
+	public AtendimentoBuilder loadAvaliacaoFisica() {
+		return (AtendimentoBuilder) this.loadProperty(this.loadAvaliacaoFisica);
+	}
+	
 	@Override
 	public Atendimento cloneFromFilter(AtendimentoFilter filter) {
 		return null;

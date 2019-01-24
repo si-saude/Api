@@ -12,6 +12,7 @@ import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.RiscoPotencialExampleBuilder;
 import br.com.saude.api.model.entity.dto.RiscoPotencialDto;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
+import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.model.persistence.RiscoPotencialDao;
 import br.com.saude.api.model.persistence.report.RiscoPotencialReport;
@@ -78,8 +79,8 @@ public class RiscoPotencialBo extends GenericBo<RiscoPotencial, RiscoPotencialFi
 		return riscos;
 	}
 	
-	public List<RiscoPotencialDto> getRiscoPotenciais(String uf, int equipeId) throws IOException{
-		return RiscoPotencialReport.getInstance().getRiscoPotenciais(uf, equipeId);
+	public List<RiscoPotencialDto> getRiscoPotenciais(String uf, Profissional profissional) throws IOException{
+		return RiscoPotencialReport.getInstance().getRiscoPotenciais(uf, profissional);
 	}
 	
 	public RiscoPotencial criarPlano(RiscoPotencial riscoPotencial) throws Exception {

@@ -1,5 +1,6 @@
 package br.com.saude.api.generic;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -139,4 +140,10 @@ public class Helper {
 				LocalDate.now());
 		return periodo;
 	}
+	
+	public static String convertToHumanPtDate(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		return sdf.format(date);
+	}
+	
 }

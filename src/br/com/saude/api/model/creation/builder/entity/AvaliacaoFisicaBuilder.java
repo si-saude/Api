@@ -2,8 +2,6 @@ package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
 
-import javax.validation.constraints.Size;
-
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.AvaliacaoFisicaFilter;
 import br.com.saude.api.model.entity.po.AvaliacaoFisica;
@@ -60,7 +58,6 @@ public class AvaliacaoFisicaBuilder extends GenericEntityBuilder<AvaliacaoFisica
 		newAvaliacao.setPraticaExercicioFisico(entity.isPraticaExercicioFisico());
 		newAvaliacao.setProtocoloComposicaoCorporal(entity.getProtocoloComposicaoCorporal());
 		newAvaliacao.setRazaoCinturaEstatura(entity.getRazaoCinturaEstatura());
-		newAvaliacao.setTipoAtendimento(entity.getTipoAtendimento());
 		newAvaliacao.setObservacaoEstagioContemplacao(entity.getObservacaoEstagioContemplacao());
 		newAvaliacao.setAptidaoCardiorrespiratoriaValor(entity.getAptidaoCardiorrespiratoriaValor());
 		newAvaliacao.setAptidaoCardiorrespiratoriaClassificacao(entity.getAptidaoCardiorrespiratoriaClassificacao());
@@ -74,6 +71,16 @@ public class AvaliacaoFisicaBuilder extends GenericEntityBuilder<AvaliacaoFisica
 		newAvaliacao.setForcaPreensaoManualValor(entity.getForcaPreensaoManualValor());
 		newAvaliacao.setForcaPreensaoManualClassificacao(entity.getForcaPreensaoManualClassificacao());
 		newAvaliacao.setForcaPreensaoManualObservacao(entity.getForcaPreensaoManualObservacao());
+		newAvaliacao.setDobraTricipital(entity.getDobraTricipital());
+		newAvaliacao.setDobraSubscapular(entity.getDobraSubscapular());
+		newAvaliacao.setDobraToracica(entity.getDobraToracica());
+		newAvaliacao.setDobraAuxiliarMedia(entity.getDobraAuxiliarMedia());
+		newAvaliacao.setDobraSupraIliaca(entity.getDobraSupraIliaca());
+		newAvaliacao.setDobraAbdominal(entity.getDobraAbdominal());
+		newAvaliacao.setDobraCoxaMedial(entity.getDobraCoxaMedial());
+		newAvaliacao.setPressaoArterialSistolica(entity.getPressaoArterialSistolica());
+		newAvaliacao.setPressaoArterialDiastolica(entity.getPressaoArterialDiastolica());
+		newAvaliacao.setFrequenciaCardiaca(entity.getFrequenciaCardiaca());
 		
 		return newAvaliacao;
 	}

@@ -250,7 +250,10 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				atendimento.getTriagens().forEach(t->{
 					t.setIndicadorSast((IndicadorSast) Hibernate.unproxy(t.getIndicadorSast()));
 				});
-			}
+			} 
+			
+			if ( atendimento.getAvaliacaoFisica() != null )
+				Hibernate.initialize(atendimento.getAvaliacaoFisica());
 			
 			return atendimento;
 		};

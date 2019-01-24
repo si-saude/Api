@@ -70,6 +70,7 @@ import br.com.saude.api.util.constant.TempoMeses;
 import br.com.saude.api.util.constant.TipoAcao;
 import br.com.saude.api.util.constant.TipoAcidente;
 import br.com.saude.api.util.constant.TipoAlimento;
+import br.com.saude.api.util.constant.TipoAtendimento;
 import br.com.saude.api.util.constant.TipoCat;
 import br.com.saude.api.util.constant.TipoContato;
 import br.com.saude.api.util.constant.TipoConvocacao;
@@ -556,5 +557,12 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFrequencia(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(Frequencia.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/tipo-atendimento")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTipoAtendimento(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TipoAtendimento.getInstance(),filter)).build();
 	}
 }

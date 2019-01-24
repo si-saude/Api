@@ -14,6 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.gson.Gson;
+
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericReportService;
 import br.com.saude.api.generic.GenericService;
@@ -22,6 +24,7 @@ import br.com.saude.api.model.business.RiscoPotencialBo;
 import br.com.saude.api.model.business.validate.RiscoPotencialValidator;
 import br.com.saude.api.model.entity.dto.RiscoPotencialDto;
 import br.com.saude.api.model.entity.filter.RiscoPotencialFilter;
+import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
 import br.com.saude.api.util.RequestInterceptor;
 
@@ -163,8 +166,10 @@ public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,Ris
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get-risco-potenciais")
-	public Response getRiscoPotenciais(@QueryParam("uf") String uf, @QueryParam("equipeId") String equipeId) throws IOException {
-		return Response.ok(RiscoPotencialBo.getInstance().getRiscoPotenciais(uf, Integer.parseInt(equipeId))).build();
+	public Response getRiscoPotenciais(List<String> ufProfissional) throws IOException {
+		String uf = ufProfissional.get(0);
+		Profissional profissional = new Gson().fromJson(ufProfissional.get(1), Profissional.class);
+		return Response.ok(RiscoPotencialBo.getInstance().getRiscoPotenciais(uf, profissional)).build();
 	}
 	
 	@POST
