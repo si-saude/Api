@@ -1,5 +1,8 @@
 package br.com.saude.api.model.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
@@ -8,6 +11,7 @@ import br.com.saude.api.generic.GenericExampleBuilder;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Curriculo;
 import br.com.saude.api.model.entity.po.Empregado;
+import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.ProfissionalConselho;
 
@@ -25,6 +29,7 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 			profissional = loadEquipe(profissional);
 			profissional = loadLocalizacao(profissional);
 			profissional = loadEmpregado(profissional);
+			profissional = loadEquipes(profissional);
 			return profissional;
 		};
 		
@@ -33,6 +38,8 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 			profissional = loadCurriculo(profissional);
 			profissional = loadProfissionalConselho(profissional);
 			profissional = loadServico(profissional);
+			profissional = loadEquipes(profissional);
+			
 			return profissional;
 		};
 		
@@ -98,6 +105,20 @@ public class ProfissionalDao extends GenericDao<Profissional> {
 			Hibernate.initialize(profissional.getServicos());
 		return profissional;
 	}
+	
+	private Profissional loadEquipes(Profissional profissional) {
+		if(profissional.getEquipes() != null) {
+			List<Equipe> equipes = new ArrayList<Equipe>();
+			
+			profissional.getEquipes().forEach(e->{
+				equipes.add((Equipe) Hibernate.unproxy(e));
+			});
+			
+			profissional.setEquipes(equipes);
+		}
+		return profissional;
+	}
+	
 	
 	public PagedList<Profissional> getListFunctionLoad(GenericExampleBuilder<?,?> exampleBuilder) throws Exception {
 		return getList(exampleBuilder,this.functionLoad);

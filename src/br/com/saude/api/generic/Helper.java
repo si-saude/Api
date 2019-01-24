@@ -53,7 +53,7 @@ public class Helper {
 	
 	@SuppressWarnings("deprecation")
 	public static Criterion getCriterionDateFilter(String propertyName, DateFilter dateFilter) {
-		if(dateFilter != null && dateFilter.getInicio() != null) {
+		if(dateFilter != null && dateFilter.getTypeFilter() != null && dateFilter.getInicio() != null) {
 			switch(dateFilter.getTypeFilter()) {
 				case ENTRE:
 					dateFilter.getInicio().setHours(0);

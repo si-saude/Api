@@ -23,13 +23,13 @@ public class ProfissionalBo extends GenericBo<Profissional, ProfissionalFilter, 
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = builder -> {
-			return builder.loadEquipe().loadLocalizacao();
+			return builder.loadEquipe().loadLocalizacao().loadEquipes();
 		};
 		
 		this.functionLoadAll = builder -> {
 			return this.functionLoad.apply(builder)
 						.loadProfissionalConselho()
-						.loadCurriculo().loadServicos();
+						.loadCurriculo().loadServicos().loadEquipes();
 		};
 	}
 	

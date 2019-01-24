@@ -910,7 +910,7 @@ public class AtendimentoBo extends
 		}
 		return "***";
 	}
-
+	
 	public EmpregadoConvocacaoFilter configureEmpregadoConvocacaoFilter(Atendimento atendimento) {
 		String tipoAtendimento = getTipoAtendimento(atendimento);
 

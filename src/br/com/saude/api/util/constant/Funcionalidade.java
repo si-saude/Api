@@ -16,6 +16,8 @@ public class Funcionalidade extends GenericConstant {
 		return instance;
 	}
 	
+	public static final String TAREFA_AGENDA_ALTERAR	 						= "TAREFA-AGENDA_ALTERAR";
+	public static final String TAREFA_AGENDA_LISTAR		 						= "TAREFA-AGENDA_LISTAR";
 	public static final String REPORT_CONFORMIDADE_ASO						= "REPORT-CONFORMIDADE-ASO";
 	public static final String REPORT_SUGESTAO_AGENDAMENTO						= "REPORT-SUGESTAO-AGENDAMENTO";
 	public static final String RECORDATORIO_LISTAR								= "RECORDATORIO_LISTAR";
@@ -371,11 +373,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String REQUISITO_ASO_ALTERAR		 			= "REQUISITO-ASO_ALTERAR";
 	public static final String REQUISITO_ASO_REMOVER 					= "REQUISITO-ASO_REMOVER";
 	public static final String REQUISITO_ASO_DETALHE 					= "REQUISITO-ASO_DETALHE";
-	public static final String RESULTADO_EXAME_LISTAR						= "RESULTADO-EXAME_LISTAR";
-	public static final String RESULTADO_EXAME_ADICIONAR 			    	= "RESULTADO-EXAME_ADICIONAR";
-	public static final String RESULTADO_EXAME_ALTERAR		 			= "RESULTADO-EXAME_ALTERAR";
-	public static final String RESULTADO_EXAME_REMOVER 					= "RESULTADO-EXAME_REMOVER";
-	public static final String RESULTADO_EXAME_DETALHE 					= "RESULTADO-EXAME_DETALHE";
+	public static final String AUDITORIA_EXAME_LISTAR						= "AUDITORIA-EXAME_LISTAR";
+	public static final String AUDITORIA_EXAME_ADICIONAR 			    	= "AUDITORIA-EXAME_ADICIONAR";
+	public static final String AUDITORIA_EXAME_ALTERAR		 			= "AUDITORIA-EXAME_ALTERAR";
+	public static final String AUDITORIA_EXAME_REMOVER 					= "AUDITORIA-EXAME_REMOVER";
+	public static final String AUDITORIA_EXAME_DETALHE 					= "AUDITORIA-EXAME_DETALHE";
 	public static final String RISCO_GHE_LISTAR						= "RISCO-GHE_LISTAR";
 	public static final String RISCO_GHE_ADICIONAR 			    	= "RISCO-GHE_ADICIONAR";
 	public static final String RISCO_GHE_ALTERAR		 			= "RISCO-GHE_ALTERAR";
