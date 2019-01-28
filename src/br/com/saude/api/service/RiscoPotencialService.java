@@ -163,7 +163,7 @@ public class RiscoPotencialService extends GenericServiceImpl<RiscoPotencial,Ris
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
 	
-	@GET
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get-risco-potenciais")
 	public Response getRiscoPotenciais(List<String> ufProfissional) throws IOException {

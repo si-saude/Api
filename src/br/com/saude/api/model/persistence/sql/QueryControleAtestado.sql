@@ -16,7 +16,8 @@ select p.nome, em.matricula,
 	a.observacao,
 	a.status,
 	ag.inicio,
-	a.justificativa
+	a.justificativa,
+	d.codigo
 from atestado a
 left join empregado em on a.empregado_id = em.id
 inner join gerencia g4 on em.gerencia_id = g4.id
@@ -31,4 +32,5 @@ left join equipe eq on eq.id = t.equipe_id
 left join profissional pr on pr.id = t.responsavel_id
 left join empregado e_pr on e_pr.id = pr.empregado_id
 left join pessoa p_e on p_e.id = e_pr.pessoa_id
+left join diagnostico d on d.id = a.cid_id
 where a.datasolicitacao between [DATA_INICIO] and [DATA_FIM] or a.inicio between [DATA_INICIO] and [DATA_FIM]

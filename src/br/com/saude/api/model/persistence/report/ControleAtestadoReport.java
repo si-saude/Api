@@ -195,6 +195,8 @@ public class ControleAtestadoReport {
 			
 			atestado.setJustificativa((String) row[19]);
 			
+			atestado.setCodigoCid((String) row[20]);
+			
 			atestados.add(atestado);
 		}
 

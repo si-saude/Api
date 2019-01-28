@@ -1,5 +1,9 @@
 select *,
-	CASE WHEN coalesce(tab.exame_ids,'') != ''
+	CASE WHEN (select string_agg(distinct ex.descricao, '  /  ')
+		from empregadoconvocacaoexame x
+		inner join exame ex on x.exame_id = ex.id
+		where x.id in (select CAST(regexp_split_to_table(tab.exame_ids, ',') AS INTEGER))
+		  and x.realizacao is null ) != ''
 	THEN 'PENDENTE' ELSE 'REALIZADO' END as status_preclinico,
 
 	CASE WHEN coalesce(tab.exame_ids,'') != ''
@@ -25,12 +29,7 @@ from 	(select trim(e.matricula) as matricula,
 		(select string_agg(x.id||'', ',')
 		 from empregadoconvocacaoexame x
 		 where x.empregadoconvocacao_id = ec.id
-		 and exists (select 1 
-				from grupomonitoramento_empregado ge
-				inner join grupomonitoramentoexame gx on ge.grupomonitoramento_id = gx.grupomonitoramento_id
-				where ge.empregado_id = e.id
-				  and gx.exame_id = x.exame_id
-				  and COALESCE( gx.opcional,'f') = 'f')) as exame_ids,
+		 and COALESCE(x.opcional,'f') = 'f' ) as exame_ids,
 		ec.resultadoAuditado as resultadoAuditado,
 		(select 1 
 		 from tarefa t

@@ -30,7 +30,6 @@ private static RiscoPotencialReport instance;
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public List<RiscoPotencialDto> getRiscoPotenciais(String uf, Profissional profissional) throws IOException {
-		int equipeId = profissional.getEquipe().getId();
 		BufferedReader in = new BufferedReader(new FileReader(Helper.getProjectPath().replace("file:/", "")
 				+"br/com/saude/api/model/persistence/sql/QueryRiscoPotencial.sql"));
 		String str;
@@ -40,12 +39,12 @@ private static RiscoPotencialReport instance;
 		}
 		in.close();
 		
-		int indexReplace = query.indexOf("[BASE_ID]");
+		int indexReplace = query.indexOf("[BASE_UF]");
 		query.replace(indexReplace, indexReplace+9, String.valueOf("'"+uf+"'"));
-		indexReplace = query.indexOf("[EQUIPE_ID]");
-		query.replace(indexReplace, indexReplace+11, String.valueOf(equipeId));
-		indexReplace = query.indexOf("[EQUIPE_ID]");
-		query.replace(indexReplace, indexReplace+11, String.valueOf(equipeId));
+		indexReplace = query.indexOf("[PROFISSIONAL_ID]");
+		query.replace(indexReplace, indexReplace+17, String.valueOf(profissional.getId()));
+		indexReplace = query.indexOf("[PROFISSIONAL_ID]");
+		query.replace(indexReplace, indexReplace+17, String.valueOf(profissional.getId()));
 		
 		List<RiscoPotencialDto> riscoPotenciais = new ArrayList<RiscoPotencialDto>();
 

@@ -27,6 +27,7 @@ public class ControleAtestadoDto {
 	private String observacao;
 	private String statusAtestado;
 	private String justificativa;
+	private String codigoCid;
 	
 	public String getNomeEmpregado() {
 		return nomeEmpregado;
@@ -165,5 +166,11 @@ public class ControleAtestadoDto {
 	}
 	public void setJustificativa(String justificativa) {
 		this.justificativa = justificativa;
+	}
+	public String getCodigoCid() {
+		return codigoCid;
+	}
+	public void setCodigoCid(String codigoCid) {
+		this.codigoCid = codigoCid;
 	}
 }
