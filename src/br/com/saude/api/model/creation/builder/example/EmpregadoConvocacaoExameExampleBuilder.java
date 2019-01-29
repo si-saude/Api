@@ -29,6 +29,7 @@ public class EmpregadoConvocacaoExameExampleBuilder
 		addExigeRelatorio();
 		addConforme();
 		addOpcional();
+		addImportado();
 	}
 
 	@Override
@@ -74,5 +75,9 @@ public class EmpregadoConvocacaoExameExampleBuilder
 	
 	private void addOpcional() {
 		this.entity.setOpcional(this.addBoolean("opcional", this.filter.getOpcional()));
+	}
+	
+	private void addImportado() {
+		this.entity.setImportado(this.addBoolean("importado", this.filter.getImportado()));
 	}
 }

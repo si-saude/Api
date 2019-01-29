@@ -31,7 +31,6 @@ public class AvaliacaoFisica {
 	private double fcRepouso;
 	
 	@Formula("(select get_ipaq_atendimento(id))")
-	@Size(max = 128, message="Tamanho máximo para o IPAQ Anterior da Avaliação Física: 128")
 	private String ipaqAnterior;
 	
 	@OneToMany(mappedBy="avaliacaoFisica", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)

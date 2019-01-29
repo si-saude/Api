@@ -58,6 +58,7 @@ import br.com.saude.api.util.constant.SituacaoEmpregado;
 import br.com.saude.api.util.constant.StatusAcao;
 import br.com.saude.api.util.constant.StatusAtestado;
 import br.com.saude.api.util.constant.StatusEmpregado;
+import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusFilaEsperaOcupacional;
 import br.com.saude.api.util.constant.StatusRPSat;
 import br.com.saude.api.util.constant.StatusRiscoEmpregado;
@@ -284,6 +285,13 @@ public class UtilService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStatusFilaEsperaOcupacional(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(StatusFilaEsperaOcupacional.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/status-fila-atendimento-ocupacional")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStatusFilaAtendimentoOcupacional(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(StatusFilaAtendimentoOcupacional.getInstance(),filter)).build();
 	}
 	
 	@GET

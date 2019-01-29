@@ -93,7 +93,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 		this.loadAvaliacaoFisica = atendimentos -> {
 			if (atendimentos.get("origem").getAvaliacaoFisica() != null)
 				atendimentos.get("destino").setAvaliacaoFisica(AvaliacaoFisicaBuilder
-						.newInstance(atendimentos.get("origem").getAvaliacaoFisica()).getEntity());
+						.newInstance(atendimentos.get("origem").getAvaliacaoFisica()).loadAvaliacaoFisicaAtividadeFisica().getEntity());
 			return atendimentos.get("destino");
 		};
 	

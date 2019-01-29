@@ -46,7 +46,7 @@ public class Atendimento {
 	@OneToOne(fetch=FetchType.LAZY)
 	private Recordatorio recordatorio;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private AvaliacaoFisica avaliacaoFisica;
 	
 	@Transient

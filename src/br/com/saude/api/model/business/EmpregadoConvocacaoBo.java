@@ -161,15 +161,13 @@ public class EmpregadoConvocacaoBo
 							
 							if(cdExames != null && cdExames.length > 0) {
 								for(String cdExame : cdExames) {
-									
-									if(eC.getEmpregadoConvocacaoExames().stream().filter(x->
-											x.getExame().getCodigo().equals(cdExame) &&
-											x.getRealizacao() == null).count() > 0) {
-										
+									List<EmpregadoConvocacaoExame> empregadoConvocacaoExames = 
 											eC.getEmpregadoConvocacaoExames().stream().filter(x->
-													x.getExame().getCodigo().equals(cdExame) &&
-													x.getRealizacao() == null).findFirst().get()
-												.setRealizacao(realizacao);
+												x.getExame().getCodigo().equals(cdExame) &&
+												x.getRealizacao() == null).collect(Collectors.toList());
+									if(empregadoConvocacaoExames.size() > 0) {
+										empregadoConvocacaoExames.get(0).setRealizacao(realizacao);
+										empregadoConvocacaoExames.get(0).setImportado(true);
 									}
 								}
 							}

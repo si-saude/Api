@@ -43,6 +43,7 @@ public class EmpregadoConvocacaoExameBuilder
 		newEmpregadoConvocacaoExame.setOpcional(empregadoConvocacaoExame.isOpcional());
 		newEmpregadoConvocacaoExame.setAuditoria(empregadoConvocacaoExame.getAuditoria());
 		newEmpregadoConvocacaoExame.setResultadoConforme(empregadoConvocacaoExame.isResultadoConforme());
+		newEmpregadoConvocacaoExame.setImportado(empregadoConvocacaoExame.isImportado());
 		newEmpregadoConvocacaoExame.setVersion(empregadoConvocacaoExame.getVersion());
 		
 		if(empregadoConvocacaoExame.getExame() != null)

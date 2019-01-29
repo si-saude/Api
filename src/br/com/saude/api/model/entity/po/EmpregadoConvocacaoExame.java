@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class EmpregadoConvocacaoExame {
-
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
@@ -44,6 +43,8 @@ public class EmpregadoConvocacaoExame {
 	private Date auditoria;
 	
 	private boolean resultadoConforme;
+	
+	private boolean importado;
 	
 	@Transient
 	private boolean resultadoInicializado;
@@ -159,5 +160,13 @@ public class EmpregadoConvocacaoExame {
 
 	public void setResultadoInicializado(boolean resultadoInicializado) {
 		this.resultadoInicializado = resultadoInicializado;
+	}
+	
+	public boolean isImportado() {
+		return importado;
+	}
+
+	public void setImportado(boolean importado) {
+		this.importado = importado;
 	}
 }

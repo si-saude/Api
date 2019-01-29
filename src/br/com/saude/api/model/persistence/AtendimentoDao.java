@@ -22,6 +22,7 @@ import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Atendimento;
+import br.com.saude.api.model.entity.po.AvaliacaoFisicaAtividadeFisica;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
@@ -53,6 +54,7 @@ import br.com.saude.api.model.entity.po.AsoAvaliacao;
 import br.com.saude.api.model.entity.po.ItemIndicadorConhecimentoAlimentar;
 import br.com.saude.api.model.entity.po.Refeicao;
 import br.com.saude.api.model.entity.po.ItemRefeicao;
+import br.com.saude.api.model.entity.po.AtividadeFisica;
 
 public class AtendimentoDao extends GenericDao<Atendimento> {
 
@@ -252,8 +254,16 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				});
 			} 
 			
-			if ( atendimento.getAvaliacaoFisica() != null )
+			if ( atendimento.getAvaliacaoFisica() != null ) {
 				Hibernate.initialize(atendimento.getAvaliacaoFisica());
+				List<AvaliacaoFisicaAtividadeFisica> afafs = new ArrayList<>();
+				atendimento.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach( afaf1 -> {
+					Hibernate.initialize(afaf1);
+					afaf1.setAtividadeFisica((AtividadeFisica) Hibernate.unproxy(afaf1.getAtividadeFisica()));
+					afafs.add(afaf1);
+				});
+				atendimento.getAvaliacaoFisica().setAvaliacaoFisicaAtividadeFisicas(afafs);
+			}
 			
 			return atendimento;
 		};

@@ -12,6 +12,7 @@ public class EmpregadoConvocacaoExameFilter extends GenericFilter {
 	private BooleanFilter conforme;
 	private BooleanFilter opcional;
 	private BooleanFilter resultadoConforme;
+	private BooleanFilter importado;
 	private DateFilter realizacao;
 	private DateFilter recebimento;
 	private DateFilter auditoria;
@@ -78,6 +79,12 @@ public class EmpregadoConvocacaoExameFilter extends GenericFilter {
 	}
 	public void setOpcional(BooleanFilter opcional) {
 		this.opcional = opcional;
+	}
+	public BooleanFilter getImportado() {
+		return importado;
+	}
+	public void setImportado(BooleanFilter importado) {
+		this.importado = importado;
 	}
 	
 }

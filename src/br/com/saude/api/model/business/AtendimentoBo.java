@@ -176,6 +176,13 @@ public class AtendimentoBo extends
 
 		if (atendimentoAux.getAso() != null && atendimentoAux.getAso().getId() != 0)
 			a.setAso(atendimentoAux.getAso());
+		
+		if ( atendimentoAux.getAvaliacaoFisica() != null ) {
+			atendimentoAux.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach(afaf -> 
+				afaf.setAvaliacaoFisica(atendimentoAux.getAvaliacaoFisica()));
+			atendimentoAux.getAvaliacaoFisica().setAtendimento(atendimentoAux);
+			a.setAvaliacaoFisica(atendimentoAux.getAvaliacaoFisica());
+		}
 
 		FichaColeta fichaColeta = a.getFilaEsperaOcupacional().getFichaColeta();
 
@@ -1435,7 +1442,7 @@ public class AtendimentoBo extends
 						Objects.toString(atendimento.getFilaEsperaOcupacional().getEmpregado().getCargo().getNome()))
 				.replace("[idade]",
 						Objects.toString(atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getIdade()))
-				.replace("[fcRepouso]", Objects.toString(roundAndCommaDouble(atendimento.getAvaliacaoFisica().getFcRepouso(), 2)))
+				.replace("[fcRepouso]", Objects.toString(roundAndCommaDouble(atendimento.getAvaliacaoFisica().getFrequenciaCardiaca(), 2)))
 				.replace("[matricula]",
 						Objects.toString(atendimento.getFilaEsperaOcupacional().getEmpregado().getMatricula()))
 				.replace("[chave]", Objects.toString(atendimento.getFilaEsperaOcupacional().getEmpregado().getChave()))
@@ -1540,10 +1547,10 @@ public class AtendimentoBo extends
 		atendimento.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach(afaf -> {
 			if (afaf.getTipo().equals(TipoAtividadeFisica.getInstance().ORIENTADA))
 				atividades.append("<tr>" 
-						+ "<td width='200'><font size='2'>" + afaf.getAtividadeFisica().getDescricao() + "</font></td>" 
-						+ "<td width='100'><font size='2'>" + getDaysAvaliacaoFisicaAtividadeFisica(afaf) + "</font></td>"
-						+ "<td width='100'><font size='2'>" + String.valueOf(afaf.getMinuto()) + "</font></td>"
-						+ "<td width='100'><font size='2'>" + afaf.getObservacao() + "</font></td>" 
+						+ "<td width='200'><font size='1'>" + afaf.getAtividadeFisica().getDescricao() + "</font></td>" 
+						+ "<td width='100'><font size='1'>" + getDaysAvaliacaoFisicaAtividadeFisica(afaf) + "</font></td>"
+						+ "<td width='100'><font size='1'>" + String.valueOf(afaf.getMinuto()) + "</font></td>"
+						+ "<td width='100'><font size='1'>" + afaf.getObservacao() + "</font></td>" 
 						+ "</tr>");
 		});
 		

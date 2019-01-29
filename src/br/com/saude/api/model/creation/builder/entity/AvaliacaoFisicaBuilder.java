@@ -1,12 +1,17 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.filter.AvaliacaoFisicaFilter;
 import br.com.saude.api.model.entity.po.AvaliacaoFisica;
 
 public class AvaliacaoFisicaBuilder extends GenericEntityBuilder<AvaliacaoFisica, AvaliacaoFisicaFilter> {
+	
+	private Function<Map<String,AvaliacaoFisica>,AvaliacaoFisica> loadAvaliacaoFisicaAtividadeFisica;
+	
 	public static AvaliacaoFisicaBuilder newInstance(AvaliacaoFisica avaliacao) {
 		return new AvaliacaoFisicaBuilder(avaliacao);
 	}
@@ -25,7 +30,13 @@ public class AvaliacaoFisicaBuilder extends GenericEntityBuilder<AvaliacaoFisica
 	
 	@Override
 	protected void initializeFunctions() {
-		// TODO Auto-generated method stub
+		this.loadAvaliacaoFisicaAtividadeFisica = avaliacaoFisica -> {
+			if(avaliacaoFisica.get("origem").getAvaliacaoFisicaAtividadeFisicas() != null)
+				avaliacaoFisica.get("destino").setAvaliacaoFisicaAtividadeFisicas(AvaliacaoFisicaAtividadeFisicaBuilder
+						.newInstance(avaliacaoFisica.get("origem").getAvaliacaoFisicaAtividadeFisicas())
+						.loadAtividadeFisica().getEntityList());
+			return avaliacaoFisica.get("destino");
+		};
 		
 	}
 	@Override
@@ -90,6 +101,9 @@ public class AvaliacaoFisicaBuilder extends GenericEntityBuilder<AvaliacaoFisica
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
+	
+	public AvaliacaoFisicaBuilder loadAvaliacaoFisicaAtividadeFisica() {
+		return (AvaliacaoFisicaBuilder) this.loadProperty(this.loadAvaliacaoFisicaAtividadeFisica);
+	}
+	
 }
