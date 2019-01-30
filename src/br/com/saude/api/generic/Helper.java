@@ -123,7 +123,7 @@ public class Helper {
 		boolean isRunningOnXampp = false;
 		
 		if(isRunningOnXampp)
-			return "C:/Users/BJZE/Downloads/xampp/tomcat/webapps/Api/WEB-INF/classes/";
+			return "C:/Users/Public/Integra/xampp/tomcat/webapps/Api/WEB-INF/classes/";
 		else
 			return Helper.class.getProtectionDomain().getCodeSource().getLocation().toString();
 	}
