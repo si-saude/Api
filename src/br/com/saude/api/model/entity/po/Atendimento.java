@@ -18,6 +18,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class Atendimento {
+
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
@@ -42,9 +43,6 @@ public class Atendimento {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	private QuestionarioConhecimentoAlimentar questionario;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	private Recordatorio recordatorio;
 	
 	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private AvaliacaoFisica avaliacaoFisica;
@@ -128,14 +126,6 @@ public class Atendimento {
 
 	public void setQuestionario(QuestionarioConhecimentoAlimentar questionario) {
 		this.questionario = questionario;
-	}
-
-	public Recordatorio getRecordatorio() {
-		return recordatorio;
-	}
-
-	public void setRecordatorio(Recordatorio recordatorio) {
-		this.recordatorio = recordatorio;
 	}
 	
 	public AvaliacaoFisica getAvaliacaoFisica() {

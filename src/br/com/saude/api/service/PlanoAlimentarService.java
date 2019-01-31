@@ -14,29 +14,30 @@ import javax.ws.rs.core.Response;
 import br.com.saude.api.generic.CustomValidator;
 import br.com.saude.api.generic.GenericService;
 import br.com.saude.api.generic.GenericServiceImpl;
-import br.com.saude.api.model.business.RecordatorioBo;
-import br.com.saude.api.model.business.validate.RecordatorioValidator;
-import br.com.saude.api.model.entity.filter.RecordatorioFilter;
-import br.com.saude.api.model.entity.po.Recordatorio;
+import br.com.saude.api.model.business.PlanoAlimentarBo;
+import br.com.saude.api.model.business.validate.PlanoAlimentarValidator;
+import br.com.saude.api.model.entity.filter.PlanoAlimentarFilter;
+import br.com.saude.api.model.entity.po.PlanoAlimentar;
+import br.com.saude.api.util.RequestInterceptor;
 
-@Path("recordatorio")
-public class RecordatorioService extends
-		GenericServiceImpl<Recordatorio, RecordatorioFilter, RecordatorioBo>
-		implements GenericService<Recordatorio, RecordatorioFilter> {
+@Path("plano-alimentar")
+public class PlanoAlimentarService extends
+		GenericServiceImpl<PlanoAlimentar, PlanoAlimentarFilter, PlanoAlimentarBo>
+		implements GenericService<PlanoAlimentar, PlanoAlimentarFilter> {
 
 	@Override
-	protected RecordatorioBo getBo() {
-		return RecordatorioBo.getInstance();
+	protected PlanoAlimentarBo getBo() {
+		return PlanoAlimentarBo.getInstance();
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass = RecordatorioValidator.class)
+	@CustomValidator(validatorClass = PlanoAlimentarValidator.class)
 	@Override
-	public Response save(Recordatorio recordatorio) {
+	public Response save(PlanoAlimentar planoAlimentar) {
 		try {
-			RecordatorioBo.getInstance().save(recordatorio);
+			PlanoAlimentarBo.getInstance().save(planoAlimentar);
 			return Response.ok("Salvo com sucesso.").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
@@ -44,25 +45,13 @@ public class RecordatorioService extends
 	}
 
 	@POST
-	@Path("/verify-recordatorio")
+	@Path("/verify-plano-alimentar")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass = RecordatorioValidator.class)
-	public Response verifyRecordatorio(RecordatorioFilter filter) {
+	@CustomValidator(validatorClass = PlanoAlimentarValidator.class)
+	public Response verifyPlanoAlimentar(PlanoAlimentarFilter filter) {
 		try {
-			return Response.ok(RecordatorioBo.getInstance().verifyRecordatorio(filter)).build();
-		} catch (Exception e) {
-			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
-		}
-	}
-	@POST
-	@Path("/verify-recordatorio-alimento")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass = RecordatorioValidator.class)
-	public Response verifyRecordatorioAlimento(RecordatorioFilter filter) {
-		try {
-			return Response.ok(RecordatorioBo.getInstance().verifyRecordatorioAlimento(filter)).build();
+			return Response.ok(PlanoAlimentarBo.getInstance().verifyPlanoAlimentar(filter)).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
@@ -72,10 +61,10 @@ public class RecordatorioService extends
 	@Path("/get-ne")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@CustomValidator(validatorClass = RecordatorioValidator.class)
-	public Response getNe(Recordatorio recordatorio) {
+	@CustomValidator(validatorClass = PlanoAlimentarValidator.class)
+	public Response getNe(PlanoAlimentar planoAlimentar) {
 		try {
-			return Response.ok(RecordatorioBo.getInstance().getNe(recordatorio)).build();
+			return Response.ok(PlanoAlimentarBo.getInstance().getNe(planoAlimentar)).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
@@ -86,7 +75,7 @@ public class RecordatorioService extends
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/list")
 	@Override
-	public Response getList(RecordatorioFilter filter)
+	public Response getList(PlanoAlimentarFilter filter)
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, Exception {
 		return super.getListGeneric(filter);
@@ -97,7 +86,7 @@ public class RecordatorioService extends
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/selectList")
 	@Override
-	public Response getSelectList(RecordatorioFilter filter)
+	public Response getSelectList(PlanoAlimentarFilter filter)
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, Exception {
 		return super.getSelectListGeneric(filter);
@@ -116,5 +105,19 @@ public class RecordatorioService extends
 	@Override
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
+	}
+	
+	
+	@POST
+	@RequestInterceptor
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/plano-pdf")
+	public Response getPlanoPDF(PlanoAlimentar planoAlimentar) throws Exception {
+		try {
+			return Response.ok(getBo().getPlanoPDF(planoAlimentar)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 	}
 }

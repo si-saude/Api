@@ -6,6 +6,7 @@ import java.util.List;
 
 import br.com.saude.api.generic.BooleanFilter;
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.IndicadorConhecimentoAlimentarBuilder;
 import br.com.saude.api.model.creation.builder.entity.QuestionarioConhecimentoAlimentarBuilder;
 import br.com.saude.api.model.creation.builder.example.QuestionarioConhecimentoAlimentarExampleBuilder;
@@ -82,5 +83,19 @@ public class QuestionarioConhecimentoAlimentarBo
 		questionario.setRespostas(respostas);
 		
 		return questionario;
+	}
+	
+	
+	public QuestionarioConhecimentoAlimentar verifyQuestionario(QuestionarioConhecimentoAlimentarFilter filter) throws Exception {
+		
+		filter.setPageNumber(1);
+		filter.setPageSize(1);
+		
+		PagedList<QuestionarioConhecimentoAlimentar> questionarios = getList(filter);
+		
+		if(questionarios.getTotal() > 0)
+			return questionarios.getList().get(0);
+		else
+			return new QuestionarioConhecimentoAlimentar();	
 	}
 }

@@ -28,7 +28,11 @@ public class AlimentoBo extends
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoad = nutricaoAlimento -> {
-			nutricaoAlimento.loadNutricaoAlimentoMedidaAlimentar();
+			nutricaoAlimento.loadNutricaoAlimentoMedidaAlimentar().loadSubstituicoes();
+			return nutricaoAlimento;
+		};
+		this.functionLoadAll = nutricaoAlimento -> {
+			nutricaoAlimento.loadSubstituicoes();
 			return nutricaoAlimento;
 		};
 	}

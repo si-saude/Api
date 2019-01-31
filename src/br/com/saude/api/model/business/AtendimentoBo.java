@@ -109,11 +109,11 @@ public class AtendimentoBo extends
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadTarefa().loadTriagens().loadQuestionario().loadRecordatorio().loadAvaliacaoFisica();
+			return builder.loadTarefa().loadTriagens().loadQuestionario().loadAvaliacaoFisica();
 		};
 
 		this.functionLoadAllAtualizacoes = builder -> {
-			return this.functionLoadAll.apply(builder).loadFilaAtendimentoOcupacional().loadAvaliacaoFisica();
+			return this.functionLoadAll.apply(builder).loadFilaAtendimentoOcupacional();
 		};
 	}
 
@@ -556,6 +556,7 @@ public class AtendimentoBo extends
 		}
 		return atendimento;
 	}
+	
 
 	public void registrarSolicitacaoReavaliacaoPeriodico(Atendimento atendimento) throws Exception {
 
@@ -944,7 +945,8 @@ public class AtendimentoBo extends
 			empConFilter.getConvocacao().setTipo(tipoAtendimento);
 		return empConFilter;
 	}
-
+	
+	
 	public String registrarSolicitacaoAtendimento(Atendimento atendimento) throws Exception {
 
 		// 1 - OBTER A CONVOCAÇÃO DO EMPREGADO, CUJA DATA INFORMADA ESTÁ NO PERÍODO
@@ -1023,7 +1025,7 @@ public class AtendimentoBo extends
 
 		return "Atendimento registrado com sucesso.";
 	}
-
+	
 	public String registrarSolicitacaoExamePericial(Atendimento atendimento) throws Exception {
 
 		if (atendimento.getTarefa().getEquipe() == null)

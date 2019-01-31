@@ -91,5 +91,18 @@ public class QuestionarioConhecimentoAlimentarService
 	public Response delete(Object id) {
 		return super.deleteGeneric(new Integer(id.toString()));
 	}
+	
+	
+	@POST
+	@Path("/verify-questionario-alimentar")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response verifyQuestionario(QuestionarioConhecimentoAlimentarFilter filter) {
+		try {
+			return Response.ok(QuestionarioConhecimentoAlimentarBo.getInstance().verifyQuestionario(filter)).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
 
 }
