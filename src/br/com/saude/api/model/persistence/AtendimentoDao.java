@@ -51,8 +51,6 @@ import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.AsoAlteracao;
 import br.com.saude.api.model.entity.po.AsoAvaliacao;
 import br.com.saude.api.model.entity.po.ItemIndicadorConhecimentoAlimentar;
-import br.com.saude.api.model.entity.po.Refeicao;
-import br.com.saude.api.model.entity.po.ItemRefeicao;
 import br.com.saude.api.model.entity.po.AtividadeFisica;
 
 public class AtendimentoDao extends GenericDao<Atendimento> {
