@@ -36,7 +36,6 @@ import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.Pessoa;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.QuestionarioConhecimentoAlimentar;
-import br.com.saude.api.model.entity.po.Recordatorio;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.RespostaQuestionarioConhecimentoAlimentar;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
@@ -51,8 +50,6 @@ import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.AsoAlteracao;
 import br.com.saude.api.model.entity.po.AsoAvaliacao;
 import br.com.saude.api.model.entity.po.ItemIndicadorConhecimentoAlimentar;
-import br.com.saude.api.model.entity.po.Refeicao;
-import br.com.saude.api.model.entity.po.ItemRefeicao;
 
 public class AtendimentoDao extends GenericDao<Atendimento> {
 
@@ -136,26 +133,6 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 						respostas.add(r);
 					});
 					atendimento.getQuestionario().setRespostas(respostas);
-				}
-			}
-			
-			if(atendimento.getRecordatorio() != null) {
-				atendimento.setRecordatorio(
-					(Recordatorio)Hibernate.unproxy(atendimento.getRecordatorio()));
-				if ( atendimento.getRecordatorio().getRefeicoes() != null ) {
-					List<Refeicao> refeicoes = new ArrayList<Refeicao>();
-					atendimento.getRecordatorio().getRefeicoes().forEach(r -> {
-						Hibernate.initialize(r);
-						if ( r.getItens() != null ) {
-							List<ItemRefeicao> itens = new ArrayList<ItemRefeicao>();
-							r.getItens().forEach(i -> {
-								itens.add((ItemRefeicao) Hibernate.unproxy(i));
-							});
-							r.setItens(itens);
-						}
-						refeicoes.add(r);
-					});
-					atendimento.getRecordatorio().setRefeicoes(refeicoes);
 				}
 			}
 			

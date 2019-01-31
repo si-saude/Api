@@ -2,8 +2,10 @@ package br.com.saude.api.model.business;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
+import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericBo;
+import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.creation.builder.entity.RecordatorioBuilder;
 import br.com.saude.api.model.creation.builder.example.RecordatorioExampleBuilder;
 import br.com.saude.api.model.entity.filter.RecordatorioFilter;
@@ -19,14 +21,20 @@ public class RecordatorioBo extends
 	
 	private static RecordatorioBo instance;
 	
+	protected Function<RecordatorioBuilder, RecordatorioBuilder> functionLoadAlimentos;
+	
 	private RecordatorioBo() {
 		super();
 	}
 
 	@Override
-	protected void initializeFunctions() {
+	protected void initializeFunctions() {		
 		this.functionLoadAll = builder -> {
 			builder = builder.loadRefeicoes();
+			return builder;
+		};
+		this.functionLoadAlimentos = builder -> {
+			builder = builder.loadRefeicoesAlimentos();
 			return builder;
 		};
 	}
@@ -54,6 +62,16 @@ public class RecordatorioBo extends
 	@Override
 	public Recordatorio getById(Object id) throws Exception {
 		return getByEntity(getDao().getById(id),functionLoadAll);
+	}
+	
+	public PagedList<Recordatorio> getListLoadAll(RecordatorioFilter filter) throws Exception {
+		return super.getList(getDao().getListLoadAll(getExampleBuilder(filter).example()), 
+				this.functionLoadAll);
+	}
+	
+	public PagedList<Recordatorio> getListLoadAlimentos(RecordatorioFilter filter) throws Exception {
+		return super.getList(getDao().getListLoadAlimento(getExampleBuilder(filter).example()), 
+				this.functionLoadAlimentos);
 	}
 	
 	public Recordatorio getNe(Recordatorio recordatorio) throws Exception {
@@ -119,5 +137,31 @@ public class RecordatorioBo extends
 			default:
 				return 1.725;
 		}
+	}
+	
+	public Recordatorio verifyRecordatorio(RecordatorioFilter filter) throws Exception {
+		
+		filter.setPageNumber(1);
+		filter.setPageSize(1);
+		
+		PagedList<Recordatorio> recordatorios = getListLoadAll(filter);
+		
+		if(recordatorios.getTotal() > 0)
+			return recordatorios.getList().get(0);
+		else
+			return new Recordatorio();	
+	}
+	
+	public Recordatorio verifyRecordatorioAlimento(RecordatorioFilter filter) throws Exception {
+		
+		filter.setPageNumber(1);
+		filter.setPageSize(1);
+		
+		PagedList<Recordatorio> recordatorios = getListLoadAlimentos(filter);
+		
+		if(recordatorios.getTotal() > 0)
+			return recordatorios.getList().get(0);
+		else
+			return new Recordatorio();	
 	}
 }

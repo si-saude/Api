@@ -16,7 +16,6 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	private Function<Map<String,Atendimento>,Atendimento> loadTriagens;
 	private Function<Map<String,Atendimento>,Atendimento> loadAso;
 	private Function<Map<String,Atendimento>,Atendimento> loadQuestionario;
-	private Function<Map<String,Atendimento>,Atendimento> loadRecordatorio;
 	
 	public static AtendimentoBuilder newInstance(Atendimento atendimento) {
 		return new AtendimentoBuilder(atendimento);
@@ -71,14 +70,6 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 						.getEntity());
 			return atendimentos.get("destino");
 		};
-		
-		this.loadRecordatorio = atendimentos -> {
-			if (atendimentos.get("origem").getRecordatorio() != null)
-				atendimentos.get("destino").setRecordatorio(RecordatorioBuilder
-						.newInstance(atendimentos.get("origem").getRecordatorio()).loadRefeicoes()
-						.getEntity());
-			return atendimentos.get("destino");
-		};
 	}
 
 	@Override
@@ -127,10 +118,6 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	
 	public AtendimentoBuilder loadQuestionario() {
 		return (AtendimentoBuilder) this.loadProperty(this.loadQuestionario);
-	}
-	
-	public AtendimentoBuilder loadRecordatorio() {
-		return (AtendimentoBuilder) this.loadProperty(this.loadRecordatorio);
 	}
 	
 	public AtendimentoBuilder loadTriagens() {

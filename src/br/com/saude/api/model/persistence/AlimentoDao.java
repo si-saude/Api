@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
+import org.hibernate.Session;
 
 import br.com.saude.api.generic.GenericDao;
 import br.com.saude.api.generic.GenericExampleBuilder;
@@ -23,6 +24,24 @@ public class AlimentoDao extends GenericDao<Alimento>{
 	protected void initializeFunctions() {
 		this.functionLoad = alimento -> {
 			alimento = loadAlimentoMedidaAlimentares(alimento);
+			alimento = loadSubstituicao(alimento);
+			return alimento;
+		};
+		this.functionLoadAll = alimento -> {
+			alimento = loadAlimentoMedidaAlimentares(alimento);
+			alimento = loadSubstituicao(alimento);
+			return alimento;
+		};
+		this.functionBeforeSave = pair -> {
+			Alimento alimento = pair.getValue0();
+			Session session = pair.getValue1();
+			
+			if(alimento.getSubstituicoes() !=null ) 
+				for(int i=0; i < alimento.getSubstituicoes().size(); i++) 					
+					alimento.getSubstituicoes().set(i, session.get(Alimento.class,alimento.getSubstituicoes().get(i).getId()));
+						   
+					
+			
 			return alimento;
 		};
 	}
@@ -42,6 +61,17 @@ public class AlimentoDao extends GenericDao<Alimento>{
 				alimentoMedidaAlimentares.add(ama);
 			});
 			alimento.setAlimentoMedidaAlimentares(alimentoMedidaAlimentares);
+		}
+		return alimento;
+	}
+	private Alimento loadSubstituicao(Alimento alimento) {
+		List<Alimento> alimentos = new ArrayList<Alimento>();
+		if(alimento.getSubstituicoes() != null) {
+			Hibernate.initialize(alimento.getSubstituicoes());
+			alimento.getSubstituicoes().forEach(a-> {
+				alimentos.add(a);
+			});
+			alimento.setSubstituicoes(alimentos);
 		}
 		return alimento;
 	}

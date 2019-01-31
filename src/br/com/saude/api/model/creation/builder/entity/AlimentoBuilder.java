@@ -11,6 +11,7 @@ import br.com.saude.api.model.entity.po.Alimento;
 public class AlimentoBuilder extends GenericEntityBuilder<Alimento, AlimentoFilter> {
 
 	private Function<Map<String,Alimento>,Alimento> loadNutricaoAlimentoMedidaAlimentares;
+	private Function<Map<String,Alimento>,Alimento> loadSubstituicoes;
 
 	
 	private AlimentoBuilder(List<Alimento> nutricaoAlimentos) {
@@ -40,6 +41,15 @@ public class AlimentoBuilder extends GenericEntityBuilder<Alimento, AlimentoFilt
 						.getEntityList());
 			return nutricaoAlimentos.get("destino");
 		};
+		
+		loadSubstituicoes  = nutricaoAlimentos -> {
+			if(nutricaoAlimentos.get("origem").getSubstituicoes() != null)
+				nutricaoAlimentos.get("destino").setSubstituicoes(
+						AlimentoBuilder.newInstance(nutricaoAlimentos.get("origem").getSubstituicoes())
+						.getEntityList());
+			return nutricaoAlimentos.get("destino");
+		};
+		
 	}
 	
 	@Override
@@ -80,7 +90,6 @@ public class AlimentoBuilder extends GenericEntityBuilder<Alimento, AlimentoFilt
 		newNutricaoAlimento.setVitd(nutricaoAlimento.getVitd());
 		newNutricaoAlimento.setVite(nutricaoAlimento.getVite());
 		newNutricaoAlimento.setInativo(nutricaoAlimento.isInativo());
-		
 		return newNutricaoAlimento;
 	}
 
@@ -91,5 +100,8 @@ public class AlimentoBuilder extends GenericEntityBuilder<Alimento, AlimentoFilt
 	
 	public AlimentoBuilder loadNutricaoAlimentoMedidaAlimentar() {
 		return (AlimentoBuilder) this.loadProperty(this.loadNutricaoAlimentoMedidaAlimentares);
+	}
+	public AlimentoBuilder loadSubstituicoes() {
+		return (AlimentoBuilder) this.loadProperty(this.loadSubstituicoes);
 	}
 }

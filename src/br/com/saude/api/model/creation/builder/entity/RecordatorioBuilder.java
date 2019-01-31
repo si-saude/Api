@@ -10,6 +10,7 @@ import br.com.saude.api.model.entity.po.Recordatorio;
 
 public class RecordatorioBuilder extends GenericEntityBuilder<Recordatorio, RecordatorioFilter> {
 	private Function<Map<String,Recordatorio>,Recordatorio> loadRefeicoes;
+	private Function<Map<String,Recordatorio>,Recordatorio> loadRefeicoesAlimentos;
 	
 	public static RecordatorioBuilder newInstance(Recordatorio recordatorio) {
 		return new RecordatorioBuilder(recordatorio);
@@ -34,6 +35,15 @@ public class RecordatorioBuilder extends GenericEntityBuilder<Recordatorio, Reco
 				recordatorios.get("destino").setRefeicoes(
 						RefeicaoBuilder.newInstance(
 								recordatorios.get("origem").getRefeicoes()).getEntityList());
+			}
+			return recordatorios.get("destino");
+		};
+		
+		this.loadRefeicoesAlimentos = recordatorios ->{
+			if(recordatorios.get("origem").getRefeicoes() != null) {
+				recordatorios.get("destino").setRefeicoes(
+						RefeicaoBuilder.newInstance(
+								recordatorios.get("origem").getRefeicoes()).loadItens().getEntityList());
 			}
 			return recordatorios.get("destino");
 		};
@@ -64,5 +74,9 @@ public class RecordatorioBuilder extends GenericEntityBuilder<Recordatorio, Reco
 	
 	public RecordatorioBuilder loadRefeicoes() {
 		return (RecordatorioBuilder) this.loadProperty(this.loadRefeicoes);
+	}
+	
+	public RecordatorioBuilder loadRefeicoesAlimentos() {
+		return (RecordatorioBuilder) this.loadProperty(this.loadRefeicoesAlimentos);
 	}
 }

@@ -1,18 +1,25 @@
 package br.com.saude.api.model.entity.po;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Formula;
 
 @Entity
-public class ItemRefeicao {
+public class ItemRefeicaoPlano {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
@@ -23,13 +30,22 @@ public class ItemRefeicao {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private MedidaAlimentar medidaCaseira;
 	
-	@NotNull(message="É necessário informar a Refeição do Item Refeição.")
+	@NotNull(message="É necessário informar a Refeição do Plano Alimentar do Item Refeição.")
 	@ManyToOne(fetch=FetchType.EAGER)
-	private Refeicao refeicao;
+	private RefeicaoPlano refeicaoPlano;
 	
 	private double quantidade;
 	
-	@Formula("(select get_ve(id))")
+	@Size(max = 1024, message="Tamanho máximo para Observação do Item Refeição: 1024")
+	private String observacao;	
+	
+	@ManyToMany(fetch=FetchType.EAGER, cascade= CascadeType.ALL)
+	@JoinTable(name="alimento_alimentos", 
+	joinColumns = {@JoinColumn(name="itemrefeicao_id")}, 
+	inverseJoinColumns = {@JoinColumn(name="alimento_id")})
+	private List<Alimento> alimentos;
+	
+	@Formula("(select get_ve_plano(id))")
 	private float ve;
 
 	@Version
@@ -83,12 +99,28 @@ public class ItemRefeicao {
 		this.version = version;
 	}
 
-	public Refeicao getRefeicao() {
-		return refeicao;
+	public RefeicaoPlano getRefeicaoPlano() {
+		return refeicaoPlano;
 	}
 
-	public void setRefeicao(Refeicao refeicao) {
-		this.refeicao = refeicao;
+	public void setRefeicaoPlano(RefeicaoPlano refeicaoPlano) {
+		this.refeicaoPlano = refeicaoPlano;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
+
+	public List<Alimento> getAlimentos() {
+		return alimentos;
+	}
+
+	public void setAlimentos(List<Alimento> alimentos) {
+		this.alimentos = alimentos;
 	}
 	
 	

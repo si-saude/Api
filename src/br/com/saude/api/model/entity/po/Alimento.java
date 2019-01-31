@@ -8,6 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.Size;
@@ -23,6 +26,13 @@ public class Alimento {
 	
 	@OneToMany(mappedBy="alimento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<AlimentoMedidaAlimentar> alimentoMedidaAlimentares;
+	
+	@ManyToMany(fetch=FetchType.LAZY, cascade= {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinTable(name="alimento_substituicao", 
+	joinColumns = {@JoinColumn(name="alimento1_id")}, 
+	inverseJoinColumns = {@JoinColumn(name="alimento2_id")})
+	private List<Alimento> substituicoes;
+	
 	
 	@Size(max = 64, message="Tamanho máximo para o Tipo do Alimento: 64")
 	private String tipo;
@@ -273,5 +283,10 @@ public class Alimento {
 			List<AlimentoMedidaAlimentar> alimentoMedidaAlimentares) {
 		this.alimentoMedidaAlimentares = alimentoMedidaAlimentares;
 	}
-	
+	public List<Alimento> getSubstituicoes() {
+		return substituicoes;
+	}
+	public void setSubstituicoes(List<Alimento> substituicoes) {
+		this.substituicoes = substituicoes;
+	}	
 }

@@ -20,6 +20,11 @@ public class Funcionalidade extends GenericConstant {
 	public static final String TAREFA_AGENDA_LISTAR		 						= "TAREFA-AGENDA_LISTAR";
 	public static final String REPORT_CONFORMIDADE_ASO						= "REPORT-CONFORMIDADE-ASO";
 	public static final String REPORT_SUGESTAO_AGENDAMENTO						= "REPORT-SUGESTAO-AGENDAMENTO";
+	public static final String PLANO_ALIMENTAR_LISTAR								= "PLANO-ALIMENTAR_LISTAR";
+	public static final String PLANO_ALIMENTAR_ADICIONAR 			    			= "PLANO-ALIMENTAR_ADICIONAR";
+	public static final String PLANO_ALIMENTAR_ALTERAR		 						= "PLANO-ALIMENTAR_ALTERAR";
+	public static final String PLANO_ALIMENTAR_REMOVER 							= "PLANO-ALIMENTAR_REMOVER";
+	public static final String PLANO_ALIMENTAR_DETALHE 							= "PLANO-ALIMENTAR_DETALHE";
 	public static final String RECORDATORIO_LISTAR								= "RECORDATORIO_LISTAR";
 	public static final String RECORDATORIO_ADICIONAR 			    			= "RECORDATORIO_ADICIONAR";
 	public static final String RECORDATORIO_ALTERAR		 						= "RECORDATORIO_ALTERAR";

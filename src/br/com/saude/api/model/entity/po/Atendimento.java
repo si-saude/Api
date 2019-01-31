@@ -43,9 +43,6 @@ public class Atendimento {
 	@OneToOne(fetch=FetchType.LAZY)
 	private QuestionarioConhecimentoAlimentar questionario;
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	private Recordatorio recordatorio;
-	
 	@Transient
 	private List<Triagem> triagensTodosAtendimentos;
 	
@@ -122,14 +119,6 @@ public class Atendimento {
 
 	public void setQuestionario(QuestionarioConhecimentoAlimentar questionario) {
 		this.questionario = questionario;
-	}
-
-	public Recordatorio getRecordatorio() {
-		return recordatorio;
-	}
-
-	public void setRecordatorio(Recordatorio recordatorio) {
-		this.recordatorio = recordatorio;
 	}
 	
 }
