@@ -174,16 +174,16 @@ public class AtendimentoBo extends
 		if (a.getId() > 0)
 			a = getByIdLoadAll(a.getId());
 
-		if (atendimentoAux.getAso() != null && atendimentoAux.getAso().getId() != 0)
-			a.setAso(atendimentoAux.getAso());
-		
 		if ( atendimentoAux.getAvaliacaoFisica() != null ) {
 			atendimentoAux.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach(afaf -> 
 				afaf.setAvaliacaoFisica(atendimentoAux.getAvaliacaoFisica()));
 			atendimentoAux.getAvaliacaoFisica().setAtendimento(atendimentoAux);
 			a.setAvaliacaoFisica(atendimentoAux.getAvaliacaoFisica());
 		}
-
+		
+		if (atendimentoAux.getAso() != null && atendimentoAux.getAso().getId() != 0)
+			a.setAso(atendimentoAux.getAso());
+		
 		FichaColeta fichaColeta = a.getFilaEsperaOcupacional().getFichaColeta();
 
 		if (fichaColeta != null) {
@@ -263,7 +263,7 @@ public class AtendimentoBo extends
 				return arg0.getIndicadorSast().getCodigo().compareTo(arg1.getIndicadorSast().getCodigo());
 			}
 		});
-
+		FilaAtendimentoOcupacionalBo.getInstance().generateAvaliacaoFisica(atendimento);
 		return atendimento;
 	}
 
@@ -1267,6 +1267,13 @@ public class AtendimentoBo extends
 			}
 		});
 
+		if ( FilaAtendimentoOcupacionalBo.getInstance().generateAvaliacaoFisica(atendimentoAux) ) {
+			atendimentoAux.getAvaliacaoFisica().setAtendimento(atendimentoAux);
+			Atendimento aux = atendimentoAux; 
+			atendimentoAux.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach(afaf -> {
+				afaf.setAvaliacaoFisica(aux.getAvaliacaoFisica());
+			});
+		}
 		return atendimentoAux;
 	}
 
