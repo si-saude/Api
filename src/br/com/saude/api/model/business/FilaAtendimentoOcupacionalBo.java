@@ -14,6 +14,7 @@ import br.com.saude.api.generic.GenericBo;
 import br.com.saude.api.generic.Helper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.generic.TypeFilter;
+import br.com.saude.api.model.creation.builder.entity.AvaliacaoFisicaBuilder;
 import br.com.saude.api.model.creation.builder.entity.FilaAtendimentoOcupacionalBuilder;
 import br.com.saude.api.model.creation.builder.entity.RiscoPotencialBuilder;
 import br.com.saude.api.model.creation.builder.example.FilaAtendimentoOcupacionalExampleBuilder;
@@ -30,6 +31,7 @@ import br.com.saude.api.model.entity.filter.ServicoFilter;
 import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.filter.TriagemFilter;
 import br.com.saude.api.model.entity.po.Atendimento;
+import br.com.saude.api.model.entity.po.AvaliacaoFisica;
 import br.com.saude.api.model.entity.po.Equipe;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
@@ -586,6 +588,8 @@ public class FilaAtendimentoOcupacionalBo
 				}
 				
 				atendimentoAux.setTipo(TipoAtendimento.getInstance().PERIODICO);
+				
+				this.generateAvaliacaoFisica(atendimentoAux);
 				return atendimentoAux;
 			}else 
 				atendimento = new Atendimento();
@@ -596,7 +600,19 @@ public class FilaAtendimentoOcupacionalBo
 		
 		atendimento.setTipo(TipoAtendimento.getInstance().PERIODICO);
 		
+		this.generateAvaliacaoFisica(atendimento);
 		return atendimento;
+	}
+	
+	public boolean generateAvaliacaoFisica(Atendimento atendimento) {
+		if ( atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe().getAbreviacao().equals("EDF") ) {
+			atendimento.setAvaliacaoFisica(AvaliacaoFisicaBuilder.newInstance(new AvaliacaoFisica()).getEntity());
+			return true;
+		}
+		else {
+			atendimento.setAvaliacaoFisica(null);
+			return false;
+		}
 	}
 	
 	private Atendimento obterTodasTriagens(Atendimento atendimento, Atendimento atendimentoAux) throws Exception {
