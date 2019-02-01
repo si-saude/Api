@@ -58,6 +58,7 @@ import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.AsoAvaliacao;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Atividade;
+import br.com.saude.api.model.entity.po.AvaliacaoFisica;
 import br.com.saude.api.model.entity.po.AvaliacaoFisicaAtividadeFisica;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Empregado;
@@ -255,6 +256,7 @@ public class AtendimentoBo extends
 		atendimento.getFilaAtendimentoOcupacional()
 				.setStatus(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
 		atendimento = gerarAso(atendimento);
+		generateAvaliacaoFisica(atendimento);
 		atendimento = save(addAtualizacao(atendimento), this.functionLoadAll);
 		atendimento = getById(atendimento.getId());
 		atendimento.getTriagens().sort(new Comparator<Triagem>() {
@@ -263,7 +265,6 @@ public class AtendimentoBo extends
 				return arg0.getIndicadorSast().getCodigo().compareTo(arg1.getIndicadorSast().getCodigo());
 			}
 		});
-		FilaAtendimentoOcupacionalBo.getInstance().generateAvaliacaoFisica(atendimento);
 		return atendimento;
 	}
 
@@ -1269,13 +1270,8 @@ public class AtendimentoBo extends
 			}
 		});
 
-		if ( FilaAtendimentoOcupacionalBo.getInstance().generateAvaliacaoFisica(atendimentoAux) ) {
-			atendimentoAux.getAvaliacaoFisica().setAtendimento(atendimentoAux);
-			Atendimento aux = atendimentoAux; 
-			atendimentoAux.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach(afaf -> {
-				afaf.setAvaliacaoFisica(aux.getAvaliacaoFisica());
-			});
-		}
+		generateAvaliacaoFisica(atendimentoAux);
+		
 		return atendimentoAux;
 	}
 
@@ -1667,4 +1663,14 @@ public class AtendimentoBo extends
 		return join;
 	}
 
+	public Atendimento generateAvaliacaoFisica(Atendimento atendimento) {
+		if ( atendimento.getFilaAtendimentoOcupacional().getProfissional()
+				.getEquipe().getAbreviacao().equals("EDF") ) {
+			atendimento.setAvaliacaoFisica(new AvaliacaoFisica());
+		} else {
+			atendimento.setAvaliacaoFisica(null);
+		}
+		return atendimento;
+	}
+	
 }

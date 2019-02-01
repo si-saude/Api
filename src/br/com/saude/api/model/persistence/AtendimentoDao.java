@@ -252,6 +252,13 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				atendimento.getFilaAtendimentoOcupacional().getAtualizacoes().forEach(a->
 					a.setFila(atendimento.getFilaAtendimentoOcupacional()));
 			
+			if ( atendimento.getAvaliacaoFisica() != null ) {
+				atendimento.getAvaliacaoFisica().setAtendimento(atendimento);
+				if ( atendimento.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas()!=null )
+					atendimento.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach(afaf -> 
+						afaf.setAvaliacaoFisica(atendimento.getAvaliacaoFisica()));
+			}
+			
 			return atendimento;
 		};
 	}
