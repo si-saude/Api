@@ -248,6 +248,22 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 		this.functionBeforeSave = pair -> {
 			Atendimento atendimento = pair.getValue0();
 			
+			if(atendimento.getAso() != null) {
+				atendimento.getAso().setAtendimento(atendimento);	
+				
+				atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional().getEmpregado());
+				
+				if(atendimento.getAso().getAptidoes() != null)
+					atendimento.getAso().getAptidoes().forEach(x -> {
+						x.setAso(atendimento.getAso());
+					});
+
+				if(atendimento.getAso().getAsoAvaliacoes() != null)
+					atendimento.getAso().getAsoAvaliacoes().forEach(x -> {
+						x.setAso(atendimento.getAso());
+					});
+			}	
+			
 			if(atendimento.getFilaAtendimentoOcupacional().getAtualizacoes() != null)
 				atendimento.getFilaAtendimentoOcupacional().getAtualizacoes().forEach(a->
 					a.setFila(atendimento.getFilaAtendimentoOcupacional()));

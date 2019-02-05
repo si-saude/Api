@@ -514,14 +514,6 @@ public class AtendimentoBo extends
 
 			atendimento.setAso(AsoBo.getInstance().criarItensAuditoriaAso(atendimento.getAso()));
 
-			atendimento.getAso().getAptidoes().forEach(x -> {
-				x.setAso(atendimento.getAso());
-			});
-
-			atendimento.getAso().getAsoAvaliacoes().forEach(x -> {
-				x.setAso(atendimento.getAso());
-			});
-
 			if ((!atendimento.getAso().isPendente() && (!atendimento.getAso().isConvocado())) && atendimento.getAso()
 					.getAptidoes().stream().filter(x -> x.getAptidaoAso().equals("INAPTO")).count() > 0) {
 
