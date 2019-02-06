@@ -508,7 +508,8 @@ public class AtendimentoBo extends
 	}
 
 	public Atendimento criarAso(Atendimento atendimento) throws Exception {
-		if (atendimento.getAso() != null) {
+		if (atendimento.getAso() != null && atendimento.getFilaAtendimentoOcupacional().getProfissional().getEquipe().getAbreviacao().contains("MED")) {
+			
 			atendimento.getAso().setAtendimento(atendimento);
 			atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional().getEmpregado());
 

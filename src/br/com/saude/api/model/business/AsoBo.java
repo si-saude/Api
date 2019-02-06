@@ -116,7 +116,7 @@ public class AsoBo
 					ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
 					itemAuditoriaAso.setDescricao(e.getExame().getCodigo()+" - "+e.getExame().getDescricao());
 					itemAuditoriaAso.setAso(aso);
-					itemAuditoriaAso.setOrdem(2);
+					itemAuditoriaAso.setOrdem(3);
 					aso.getItemAuditoriaAsos().add(itemAuditoriaAso);
 				}
 			}
@@ -135,7 +135,7 @@ public class AsoBo
 					    ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
 						itemAuditoriaAso.setDescricao(gAt.getNome());
 						itemAuditoriaAso.setAso(aso);
-						itemAuditoriaAso.setOrdem(3);
+						itemAuditoriaAso.setOrdem(4);
 						aso.getItemAuditoriaAsos().add(itemAuditoriaAso);
 					}					
 				}
@@ -145,7 +145,7 @@ public class AsoBo
 						 	ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
 							itemAuditoriaAso.setDescricao(a.getNome());
 							itemAuditoriaAso.setAso(asoAux);
-							itemAuditoriaAso.setOrdem(4);
+							itemAuditoriaAso.setOrdem(5);
 							asoAux.getItemAuditoriaAsos().add(itemAuditoriaAso);
 							
 					}							
@@ -188,6 +188,9 @@ public class AsoBo
 						e1.printStackTrace();
 					}
 				}
+			}else {
+				itemAuditoriaAso.setDescricao(r.getConteudo());		
+				itemAuditoriaAso.setOrdem(2);
 			}
 			if(itemAuditoriaAso.getDescricao() != null && aso.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(itemAuditoriaAso.getDescricao())).count() == 0) {
 				itemAuditoriaAso.setAso(aso);
