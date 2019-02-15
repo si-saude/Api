@@ -1134,6 +1134,11 @@ public class AtendimentoBo extends
 				atendimentoAux.getAso().getAsoAvaliacoes().forEach(x -> x.setAso(null));
 			}
 		}
+		
+		if ((atendimentoAux.getAvaliacaoFisica() == null || atendimentoAux.getAvaliacaoFisica().getId() == 0))			 
+			atendimentoAux = generateAvaliacaoFisica(atendimentoAux);
+		
+		
 		atendimentoAux.getFilaAtendimentoOcupacional()
 				.setStatus(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
 
@@ -1262,8 +1267,6 @@ public class AtendimentoBo extends
 				return arg0.getIndicadorSast().getCodigo().compareTo(arg1.getIndicadorSast().getCodigo());
 			}
 		});
-
-		generateAvaliacaoFisica(atendimentoAux);
 		
 		return atendimentoAux;
 	}
@@ -1277,20 +1280,21 @@ public class AtendimentoBo extends
 				.filter(r -> r.getPergunta().getGrupo().equals(GrupoPerguntaFichaColeta.EXAME_FISICO))
 				.collect(Collectors.toList());
 		// peso dividido pela altura ao quadrado (altura em metros)
-		atendimento.getAvaliacaoFisica().setImc((Double
+		
+		atendimento.getAvaliacaoFisica().setImc(Helper.roundDouble((Double
 				.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
 						.collect(Collectors.toList()).get(0).getConteudo())
 				/ Math.pow(
 						(Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0002"))
 								.collect(Collectors.toList()).get(0).getConteudo()) / 100),
-						2.0)));
+						2.0)),2));
 
 		atendimento.getAvaliacaoFisica()
-				.setRazaoCinturaEstatura(Double
+				.setRazaoCinturaEstatura(Helper.roundDouble(Double
 						.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0010"))
 								.collect(Collectors.toList()).get(0).getConteudo())
 						/ Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0002"))
-								.collect(Collectors.toList()).get(0).getConteudo()));
+								.collect(Collectors.toList()).get(0).getConteudo()),2));
 
 		sum7Dobras = getSumDobras(atendimento);
 
@@ -1298,26 +1302,26 @@ public class AtendimentoBo extends
 				.equals(Sexo.getInstance().MASCULINO)) {
 			dc = 1.1120 - (0.00043499 * sum7Dobras) + (0.00000055 * Math.pow(sum7Dobras, 2))
 					- (0.00028826 * atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getIdade());
-			atendimento.getAvaliacaoFisica().setPercentualGordura(((4.95 / dc) - 4.50) * 100);
+			atendimento.getAvaliacaoFisica().setPercentualGordura(Helper.roundDouble(((4.95 / dc) - 4.50) * 100,2));
 		} else {
 			dc = 1.0970 - (0.00046971 * sum7Dobras) + (0.00000056 * Math.pow(sum7Dobras, 2))
 					- (0.00012828 * atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getIdade());
-			atendimento.getAvaliacaoFisica().setPercentualGordura(((4.96 / dc) - 4.51) * 100);
+			atendimento.getAvaliacaoFisica().setPercentualGordura(Helper.roundDouble(((4.96 / dc) - 4.51) * 100,2));
 		}
 
 		atendimento.getAvaliacaoFisica()
-				.setPercentualMassaMagra(100 - atendimento.getAvaliacaoFisica().getPercentualGordura());
+				.setPercentualMassaMagra(Helper.roundDouble(100 - atendimento.getAvaliacaoFisica().getPercentualGordura(),2));
 
 		atendimento.getAvaliacaoFisica()
-				.setGorduraAbsoluta((atendimento.getAvaliacaoFisica().getPercentualGordura() / 100)
+				.setGorduraAbsoluta(Helper.roundDouble((atendimento.getAvaliacaoFisica().getPercentualGordura() / 100)
 						* Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
-								.collect(Collectors.toList()).get(0).getConteudo()));
+								.collect(Collectors.toList()).get(0).getConteudo()),2));
 
 		atendimento.getAvaliacaoFisica()
-				.setMassaMagra(Double
+				.setMassaMagra(Helper.roundDouble(Double
 						.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
 								.collect(Collectors.toList()).get(0).getConteudo())
-						- atendimento.getAvaliacaoFisica().getGorduraAbsoluta());
+						- atendimento.getAvaliacaoFisica().getGorduraAbsoluta(),2));
 
 		atendimento.getAvaliacaoFisica()
 				.setPercentualGorduraIdeal(this.getPercentualGorduraIdeal(
@@ -1325,38 +1329,44 @@ public class AtendimentoBo extends
 						atendimento.getFilaEsperaOcupacional().getEmpregado().getPessoa().getSexo()));
 
 		atendimento.getAvaliacaoFisica()
-				.setPercentualMassaMagraIdeal(100 - atendimento.getAvaliacaoFisica().getPercentualGorduraIdeal());
+				.setPercentualMassaMagraIdeal(Helper.roundDouble(100 - atendimento.getAvaliacaoFisica().getPercentualGorduraIdeal(),2));
+
+		
+		double carenciaMuscularAux =  Helper.roundDouble((atendimento.getAvaliacaoFisica().getPercentualMassaMagraIdeal()
+				- atendimento.getAvaliacaoFisica().getPercentualMassaMagra())
+				* (Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+						.collect(Collectors.toList()).get(0).getConteudo()) / 100),2);
+		
+		atendimento.getAvaliacaoFisica().setCarenciaMuscular(carenciaMuscularAux < 0 ? 0 : carenciaMuscularAux);
 
 		atendimento.getAvaliacaoFisica()
-				.setCarenciaMuscular((atendimento.getAvaliacaoFisica().getPercentualMassaMagraIdeal()
-						- atendimento.getAvaliacaoFisica().getPercentualMassaMagra())
-						* (Double.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
-								.collect(Collectors.toList()).get(0).getConteudo()) / 100));
-
-		atendimento.getAvaliacaoFisica()
-				.setPesoIdeal((atendimento.getAvaliacaoFisica().getMassaMagra()
+				.setPesoIdeal(Helper.roundDouble((atendimento.getAvaliacaoFisica().getMassaMagra()
 						/ (1 - (atendimento.getAvaliacaoFisica().getPercentualGorduraIdeal() / 100))
-						+ atendimento.getAvaliacaoFisica().getCarenciaMuscular()));
+						+ atendimento.getAvaliacaoFisica().getCarenciaMuscular()),2));
 
-		atendimento.getAvaliacaoFisica()
-				.setPesoExcesso(Double
-						.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
-								.collect(Collectors.toList()).get(0).getConteudo())
-						- atendimento.getAvaliacaoFisica().getPesoIdeal());
+		
+		double pesoExcesso = Helper.roundDouble(Double
+				.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+						.collect(Collectors.toList()).get(0).getConteudo())
+				- atendimento.getAvaliacaoFisica().getPesoIdeal(),2);
+		
+		atendimento.getAvaliacaoFisica().setPesoExcesso(pesoExcesso < 0 ? 0: pesoExcesso);
 
 		atendimento.getAvaliacaoFisica().setPercentualMassaMagraNegociada(
-				100 - atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada());
+				Helper.roundDouble(100 - atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada(),2));
 
 		atendimento.getAvaliacaoFisica()
-				.setPesoNegociado(atendimento.getAvaliacaoFisica().getMassaMagra()
+				.setPesoNegociado(Helper.roundDouble(atendimento.getAvaliacaoFisica().getMassaMagra()
 						/ (1 - (atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada() / 100))
-						+ atendimento.getAvaliacaoFisica().getCarenciaMuscular());
+						+ atendimento.getAvaliacaoFisica().getCarenciaMuscular(),2));
 
+		double pesoExecessoNegociadoAux = Helper.roundDouble(Double
+				.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+						.collect(Collectors.toList()).get(0).getConteudo())
+				- atendimento.getAvaliacaoFisica().getPesoNegociado(),2);		
+		
 		atendimento.getAvaliacaoFisica()
-				.setPesoExcessoNegociado(Double
-						.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
-								.collect(Collectors.toList()).get(0).getConteudo())
-						- atendimento.getAvaliacaoFisica().getPesoNegociado());
+				.setPesoExcessoNegociado(pesoExecessoNegociadoAux < 0 ? 0 : pesoExecessoNegociadoAux);
 
 		return atendimento;
 	}
@@ -1444,7 +1454,7 @@ public class AtendimentoBo extends
 				.replace("[matricula]",
 						Objects.toString(atendimento.getFilaEsperaOcupacional().getEmpregado().getMatricula()))
 				.replace("[chave]", Objects.toString(atendimento.getFilaEsperaOcupacional().getEmpregado().getChave()))
-				.replace("[tipo]", Objects.toString(atendimento.getTipo()))
+				.replace("[tipo]", Objects.toString(atendimento.getAvaliacaoFisica().getTipo()))
 				.replace("[atendimento]",
 						Objects.toString(Helper.convertToHumanPtDate(atendimento.getTarefa().getInicio())))
 				.replace("[genero]",
@@ -1491,6 +1501,10 @@ public class AtendimentoBo extends
 							Objects.toString(
 									getRespostaFichaColeta(atendimento.getFilaEsperaOcupacional().getFichaColeta(),
 											GrupoPerguntaFichaColeta.EXAME_FISICO, "0010")))
+					.replace("[ccAbdome" + i + "]",
+							Objects.toString(
+									getRespostaFichaColeta(atendimento.getFilaEsperaOcupacional().getFichaColeta(),
+											GrupoPerguntaFichaColeta.EXAME_FISICO, "0011")))
 					.replace("[ccQuadril" + i + "]",
 							Objects.toString(
 									getRespostaFichaColeta(atendimento.getFilaEsperaOcupacional().getFichaColeta(),
@@ -1510,8 +1524,6 @@ public class AtendimentoBo extends
 							Objects.toString(String.valueOf(roundAndCommaDouble(atendimento.getAvaliacaoFisica().getPesoIdeal(),2))))
 					.replace("[ccPin" + i + "]",
 							Objects.toString(String.valueOf(roundAndCommaDouble(atendimento.getAvaliacaoFisica().getPesoNegociado(),2))))
-					.replace("[ccPin" + i + "]",
-							Objects.toString(String.valueOf(roundAndCommaDouble(atendimento.getAvaliacaoFisica().getPesoNegociado(),2))))
 					.replace("[dcDobraTricipital" + i + "]",
 							Objects.toString(String.valueOf(roundAndCommaDouble(atendimento.getAvaliacaoFisica().getDobraTricipital(),2))))
 					.replace("[dcDobraSubscapular" + i + "]",
@@ -1528,34 +1540,38 @@ public class AtendimentoBo extends
 							Objects.toString(String.valueOf(roundAndCommaDouble(atendimento.getAvaliacaoFisica().getDobraCoxaMedial(),2))))
 					.replace("[afVo2Maximo" + i + "]", Objects.toString(
 							String.valueOf(atendimento.getAvaliacaoFisica().getAptidaoCardiorrespiratoriaValor() + " - "
-									+ atendimento.getAvaliacaoFisica().getAptidaoCardiorrespiratoriaClassificacao())))
+									+ (atendimento.getAvaliacaoFisica().getAptidaoCardiorrespiratoriaClassificacao() != null ?
+									   atendimento.getAvaliacaoFisica().getAptidaoCardiorrespiratoriaClassificacao() : ""))))
 					.replace("[afFlexibilidade" + i + "]",
 							Objects.toString(String.valueOf(atendimento.getAvaliacaoFisica().getFlexibilidadeValor()
-									+ " - " + atendimento.getAvaliacaoFisica().getFlexibilidadeClassificacao())))
+									+ " - " + (atendimento.getAvaliacaoFisica().getFlexibilidadeClassificacao() != null ?
+											   atendimento.getAvaliacaoFisica().getFlexibilidadeClassificacao() : ""))))
 					.replace("[afRepeticoesAbdominais" + i + "]",
 							Objects.toString(String.valueOf(atendimento.getAvaliacaoFisica().getForcaAbdominalValor()
-									+ " - " + atendimento.getAvaliacaoFisica().getForcaAbdominalClassificacao())))
+									+ " - " + (atendimento.getAvaliacaoFisica().getForcaAbdominalClassificacao() != null ?
+											   atendimento.getAvaliacaoFisica().getForcaAbdominalClassificacao() : ""))))
 					.replace("[afForcaPreensaoManual" + i + "]",
 							Objects.toString(String
 									.valueOf(atendimento.getAvaliacaoFisica().getForcaPreensaoManualValor() + " - "
-											+ atendimento.getAvaliacaoFisica().getForcaPreensaoManualClassificacao())));
+											+ (atendimento.getAvaliacaoFisica().getForcaPreensaoManualClassificacao()!= null ?
+											   atendimento.getAvaliacaoFisica().getForcaPreensaoManualClassificacao() : ""))));
 		}
 
 		StringBuilder atividades  = new StringBuilder(""); 
 		atendimento.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach(afaf -> {
-			if (afaf.getTipo().equals(TipoAtividadeFisica.getInstance().ORIENTADA))
-				atividades.append("<tr>" 
-						+ "<td width='200'><font size='1'>" + afaf.getAtividadeFisica().getDescricao() + "</font></td>" 
-						+ "<td width='100'><font size='1'>" + getDaysAvaliacaoFisicaAtividadeFisica(afaf) + "</font></td>"
-						+ "<td width='100'><font size='1'>" + String.valueOf(afaf.getMinuto()) + "</font></td>"
-						+ "<td width='100'><font size='1'>" + afaf.getObservacao() + "</font></td>" 
-						+ "</tr>");
+			if (afaf.getTipo().equals(TipoAtividadeFisica.getInstance().ORIENTADA)) {
+				atividades.append("<tr><td width='200'><font size='1'>" + afaf.getAtividadeFisica().getDescricao() + "</font></td>" );
+				atividades.append( "<td width='100'><font size='1'>" + getDaysAvaliacaoFisicaAtividadeFisica(afaf) + "</font></td>");
+				atividades.append("<td width='100'><font size='1'>" + String.valueOf(afaf.getMinuto()) + "</font></td>");
+				atividades.append("<td width='100'><font size='1'>" + (afaf.getObservacao() != null ? afaf.getObservacao() : "") + "</font></td>"); 
+				atividades.append("</tr>");
+			}
 		});
 		
 		stringReplacer.replace("[atividadesFisicasRecomendadas]", atividades.toString());
 		
 		stringReplacer.replace("[parecerConclusivoOrientacoes]",
-				Objects.toString(atendimento.getAvaliacaoFisica().getObservacoes()));
+				Objects.toString(atendimento.getAvaliacaoFisica().getObservacoes() != null ? atendimento.getAvaliacaoFisica().getObservacoes() : ""));
 
 		stringReplacer.replace("[nomeEducadorFisico]",
 				atendimento.getFilaAtendimentoOcupacional().getProfissional().getEmpregado().getPessoa().getNome());
@@ -1570,7 +1586,7 @@ public class AtendimentoBo extends
 				stringReplacer.replace("[data" + removeCount + "]","");
 			
 			stringReplacer.replace("[ccPeso" + removeCount + "]", "").replace("[ccEstatura" + removeCount + "]", "")
-					.replace("[ccCintura" + removeCount + "]", "").replace("[ccQuadril" + removeCount + "]", "")
+					.replace("[ccCintura" + removeCount + "]", "").replace("[ccAbdome" + removeCount + "]", "").replace("[ccQuadril" + removeCount + "]", "")
 					.replace("[ccImc" + removeCount + "]", "").replace("[ccRce" + removeCount + "]", "")
 					.replace("[cc%Gordura" + removeCount + "]", "").replace("[ccPesoGordo" + removeCount + "]", "")
 					.replace("[ccPesoMagro" + removeCount + "]", "").replace("[ccPesoIdeal" + removeCount + "]", "")

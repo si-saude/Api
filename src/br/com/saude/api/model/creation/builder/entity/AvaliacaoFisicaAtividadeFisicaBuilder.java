@@ -43,6 +43,7 @@ public class AvaliacaoFisicaAtividadeFisicaBuilder extends GenericEntityBuilder<
 		AvaliacaoFisicaAtividadeFisica newAvaliacaoFisicaAtividadeFisica = new AvaliacaoFisicaAtividadeFisica();
 		
 		newAvaliacaoFisicaAtividadeFisica.setId(avaliacaoFisicaAtividadeFisica.getId());
+		newAvaliacaoFisicaAtividadeFisica.setIndex(avaliacaoFisicaAtividadeFisica.getIndex());
 		newAvaliacaoFisicaAtividadeFisica.setVersion(avaliacaoFisicaAtividadeFisica.getVersion());
 		newAvaliacaoFisicaAtividadeFisica.setClassificacao(avaliacaoFisicaAtividadeFisica.getClassificacao());
 		newAvaliacaoFisicaAtividadeFisica.setDomingo(avaliacaoFisicaAtividadeFisica.isDomingo());

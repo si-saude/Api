@@ -96,7 +96,6 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 		
 		newAtendimento.setId(atendimento.getId());
 		newAtendimento.setVersion(atendimento.getVersion());
-		newAtendimento.setTipo(atendimento.getTipo());
 				
 		if(atendimento.getFilaAtendimentoOcupacional() != null) {
 			FilaAtendimentoOcupacionalBuilder filaAtendBuilder = FilaAtendimentoOcupacionalBuilder

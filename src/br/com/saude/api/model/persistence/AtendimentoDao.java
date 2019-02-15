@@ -35,8 +35,10 @@ import br.com.saude.api.model.entity.po.ItemRespostaFichaColeta;
 import br.com.saude.api.model.entity.po.Localizacao;
 import br.com.saude.api.model.entity.po.PerguntaFichaColeta;
 import br.com.saude.api.model.entity.po.Pessoa;
+import br.com.saude.api.model.entity.po.PlanoAlimentar;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.QuestionarioConhecimentoAlimentar;
+import br.com.saude.api.model.entity.po.Recordatorio;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.RespostaQuestionarioConhecimentoAlimentar;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
@@ -279,6 +281,7 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 		};
 	}
 	
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void devolverPraFila(Atendimento atendimento) throws Exception {
 		Session session = HibernateHelper.getSession();
 		
@@ -294,6 +297,32 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 					
 			//SALVAR ATENDIMENTO E DELETAR
 			atendimento = (Atendimento) session.merge(atendimento);
+
+			if(atendimento.getAso() != null && atendimento.getAso().getId() > 0) {
+				session.delete(atendimento.getAso());	
+			}
+			
+			if(atendimento.getQuestionario() != null && atendimento.getQuestionario().getId() > 0) {
+				session.delete(atendimento.getQuestionario());	
+			}
+			
+			Criteria criteria = session.createCriteria(Recordatorio.class);
+			criteria.createAlias("atendimento", "atendimento");
+			criteria.add(Restrictions.eq("atendimento.id", atendimento.getId()));
+			List<Recordatorio> recList = criteria.list();
+			
+			if(recList != null) {
+				recList.forEach(r -> session.delete(r));
+			}
+			
+			criteria = session.createCriteria(PlanoAlimentar.class);
+			criteria.createAlias("atendimento", "atendimento");
+			criteria.add(Restrictions.eq("atendimento.id", atendimento.getId()));
+			List<PlanoAlimentar> planoList = criteria.list();
+			
+			if(planoList != null) {
+				planoList.forEach(p -> session.delete(p));
+			}			
 			
 			session.delete(atendimento);
 			

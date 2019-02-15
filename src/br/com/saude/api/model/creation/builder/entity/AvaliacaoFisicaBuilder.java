@@ -92,6 +92,13 @@ public class AvaliacaoFisicaBuilder extends GenericEntityBuilder<AvaliacaoFisica
 		newAvaliacao.setPressaoArterialSistolica(entity.getPressaoArterialSistolica());
 		newAvaliacao.setPressaoArterialDiastolica(entity.getPressaoArterialDiastolica());
 		newAvaliacao.setFrequenciaCardiaca(entity.getFrequenciaCardiaca());
+		newAvaliacao.setTipo(entity.getTipo());
+		newAvaliacao.setPeso(entity.getPeso());
+		newAvaliacao.setCircunferenciaAbdominal(entity.getCircunferenciaAbdominal());
+		newAvaliacao.setCircunferenciaCintura(entity.getCircunferenciaCintura());
+		newAvaliacao.setCircunferenciaQuadril(entity.getCircunferenciaQuadril());
+		newAvaliacao.setEstatura(entity.getEstatura());
+		newAvaliacao.setGorduraNegociada(entity.getGorduraNegociada());
 		
 		if ( entity.getAtendimento() != null ) {
 			newAvaliacao.setAtendimento(

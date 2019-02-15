@@ -1,5 +1,7 @@
 package br.com.saude.api.generic;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -144,6 +146,11 @@ public class Helper {
 	public static String convertToHumanPtDate(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		return sdf.format(date);
+	}
+	
+	public static Double roundDouble(Double value, int digits) {		
+		BigDecimal valorExato = new BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN);		
+		return valorExato.doubleValue();
 	}
 	
 }

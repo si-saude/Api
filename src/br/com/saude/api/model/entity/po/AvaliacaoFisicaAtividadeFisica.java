@@ -46,10 +46,20 @@ public class AvaliacaoFisicaAtividadeFisica {
 	
 	@Size(max = 2048, message="Tamanho máximo para o Observação da Avaliação Física Atividade Física: 2048")
 	private String observacao;
+
+	private int index;
 	
 	@Version
 	private long version;
 	
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
 	public AvaliacaoFisica getAvaliacaoFisica() {
 		return avaliacaoFisica;
 	}

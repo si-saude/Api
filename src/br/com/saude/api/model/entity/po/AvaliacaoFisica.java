@@ -36,6 +36,14 @@ public class AvaliacaoFisica {
 	@OneToMany(mappedBy="avaliacaoFisica", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<AvaliacaoFisicaAtividadeFisica> avaliacaoFisicaAtividadeFisicas;
 	
+	@Size(max = 128, message="Tamanho máximo para o Tipo: 128")
+	private String tipo;
+	private double peso;
+	private double estatura;
+	private double circunferenciaAbdominal;
+	private double circunferenciaCintura;
+	private double circunferenciaQuadril;
+	private double gorduraNegociada;	
 	private boolean praticaExercicioFisico;
 	private boolean interesseProgramaFisico;
 	private boolean acaoIniciarExercicioFisico;
@@ -91,6 +99,48 @@ public class AvaliacaoFisica {
 	@Version
 	private long version;
 	
+	public double getPeso() {
+		return peso;
+	}
+	public void setPeso(double peso) {
+		this.peso = peso;
+	}
+	public double getEstatura() {
+		return estatura;
+	}
+	public void setEstatura(double estatura) {
+		this.estatura = estatura;
+	}
+	public double getCircunferenciaAbdominal() {
+		return circunferenciaAbdominal;
+	}
+	public void setCircunferenciaAbdominal(double circunferenciaAbdominal) {
+		this.circunferenciaAbdominal = circunferenciaAbdominal;
+	}
+	public double getCircunferenciaCintura() {
+		return circunferenciaCintura;
+	}
+	public void setCircunferenciaCintura(double circunferenciaCintura) {
+		this.circunferenciaCintura = circunferenciaCintura;
+	}
+	public double getCircunferenciaQuadril() {
+		return circunferenciaQuadril;
+	}
+	public void setCircunferenciaQuadril(double circunferenciaQuadril) {
+		this.circunferenciaQuadril = circunferenciaQuadril;
+	}
+	public double getGorduraNegociada() {
+		return gorduraNegociada;
+	}
+	public void setGorduraNegociada(double gorduraNegociada) {
+		this.gorduraNegociada = gorduraNegociada;
+	}
+	public String getTipo() {
+		return tipo;
+	}
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
 	public Atendimento getAtendimento() {
 		return atendimento;
 	}

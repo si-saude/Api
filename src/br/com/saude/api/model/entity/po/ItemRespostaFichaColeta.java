@@ -28,8 +28,18 @@ public class ItemRespostaFichaColeta {
 	@Size(max = 2048, message="Tamanho máximo para Conteúdo do Item da Resposta: 2048")
 	private String conteudo;
 	
+	private int index;
+	
 	@Version
 	private long version;
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
 
 	public int getId() {
 		return id;

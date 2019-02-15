@@ -34,6 +34,7 @@ public class ItemRespostaFichaColetaBuilder extends GenericEntityBuilder<ItemRes
 		ItemRespostaFichaColeta cloneItemRespostaFichaColeta = new ItemRespostaFichaColeta();
 		
 		cloneItemRespostaFichaColeta.setId(itemRespostaFichaColeta.getId());
+		cloneItemRespostaFichaColeta.setIndex(itemRespostaFichaColeta.getIndex());
 		cloneItemRespostaFichaColeta.setVersion(itemRespostaFichaColeta.getVersion());
 		cloneItemRespostaFichaColeta.setConteudo(itemRespostaFichaColeta.getConteudo());
 		

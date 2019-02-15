@@ -42,7 +42,6 @@ import br.com.saude.api.model.persistence.FilaAtendimentoOcupacionalDao;
 import br.com.saude.api.util.constant.GrupoServico;
 import br.com.saude.api.util.constant.StatusFilaAtendimentoOcupacional;
 import br.com.saude.api.util.constant.StatusTarefa;
-import br.com.saude.api.util.constant.TipoAtendimento;
 
 public class FilaAtendimentoOcupacionalBo 
 	extends GenericBo<FilaAtendimentoOcupacional, FilaAtendimentoOcupacionalFilter, 
@@ -475,7 +474,6 @@ public class FilaAtendimentoOcupacionalBo
 							atendimento.getFilaEsperaOcupacional().getRiscoPotencial().getId() != 
 							atendimentoAux.getFilaEsperaOcupacional().getRiscoPotencial().getId()))) {
 					
-					atendimentoAux.setTipo(TipoAtendimento.getInstance().PERIODICO);
 					return atendimentoAux;
 				}
 				
@@ -584,8 +582,7 @@ public class FilaAtendimentoOcupacionalBo
 						atendimentoAux.getTriagensTodosAtendimentos().sort(comparator);
 					}					
 				}
-				
-				atendimentoAux.setTipo(TipoAtendimento.getInstance().PERIODICO);
+
 				
 				return atendimentoAux;
 			}else 
@@ -594,8 +591,6 @@ public class FilaAtendimentoOcupacionalBo
 			atendimento.setFilaAtendimentoOcupacional(fila);
 		}else
 			atendimento = new Atendimento();
-		
-		atendimento.setTipo(TipoAtendimento.getInstance().PERIODICO);
 		
 		return atendimento;
 	}
