@@ -64,6 +64,7 @@ public class AvaliacaoFisica {
 	private double percentualMassaMagraNegociada;
 	private double pesoNegociado;
 	private double pesoExcessoNegociado;
+	@Size(max = 2048, message="Tamanho máximo para o Observação da Avaliação Física: 2048")
 	private String observacoes;
 	private double aptidaoCardiorrespiratoriaValor;
 	@Size(max = 32, message="Tamanho máximo para o Classificação da Aptidão Cardiorespiratória da Avaliação Física: 32")

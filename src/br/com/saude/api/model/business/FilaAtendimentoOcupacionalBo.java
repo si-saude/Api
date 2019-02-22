@@ -476,15 +476,14 @@ public class FilaAtendimentoOcupacionalBo
 					
 					return atendimentoAux;
 				}
+		
+				atendimento.setFilaEsperaOcupacional(
+							FilaEsperaOcupacionalBo.getInstance().getById(atendimentoAux.getFilaEsperaOcupacional().getId()));					
+				
 				
 				atendimentoAux.getFilaEsperaOcupacional().setEmpregado(EmpregadoBo
 						.getInstance().getById(atendimentoAux.getFilaEsperaOcupacional().getEmpregado().getId()));
 				
-				if(atendimento.getFilaEsperaOcupacional().getFichaColeta() != null
-						&& atendimento.getFilaEsperaOcupacional().getFichaColeta().getId() > 0) {
-					atendimentoAux.getFilaEsperaOcupacional().setFichaColeta(
-							atendimento.getFilaEsperaOcupacional().getFichaColeta());					
-				}
 				
 				if(atendimentoAux.getQuestionario() != null &&
 						atendimentoAux.getQuestionario().getId() > 0 )

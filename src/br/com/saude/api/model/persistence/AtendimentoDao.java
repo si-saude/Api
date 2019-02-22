@@ -87,7 +87,7 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 					});
 					atendimento.getAso().setAsoAlteracoes(list);
 				}	
-				
+					
 				if(atendimento.getAso().getAsoAvaliacoes() != null) {
 					List<AsoAvaliacao> list = new ArrayList<AsoAvaliacao>();
 					Hibernate.initialize(atendimento.getAso().getAsoAvaliacoes());					
@@ -250,35 +250,48 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 		this.functionBeforeSave = pair -> {
 			Atendimento atendimento = pair.getValue0();
 			
-			if(atendimento.getAso() != null) {
-				atendimento.getAso().setAtendimento(atendimento);	
-				
-				atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional().getEmpregado());
-				
-				if(atendimento.getAso().getAptidoes() != null)
-					atendimento.getAso().getAptidoes().forEach(x -> {
-						x.setAso(atendimento.getAso());
-					});
-
-				if(atendimento.getAso().getAsoAvaliacoes() != null)
-					atendimento.getAso().getAsoAvaliacoes().forEach(x -> {
-						x.setAso(atendimento.getAso());
-					});
-			}	
-			
-			if(atendimento.getFilaAtendimentoOcupacional().getAtualizacoes() != null)
-				atendimento.getFilaAtendimentoOcupacional().getAtualizacoes().forEach(a->
-					a.setFila(atendimento.getFilaAtendimentoOcupacional()));
-			
-			if ( atendimento.getAvaliacaoFisica() != null ) {
-				atendimento.getAvaliacaoFisica().setAtendimento(atendimento);
-				if ( atendimento.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas()!=null )
-					atendimento.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach(afaf -> 
-						afaf.setAvaliacaoFisica(atendimento.getAvaliacaoFisica()));
-			}
+			atendimento = referenciaCircular(atendimento);
 			
 			return atendimento;
 		};
+	}
+	
+	public Atendimento referenciaCircular(Atendimento atendimento) {
+		
+		if(atendimento.getAso() != null) {
+			atendimento.getAso().setAtendimento(atendimento);	
+			
+			atendimento.getAso().setEmpregado(atendimento.getFilaEsperaOcupacional().getEmpregado());
+			
+			if(atendimento.getAso().getAptidoes() != null)				
+				atendimento.getAso().getAptidoes().forEach(x -> {
+					x.setAso(atendimento.getAso());
+				});
+
+			if(atendimento.getAso().getAsoAvaliacoes() != null)
+				atendimento.getAso().getAsoAvaliacoes().forEach(x -> {
+					x.setAso(atendimento.getAso());
+				});
+			
+			if(atendimento.getAso().getAsoAlteracoes() != null)
+				atendimento.getAso().getAsoAlteracoes().forEach(x -> {
+					x.setAso(atendimento.getAso());
+				});	
+		}	
+		
+		if(atendimento.getFilaAtendimentoOcupacional().getAtualizacoes() != null)
+			atendimento.getFilaAtendimentoOcupacional().getAtualizacoes().forEach(a->
+				a.setFila(atendimento.getFilaAtendimentoOcupacional()));
+		
+		if ( atendimento.getAvaliacaoFisica() != null ) {
+			atendimento.getAvaliacaoFisica().setAtendimento(atendimento);
+			if ( atendimento.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas()!=null )
+				atendimento.getAvaliacaoFisica().getAvaliacaoFisicaAtividadeFisicas().forEach(afaf -> 
+					afaf.setAvaliacaoFisica(atendimento.getAvaliacaoFisica()));
+		}
+		
+		
+		return atendimento;
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -294,13 +307,10 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 				atendimento.getFilaEsperaOcupacional().getFichaColeta().getRespostaFichaColetas()
 					.forEach(r->r.setFicha(ficha));
 			}
-					
-			//SALVAR ATENDIMENTO E DELETAR
+			
+			
+			atendimento.setAso(null);
 			atendimento = (Atendimento) session.merge(atendimento);
-
-			if(atendimento.getAso() != null && atendimento.getAso().getId() > 0) {
-				session.delete(atendimento.getAso());	
-			}
 			
 			if(atendimento.getQuestionario() != null && atendimento.getQuestionario().getId() > 0) {
 				session.delete(atendimento.getQuestionario());	
@@ -311,7 +321,7 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 			criteria.add(Restrictions.eq("atendimento.id", atendimento.getId()));
 			List<Recordatorio> recList = criteria.list();
 			
-			if(recList != null) {
+			if(recList != null && recList.size() > 0) {
 				recList.forEach(r -> session.delete(r));
 			}
 			
@@ -320,7 +330,7 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 			criteria.add(Restrictions.eq("atendimento.id", atendimento.getId()));
 			List<PlanoAlimentar> planoList = criteria.list();
 			
-			if(planoList != null) {
+			if(planoList != null && planoList.size() > 0) {
 				planoList.forEach(p -> session.delete(p));
 			}			
 			

@@ -458,7 +458,7 @@ public class FilaEsperaOcupacionalBo
 		if(tarefas.getTotal() > 0) {
 			tarefa = getTarefaEquipeAcolhimento(tarefas);
 		}else {
-			tarefa = checkPendecia(fila.getEmpregado(),Helper.getToday());
+			tarefa = checkPendecia(fila.getEmpregado(), data);
 		
 			if(tarefa == null)
 				throw new Exception("Não há agendamento para este Empregado.");
