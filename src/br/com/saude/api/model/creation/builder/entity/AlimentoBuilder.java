@@ -90,6 +90,8 @@ public class AlimentoBuilder extends GenericEntityBuilder<Alimento, AlimentoFilt
 		newNutricaoAlimento.setVitd(nutricaoAlimento.getVitd());
 		newNutricaoAlimento.setVite(nutricaoAlimento.getVite());
 		newNutricaoAlimento.setInativo(nutricaoAlimento.isInativo());
+		newNutricaoAlimento.setTipoCarboidrato(nutricaoAlimento.getTipoCarboidrato());
+		
 		return newNutricaoAlimento;
 	}
 

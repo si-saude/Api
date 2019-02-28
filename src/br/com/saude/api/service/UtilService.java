@@ -72,6 +72,7 @@ import br.com.saude.api.util.constant.TipoAcao;
 import br.com.saude.api.util.constant.TipoAcidente;
 import br.com.saude.api.util.constant.TipoAlimento;
 import br.com.saude.api.util.constant.TipoAtendimento;
+import br.com.saude.api.util.constant.TipoCarboidrato;
 import br.com.saude.api.util.constant.TipoCat;
 import br.com.saude.api.util.constant.TipoContato;
 import br.com.saude.api.util.constant.TipoConvocacao;
@@ -98,6 +99,14 @@ public class UtilService {
 	public Response getAptidaoAso(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
 		return Response.ok(getMap(AptidaoAso.getInstance(),filter)).build();
 	}
+	
+	@GET
+	@Path("/tipo-carboidrato")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTipoCarboidrato(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TipoCarboidrato.getInstance(),filter)).build();
+	}
+	
 	@GET
 	@Path("/funcionalidade")
 	@Produces(MediaType.APPLICATION_JSON)

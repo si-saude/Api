@@ -1075,6 +1075,8 @@ public class FilaEsperaOcupacionalBo
 										
 										if(tHo.getTotal() > 0)
 											continue;
+										else
+											temHo = false;
 									}
 									
 									List<Atendimento> listAtendimento = aList.getList();

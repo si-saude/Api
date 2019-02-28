@@ -36,6 +36,10 @@ public class Alimento {
 	
 	@Size(max = 64, message="Tamanho máximo para o Tipo do Alimento: 64")
 	private String tipo;
+	
+	@Size(max = 64, message="Tamanho máximo para o Tipo do Carboidrato: 64")
+	private String tipoCarboidrato;
+
 	private double padrao;
 	private double energia;
 	private double proteina;
@@ -86,6 +90,12 @@ public class Alimento {
 	}
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}	
+	public String getTipoCarboidrato() {
+		return tipoCarboidrato;
+	}
+	public void setTipoCarboidrato(String tipoCarboidrato) {
+		this.tipoCarboidrato = tipoCarboidrato;
 	}
 	public double getPadrao() {
 		return padrao;
