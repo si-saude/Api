@@ -14,10 +14,12 @@ import br.com.saude.api.model.creation.builder.entity.AsoBuilder;
 import br.com.saude.api.model.creation.builder.example.AsoExampleBuilder;
 import br.com.saude.api.model.entity.dto.ConformidadeAsoDto;
 import br.com.saude.api.model.entity.filter.AsoFilter;
+import br.com.saude.api.model.entity.filter.AtendimentoFilter;
 import br.com.saude.api.model.entity.filter.ConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoConvocacaoFilter;
 import br.com.saude.api.model.entity.filter.EmpregadoFilter;
 import br.com.saude.api.model.entity.filter.RequisitoAsoFilter;
+import br.com.saude.api.model.entity.filter.TarefaFilter;
 import br.com.saude.api.model.entity.po.Aso;
 import br.com.saude.api.model.entity.po.AsoAlteracao;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
@@ -72,6 +74,11 @@ public class AsoBo
 	
 	@Override
 	public PagedList<Aso> getList(AsoFilter filter) throws Exception {
+		
+		filter.setAtendimento(new AtendimentoFilter());
+		filter.getAtendimento().setTarefa(new TarefaFilter());
+		filter.getAtendimento().getTarefa().setStatus("CONCLUÍDA");
+		
 		return super.getList(filter, this.functionLoad);
 	}
 	

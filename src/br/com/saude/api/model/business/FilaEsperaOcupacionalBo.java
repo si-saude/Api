@@ -1053,7 +1053,6 @@ public class FilaEsperaOcupacionalBo
 										//PENDENTE, SE EXISTIR, OU DATA ATUAL. SE EXISTIR, CONTINUAR
 										
 										TarefaFilter tarefaFilterHo = criarFiltroTarefa(filaEspera);
-										tarefaFilterHo.setStatus(StatusTarefa.getInstance().ABERTA);
 										tarefaFilterHo.setEquipe(new EquipeFilter());
 										tarefaFilterHo.getEquipe().setAbreviacao("HIG");
 										tarefaFilterHo.getServico().setCodigo("0003");
