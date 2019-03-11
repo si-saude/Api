@@ -110,7 +110,7 @@ public class AtendimentoBo extends
 	@Override
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
-			return builder.loadTarefa().loadTriagens().loadAso().loadQuestionario().loadAvaliacaoFisica();
+			return builder.loadTarefa().loadTriagens().loadAso().loadQuestionario().loadAvaliacaoFisica().loadAvaliacaoHigieneOcupacional();
 		};
 
 		this.functionLoadAllAtualizacoes = builder -> {

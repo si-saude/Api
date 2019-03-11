@@ -42,9 +42,7 @@ private static AvaliacaoHigieneOcupacionalBo instance;
 	
 	@Override
 	protected void initializeFunctions() {
-		this.functionLoadAll = builder -> {
-			return builder.loadLocal();
-		};
+		
 	}
 	
 	public static AvaliacaoHigieneOcupacionalBo getInstance() {
@@ -102,9 +100,9 @@ private static AvaliacaoHigieneOcupacionalBo instance;
 		
 		
 		stringReplacer = stringReplacer
-			.replace("dataDadosAtendimento", Objects.toString(avaliacaoHigieneOcupacional.getData().toLocaleString().substring(0, 10)))
-			.replace("localDadosAtendimento", Objects.toString(avaliacaoHigieneOcupacional.getLocal().getNome()))
-			.replace("tecnicoHODadosAtendimento", Objects.toString(avaliacaoHigieneOcupacional.getTecnico().getEmpregado().getPessoa().getNome()))
+//			.replace("dataDadosAtendimento", Objects.toString(avaliacaoHigieneOcupacional.getData().toLocaleString().substring(0, 10)))
+//			.replace("localDadosAtendimento", Objects.toString(avaliacaoHigieneOcupacional.getLocal().getNome()))
+//			.replace("tecnicoHODadosAtendimento", Objects.toString(avaliacaoHigieneOcupacional.getTecnico().getEmpregado().getPessoa().getNome()))
 			.replace("inicioDadosAtendimento", Objects.toString(avaliacaoHigieneOcupacional.getInicio().getHours()))
 			.replace("finalDadosAtendimento", Objects.toString(avaliacaoHigieneOcupacional.getFim().getHours()))
 			.replace("gerenciaDadosEmpregado", Objects.toString(empregado.getGerencia().getCodigoCompleto()))

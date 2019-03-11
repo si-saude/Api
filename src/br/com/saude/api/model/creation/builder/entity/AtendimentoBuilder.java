@@ -18,6 +18,7 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	private Function<Map<String,Atendimento>,Atendimento> loadQuestionario;
 	private Function<Map<String,Atendimento>,Atendimento> loadFilaAtendimentoOcupacional;
 	private Function<Map<String,Atendimento>,Atendimento> loadAvaliacaoFisica;
+	private Function<Map<String,Atendimento>,Atendimento> loadAvaliacaoHigieneOcupacional;
 	
 	public static AtendimentoBuilder newInstance(Atendimento atendimento) {
 		return new AtendimentoBuilder(atendimento);
@@ -53,6 +54,14 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 						.loadAlteracoes()
 						.loadExamesConvocacao()
 						.loadAvaliacoes()
+						.getEntity());
+			return atendimentos.get("destino");
+		};
+		
+		this.loadAvaliacaoHigieneOcupacional = atendimentos -> {
+			if(atendimentos.get("origem").getAvaliacaoHigieneOcupacional() != null)
+				atendimentos.get("destino").setAvaliacaoHigieneOcupacional(AvaliacaoHigieneOcupacionalBuilder
+						.newInstance(atendimentos.get("origem").getAvaliacaoHigieneOcupacional())
 						.getEntity());
 			return atendimentos.get("destino");
 		};
@@ -132,6 +141,10 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 	
 	public AtendimentoBuilder loadAso() {
 		return (AtendimentoBuilder) this.loadProperty(this.loadAso);
+	}
+	
+	public AtendimentoBuilder loadAvaliacaoHigieneOcupacional() {
+		return (AtendimentoBuilder) this.loadProperty(this.loadAvaliacaoHigieneOcupacional);
 	}
 	
 	public AtendimentoBuilder loadQuestionario() {

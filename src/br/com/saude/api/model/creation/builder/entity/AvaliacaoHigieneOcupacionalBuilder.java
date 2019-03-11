@@ -1,16 +1,12 @@
 package br.com.saude.api.model.creation.builder.entity;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 import br.com.saude.api.generic.GenericEntityBuilder;
 import br.com.saude.api.model.entity.po.AvaliacaoHigieneOcupacional;
 import br.com.saude.api.model.entity.filter.AvaliacaoHigieneOcupacionalFilter;
 
 public class AvaliacaoHigieneOcupacionalBuilder extends GenericEntityBuilder<AvaliacaoHigieneOcupacional, AvaliacaoHigieneOcupacionalFilter> {
-
-	private Function<Map<String,AvaliacaoHigieneOcupacional>,AvaliacaoHigieneOcupacional> loadLocal;
 
 	public static AvaliacaoHigieneOcupacionalBuilder newInstance(AvaliacaoHigieneOcupacional avaliacaoHigieneOcupacional) {
 		return new AvaliacaoHigieneOcupacionalBuilder(avaliacaoHigieneOcupacional);
@@ -30,12 +26,7 @@ public class AvaliacaoHigieneOcupacionalBuilder extends GenericEntityBuilder<Ava
 
 	@Override
 	protected void initializeFunctions() {
-		this.loadLocal = avaliacaoHigieneOcupacionais ->{
-			if(avaliacaoHigieneOcupacionais.get("origem").getLocal() != null) {
-				avaliacaoHigieneOcupacionais.get("destino").setLocal(LocalizacaoBuilder.newInstance(avaliacaoHigieneOcupacionais.get("origem").getLocal()).getEntity());
-			}
-			return avaliacaoHigieneOcupacionais.get("destino");
-		};
+
 	}
 
 	@Override
@@ -44,7 +35,6 @@ public class AvaliacaoHigieneOcupacionalBuilder extends GenericEntityBuilder<Ava
 		
 		newAvaliacaoHigieneOcupacional.setId(avaliacaoHigieneOcupacional.getId());
 		newAvaliacaoHigieneOcupacional.setBrigada(avaliacaoHigieneOcupacional.isBrigada());
-		newAvaliacaoHigieneOcupacional.setData(avaliacaoHigieneOcupacional.getData());
 		newAvaliacaoHigieneOcupacional.setEspacoConfinado(avaliacaoHigieneOcupacional.isEspacoConfinado());
 		newAvaliacaoHigieneOcupacional.setFim(avaliacaoHigieneOcupacional.getFim());
 		newAvaliacaoHigieneOcupacional.setInicio(avaliacaoHigieneOcupacional.getInicio());
@@ -60,15 +50,37 @@ public class AvaliacaoHigieneOcupacionalBuilder extends GenericEntityBuilder<Ava
 		newAvaliacaoHigieneOcupacional.setNaoConcordaFrequenciaExposicaoRiscos(avaliacaoHigieneOcupacional.isNaoConcordaFrequenciaExposicaoRiscos());
 		newAvaliacaoHigieneOcupacional.setNaoConcordaCategoriaRiscos(avaliacaoHigieneOcupacional.isNaoConcordaCategoriaRiscos());
 		newAvaliacaoHigieneOcupacional.setMotivoAnalisePreliminar(avaliacaoHigieneOcupacional.getMotivoAnalisePreliminar());
+		newAvaliacaoHigieneOcupacional.setNaoConcordaCategoriaRiscos(avaliacaoHigieneOcupacional.isNaoConcordaCategoriaRiscos());
+		newAvaliacaoHigieneOcupacional.setJustificativaHO(avaliacaoHigieneOcupacional.getJustificativaHO());
+		newAvaliacaoHigieneOcupacional.setObservacaoGHE(avaliacaoHigieneOcupacional.getObservacaoGHE());
+		newAvaliacaoHigieneOcupacional.setHOconcordaDescricaoAprhoGhe(avaliacaoHigieneOcupacional.isConcordaDescricaoAprhoGhe());
+		newAvaliacaoHigieneOcupacional.setFiscalSopSg(avaliacaoHigieneOcupacional.isFiscalSopSg());
+		newAvaliacaoHigieneOcupacional.setOpEcolEcomp(avaliacaoHigieneOcupacional.isOpEcolEcomp());
+		newAvaliacaoHigieneOcupacional.setOutros(avaliacaoHigieneOcupacional.isOutros());
+		newAvaliacaoHigieneOcupacional.setAprho(avaliacaoHigieneOcupacional.getAprho());
+		newAvaliacaoHigieneOcupacional.setEnsaioVedacaoRealizado(avaliacaoHigieneOcupacional.isEnsaioVedacaoRealizado());
+		
 		newAvaliacaoHigieneOcupacional.setVersion(avaliacaoHigieneOcupacional.getVersion());
 		
 		if(avaliacaoHigieneOcupacional.getEmpregado() != null)
 			newAvaliacaoHigieneOcupacional.setEmpregado(EmpregadoBuilder
-					.newInstance(avaliacaoHigieneOcupacional.getEmpregado()).getEntity());
+					.newInstance(avaliacaoHigieneOcupacional.getEmpregado()).getEntity());		
 		
-		if(avaliacaoHigieneOcupacional.getTecnico() != null)
-			newAvaliacaoHigieneOcupacional.setTecnico(ProfissionalBuilder
-					.newInstance(avaliacaoHigieneOcupacional.getTecnico()).getEntity());
+		if(avaliacaoHigieneOcupacional.getGhe() != null)
+			newAvaliacaoHigieneOcupacional.setGhe(GheBuilder
+					.newInstance(avaliacaoHigieneOcupacional.getGhe()).getEntity());
+		
+		if(avaliacaoHigieneOcupacional.getFuncao() != null)
+			newAvaliacaoHigieneOcupacional.setFuncao(FuncaoBuilder
+					.newInstance(avaliacaoHigieneOcupacional.getFuncao()).getEntity());
+		
+		if(avaliacaoHigieneOcupacional.getGerencia() != null)
+			newAvaliacaoHigieneOcupacional.setGerencia(GerenciaBuilder
+					.newInstance(avaliacaoHigieneOcupacional.getGerencia()).getEntity());
+		
+		if(avaliacaoHigieneOcupacional.getProfissional() != null)
+			newAvaliacaoHigieneOcupacional.setProfissional(ProfissionalBuilder
+					.newInstance(avaliacaoHigieneOcupacional.getProfissional()).getEntity());
 		
 		return newAvaliacaoHigieneOcupacional;
 	}
@@ -76,10 +88,6 @@ public class AvaliacaoHigieneOcupacionalBuilder extends GenericEntityBuilder<Ava
 	@Override
 	public AvaliacaoHigieneOcupacional cloneFromFilter(AvaliacaoHigieneOcupacionalFilter filter) {
 		return null;
-	}
-	
-	public AvaliacaoHigieneOcupacionalBuilder loadLocal() {
-		return (AvaliacaoHigieneOcupacionalBuilder) this.loadProperty(this.loadLocal);
 	}
 
 }

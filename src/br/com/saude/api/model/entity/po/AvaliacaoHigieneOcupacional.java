@@ -14,35 +14,51 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class AvaliacaoHigieneOcupacional {
+	
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
-	
-	@NotNull(message="É necessário informar a Data da Avaliação de Higiene Ocupacional.")
-	private Date data;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	private Localizacao local;
-	
-	@NotNull(message="É necessário informar o Técnico da Avaliação de Higiene Ocupacional.")
-	@ManyToOne(fetch=FetchType.EAGER)
-	private Profissional tecnico; 
 	
 	@NotNull(message="É necessário informar o Início da Avaliação de Higiene Ocupacional.")
 	private Date inicio;
 	
 	@NotNull(message="É necessário informar o Fim da Avaliação de Higiene Ocupacional.")
 	private Date fim;
+
+	@NotNull(message="É necessário informar o Profissional da Avaliação de Higiene Ocupacional.")
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Profissional profissional;
 	
 	@NotNull(message="É necessário informar o Empregado da Avaliação de Higiene Ocupacional.")
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Empregado empregado;
 	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar a Gerência de Empregado.")
+	private Gerencia gerencia;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@NotNull(message="É necessário informar a Função de Empregado.")
+	private Funcao funcao;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Ghe ghe;
+	
+	private String aprho;
+	
 	private boolean brigada;
 	
 	private boolean espacoConfinado;
 	
+	private boolean fiscalSopSg;
+	
+	private boolean opEcolEcomp;
+
+	private boolean outros;
+	
 	private boolean usoVoluntario;
+	
+	private boolean ensaioVedacaoRealizado;
 	
 	@Size(max = 64, message="Tamanho máximo para Ensaio Vedação da Avaliação de Higiene Ocupacional.: 64")
 	private String ensaioVedacao;
@@ -55,6 +71,8 @@ public class AvaliacaoHigieneOcupacional {
 	
 	private boolean concordaDescricaoAprhoGhe;
 	
+	private boolean HOconcordaDescricaoAprhoGhe;
+	
 	private boolean naoConcordaAgentesRiscos;
 	
 	private boolean naoConcordaAtividades;
@@ -66,11 +84,26 @@ public class AvaliacaoHigieneOcupacional {
 	@Size(max = 512, message="Tamanho máximo para Motivo da Análise Preliminar da Avaliação de Higiene Ocupacional.: 512")
 	private String motivoAnalisePreliminar;
 	
+	@Size(max = 512, message="Tamanho máximo para Observação. : 512")
+	private String observacaoGHE;
+	
+	@Size(max = 512, message="Tamanho máximo para Observação.: 512")
+	private String justificativaHO;
+	
+	
 	@Size(max = 512, message="Tamanho máximo para Observação da Avaliação de Higiene Ocupacional.: 512")
 	private String observacao;
 	
 	@Version
 	private long version;
+
+	public Profissional getProfissional() {
+		return profissional;
+	}
+
+	public void setProfissional(Profissional profissional) {
+		this.profissional = profissional;
+	}
 
 	public long getId() {
 		return id;
@@ -78,30 +111,6 @@ public class AvaliacaoHigieneOcupacional {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public Date getData() {
-		return data;
-	}
-
-	public void setData(Date data) {
-		this.data = data;
-	}
-
-	public Localizacao getLocal() {
-		return local;
-	}
-
-	public void setLocal(Localizacao local) {
-		this.local = local;
-	}
-
-	public Profissional getTecnico() {
-		return tecnico;
-	}
-
-	public void setTecnico(Profissional tecnico) {
-		this.tecnico = tecnico;
 	}
 
 	public Date getInicio() {
@@ -247,4 +256,92 @@ public class AvaliacaoHigieneOcupacional {
 	public void setMotivoAnalisePreliminar(String motivoAnalisePreliminar) {
 		this.motivoAnalisePreliminar = motivoAnalisePreliminar;
 	}
+
+	public Gerencia getGerencia() {
+		return gerencia;
+	}
+
+	public void setGerencia(Gerencia gerencia) {
+		this.gerencia = gerencia;
+	}
+
+	public Funcao getFuncao() {
+		return funcao;
+	}
+
+	public void setFuncao(Funcao funcao) {
+		this.funcao = funcao;
+	}
+
+	public Ghe getGhe() {
+		return ghe;
+	}
+
+	public void setGhe(Ghe ghe) {
+		this.ghe = ghe;
+	}
+
+	public String getAprho() {
+		return aprho;
+	}
+
+	public void setAprho(String aprho) {
+		this.aprho = aprho;
+	}
+
+	public boolean isFiscalSopSg() {
+		return fiscalSopSg;
+	}
+
+	public void setFiscalSopSg(boolean fiscalSopSg) {
+		this.fiscalSopSg = fiscalSopSg;
+	}
+
+	public boolean isOpEcolEcomp() {
+		return opEcolEcomp;
+	}
+
+	public void setOpEcolEcomp(boolean opEcolEcomp) {
+		this.opEcolEcomp = opEcolEcomp;
+	}
+
+	public boolean isOutros() {
+		return outros;
+	}
+
+	public void setOutros(boolean outros) {
+		this.outros = outros;
+	}
+
+	public boolean isEnsaioVedacaoRealizado() {
+		return ensaioVedacaoRealizado;
+	}
+
+	public void setEnsaioVedacaoRealizado(boolean ensaioVedacaoRealizado) {
+		this.ensaioVedacaoRealizado = ensaioVedacaoRealizado;
+	}
+
+	public String getObservacaoGHE() {
+		return observacaoGHE;
+	}
+
+	public void setObservacaoGHE(String observacaoGHE) {
+		this.observacaoGHE = observacaoGHE;
+	}
+
+	public boolean isHOconcordaDescricaoAprhoGhe() {
+		return HOconcordaDescricaoAprhoGhe;
+	}
+
+	public void setHOconcordaDescricaoAprhoGhe(boolean hOconcordaDescricaoAprhoGhe) {
+		HOconcordaDescricaoAprhoGhe = hOconcordaDescricaoAprhoGhe;
+	}
+
+	public String getJustificativaHO() {
+		return justificativaHO;
+	}
+
+	public void setJustificativaHO(String justificativaHO) {
+		this.justificativaHO = justificativaHO;
+	}		
 }

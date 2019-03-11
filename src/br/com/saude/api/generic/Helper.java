@@ -122,7 +122,7 @@ public class Helper {
     }
 	
 	public static String getProjectPath() {
-		boolean isRunningOnXampp = true;
+		boolean isRunningOnXampp = false;
 		
 		if(isRunningOnXampp)
 			return "C:/Users/Public/Integra/xampp/tomcat/webapps/Api/WEB-INF/classes/";

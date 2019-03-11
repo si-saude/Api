@@ -23,6 +23,7 @@ import br.com.saude.api.generic.HibernateHelper;
 import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.AvaliacaoFisicaAtividadeFisica;
+import br.com.saude.api.model.entity.po.AvaliacaoHigieneOcupacional;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.FichaColeta;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
@@ -74,6 +75,9 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 		this.functionLoadAll = atendimento -> {
 			if(atendimento.getTarefa() != null)
 				atendimento.setTarefa((Tarefa) Hibernate.unproxy(atendimento.getTarefa()));
+			
+			if(atendimento.getAvaliacaoHigieneOcupacional() != null) 
+				atendimento.setAvaliacaoHigieneOcupacional((AvaliacaoHigieneOcupacional)Hibernate.unproxy(atendimento.getAvaliacaoHigieneOcupacional()));
 			
 			if(atendimento.getAso() != null) {
 				atendimento.setAso((Aso)Hibernate.unproxy(atendimento.getAso()));

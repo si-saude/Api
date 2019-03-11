@@ -35,6 +35,9 @@ public class Atendimento {
 	private Tarefa tarefa;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private AvaliacaoHigieneOcupacional avaliacaoHigieneOcupacional;
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private Aso aso;
 	
 	@OneToMany(mappedBy="atendimento", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
@@ -131,4 +134,13 @@ public class Atendimento {
 	public void setAvaliacaoFisica(AvaliacaoFisica avaliacaoFisica) {
 		this.avaliacaoFisica = avaliacaoFisica;
 	}
+
+	public AvaliacaoHigieneOcupacional getAvaliacaoHigieneOcupacional() {
+		return avaliacaoHigieneOcupacional;
+	}
+
+	public void setAvaliacaoHigieneOcupacional(AvaliacaoHigieneOcupacional avaliacaoHigieneOcupacional) {
+		this.avaliacaoHigieneOcupacional = avaliacaoHigieneOcupacional;
+	}	
+	
 }

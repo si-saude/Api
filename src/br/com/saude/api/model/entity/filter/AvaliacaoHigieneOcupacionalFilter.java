@@ -1,30 +1,68 @@
 package br.com.saude.api.model.entity.filter;
 
 import br.com.saude.api.generic.BooleanFilter;
+import br.com.saude.api.generic.DateFilter;
 import br.com.saude.api.generic.GenericFilter;
 
 public class AvaliacaoHigieneOcupacionalFilter extends GenericFilter {
 	private EmpregadoFilter empregado;
 	
+	private DateFilter inicio;
+	private DateFilter fim;
 	private BooleanFilter brigada;
 	private BooleanFilter espacoConfinado;
 	private BooleanFilter usoVoluntario;
 	private BooleanFilter naoBarbeado;
 	private BooleanFilter naoUtilizaMascara;
 	private BooleanFilter testeSensibilidadeInsatisfatorio;
-	private BooleanFilter ensaioVedacao;
 	
 	private BooleanFilter concordaDescricaoAprhoGhe;
 	private BooleanFilter naoConcordaAgentesRiscos;
 	private BooleanFilter naoConcordaAtividades;
 	private BooleanFilter naoConcordaFrequenciaExposicaoRiscos;
 	private BooleanFilter naoConcordaCategoriaRiscos;
+	private BooleanFilter HOconcordaDescricaoAprhoGhe;
+	
+	private BooleanFilter fiscalSopSg;
+	private BooleanFilter opEcolEcomp;
+	private BooleanFilter outros;
+	private BooleanFilter ensaioVedacaoRealizado;
 	
 	public EmpregadoFilter getEmpregado() {
 		return empregado;
 	}
 	public void setEmpregado(EmpregadoFilter empregado) {
 		this.empregado = empregado;
+	}
+	public BooleanFilter getHOconcordaDescricaoAprhoGhe() {
+		return HOconcordaDescricaoAprhoGhe;
+	}
+	public void setHOconcordaDescricaoAprhoGhe(BooleanFilter hOconcordaDescricaoAprhoGhe) {
+		HOconcordaDescricaoAprhoGhe = hOconcordaDescricaoAprhoGhe;
+	}
+	public BooleanFilter getFiscalSopSg() {
+		return fiscalSopSg;
+	}
+	public void setFiscalSopSg(BooleanFilter fiscalSopSg) {
+		this.fiscalSopSg = fiscalSopSg;
+	}
+	public BooleanFilter getOpEcolEcomp() {
+		return opEcolEcomp;
+	}
+	public void setOpEcolEcomp(BooleanFilter opEcolEcomp) {
+		this.opEcolEcomp = opEcolEcomp;
+	}
+	public BooleanFilter getOutros() {
+		return outros;
+	}
+	public void setOutros(BooleanFilter outros) {
+		this.outros = outros;
+	}
+	public BooleanFilter getEnsaioVedacaoRealizado() {
+		return ensaioVedacaoRealizado;
+	}
+	public void setEnsaioVedacaoRealizado(BooleanFilter ensaioVedacaoRealizado) {
+		this.ensaioVedacaoRealizado = ensaioVedacaoRealizado;
 	}
 	public BooleanFilter isNaoConcordaCategoriaRiscos() {
 		return naoConcordaCategoriaRiscos;
@@ -62,12 +100,6 @@ public class AvaliacaoHigieneOcupacionalFilter extends GenericFilter {
 	public void setBrigada(BooleanFilter brigada) {
 		this.brigada = brigada;
 	}
-	public BooleanFilter isEnsaioVedacao() {
-		return ensaioVedacao;
-	}
-	public void setEnsaioVedacao(BooleanFilter ensaioVedacao) {
-		this.ensaioVedacao = ensaioVedacao;
-	}
 	public BooleanFilter isEspacoConfinado() {
 		return espacoConfinado;
 	}
@@ -98,4 +130,17 @@ public class AvaliacaoHigieneOcupacionalFilter extends GenericFilter {
 	public void setTesteSensibilidadeInsatisfatorio(BooleanFilter testeSensibilidadeInsatisfatorio) {
 		this.testeSensibilidadeInsatisfatorio = testeSensibilidadeInsatisfatorio;
 	}
+	public DateFilter getInicio() {
+		return inicio;
+	}
+	public void setInicio(DateFilter inicio) {
+		this.inicio = inicio;
+	}
+	public DateFilter getFim() {
+		return fim;
+	}
+	public void setFim(DateFilter fim) {
+		this.fim = fim;
+	}
+	
 }
