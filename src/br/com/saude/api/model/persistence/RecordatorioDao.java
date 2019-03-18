@@ -12,6 +12,7 @@ import br.com.saude.api.generic.PagedList;
 import br.com.saude.api.model.entity.po.Recordatorio;
 import br.com.saude.api.model.entity.po.Refeicao;
 import br.com.saude.api.model.entity.po.Alimento;
+import br.com.saude.api.model.entity.po.AlimentoMedidaAlimentar;
 import br.com.saude.api.model.entity.po.ItemRefeicao;
 
 public class RecordatorioDao extends GenericDao<Recordatorio> {
@@ -72,15 +73,18 @@ public class RecordatorioDao extends GenericDao<Recordatorio> {
 						
 						if(i.getAlimento() != null) {
 						   Alimento alimento = (Alimento) Hibernate.unproxy(i.getAlimento());
+						   
+						   List<AlimentoMedidaAlimentar> alimentoMedidaAlimentares = new ArrayList<AlimentoMedidaAlimentar>();	
+						   
+						   if(alimento.getAlimentoMedidaAlimentares() != null) 
+							   alimento.getAlimentoMedidaAlimentares().forEach(a-> alimentoMedidaAlimentares.add((AlimentoMedidaAlimentar) Hibernate.unproxy(a)));
+						   
+						   alimento.setAlimentoMedidaAlimentares(alimentoMedidaAlimentares);
 						   i.setAlimento(alimento);
 						   
-						   if(i.getAlimento().getSubstituicoes() != null) {
-							   List<Alimento> alimentos = new ArrayList<Alimento>();
-							   Hibernate.initialize(i.getAlimento().getSubstituicoes());
-							   i.getAlimento().getSubstituicoes().forEach(a-> {
-								   alimentos.add(a);
-							   });
-							   i.getAlimento().setSubstituicoes(alimentos);
+						   
+						   if(i.getAlimento() != null) {
+							   
 						   }
 						}
 						itens.add(i);
@@ -97,7 +101,7 @@ public class RecordatorioDao extends GenericDao<Recordatorio> {
 	
 	@Override
 	public Recordatorio getById(Object id) throws Exception {
-		return super.getById(id, functionLoadAll);
+		return super.getById(id, functionLoadRefeicoesAlimentos);
 	}
 	
 	@Override

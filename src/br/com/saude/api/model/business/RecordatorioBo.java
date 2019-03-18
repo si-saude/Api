@@ -61,7 +61,7 @@ public class RecordatorioBo extends
 	
 	@Override
 	public Recordatorio getById(Object id) throws Exception {
-		return getByEntity(getDao().getById(id),functionLoadAll);
+		return getByEntity(getDao().getById(id),functionLoadAlimentos);
 	}
 	
 	public PagedList<Recordatorio> getListLoadAll(RecordatorioFilter filter) throws Exception {
@@ -144,7 +144,7 @@ public class RecordatorioBo extends
 		filter.setPageNumber(1);
 		filter.setPageSize(1);
 		
-		PagedList<Recordatorio> recordatorios = getListLoadAll(filter);
+		PagedList<Recordatorio> recordatorios = getListLoadAlimentos(filter);
 		
 		if(recordatorios.getTotal() > 0)
 			return recordatorios.getList().get(0);

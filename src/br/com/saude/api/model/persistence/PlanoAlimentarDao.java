@@ -78,15 +78,6 @@ public class PlanoAlimentarDao extends GenericDao<PlanoAlimentar> {
 						if(i.getAlimento() != null) {
 						   Alimento alimento = (Alimento) Hibernate.unproxy(i.getAlimento());
 						   i.setAlimento(alimento);
-						   
-						   if(i.getAlimento().getSubstituicoes() != null) {
-							   List<Alimento> alimentos = new ArrayList<Alimento>();
-							   Hibernate.initialize(i.getAlimento().getSubstituicoes());
-							   i.getAlimento().getSubstituicoes().forEach(a-> {
-								   alimentos.add(a);
-							   });
-							   i.getAlimento().setSubstituicoes(alimentos);
-						   }
 						}
 						itens.add(i);
 					});

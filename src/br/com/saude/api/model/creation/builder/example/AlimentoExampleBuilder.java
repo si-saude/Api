@@ -34,7 +34,7 @@ public class AlimentoExampleBuilder extends GenericExampleBuilder<Alimento, Alim
 	
 	public void addNome() {
 		if(this.filter.getNome()!=null)
-			this.criterions.add(Restrictions.ilike("nome", Helper.filterLike(this.filter.getNome())));
+			this.criterions.add(Restrictions.ilike("nome", Helper.commonFilterLike(this.filter.getNome())));
 	}
 
 }

@@ -33,7 +33,7 @@ public class ItemRefeicaoBuilder extends GenericEntityBuilder<ItemRefeicao, Item
 			if(itens.get("origem").getAlimento() != null) {
 				itens.get("destino").setAlimento(
 						AlimentoBuilder.newInstance(
-								itens.get("origem").getAlimento()).loadSubstituicoes().getEntity());
+								itens.get("origem").getAlimento()).loadNutricaoAlimentoMedidaAlimentar().getEntity());
 			}
 			return itens.get("destino");
 		};
