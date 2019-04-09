@@ -36,6 +36,7 @@ public class AtendimentoExampleBuilder extends GenericExampleBuilder<Atendimento
 		addFilaEsperaOcupacional();
 		addFilaAtendimentoOcupacional();
 		addAso();
+		addAvaliacaoHigieneOcupacional();
 	}
 	
 	protected void createExampleTarefaStatusNaoConcluidoCancelado() throws InstantiationException, IllegalAccessException {
@@ -43,6 +44,7 @@ public class AtendimentoExampleBuilder extends GenericExampleBuilder<Atendimento
 		addFilaEsperaOcupacional();
 		addFilaAtendimentoOcupacional();
 		addAso();		
+		addAvaliacaoHigieneOcupacional();
 	}
 
 	@Override
@@ -92,6 +94,14 @@ public class AtendimentoExampleBuilder extends GenericExampleBuilder<Atendimento
 			CriteriaExample criteriaExample = AsoExampleBuilder
 					.newInstance(this.filter.getAso()).getCriteriaExample();
 			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("aso", criteriaExample, JoinType.INNER_JOIN));
+		}
+	}
+	
+	private void addAvaliacaoHigieneOcupacional() throws InstantiationException, IllegalAccessException {
+		if(this.filter.getAvaliacaoHigieneOcupacional()!=null) {
+			CriteriaExample criteriaExample = AvaliacaoHigieneOcupacionalExampleBuilder
+					.newInstance(this.filter.getAvaliacaoHigieneOcupacional()).getCriteriaExample();
+			this.criterias.add(new Triplet<String,CriteriaExample,JoinType>("avaliacaoHigieneOcupacional", criteriaExample, JoinType.INNER_JOIN));
 		}
 	}
 }

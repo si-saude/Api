@@ -6,6 +6,7 @@ public class AtendimentoFilter extends GenericFilter {
 
 	private FilaAtendimentoOcupacionalFilter filaAtendimentoOcupacional;
 	private FilaEsperaOcupacionalFilter filaEsperaOcupacional;
+	private AvaliacaoHigieneOcupacionalFilter avaliacaoHigieneOcupacional;
 	private TarefaFilter tarefa;
 	private AsoFilter aso;
 		
@@ -33,4 +34,10 @@ public class AtendimentoFilter extends GenericFilter {
 	public void setAso(AsoFilter aso) {
 		this.aso = aso;
 	}
+	public AvaliacaoHigieneOcupacionalFilter getAvaliacaoHigieneOcupacional() {
+		return avaliacaoHigieneOcupacional;
+	}
+	public void setAvaliacaoHigieneOcupacional(AvaliacaoHigieneOcupacionalFilter avaliacaoHigieneOcupacional) {
+		this.avaliacaoHigieneOcupacional = avaliacaoHigieneOcupacional;
+	}	
 }

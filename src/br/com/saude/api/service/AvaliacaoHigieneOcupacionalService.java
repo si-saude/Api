@@ -62,12 +62,16 @@ public class AvaliacaoHigieneOcupacionalService extends GenericServiceImpl<Avali
 		return super.getSelectListGeneric(filter);
 	}
 	
-	@POST
+	
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/download-relatorio")
-	public Response getDownloadRelatorio(AvaliacaoHigieneOcupacional avaliacaoHigieneOcupacional) throws Exception {
-		return Response.ok(getBo().avaliacaoHigienOcupacionalToPdf(avaliacaoHigieneOcupacional)).build();
+	@Path("/get-avaliacao-atendimento")
+	public Response getAvaliacaoAtendimento(@QueryParam("id")String id) throws Exception {
+		try {
+			return Response.ok(AvaliacaoHigieneOcupacionalBo.getInstance().getAvaliacaoAtendimento(Long.parseLong(id))).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 	}
 
 	@Override

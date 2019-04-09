@@ -62,6 +62,11 @@ public class AtendimentoBuilder extends GenericEntityBuilder<Atendimento, Atendi
 			if(atendimentos.get("origem").getAvaliacaoHigieneOcupacional() != null)
 				atendimentos.get("destino").setAvaliacaoHigieneOcupacional(AvaliacaoHigieneOcupacionalBuilder
 						.newInstance(atendimentos.get("origem").getAvaliacaoHigieneOcupacional())
+						.loadCargo()
+						.loadEmpregado()
+						.loadGhe()
+						.loadGerencia()
+						.loadQuestionario()
 						.getEntity());
 			return atendimentos.get("destino");
 		};

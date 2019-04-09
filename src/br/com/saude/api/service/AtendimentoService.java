@@ -82,6 +82,32 @@ public class AtendimentoService extends GenericServiceImpl<Atendimento, Atendime
 		}
 	}
 	
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-relatorio-avaliacao-ho")
+	public Response getRelatorioAvaliacaoHo(Atendimento atendimento) {
+		try {
+			return Response.ok(getBo().getRelatorioAvaliacaoHo(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-relatorio-questionario-ensaio-vedacao")
+	public Response getRelatorioQuestionarioVedacao(Atendimento atendimento) {
+		try {
+			return Response.ok(getBo().getRelatorioQuestionarioVedacao(atendimento)).build();
+		}catch (Exception e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
+	
+	
 	@RequestInterceptor
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

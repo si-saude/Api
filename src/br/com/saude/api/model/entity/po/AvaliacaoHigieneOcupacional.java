@@ -2,6 +2,7 @@ package br.com.saude.api.model.entity.po;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -34,12 +35,15 @@ public class AvaliacaoHigieneOcupacional {
 	private Empregado empregado;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
-	@NotNull(message="É necessário informar a Gerência de Empregado.")
+	@NotNull(message="É necessário informar a Gerência do Empregado.")
 	private Gerencia gerencia;
 	
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	private QuestionarioVedacaoMascara questionarioVedacaoMascara;
+	
 	@ManyToOne(fetch=FetchType.EAGER)
-	@NotNull(message="É necessário informar a Função de Empregado.")
-	private Funcao funcao;
+	@NotNull(message="É necessário informar a Função do Empregado.")
+	private Cargo cargo;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Ghe ghe;
@@ -71,7 +75,7 @@ public class AvaliacaoHigieneOcupacional {
 	
 	private boolean concordaDescricaoAprhoGhe;
 	
-	private boolean HOconcordaDescricaoAprhoGhe;
+	private boolean hOconcordaDescricaoAprhoGhe;
 	
 	private boolean naoConcordaAgentesRiscos;
 	
@@ -264,13 +268,21 @@ public class AvaliacaoHigieneOcupacional {
 	public void setGerencia(Gerencia gerencia) {
 		this.gerencia = gerencia;
 	}
-
-	public Funcao getFuncao() {
-		return funcao;
+	
+	public QuestionarioVedacaoMascara getQuestionarioVedacaoMascara() {
+		return questionarioVedacaoMascara;
 	}
 
-	public void setFuncao(Funcao funcao) {
-		this.funcao = funcao;
+	public void setQuestionarioVedacaoMascara(QuestionarioVedacaoMascara questionarioVedacaoMascara) {
+		this.questionarioVedacaoMascara = questionarioVedacaoMascara;
+	}
+
+	public Cargo getCargo() {
+		return cargo;
+	}
+
+	public void setCargo(Cargo cargo) {
+		this.cargo = cargo;
 	}
 
 	public Ghe getGhe() {
@@ -330,11 +342,11 @@ public class AvaliacaoHigieneOcupacional {
 	}
 
 	public boolean isHOconcordaDescricaoAprhoGhe() {
-		return HOconcordaDescricaoAprhoGhe;
+		return hOconcordaDescricaoAprhoGhe;
 	}
 
 	public void setHOconcordaDescricaoAprhoGhe(boolean hOconcordaDescricaoAprhoGhe) {
-		HOconcordaDescricaoAprhoGhe = hOconcordaDescricaoAprhoGhe;
+		this.hOconcordaDescricaoAprhoGhe = hOconcordaDescricaoAprhoGhe;
 	}
 
 	public String getJustificativaHO() {

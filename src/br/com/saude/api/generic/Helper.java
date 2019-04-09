@@ -40,6 +40,14 @@ public class Helper {
 		return stringBuilder.toString();
 	}
 	
+	public static String commonFilterLike(String str) {
+		
+		stringBuilder = new StringBuilder("%");
+		stringBuilder.append(str);
+		stringBuilder.append("%");
+		return stringBuilder.toString();
+	}
+	
 	public static Date getNow() {
 		return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 	}

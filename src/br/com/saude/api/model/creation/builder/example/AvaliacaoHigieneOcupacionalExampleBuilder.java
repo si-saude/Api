@@ -1,5 +1,6 @@
 package br.com.saude.api.model.creation.builder.example;
 
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.javatuples.Triplet;
 
@@ -20,6 +21,7 @@ public class AvaliacaoHigieneOcupacionalExampleBuilder extends GenericExampleBui
 	
 	@Override
 	protected void createExample() throws InstantiationException, IllegalAccessException {
+		addId();
 		addEmpregado();
 		addBrigado();
 		addEspacoConfina();
@@ -32,10 +34,20 @@ public class AvaliacaoHigieneOcupacionalExampleBuilder extends GenericExampleBui
 		addNaoConcordaAtividades();
 		addNaoConcordaAgentesRiscos();
 		addConcordaDescricaoAprhoGhe();
+		addEnsaioVedacaoRealizado();
+		addFiscalSopSg();
+		addHOconcordaDescricaoAprhoGhe();
+		addOpEcolEcomp();
+		addOutros();
 	}
 	
 	@Override
 	protected void createExampleSelectList() { }
+	
+	private void addId() {
+		if(this.filter.getId() > 0)
+			this.criterions.add(Restrictions.eq("id", this.filter.getId()));
+	}	
 	
 	protected void addBrigado() {
 		this.entity.setBrigada(this.addBoolean("brigada", this.filter.isBrigada()));
@@ -89,4 +101,24 @@ public class AvaliacaoHigieneOcupacionalExampleBuilder extends GenericExampleBui
 		}
 	}
 	
+	protected void addEnsaioVedacaoRealizado() {
+		this.entity.setNaoConcordaCategoriaRiscos(this.addBoolean("ensaioVedacaoRealizado", this.filter.getEnsaioVedacaoRealizado()));
+	}
+	
+	protected void addFiscalSopSg() {
+		this.entity.setNaoConcordaCategoriaRiscos(this.addBoolean("fiscalSopSg", this.filter.getFiscalSopSg()));
+	}
+	
+	
+	protected void addHOconcordaDescricaoAprhoGhe() {
+		this.entity.setNaoConcordaCategoriaRiscos(this.addBoolean("hOconcordaDescricaoAprhoGhe", this.filter.getHOconcordaDescricaoAprhoGhe()));
+	}
+	
+	protected void addOpEcolEcomp() {
+		this.entity.setNaoConcordaCategoriaRiscos(this.addBoolean("opEcolEcomp", this.filter.getOpEcolEcomp()));
+	}
+	
+	protected void addOutros() {
+		this.entity.setNaoConcordaCategoriaRiscos(this.addBoolean("outros", this.filter.getOutros()));
+	}	
 }

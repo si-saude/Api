@@ -138,7 +138,7 @@ public class AsoBo
 				
 				if(gAt.getTipoGrupoMonitoramento().getNome().equals("ATIVIDADES CRÍTICAS")) {
 					
-					if(aso.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(gAt.getNome())).count() == 0){
+					if(aso.getItemAuditoriaAsos().stream().filter(x->x.getDescricao().equals(gAt.getNome())).count() == 0 && gAt.isAuditoriaAso()){
 					    ItemAuditoriaAso itemAuditoriaAso = new ItemAuditoriaAso();
 						itemAuditoriaAso.setDescricao(gAt.getNome());
 						itemAuditoriaAso.setAso(aso);

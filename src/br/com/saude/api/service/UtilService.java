@@ -66,6 +66,7 @@ import br.com.saude.api.util.constant.StatusRiscoPotencial;
 import br.com.saude.api.util.constant.StatusSimNao;
 import br.com.saude.api.util.constant.StatusSolicitacao;
 import br.com.saude.api.util.constant.StatusTarefa;
+import br.com.saude.api.util.constant.Tamanho;
 import br.com.saude.api.util.constant.TempoAnos;
 import br.com.saude.api.util.constant.TempoMeses;
 import br.com.saude.api.util.constant.TipoAcao;
@@ -79,6 +80,7 @@ import br.com.saude.api.util.constant.TipoConvocacao;
 import br.com.saude.api.util.constant.TipoCriterio;
 import br.com.saude.api.util.constant.TipoPerguntaFichaColeta;
 import br.com.saude.api.util.constant.TipoPessoa;
+import br.com.saude.api.util.constant.TipoRespirador;
 import br.com.saude.api.util.constant.TipoResultadoExame;
 import br.com.saude.api.util.constant.UF;
 import br.com.saude.api.util.constant.VinculoEmpregado;
@@ -91,6 +93,21 @@ public class UtilService {
 		return constant.getList().entrySet().stream() 
 		.filter(f-> filter!=null?f.getValue().toLowerCase().contains(filter.toLowerCase()):true)
 		.collect(Collectors.toMap(e->e.getKey(),e->e.getValue()));
+	}
+	
+	
+	@GET
+	@Path("/tamanho-respirador")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTamanhoRespirador(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(Tamanho.getInstance(),filter)).build();
+	}
+	
+	@GET
+	@Path("/tipo-respirador")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTipoRespirador(@QueryParam("filter") String filter) throws IllegalArgumentException, IllegalAccessException {
+		return Response.ok(getMap(TipoRespirador.getInstance(),filter)).build();
 	}
 	
 	@GET

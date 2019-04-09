@@ -60,6 +60,7 @@ import br.com.saude.api.model.entity.po.Atendimento;
 import br.com.saude.api.model.entity.po.Atividade;
 import br.com.saude.api.model.entity.po.AvaliacaoFisica;
 import br.com.saude.api.model.entity.po.AvaliacaoFisicaAtividadeFisica;
+import br.com.saude.api.model.entity.po.AvaliacaoHigieneOcupacional;
 import br.com.saude.api.model.entity.po.Convocacao;
 import br.com.saude.api.model.entity.po.Empregado;
 import br.com.saude.api.model.entity.po.EmpregadoConvocacao;
@@ -70,6 +71,7 @@ import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacional;
 import br.com.saude.api.model.entity.po.FilaAtendimentoOcupacionalAtualizacao;
 import br.com.saude.api.model.entity.po.GerenciaConvocacao;
 import br.com.saude.api.model.entity.po.Profissiograma;
+import br.com.saude.api.model.entity.po.QuestionarioVedacaoMascara;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.RiscoEmpregado;
 import br.com.saude.api.model.entity.po.RiscoPotencial;
@@ -185,6 +187,9 @@ public class AtendimentoBo extends
 		if (atendimentoAux.getAso() != null && atendimentoAux.getAso().getId() != 0)
 			a.setAso(atendimentoAux.getAso());
 		
+		if (atendimentoAux.getAvaliacaoHigieneOcupacional() != null && atendimentoAux.getAvaliacaoHigieneOcupacional().getId() != 0)
+			a.setAvaliacaoHigieneOcupacional(atendimentoAux.getAvaliacaoHigieneOcupacional());
+		
 		FichaColeta fichaColeta = a.getFilaEsperaOcupacional().getFichaColeta();
 
 		if (fichaColeta != null) {
@@ -244,6 +249,9 @@ public class AtendimentoBo extends
 
 			if (atendimentoAux.getAso() != null && atendimentoAux.getAso().getId() == 0)
 				atendimentoAux.setAso(null);
+			
+			if (atendimentoAux.getAvaliacaoHigieneOcupacional() != null && atendimentoAux.getAvaliacaoHigieneOcupacional().getId() == 0)
+				a.setAvaliacaoHigieneOcupacional(null);
 		}
 
 		return atendimentoAux;
@@ -257,6 +265,7 @@ public class AtendimentoBo extends
 				.setStatus(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
 		atendimento = gerarAso(atendimento);
 		generateAvaliacaoFisica(atendimento);
+		generateAvaliacaoHO(atendimento);
 		atendimento = save(addAtualizacao(atendimento), this.functionLoadAll);
 		atendimento = getById(atendimento.getId());
 		atendimento.getTriagens().sort(new Comparator<Triagem>() {
@@ -1138,6 +1147,8 @@ public class AtendimentoBo extends
 		if ((atendimentoAux.getAvaliacaoFisica() == null || atendimentoAux.getAvaliacaoFisica().getId() == 0))			 
 			atendimentoAux = generateAvaliacaoFisica(atendimentoAux);
 		
+		if ((atendimentoAux.getAvaliacaoHigieneOcupacional() == null || atendimentoAux.getAvaliacaoHigieneOcupacional().getId() == 0))
+			generateAvaliacaoHO(atendimento);
 		
 		atendimentoAux.getFilaAtendimentoOcupacional()
 				.setStatus(StatusFilaAtendimentoOcupacional.getInstance().EM_ATENDIMENTO);
@@ -1705,5 +1716,38 @@ public class AtendimentoBo extends
 		}
 		return atendimento;
 	}
+	
+	public Atendimento generateAvaliacaoHO(Atendimento atendimento) throws Exception {
+		if ( atendimento.getFilaAtendimentoOcupacional().getProfissional()
+				.getEquipe().getAbreviacao().equals("HIG") ) {
+			atendimento.setAvaliacaoHigieneOcupacional(new AvaliacaoHigieneOcupacional());
+			atendimento.getAvaliacaoHigieneOcupacional().setQuestionarioVedacaoMascara(new QuestionarioVedacaoMascara());
+			
+			Empregado empregado = EmpregadoBo.getInstance().getById(atendimento.getFilaEsperaOcupacional().getEmpregado().getId());
+			
+			atendimento.getAvaliacaoHigieneOcupacional().setProfissional(atendimento.getFilaAtendimentoOcupacional().getProfissional());
+			atendimento.getAvaliacaoHigieneOcupacional().setEmpregado(empregado);
+			atendimento.getAvaliacaoHigieneOcupacional().setCargo(empregado.getCargo());
+			atendimento.getAvaliacaoHigieneOcupacional().setGerencia(empregado.getGerencia());
+			atendimento.getAvaliacaoHigieneOcupacional().setGhe(empregado.getGhe());
+			atendimento.getAvaliacaoHigieneOcupacional().setInicio(Helper.cloneDate(atendimento.getTarefa().getInicio()));
+			atendimento.getAvaliacaoHigieneOcupacional().setFim(Helper.cloneDate(atendimento.getTarefa().getInicio()));
+			atendimento.getAvaliacaoHigieneOcupacional().getQuestionarioVedacaoMascara().setData(Helper.cloneDate(atendimento.getTarefa().getInicio()));
+		} else {
+			atendimento.setAvaliacaoHigieneOcupacional(null);
+		}
+		return atendimento;
+	}
+	
+	public String getRelatorioAvaliacaoHo(Atendimento atendimento) throws Exception {		
+		
+		return AvaliacaoHigieneOcupacionalBo.getInstance().avaliacaoHigienOcupacionalToPdf(atendimento);
+	}
+	
+	public String getRelatorioQuestionarioVedacao(Atendimento atendimento) throws Exception {		
+		
+		return AvaliacaoHigieneOcupacionalBo.getInstance().questionarioEnsaioVedacaoToPdf(atendimento);
+	}
+
 	
 }

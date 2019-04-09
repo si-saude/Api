@@ -39,6 +39,7 @@ import br.com.saude.api.model.entity.po.Pessoa;
 import br.com.saude.api.model.entity.po.PlanoAlimentar;
 import br.com.saude.api.model.entity.po.Profissional;
 import br.com.saude.api.model.entity.po.QuestionarioConhecimentoAlimentar;
+import br.com.saude.api.model.entity.po.QuestionarioVedacaoMascara;
 import br.com.saude.api.model.entity.po.Recordatorio;
 import br.com.saude.api.model.entity.po.RespostaFichaColeta;
 import br.com.saude.api.model.entity.po.RespostaQuestionarioConhecimentoAlimentar;
@@ -76,8 +77,12 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 			if(atendimento.getTarefa() != null)
 				atendimento.setTarefa((Tarefa) Hibernate.unproxy(atendimento.getTarefa()));
 			
-			if(atendimento.getAvaliacaoHigieneOcupacional() != null) 
+			if(atendimento.getAvaliacaoHigieneOcupacional() != null) {
 				atendimento.setAvaliacaoHigieneOcupacional((AvaliacaoHigieneOcupacional)Hibernate.unproxy(atendimento.getAvaliacaoHigieneOcupacional()));
+			
+				if(atendimento.getAvaliacaoHigieneOcupacional().getQuestionarioVedacaoMascara() != null )
+					atendimento.getAvaliacaoHigieneOcupacional().setQuestionarioVedacaoMascara((QuestionarioVedacaoMascara)Hibernate.unproxy(atendimento.getAvaliacaoHigieneOcupacional().getQuestionarioVedacaoMascara()));
+			}
 			
 			if(atendimento.getAso() != null) {
 				atendimento.setAso((Aso)Hibernate.unproxy(atendimento.getAso()));
@@ -314,6 +319,7 @@ public class AtendimentoDao extends GenericDao<Atendimento> {
 			
 			
 			atendimento.setAso(null);
+			atendimento.setAvaliacaoHigieneOcupacional(null);
 			atendimento = (Atendimento) session.merge(atendimento);
 			
 			if(atendimento.getQuestionario() != null && atendimento.getQuestionario().getId() > 0) {
