@@ -33,12 +33,7 @@ public class ItemRefeicaoPlanoBuilder extends GenericEntityBuilder<ItemRefeicaoP
 			if(itens.get("origem").getAlimento() != null) {
 				itens.get("destino").setAlimento(
 						AlimentoBuilder.newInstance(
-								itens.get("origem").getAlimento()).getEntity());
-			}
-			if(itens.get("origem").getAlimentos() != null) {
-				itens.get("destino").setAlimentos(
-						AlimentoBuilder.newInstance(
-								itens.get("origem").getAlimentos()).getEntityList());
+								itens.get("origem").getAlimento()).loadNutricaoAlimentoMedidaAlimentar().getEntity());
 			}
 			return itens.get("destino");
 		};
@@ -60,10 +55,6 @@ public class ItemRefeicaoPlanoBuilder extends GenericEntityBuilder<ItemRefeicaoP
 		if ( itemRefeicao.getAlimento() != null )
 			cloneItemRefeicaoPlano.setMedidaCaseira(
 					MedidaAlimentarBuilder.newInstance(itemRefeicao.getMedidaCaseira()).getEntity());
-		
-		if ( itemRefeicao.getAlimentos() != null )
-			cloneItemRefeicaoPlano.setAlimentos(
-					AlimentoBuilder.newInstance(itemRefeicao.getAlimentos()).getEntityList());
 		
 		return cloneItemRefeicaoPlano;
 	}

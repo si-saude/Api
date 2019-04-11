@@ -75,7 +75,7 @@ public class QuestionarioVedacaoMascara {
 	@Size(max = 256, message="Tamanho máximo para o Exposição a aerodispersóides: 256")
 	private String  exposicaoAerodispersoide;		
 	
-	@Size(max = 2, message="Tamanho máximo para as Horas utilizadas: 2")
+	@Size(max = 32, message="Tamanho máximo para as Horas utilizadas: 2")
 	private String  horaUsada;
 	
 	@Size(max = 1, message="Tamanho máximo para os Dias utilizados: 1")

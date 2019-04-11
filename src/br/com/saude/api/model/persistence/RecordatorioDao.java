@@ -14,6 +14,7 @@ import br.com.saude.api.model.entity.po.Refeicao;
 import br.com.saude.api.model.entity.po.Alimento;
 import br.com.saude.api.model.entity.po.AlimentoMedidaAlimentar;
 import br.com.saude.api.model.entity.po.ItemRefeicao;
+import br.com.saude.api.model.entity.po.MedidaAlimentar;
 
 public class RecordatorioDao extends GenericDao<Recordatorio> {
 	private Function<Recordatorio,Recordatorio> functionLoadRefeicoesAlimentos;
@@ -77,7 +78,10 @@ public class RecordatorioDao extends GenericDao<Recordatorio> {
 						   List<AlimentoMedidaAlimentar> alimentoMedidaAlimentares = new ArrayList<AlimentoMedidaAlimentar>();	
 						   
 						   if(alimento.getAlimentoMedidaAlimentares() != null) 
-							   alimento.getAlimentoMedidaAlimentares().forEach(a-> alimentoMedidaAlimentares.add((AlimentoMedidaAlimentar) Hibernate.unproxy(a)));
+							   alimento.getAlimentoMedidaAlimentares().forEach(a-> {
+								   alimentoMedidaAlimentares.add((AlimentoMedidaAlimentar) Hibernate.unproxy(a));
+						   		   a.setMedidaAlimentar((MedidaAlimentar) Hibernate.unproxy(a.getMedidaAlimentar()));
+							   });
 						   
 						   alimento.setAlimentoMedidaAlimentares(alimentoMedidaAlimentares);
 						   i.setAlimento(alimento);

@@ -1,16 +1,10 @@
 package br.com.saude.api.model.entity.po;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -38,12 +32,6 @@ public class ItemRefeicaoPlano {
 	
 	@Size(max = 1024, message="Tamanho máximo para Observação do Item Refeição: 1024")
 	private String observacao;	
-	
-	@ManyToMany(fetch=FetchType.EAGER, cascade= CascadeType.ALL)
-	@JoinTable(name="alimento_alimentos", 
-	joinColumns = {@JoinColumn(name="itemrefeicao_id")}, 
-	inverseJoinColumns = {@JoinColumn(name="alimento_id")})
-	private List<Alimento> alimentos;
 	
 	@Formula("(select get_ve_plano(id))")
 	private float ve;
@@ -114,14 +102,5 @@ public class ItemRefeicaoPlano {
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
 	}
-
-	public List<Alimento> getAlimentos() {
-		return alimentos;
-	}
-
-	public void setAlimentos(List<Alimento> alimentos) {
-		this.alimentos = alimentos;
-	}
-	
 	
 }

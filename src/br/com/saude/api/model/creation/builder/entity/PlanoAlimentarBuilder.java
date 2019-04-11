@@ -10,6 +10,7 @@ import br.com.saude.api.model.entity.po.PlanoAlimentar;
 
 public class PlanoAlimentarBuilder extends GenericEntityBuilder<PlanoAlimentar, PlanoAlimentarFilter> {
 	private Function<Map<String,PlanoAlimentar>,PlanoAlimentar> loadRefeicoes;
+	private Function<Map<String,PlanoAlimentar>,PlanoAlimentar> loadRefeicoesAlimentos;
 	
 	public static PlanoAlimentarBuilder newInstance(PlanoAlimentar planoAlimentar) {
 		return new PlanoAlimentarBuilder(planoAlimentar);
@@ -30,6 +31,15 @@ public class PlanoAlimentarBuilder extends GenericEntityBuilder<PlanoAlimentar, 
 	@Override
 	protected void initializeFunctions() {
 		this.loadRefeicoes = planoAlimentars ->{
+			if(planoAlimentars.get("origem").getRefeicoes() != null) {
+				planoAlimentars.get("destino").setRefeicoes(
+						RefeicaoPlanoBuilder.newInstance(
+								planoAlimentars.get("origem").getRefeicoes()).loadItens().getEntityList());
+			}
+			return planoAlimentars.get("destino");
+		};
+		
+		this.loadRefeicoesAlimentos = planoAlimentars ->{
 			if(planoAlimentars.get("origem").getRefeicoes() != null) {
 				planoAlimentars.get("destino").setRefeicoes(
 						RefeicaoPlanoBuilder.newInstance(
@@ -65,5 +75,9 @@ public class PlanoAlimentarBuilder extends GenericEntityBuilder<PlanoAlimentar, 
 	
 	public PlanoAlimentarBuilder loadRefeicoes() {
 		return (PlanoAlimentarBuilder) this.loadProperty(this.loadRefeicoes);
+	}
+	
+	public PlanoAlimentarBuilder loadRefeicoesAlimentos() {
+		return (PlanoAlimentarBuilder) this.loadProperty(this.loadRefeicoesAlimentos);
 	}
 }

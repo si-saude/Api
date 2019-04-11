@@ -12,6 +12,7 @@ import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.Base64;
 import java.util.Objects;
+import java.util.function.Function;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.html.simpleparser.HTMLWorker;
@@ -37,6 +38,8 @@ public class PlanoAlimentarBo extends
 	
 	private static PlanoAlimentarBo instance;
 	
+	protected Function<PlanoAlimentarBuilder, PlanoAlimentarBuilder> functionLoadAlimentos;
+	
 	private PlanoAlimentarBo() {
 		super();
 	}
@@ -45,6 +48,11 @@ public class PlanoAlimentarBo extends
 	protected void initializeFunctions() {
 		this.functionLoadAll = builder -> {
 			builder = builder.loadRefeicoes();
+			return builder;
+		};
+		
+		this.functionLoadAlimentos = builder -> {
+			builder = builder.loadRefeicoesAlimentos();
 			return builder;
 		};
 	}
@@ -71,7 +79,7 @@ public class PlanoAlimentarBo extends
 	
 	@Override
 	public PlanoAlimentar getById(Object id) throws Exception {
-		return getByEntity(getDao().getById(id),functionLoadAll);
+		return getByEntity(getDao().getById(id),functionLoadAlimentos);
 	}
 	
 	public PlanoAlimentar getNe(PlanoAlimentar planoAlimentar) throws Exception {
@@ -193,21 +201,7 @@ public class PlanoAlimentarBo extends
 			r.getItens().forEach(i->{
 				refeicoes.append("<td>"+ i.getAlimento().getNome()+"</td>");
 				refeicoes.append("<td>"+ i.getQuantidade()+" "+i.getMedidaCaseira().getDescricao()+"</td>");
-				
-				String substituicoes ="";
-				for(int a = 0 ;a < i.getAlimentos().size(); a++ ) {
-					
-					if(a > 0)
-						substituicoes +=", ";
-					
-						substituicoes += i.getAlimentos().get(a).getNome();
-					
-					if((a + 1) == i.getAlimentos().size())
-						substituicoes +=".";
-				}
-				
-				refeicoes.append("<td>"+substituicoes+"</td>");
-				
+			
 				refeicoes.append("<td>"+ (i.getObservacao() != null ? i.getObservacao() : "")+"</td>");
 			});
 			refeicoes.append("</tr>");
