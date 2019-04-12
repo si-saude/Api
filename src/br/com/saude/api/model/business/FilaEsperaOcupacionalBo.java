@@ -621,11 +621,12 @@ public class FilaEsperaOcupacionalBo
 				r.getRiscoEmpregados().forEach(rE -> {
 					rE.setRiscoPotencial(r);
 					rE.getTriagens().forEach(t -> {
+						t.setRiscoEmpregado(rE);
 						if(t.getAcoes() != null)
-						t.getAcoes().forEach(a -> {
-							a.setTriagem(t);
-							a.getAcompanhamentos().forEach(ac -> ac.setAcao(a));
-						});
+							t.getAcoes().forEach(a -> {
+								a.setTriagem(t);
+								a.getAcompanhamentos().forEach(ac -> ac.setAcao(a));
+							});
 					});
 				});
 			});
