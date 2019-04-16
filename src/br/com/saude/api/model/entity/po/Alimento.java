@@ -261,9 +261,6 @@ public class Alimento {
 	public void setVite(double vite) {
 		this.vite = vite;
 	}
-	public void setVite(float vite) {
-		this.vite = vite;
-	}
 	public long getVersion() {
 		return version;
 	}

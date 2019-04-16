@@ -190,10 +190,20 @@ public class AsoBo
 					try {
 						Ghe ghe = GheBo.getInstance().getById(aso.getEmpregado().getGhe().getId());
 						itemAuditoriaAso.setDescricao(r.getConteudo().replace("[RISCOS_GHE]", 
-								": "+ghe.getNome()));					
+								": "+ghe.getRisco().getTitulo()));					
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
+				}
+			}else if(r.getConteudo().contains("[GRUPO_OCUPACIONAL]")) {
+				if(aso.getEmpregado().getGhe() != null) { 	
+					try {
+							Ghe ghe = GheBo.getInstance().getById(aso.getEmpregado().getGhe().getId());
+							itemAuditoriaAso.setDescricao(r.getConteudo().replace("[GRUPO_OCUPACIONAL]", 
+									": "+ghe.getNome()));	
+						} catch (Exception e) {
+							e.printStackTrace();
+						}			
 				}
 			}else {
 				itemAuditoriaAso.setDescricao(r.getConteudo());		
