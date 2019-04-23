@@ -1417,7 +1417,7 @@ public class AtendimentoBo extends
 				atendimento.getAvaliacaoFisica().getDobraSupraIliaca() == 0);
 	}
 	private int getPercentualGorduraIdeal(int idade, String sexo) {
-		if (sexo == Sexo.getInstance().MASCULINO) {
+		if (sexo.equals(Sexo.getInstance().MASCULINO)) {
 			if (idade >= 18 && idade <= 29) {
 				return 14;
 			} else if (idade >= 30 && idade <= 39) {

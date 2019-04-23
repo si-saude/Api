@@ -157,7 +157,7 @@ public class Helper {
 	}
 	
 	public static Double roundDouble(Double value, int digits) {		
-		BigDecimal valorExato = new BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN);		
+		BigDecimal valorExato = new BigDecimal(value).setScale(digits, RoundingMode.HALF_UP);		
 		return valorExato.doubleValue();
 	}
 	
