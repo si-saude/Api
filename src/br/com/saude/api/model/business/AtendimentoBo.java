@@ -1363,21 +1363,29 @@ public class AtendimentoBo extends
 	
 			atendimento.getAvaliacaoFisica().setPesoExcesso(pesoExcesso < 0 ? 0: pesoExcesso);
 	
-			atendimento.getAvaliacaoFisica().setPercentualMassaMagraNegociada(
-					Helper.roundDouble(100 - atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada(),2));
-	
-			atendimento.getAvaliacaoFisica()
-					.setPesoNegociado(Helper.roundDouble(atendimento.getAvaliacaoFisica().getMassaMagra()
-							/ (1 - (atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada() / 100))
-							+ atendimento.getAvaliacaoFisica().getCarenciaMuscular(),2));
-	
-			double pesoExecessoNegociadoAux = Helper.roundDouble(Double
-					.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
-							.collect(Collectors.toList()).get(0).getConteudo())
-					- atendimento.getAvaliacaoFisica().getPesoNegociado(),2);		
-	
-			atendimento.getAvaliacaoFisica()
-					.setPesoExcessoNegociado(pesoExecessoNegociadoAux < 0 ? 0 : pesoExecessoNegociadoAux);
+			if(atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada() > 0) {
+				
+				atendimento.getAvaliacaoFisica().setPercentualMassaMagraNegociada(
+						Helper.roundDouble(100 - atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada(),2));
+		
+				atendimento.getAvaliacaoFisica()
+						.setPesoNegociado(Helper.roundDouble(atendimento.getAvaliacaoFisica().getMassaMagra()
+								/ (1 - (atendimento.getAvaliacaoFisica().getPercentualGorduraNegociada() / 100))
+								+ atendimento.getAvaliacaoFisica().getCarenciaMuscular(),2));
+		
+				double pesoExecessoNegociadoAux = Helper.roundDouble(Double
+						.parseDouble(respostas.stream().filter(r -> r.getPergunta().getCodigo().equals("0001"))
+								.collect(Collectors.toList()).get(0).getConteudo())
+						- atendimento.getAvaliacaoFisica().getPesoNegociado(),2);		
+		
+				atendimento.getAvaliacaoFisica()
+						.setPesoExcessoNegociado(pesoExecessoNegociadoAux < 0 ? 0 : pesoExecessoNegociadoAux);
+			}
+			else {
+				atendimento.getAvaliacaoFisica().setPercentualMassaMagraNegociada(0);		
+				atendimento.getAvaliacaoFisica().setPesoNegociado(0);				
+				atendimento.getAvaliacaoFisica().setPesoExcessoNegociado(0);				
+			}
 		}else {
 			
 			atendimento.getAvaliacaoFisica().setPercentualGordura(0);
